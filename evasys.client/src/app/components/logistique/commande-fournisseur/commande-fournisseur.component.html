@@ -1,0 +1,1099 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onSave('')" *ngIf="!(locked && saveLocked)"
+                [disabled]="!isFormValidForSave()">
+          {{applicationUserContext.getCulturedRessourceText(6)}}
+        </button>
+        <button mat-raised-button color="accent" class="ev-button-left" type="button" (click)="onAcceptAnomalie()"
+                *ngIf="!(locked && saveLocked)
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                            || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')
+                        && (form.errors?.prixTonneHTEquals0
+                            ||form.errors?.nbBalleChargementAwayFrombBalleDechargement
+                            ||form.errors?.poidsChargementAwayFromPoidsDechargement
+                            ||form.errors?.refusCamionDDechargementRelatedData
+                            ||form.errors?.refusCamionPoidsDechargementRelatedData
+                            ||form.errors?.refusCamionNbBalleDechargementRelatedData
+                            ||form.errors?.dDechargementPrevueOutOfDMoisDechargementPrevu)
+                        && commandeFournisseur.DAnomalieOk===null">
+          {{applicationUserContext.getCulturedRessourceText(574)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onFindCible();"
+                *ngIf="!locked
+                        && commandeFournisseur.DDechargement===null
+                        && !commandeFournisseur.Transporteur
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')"
+                [disabled]="!commandeFournisseur.Entite
+                        || !commandeFournisseur.Produit
+                        || commandeFournisseur.DMoisDechargementPrevu===null
+                        || !commandeFournisseur.CommandeFournisseurStatut
+                        || (commandeFournisseur.CommandeFournisseurStatut && commandeFournisseur.CommandeFournisseurStatut.RefCommandeFournisseurStatut!==1)">
+          {{applicationUserContext.getCulturedRessourceText(488)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onRemoveCible();"
+                *ngIf="!locked
+                        && commandeFournisseur.DDechargement===null
+                        && commandeFournisseur.Transporteur
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+          {{applicationUserContext.getCulturedRessourceText(522)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onFindCible();"
+                *ngIf="!locked
+                        && commandeFournisseur.DDechargement===null
+                        && commandeFournisseur.Transporteur
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+          {{commandeFournisseur.ValideDPrevues ? applicationUserContext.getCulturedRessourceText(566) : applicationUserContext.getCulturedRessourceText(1073)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onCopy();"
+                *ngIf="!locked
+                        && !commandeFournisseur.CommandeFournisseurStatut
+                        && !commandeFournisseur.Transporteur
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+          {{applicationUserContext.getCulturedRessourceText(525)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onCancelUnloading();"
+                *ngIf="!locked
+                        && !reparti
+                        && commandeFournisseur.RefCommandeFournisseur!==null
+                        && commandeFournisseur.DDechargement!==null
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+          {{applicationUserContext.getCulturedRessourceText(530)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onMixte();"
+                *ngIf="!locked
+                        && commandeFournisseur.Transporteur
+                        && commandeFournisseur.DDechargement===null
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+          {{applicationUserContext.getCulturedRessourceText(532)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onRepartition();" [disabled]="!isFormValidForSave()"
+                *ngIf="commandeFournisseur.DDechargement !== null && commandeFournisseur.PoidsDechargement !== null && commandeFournisseur.RefCommandeFournisseur >0
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                            || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+          {{applicationUserContext.getCulturedRessourceText(601)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onUploadFile();"
+                *ngIf="!locked && commandeFournisseur.ValideDPrevues
+                            && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Transporteur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Client'
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'CentreDeTri')">
+          {{applicationUserContext.getCulturedRessourceText(629)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onFicheControle();" [disabled]="!isFormValidForSave()"
+                *ngIf="commandeFournisseur.ValideDPrevues
+                            && (applicationUserContext.connectedUtilisateur.HabilitationQualite === 'Administrateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationQualite === 'Utilisateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationQualite === 'Client')">
+          {{applicationUserContext.getCulturedRessourceText(834)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onNonConformite();" [disabled]="!isFormValidForSave()"
+                *ngIf="commandeFournisseur.ValideDPrevues
+                            && (applicationUserContext.connectedUtilisateur.HabilitationQualite === 'Administrateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationQualite === 'Utilisateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationQualite === 'Client')">
+          {{applicationUserContext.getCulturedRessourceText(801)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onUnlock()" color="accent" [matTooltip]="getLockByTooltipText()"
+                *ngIf="commandeFournisseur.LockedBy
+                            && commandeFournisseur.LockedBy?.RefUtilisateur != applicationUserContext.connectedUtilisateur.RefUtilisateur
+                            && (applicationUserContext.connectedUtilisateur.HabilitationAdministration === 'Administrateur')">
+          {{applicationUserContext.getCulturedRessourceText(1474)}}
+        </button>
+        <button mat-icon-button class="ev-button-left" type="button" (click)="onSave('Print');"
+                *ngIf="buttonPrintVisible">
+          <mat-icon>print</mat-icon>
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="!deleteLocked && commandeFournisseur.RefCommandeFournisseur" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+        <mat-icon class="ev-button-right color-accent" [matTooltip]="getLockByTooltipText()"
+                  *ngIf="commandeFournisseur?.LockedBy?.RefUtilisateur && (commandeFournisseur?.LockedBy?.RefUtilisateur !== applicationUserContext.connectedUtilisateur.RefUtilisateur)">warning</mat-icon>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td [class]="'cadre_header_' + (commandeFournisseur?.CommandeFournisseurStatut ? ('statut_' + commandeFournisseur.CommandeFournisseurStatut.RefCommandeFournisseurStatut.toString()) : 'primary')">
+            {{applicationUserContext.getCulturedRessourceText(14)}}&nbsp;{{getFormattedNumeroCommande(commandeFournisseur.NumeroCommande)}}
+            <br />
+            <span *ngIf="commandeFournisseur.Mixte" class="color-accent">{{applicationUserContext.getCulturedRessourceText(276)}}&nbsp;{{getFormattedNumeroCommande(commandeFournisseur.NumeroAffretement)}}</span>
+            <span *ngIf="!commandeFournisseur.Mixte">{{applicationUserContext.getCulturedRessourceText(276)}}&nbsp;{{getFormattedNumeroCommande(commandeFournisseur.NumeroAffretement)}}</span>
+            <br />
+            {{getEnvCommandeFournisseurStatut()}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;" appearance="outline" *ngIf="false">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(14)}}</mat-label>
+              <input matInput formControlName="NumeroCommande" tabindex="-1" />
+            </mat-form-field>
+            <mat-form-field style="width:100%;" appearance="outline" *ngIf="false">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(276)}}</mat-label>
+              <input matInput formControlName="NumeroAffretement" tabindex="-1" />
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(461)}}</mat-label>
+              <input matInput formControlName="OrdreAffretement" type="number" pattern="^[0-9]+$" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('OrdreAffretement').value!=null && form.get('OrdreAffretement').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('OrdreAffretement').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('OrdreAffretement').touched || form.get('OrdreAffretement').dirty) && form.get('OrdreAffretement').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('OrdreAffretement').touched || form.get('OrdreAffretement').dirty) && form.get('OrdreAffretement').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('OrdreAffretement').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(462)}}</mat-label>
+              <mat-select formControlName="CommandeFournisseurStatutList" (selectionChange)="onCommandeFournisseurStatutSelected($event.value)">
+                <mat-option *ngFor="let commandeFournisseurStatut of commandeFournisseurStatutList" [value]="commandeFournisseurStatut.RefCommandeFournisseurStatut">{{commandeFournisseurStatut.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('CommandeFournisseurStatutList').value && form.get('CommandeFournisseurStatutList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); onCommandeFournisseurStatutSelected(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="commandeFournisseur.DBlocage!==null
+                                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(496)}}</mat-label>
+              <textarea matInput formControlName="CmtBlocage" maxlength="500" style="height:80px;"></textarea>
+              <button *ngIf="form.get('CmtBlocage').value && form.get('CmtBlocage').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CmtBlocage').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint align="end" class="color-accent-dark">{{getBlocageDetails()}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(464)}}</mat-label>
+              <mat-select formControlName="CamionCompletList" (selectionChange)="onCamionCompletSelected($event.value)" required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let camionCompletList of camionCompletList" [value]="camionCompletList.value">{{camionCompletList.text}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('CamionCompletList').value && form.get('CamionCompletList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('CamionCompletList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('CamionCompletList').touched || form.get('CamionCompletList').dirty) && form.get('CamionCompletList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(463)}}</mat-label>
+              <mat-select formControlName="MotifCamionIncompletList" required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let motifCamionIncomplet of motifCamionIncompletList" [value]="motifCamionIncomplet.RefMotifCamionIncomplet">{{motifCamionIncomplet.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('MotifCamionIncompletList').value && form.get('MotifCamionIncompletList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('MotifCamionIncompletList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('MotifCamionIncompletList').touched || form.get('MotifCamionIncompletList').dirty) && form.get('MotifCamionIncompletList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(19)}}</mat-label>
+              <mat-select formControlName="ProduitList" (selectionChange)="onProduitSelected($event.value)" required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let produitList of produitList" [value]="produitList.RefProduit">{{produitList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ProduitList').value && form.get('ProduitList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation();  onProduitSelected(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('ProduitList').touched || form.get('ProduitList').dirty) && form.get('ProduitList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(459)}}</mat-label>
+              <mat-select formControlName="DMoisDechargementPrevuList" (selectionChange)="onDMoisDechargementPrevuSelected($event.value)" [required]="dMoisDechargementPrevuFCRequired" [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let month of dMoisDechargementPrevuList" [value]="month.d">{{month.name}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('DMoisDechargementPrevuList').value && form.get('DMoisDechargementPrevuList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation();  onDMoisDechargementPrevuSelected(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('DMoisDechargementPrevuList').touched || form.get('DMoisDechargementPrevuList').dirty) && form.get('DMoisDechargementPrevuList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="ev-date-picker" style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(435)}}</mat-label>
+              <input matInput [matDatepicker]="pickerD" formControlName="D" required [errorStateMatcher]="matcher"
+                     (dateChange)="onDDateChange($event.value)" (dateInput)="onDDateChange($event.value)" [min]="dMin">
+              <mat-datepicker-toggle matIconPrefix [for]="pickerD"></mat-datepicker-toggle>
+              <mat-datepicker #pickerD></mat-datepicker>
+              <button *ngIf="form.get('D').value && form.get('D').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="onDDateChange(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('D').touched || form.get('D').dirty) && form.get('D').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="form.errors?.dBeforeToday && form.get('D').enabled">{{applicationUserContext.getCulturedRessourceText(1424)}}</mat-error>
+            </mat-form-field>
+            <mat-checkbox formControlName="ExportSAGE" style="width:100%;" (change)="onExportSAGEChange()"
+                          *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')
+                           && form.get('CommandeFournisseurStatutList').value!='3'">
+              {{applicationUserContext.getCulturedRessourceText(500)}}
+            </mat-checkbox>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="blocTransporteurVisible" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(255)}} &nbsp;{{commandeFournisseur?.Transporteur?.Libelle}}
+            <ng-container *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')">&nbsp;-&nbsp;{{(form.get('PrixTransportHT').value-0) + (form.get('PrixTransportSupplementHT').value-0)+ (form.get('SurcoutCarburantHT').value-0)}}&nbsp;{{applicationUserContext.getCulturedRessourceText(233)}}</ng-container>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(468)}}</mat-label>
+              <mat-select formControlName="TransporteurContactAdresseList" required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let contactAdresse of transporteurContactAdresseList" [value]="contactAdresse.RefContactAdresse">{{contactAdresse.ListText}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('TransporteurContactAdresseList').value && form.get('TransporteurContactAdresseList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('TransporteurContactAdresseList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button *ngIf="form.get('TransporteurContactAdresseList').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeFournisseurTransporteurContactAdresse', form.get('TransporteurContactAdresseList').value); " tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('TransporteurContactAdresseList').touched || form.get('TransporteurContactAdresseList').dirty) && form.get('TransporteurContactAdresseList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(313)}}</mat-label>
+              <mat-select formControlName="CamionTypeList">
+                <mat-option *ngFor="let camionType of camionTypeList" [value]="camionType.RefCamionType">{{camionType.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('CamionTypeList').value && form.get('CamionTypeList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('CamionTypeList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(252)}}</mat-label>
+              <input matInput formControlName="PrixTransportHT" mask="separator.2" required [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(233)}}</span>
+              <button *ngIf="form.get('PrixTransportHT').value!=null && form.get('PrixTransportHT').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PrixTransportHT').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button *ngIf="commandeFournisseur.Transporteur
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeFournisseurTransport', 0); " tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(326)}}</mat-hint>
+              <mat-error align="end" *ngIf="(form.get('PrixTransportHT').touched || form.get('PrixTransportHT').dirty) && form.get('PrixTransportHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('PrixTransportHT').touched || form.get('PrixTransportHT').dirty) && form.get('PrixTransportHT').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('PrixTransportHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(715)}}</mat-label>
+              <input matInput formControlName="SurcoutCarburantHT" [allowNegativeNumbers]="true" mask="separator.2" required [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(233)}}</span>
+              <button *ngIf="form.get('SurcoutCarburantHT').value!=null && form.get('SurcoutCarburantHT').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('SurcoutCarburantHT').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(717)}}</mat-hint>
+              <mat-error align="end" *ngIf="(form.get('SurcoutCarburantHT').touched || form.get('SurcoutCarburantHT').dirty) && form.get('SurcoutCarburantHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('SurcoutCarburantHT').touched || form.get('SurcoutCarburantHT').dirty) && form.get('SurcoutCarburantHT').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('SurcoutCarburantHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(466)}}</mat-label>
+              <input matInput formControlName="PrixTransportSupplementHT" [allowNegativeNumbers]="true" mask="separator.2" required [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(233)}}</span>
+              <button *ngIf="form.get('PrixTransportSupplementHT').value!=null && form.get('PrixTransportSupplementHT').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PrixTransportSupplementHT').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(467)}}</mat-hint>
+              <mat-error align="end" *ngIf="(form.get('PrixTransportSupplementHT').touched || form.get('PrixTransportSupplementHT').dirty) && form.get('PrixTransportSupplementHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('PrixTransportSupplementHT').touched || form.get('PrixTransportSupplementHT').dirty) && form.get('PrixTransportSupplementHT').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('PrixTransportSupplementHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+              <mat-error align="end" *ngIf="(form.get('PrixTransportSupplementHT').touched || form.get('PrixTransportSupplementHT').dirty) && form.get('PrixTransportSupplementHT').errors?.min">
+                {{applicationUserContext.getCulturedRessourceText(687) + (form.get('PrixTransportSupplementHT').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(323)}}</mat-label>
+              <input matInput formControlName="Km" mask="separator" required [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(251)}}</span>
+              <button *ngIf="form.get('Km').value!=null && form.get('Km').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Km').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button *ngIf="commandeFournisseur.Transporteur
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeFournisseurTransport', 0); " tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(324)}}</mat-hint>
+              <mat-error align="end" *ngIf="(form.get('Km').touched || form.get('Km').dirty) && form.get('Km').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('Km').touched || form.get('Km').dirty) && form.get('Km').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('Km').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(499)}}</mat-label>
+              <textarea matInput formControlName="CmtTransporteur" maxlength="200" style="height:45px;"></textarea>
+              <button *ngIf="form.get('CmtTransporteur').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CmtTransporteur').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-checkbox formControlName="Imprime" style="width:100%;"
+                          *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')">
+              {{applicationUserContext.getCulturedRessourceText(443)}}
+            </mat-checkbox>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">{{applicationUserContext.getCulturedRessourceText(17)}}
+            <span *ngIf="commandeFournisseur.Prestataire">
+              <br />
+              {{getPrestataireInfo()}}
+            </span></td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(17)}}</mat-label>
+              <mat-select formControlName="CentreDeTriList" (selectionChange)="onEntiteSelected($event.value)" required [errorStateMatcher]="matcher">
+                <mat-option>
+                  <ngx-mat-select-search formControlName="CentreDeTriListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                         noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let centreDeTriList of filteredCentreDeTriList | async" [value]="centreDeTriList.RefEntite">{{centreDeTriList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('CentreDeTriList').value && form.get('CentreDeTriList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); onEntiteSelected(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('CentreDeTriList').touched || form.get('CentreDeTriList').dirty) && form.get('CentreDeTriList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(476)}}</mat-label>
+              <mat-select formControlName="AdresseList" required [errorStateMatcher]="matcher"
+                          (selectionChange)="onAdresseSelected($event.value)">
+                <mat-option *ngFor="let adresse of adresseList" [value]="adresse.RefAdresse">{{adresse.TexteAdresseList}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('AdresseList').value && form.get('AdresseList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('AdresseList').setValue(null)" tabindex="-1" type="button"
+                      (selectionChange)="onAdresseSelected(null)">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button *ngIf="form.get('AdresseList').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeFournisseurAdresse', form.get('AdresseList').value);" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('AdresseList').touched || form.get('AdresseList').dirty) && form.get('AdresseList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(474)}}</mat-label>
+              <input matInput formControlName="Libelle" maxlength="69" />
+              <button *ngIf="form.get('Libelle').value && form.get('Libelle').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Libelle').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(475)}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(476)}}</mat-label>
+              <input matInput formControlName="Adr1" maxlength="69" />
+              <button *ngIf="form.get('Adr1').value && form.get('Adr1').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Adr1').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(477)}}</mat-label>
+              <input matInput formControlName="Adr2" maxlength="69" />
+              <button *ngIf="form.get('Adr2').value && form.get('Adr2').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Adr2').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(65)}}</mat-label>
+              <input matInput formControlName="CodePostal" maxlength="9" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('CodePostal').value && form.get('CodePostal').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CodePostal').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('CodePostal').touched || form.get('CodePostal').dirty) && form.get('CodePostal').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(66)}}</mat-label>
+              <input matInput formControlName="Ville" maxlength="35" required [errorStateMatcher]="matcher"
+                     (input)="form.get('Ville').setValue(form.get('Ville').value.toUpperCase())" />
+              <button *ngIf="form.get('Ville').value && form.get('Ville').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Ville').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Ville').touched || form.get('Ville').dirty) && form.get('Ville').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(312)}}</mat-label>
+              <mat-select formControlName="PaysList" required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let pays of paysList" [value]="pays?.RefPays">{{pays.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('PaysList').value && form.get('PaysList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); form.get('PaysList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="blocContactAdresseVisible" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            <table class="table-no-pad-no-space">
+              <tr style="vertical-align:middle">
+                <td style="width:100%;">
+                  {{applicationUserContext.getCulturedRessourceText(17)}}
+                </td>
+                <td>
+                  <button mat-icon-button class="ev-button-left" type="button" (click)="onSave('EmailBLChargement');"
+                          *ngIf="commandeFournisseur.AdresseClient && commandeFournisseur.Transporteur
+                      &&(applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                        || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                    <mat-icon>mail</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(468)}}</mat-label>
+              <mat-select formControlName="ContactAdresseList" required [errorStateMatcher]="matcher" (selectionChange)="onContactAdresseSelected($event.value)">
+                <mat-option *ngFor="let contactAdresse of contactAdresseList" [value]="contactAdresse.RefContactAdresse">{{contactAdresse.ListText}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ContactAdresseList').value && form.get('ContactAdresseList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('ContactAdresseList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button *ngIf="form.get('ContactAdresseList').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeFournisseurContactAdresse', form.get('ContactAdresseList').value); " tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('ContactAdresseList').touched || form.get('ContactAdresseList').dirty) && form.get('ContactAdresseList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(469)}}</mat-label>
+              <mat-select formControlName="CiviliteList" required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let civilite of civiliteList" [value]="civilite.RefCivilite">{{civilite.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('CiviliteList').value && form.get('CiviliteList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('CiviliteList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('CiviliteList').touched || form.get('CiviliteList').dirty) && form.get('CiviliteList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(470)}}</mat-label>
+              <input matInput formControlName="Prenom" maxlength="50" [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('Prenom').value && form.get('Prenom').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Prenom').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(471)}}</mat-label>
+              <input matInput formControlName="Nom" maxlength="50" required [errorStateMatcher]="matcher"
+                     (input)="form.get('Nom').setValue(form.get('Nom').value.toUpperCase())" />
+              <button *ngIf="form.get('Nom').value && form.get('Nom').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Nom').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Nom').touched || form.get('Nom').dirty) && form.get('Nom').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(419)}}</mat-label>
+              <input matInput formControlName="Email" maxlength="200" />
+              <button *ngIf="form.get('Email').value && form.get('Email').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Email').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(417)}}</mat-label>
+              <input matInput formControlName="Tel" maxlength="20" />
+              <button *ngIf="form.get('Tel').value && form.get('Tel').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Tel').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(437)}}</mat-label>
+              <input matInput formControlName="TelMobile" maxlength="20" />
+              <button *ngIf="form.get('TelMobile').value && form.get('TelMobile').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('TelMobile').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(478)}}</mat-label>
+              <textarea matInput formControlName="Horaires" maxlength="500" style="height:70px;"></textarea>
+              <button *ngIf="form.get('Horaires').value && form.get('Horaires').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Horaires').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(479)}}</mat-hint>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="blocClientVisible" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            <table class="table-no-pad-no-space">
+              <tr style="vertical-align:middle">
+                <td style="width:100%;">
+                  {{applicationUserContext.getCulturedRessourceText(16)}}
+                </td>
+                <td>
+                  <button mat-icon-button class="ev-button-left" type="button" (click)="onSave('EmailBLClient');"
+                          *ngIf="commandeFournisseur.AdresseClient && commandeFournisseur.Transporteur
+                      &&(applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                        || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                    <mat-icon>mail</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(16)}}</mat-label>
+              <mat-select formControlName="ClientList" (selectionChange)="onClientSelected($event.value)">
+                <mat-option *ngFor="let client of clientList" [value]="client.RefEntite">{{client.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ClientList').value && form.get('ClientList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); onClientSelected(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(476)}}</mat-label>
+              <mat-select formControlName="ClientAdresseList" required [errorStateMatcher]="matcher"
+                          (selectionChange)="onClientAdresseSelected($event.value)">
+                <mat-option *ngFor="let adresse of clientAdresseList" [value]="adresse.RefAdresse">{{adresse.TexteAdresseList}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ClientAdresseList').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeFournisseurClientAdresse', form.get('ClientAdresseList').value);" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('ClientAdresseList').touched || form.get('ClientAdresseList').dirty) && form.get('ClientAdresseList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(468)}}</mat-label>
+              <mat-select formControlName="ClientContactAdresseList" required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let contactAdresse of clientContactAdresseList" [value]="contactAdresse.RefContactAdresse">{{contactAdresse.ListText}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ClientContactAdresseList').value && form.get('ClientContactAdresseList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('ClientContactAdresseList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button *ngIf="form.get('ClientContactAdresseList').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeFournisseurClientContactAdresse', form.get('ClientContactAdresseList').value);" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('ClientContactAdresseList').touched || form.get('ClientContactAdresseList').dirty) && form.get('ClientContactAdresseList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="blocChargementVisible" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">{{applicationUserContext.getCulturedRessourceText(472)}}</td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(56)}}</mat-label>
+              <input matInput formControlName="PoidsChargement" mask="separator" required [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
+              <button *ngIf="form.get('PoidsChargement').value!=null && form.get('PoidsChargement').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PoidsChargement').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('PoidsChargement').touched || form.get('PoidsChargement').dirty) && form.get('PoidsChargement').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('PoidsChargement').touched || form.get('PoidsChargement').dirty) && form.get('PoidsChargement').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('PoidsChargement').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(50)}}</mat-label>
+              <input matInput formControlName="NbBalleChargement" mask="separator" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('NbBalleChargement').value!=null && form.get('NbBalleChargement').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('NbBalleChargement').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('NbBalleChargement').touched || form.get('NbBalleChargement').dirty) && form.get('NbBalleChargement').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('NbBalleChargement').touched || form.get('NbBalleChargement').dirty) && form.get('NbBalleChargement').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('NbBalleChargement').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="ev-date-picker" style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(441)}}</mat-label>
+              <input matInput [matDatepicker]="pickerDChargementPrevue" formControlName="DChargementPrevue" [required]="dChargementPrevueFCRequired" [errorStateMatcher]="matcher" (dateChange)="onDChargementPrevueDateChange($event.value)">
+              <mat-datepicker-toggle matIconPrefix [for]="pickerDChargementPrevue"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDChargementPrevue></mat-datepicker>
+              <button *ngIf="form.get('DChargementPrevue').value && form.get('DChargementPrevue').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="onDChargementPrevueDateChange(null)">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('DChargementPrevue').touched || form.get('DChargementPrevue').dirty) && form.get('DChargementPrevue').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(535)}}</mat-label>
+              <input matInput formControlName="HoraireChargementPrevu" maxlength="5" mask="00:00" [dropSpecialCharacters]="false" [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('HoraireChargementPrevu').value && form.get('HoraireChargementPrevu').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('HoraireChargementPrevu').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(485)}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field class="ev-date-picker" style="width:100%;" *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(486)}}</mat-label>
+              <input matInput [matDatepicker]="pickerDChargement" formControlName="DChargement" [required]="dChargementFCRequired" [errorStateMatcher]="matcher">
+              <mat-datepicker-toggle matIconPrefix [for]="pickerDChargement"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDChargement></mat-datepicker>
+              <button *ngIf="form.get('DChargement').value && form.get('DChargement').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('DChargement').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('DChargement').touched || form.get('DChargement').dirty) && form.get('DChargement').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(480)}}</mat-label>
+              <input matInput formControlName="PoidsReparti" mask="separator" [required]="poidsRepartiFCRequired" [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
+              <button *ngIf="form.get('PoidsReparti').value!=null && form.get('PoidsReparti').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PoidsReparti').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('PoidsReparti').touched || form.get('PoidsReparti').dirty) && form.get('PoidsReparti').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('PoidsReparti').touched || form.get('PoidsReparti').dirty) && form.get('PoidsReparti').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('PoidsReparti').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+              <mat-error align="end" *ngIf="form.errors?.poidsChargementLessThanPoidsReparti">{{applicationUserContext.getCulturedRessourceText(519)}}</mat-error>
+            </mat-form-field>
+            <mat-checkbox formControlName="ChargementEffectue" style="width:100%;" (change)="onChargementEffectueChange()"
+                          *ngIf="form.get('ChargementAnnule').value==false">
+              {{applicationUserContext.getCulturedRessourceText(481)}}
+            </mat-checkbox>
+            <table class="table-no-pad-no-space">
+              <tr>
+                <td style="width:100%;">
+                  <mat-checkbox formControlName="ChargementAnnule"
+                                *ngIf="form.get('ChargementEffectue').value==false">
+                    {{applicationUserContext.getCulturedRessourceText(1246)}}
+                  </mat-checkbox>
+                </td>
+                <td>
+                  <mat-icon class="color-grey" [matTooltip]="getChargementAnnuleTooltipText()" style="font-size:20px;"
+                            *ngIf="form.get('ChargementAnnule').value==true">info</mat-icon>
+                </td>
+              </tr>
+            </table>
+            <mat-form-field style="width:100%;" *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri')
+                            && form.get('ChargementAnnule').value==true">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1247)}}</mat-label>
+              <textarea matInput formControlName="CmtChargementAnnule" maxlength="500" style="height:45px;"></textarea>
+              <button *ngIf="form.get('CmtChargementAnnule').value && form.get('CmtChargementAnnule').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CmtChargementAnnule').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-checkbox formControlName="LotControle" style="width:100%;"
+                          *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                          || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                          || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Client'
+                          || (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri' && applicationUserContext.connectedUtilisateur?.CentreDeTri?.AutoControle == true))">
+              {{applicationUserContext.getCulturedRessourceText(498)}}
+            </mat-checkbox>
+            <mat-form-field style="width:100%;" *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri')
+                          && form.get('ChargementAnnule').value!=true">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(484)}}</mat-label>
+              <textarea matInput formControlName="CmtFournisseur" maxlength="5000" style="height:55px;"></textarea>
+              <button *ngIf="form.get('CmtFournisseur').value" matIconSuffix mat-icon-button aria-label="Details" (click)="cmtFournisseurVisible=true" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+              <button *ngIf="form.get('CmtFournisseur').value && form.get('CmtFournisseur').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CmtFournisseur').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="blocDechargementVisible" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">{{applicationUserContext.getCulturedRessourceText(473)}}</td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(56)}}</mat-label>
+              <input matInput formControlName="PoidsDechargement" mask="separator" [required]="poidsDechargementFCRequired" [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
+              <button *ngIf="form.get('PoidsDechargement').value!=null && form.get('PoidsDechargement').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PoidsDechargement').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('PoidsDechargement').touched || form.get('PoidsDechargement').dirty) && form.get('PoidsDechargement').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('PoidsDechargement').touched || form.get('PoidsDechargement').dirty) && form.get('PoidsDechargement').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('PoidsDechargement').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+              <mat-hint class="color-accent-dark" align="end" *ngIf="form.errors?.poidsChargementAwayFromPoidsDechargement && !form.errors?.refusCamionPoidsDechargementRelatedData">{{applicationUserContext.getCulturedRessourceText(515)}}</mat-hint>
+              <mat-hint class="color-accent-dark" align="end" *ngIf="form.errors?.refusCamionPoidsDechargementRelatedData">{{applicationUserContext.getCulturedRessourceText(518)}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(50)}}</mat-label>
+              <input matInput formControlName="NbBalleDechargement" mask="separator" [required]="nbBalleDechargementFCRequired" [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('NbBalleDechargement').value!=null && form.get('NbBalleDechargement').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('NbBalleDechargement').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('NbBalleDechargement').touched || form.get('NbBalleDechargement').dirty) && form.get('NbBalleDechargement').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('NbBalleDechargement').touched || form.get('NbBalleDechargement').dirty) && form.get('NbBalleDechargement').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('NbBalleDechargement').errors?.max?.max | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+              <mat-hint class="color-accent-dark" align="end" *ngIf="form.errors?.nbBalleChargementAwayFrombBalleDechargement && !form.errors?.refusCamionNbBalleDechargementRelatedData">{{applicationUserContext.getCulturedRessourceText(520)}}</mat-hint>
+              <mat-hint class="color-accent-dark" align="end" *ngIf="form.errors?.refusCamionNbBalleDechargementRelatedData">{{applicationUserContext.getCulturedRessourceText(518)}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field class="ev-date-picker" style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(442)}}</mat-label>
+              <input matInput [matDatepicker]="pickerDDechargementPrevue" formControlName="DDechargementPrevue" [required]="dDechargementPrevueFCRequired" [errorStateMatcher]="matcher" (dateChange)="onDDechargementPrevueDateChange($event.value)">
+              <mat-datepicker-toggle matIconPrefix [for]="pickerDDechargementPrevue"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDDechargementPrevue></mat-datepicker>
+              <button *ngIf="form.get('DDechargementPrevue').value && form.get('DDechargementPrevue').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="onDDechargementPrevueDateChange(null)">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('DDechargementPrevue').touched || form.get('DDechargementPrevue').dirty) && form.get('DDechargementPrevue').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="form.errors?.dDechargementPrevueBeforeDChargementPrevue">{{applicationUserContext.getCulturedRessourceText(517)}}</mat-error>
+              <mat-error align="end" *ngIf="form.errors?.dDechargementPrevueOutOfDMoisDechargementPrevu
+                                       && applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'">{{applicationUserContext.getCulturedRessourceText(564)}}</mat-error>
+              <mat-hint class="color-accent-dark" align="end" *ngIf="form.errors?.dDechargementPrevueOutOfDMoisDechargementPrevu
+                                      && applicationUserContext.connectedUtilisateur.HabilitationLogistique!=='Transporteur'">{{applicationUserContext.getCulturedRessourceText(564)}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(535)}}</mat-label>
+              <input matInput formControlName="HoraireDechargementPrevu" maxlength="5" mask="00:00" [dropSpecialCharacters]="false" [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('HoraireDechargementPrevu').value && form.get('HoraireDechargementPrevu').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('HoraireDechargementPrevu').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(445)}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field class="ev-date-picker" style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(277)}}</mat-label>
+              <input matInput [matDatepicker]="pickerDDechargement" formControlName="DDechargement" [required]="dDechargementFCRequired" [errorStateMatcher]="matcher" (dateChange)="onDDechargementDateChange($event.value)">
+              <mat-datepicker-toggle matIconPrefix [for]="pickerDDechargement"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDDechargement></mat-datepicker>
+              <button *ngIf="form.get('DDechargement').value && form.get('DDechargement').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="onDDechargementDateChange(null)">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('DDechargement').touched || form.get('DDechargement').dirty) && form.get('DDechargement').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="form.errors?.dDechargementBeforeDChargement">{{applicationUserContext.getCulturedRessourceText(516)}}</mat-error>
+              <mat-hint class="color-accent-dark" align="end" *ngIf="form.errors?.refusCamionDDechargementRelatedData">{{applicationUserContext.getCulturedRessourceText(518)}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(510)}}</mat-label>
+              <input matInput formControlName="PrixTonneHT" mask="separator.2" required [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
+              <button *ngIf="form.get('PrixTonneHT').value!=null && form.get('PrixTonneHT').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PrixTonneHT').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint class="color-accent-dark" align="end" *ngIf="form.errors?.prixTonneHTEquals0">{{applicationUserContext.getCulturedRessourceText(512)}}</mat-hint>
+              <mat-error align="end" *ngIf="(form.get('PrixTonneHT').touched || form.get('PrixTonneHT').dirty) && form.get('PrixTonneHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('PrixTonneHT').touched || form.get('PrixTonneHT').dirty) && form.get('PrixTonneHT').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('PrixTonneHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(482)}}</mat-label>
+              <textarea matInput formControlName="CmtClient" maxlength="200" style="height:45px;"></textarea>
+              <button *ngIf="form.get('CmtClient').value && form.get('CmtClient').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CmtClient').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-checkbox formControlName="ValideDPrevues" style="width:100%;" (change)="onValideDPrevuesChange()">
+              {{applicationUserContext.getCulturedRessourceText(511)}}
+            </mat-checkbox>
+            <br />
+            <mat-checkbox formControlName="RefusCamion" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(237)}}</mat-checkbox>
+            <br />
+            <mat-checkbox formControlName="NonRepartissable" style="width:100%;"
+                          *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')">
+              {{applicationUserContext.getCulturedRessourceText(1058)}}
+            </mat-checkbox>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="blocAnomalieChargementVisible" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            <table class="table-no-pad-no-space">
+              <tr style="vertical-align:middle">
+                <td style="width:100%;">
+                  {{applicationUserContext.getCulturedRessourceText(501)}}
+                  <span *ngIf="formattedDAnomalieChargement!==''"><br />{{applicationUserContext.getCulturedRessourceText(506)}}&nbsp;{{formattedDAnomalieChargement}}</span>
+                  <span *ngIf="formattedDTraitementAnomalieChargement!==''"><br />{{applicationUserContext.getCulturedRessourceText(507)}}&nbsp;{{formattedDTraitementAnomalieChargement}}</span>
+                </td>
+                <td>
+                  <button mat-icon-button class="ev-button-left" type="button" (click)="onSave('EmailAnomalieChargement');"
+                          *ngIf="form.get('MotifAnomalieChargementList').value
+                            && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                    <mat-icon>mail</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-checkbox formControlName="TraitementAnomalieChargement" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(502)}}</mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(581)}}</mat-label>
+              <mat-select formControlName="MotifAnomalieChargementList">
+                <mat-option *ngFor="let motifAnomalieChargement of motifAnomalieChargementList" [value]="motifAnomalieChargement.RefMotifAnomalieChargement">{{motifAnomalieChargement.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('MotifAnomalieChargementList').value && form.get('MotifAnomalieChargementList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('MotifAnomalieChargementList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('MotifAnomalieChargementList').touched || form.get('MotifAnomalieChargementList').dirty) && form.get('MotifAnomalieChargementList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+              <textarea matInput formControlName="CmtAnomalieChargement" maxlength="500" style="height:80px;"></textarea>
+              <button *ngIf="form.get('CmtAnomalieChargement').value && form.get('CmtAnomalieChargement').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CmtAnomalieChargement').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="blocAnomalieTransporteurVisible" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            <table class="table-no-pad-no-space">
+              <tr style="vertical-align:middle">
+                <td style="width:100%;">
+                  {{applicationUserContext.getCulturedRessourceText(509)}}
+                  <span *ngIf="formattedDAnomalieTransporteur!==''"><br />{{applicationUserContext.getCulturedRessourceText(506)}}&nbsp;{{formattedDAnomalieTransporteur}}</span>
+                  <span *ngIf="formattedDTraitementAnomalieTransporteur!==''"><br />{{applicationUserContext.getCulturedRessourceText(507)}}&nbsp;{{formattedDTraitementAnomalieTransporteur}}</span>
+                </td>
+                <td>
+                  <button mat-icon-button class="ev-button-left" type="button" (click)="onSave('EmailAnomalieTransporteur');"
+                          *ngIf="form.get('MotifAnomalieTransporteurList').value
+                            && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                    <mat-icon>mail</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-checkbox formControlName="TraitementAnomalieTransporteur" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(502)}}</mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(581)}}</mat-label>
+              <mat-select formControlName="MotifAnomalieTransporteurList">
+                <mat-option *ngFor="let motifAnomalieTransporteur of motifAnomalieTransporteurList" [value]="motifAnomalieTransporteur.RefMotifAnomalieTransporteur">{{motifAnomalieTransporteur.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('MotifAnomalieTransporteurList').value && form.get('MotifAnomalieTransporteurList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('MotifAnomalieTransporteurList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('MotifAnomalieTransporteurList').touched || form.get('MotifAnomalieTransporteurList').dirty) && form.get('MotifAnomalieTransporteurList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+              <textarea matInput formControlName="CmtAnomalieTransporteur" maxlength="500" style="height:80px;"></textarea>
+              <button *ngIf="form.get('CmtAnomalieTransporteur').value && form.get('CmtAnomalieTransporteur').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CmtAnomalieTransporteur').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="blocAnomalieClientVisible" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            <table class="table-no-pad-no-space">
+              <tr style="vertical-align:middle">
+                <td style="width:100%;">
+                  {{applicationUserContext.getCulturedRessourceText(508)}}
+                  <span *ngIf="formattedDAnomalieClient!==''"><br />{{applicationUserContext.getCulturedRessourceText(506)}}&nbsp;{{formattedDAnomalieClient}}</span>
+                  <span *ngIf="formattedDTraitementAnomalieClient!==''"><br />{{applicationUserContext.getCulturedRessourceText(507)}}&nbsp;{{formattedDTraitementAnomalieClient}}</span>
+                </td>
+                <td>
+                  <button mat-icon-button class="ev-button-left" type="button" (click)="onSave('EmailAnomalieClient');"
+                          *ngIf="form.get('MotifAnomalieClientList').value
+                            && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                    <mat-icon>mail</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-checkbox formControlName="TraitementAnomalieClient" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(502)}}</mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(581)}}</mat-label>
+              <mat-select formControlName="MotifAnomalieClientList">
+                <mat-option *ngFor="let motifAnomalieClient of motifAnomalieClientList" [value]="motifAnomalieClient.RefMotifAnomalieClient">{{motifAnomalieClient.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('MotifAnomalieClientList').value && form.get('MotifAnomalieClientList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('MotifAnomalieClientList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('MotifAnomalieClientList').touched || form.get('MotifAnomalieClientList').dirty) && form.get('MotifAnomalieClientList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+              <textarea matInput formControlName="CmtAnomalieClient" maxlength="500" style="height:80px;"></textarea>
+              <button *ngIf="form.get('CmtAnomalieClient').value && form.get('CmtAnomalieClient').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CmtAnomalieClient').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="blocCommandeFournisseurFichiersVisible" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(623)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="table-no-pad-no-space" style="width:100%;" *ngIf="commandeFournisseur.CommandeFournisseurFichiers?.length>0">
+              <tr *ngFor="let cmdFF of commandeFournisseur.CommandeFournisseurFichiers; let i=index;">
+                <td style="padding: 0px 5px 0px 5px; width:40px;">
+                  <button mat-icon-button (click)="onDeleteCommandeFournisseurFichier(i)" type="button"
+                          *ngIf="!locked">
+                    <mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon>
+                  </button>
+                </td>
+                <td style="padding: 0px 5px 0px 5px;cursor:pointer;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
+                    (click)="getFile('CommandeFournisseurFichier', cmdFF.RefCommandeFournisseurFichier); ">
+                  {{cmdFF.Nom}}
+                </td>
+                <td style="padding: 0px 5px 0px 5px; width:70px; text-align:center;">
+                  <img id="image" [src]="'data:image/jpeg;base64,'+cmdFF.MiniatureBase64" height="50"
+                       (click)="showPictures('CommandeFournisseur', cmdFF.RefCommandeFournisseur, cmdFF.RefCommandeFournisseurFichier); "
+                       style="cursor:pointer;" *ngIf="cmdFF.MiniatureBase64" matTooltip={{applicationUserContext.getCulturedRessourceText(1392)}}>
+                  <mat-icon aria-hidden="false" aria-label="Fichier" fontIcon="description" class="color-grey"
+                            *ngIf="!cmdFF.MiniatureBase64"></mat-icon>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+<div class="k-elevation-4" *ngIf="cmtFournisseurVisible" [@fadeInOnEnter]
+         cdkDrag style="position:absolute; top:75px; right:50px;height:50%; width:30%; background-color:white; border:thin solid black;">
+  <table class="table-no-pad-no-space" style="width: 100%; height: 100%; box-sizing: border-box;">
+    <tr>
+      <td class="background-color-accent">
+        <table class="table-no-pad-no-space" style="width:100%;">
+          <tr>
+            <td style="width:100%; padding:0 0 0 10px; font-weight:700;">{{applicationUserContext.getCulturedRessourceText(484)}}</td>
+            <td><mat-icon style="cursor:pointer;" (click)="cmtFournisseurVisible=false;">close</mat-icon></td>
+            <td><mat-icon cdkDragHandle style="cursor:grab;">drag_indicator</mat-icon></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr style="height:100%;" class="background-color-accent-light">
+      <td style="padding:10px 10px 5px 5px;">
+        <textarea matInput maxlength="5000" style="height: 95%; width: 100%;" readonly>{{commandeFournisseur.CmtFournisseur}}</textarea>
+      </td>
+    </tr>
+  </table>
+</div>

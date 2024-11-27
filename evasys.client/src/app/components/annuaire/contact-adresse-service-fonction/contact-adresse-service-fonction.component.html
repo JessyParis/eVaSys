@@ -1,0 +1,46 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-raised-button color="primary" [disabled]="!form.get('ServiceList').value && !form.get('FonctionList').value"
+                class="ev-button-left" type="button" (click)="onSave()"
+                *ngIf="!locked">
+          {{applicationUserContext.getCulturedRessourceText(45)}}
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button mat-raised-button color="warn" class="ev-button-left" type="button" mat-dialog-close="">
+          {{applicationUserContext.getCulturedRessourceText(133)}}
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="mat-dialog-content">
+    <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+      <mat-form-field style="width:100%;">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(10010)}}</mat-label>
+        <mat-select formControlName="ServiceList">
+          <mat-option *ngFor="let service of serviceList" [value]="service.RefService">{{service.Libelle}}</mat-option>
+        </mat-select>
+        <button *ngIf="form.get('ServiceList').value && form.get('ServiceList').enabled"
+                matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('ServiceList').setValue(null);" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error align="end" *ngIf="(form.get('ServiceList').touched || form.get('ServiceList').dirty) && form.get('ServiceList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+      </mat-form-field>
+      <mat-form-field style="width:100%;">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(10014)}}</mat-label>
+        <mat-select formControlName="FonctionList">
+          <mat-option *ngFor="let fonction of fonctionList" [value]="fonction.RefFonction">{{fonction.Libelle}}</mat-option>
+        </mat-select>
+        <button *ngIf="form.get('FonctionList').value && form.get('FonctionList').enabled"
+                matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('FonctionList').setValue(null);" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error align="end" *ngIf="(form.get('FonctionList').touched || form.get('FonctionList').dirty) && form.get('FonctionList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

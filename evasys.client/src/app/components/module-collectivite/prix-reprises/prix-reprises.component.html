@@ -1,0 +1,101 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+      </div>
+    </div>
+  </header>
+  <div class="ev-dataform-container">
+    <table style="height: 100%; width: 100%;" class="ev-table-spacy" [class.border-top-grey]="applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite">
+      <tr>
+        <td [class.background-color-primary-light]="!applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite"
+            class="border-right-grey"
+            style="width: 250px; min-width:250px; vertical-align: top;">
+          <table style="width:100%;">
+            <tr *ngIf="!applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite">
+              <td style="text-align:center;"><img alt="visuel" src="assets/images/emballages-plastiques.png" /></td>
+            </tr>
+            <tr *ngIf="!applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite">
+              <td><h2>{{currentMonth}}</h2></td>
+            </tr>
+            <tr *ngIf="!applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite">
+              <td style="padding:0 10px 10px 10px;">
+                <mat-divider style="border-top-color:white !important; border-top-width:medium !important"></mat-divider>
+                {{applicationUserContext.getCulturedRessourceText(1350)}}
+                <mat-divider style="border-top-color:white !important; border-top-width:medium !important"></mat-divider>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:250px; min-width:250px; padding:10px 20px 0 20px;">
+                <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Filtre">
+                  <mat-chip-option [selected]="applicationUserContext.filterCollecte=='Collecte'" value="Collecte"
+                                   (selectionChange)="onChipChange($event)" style="height:40px;" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(1351)}}
+                  </mat-chip-option>
+                  <mat-chip-option [selected]="applicationUserContext.filterCollecte=='HorsCollecte'" value="HorsCollecte"
+                                   (selectionChange)="onChipChange($event)" style="height:40px;" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(1352)}}
+                  </mat-chip-option>
+                  <mat-chip-option [selected]="applicationUserContext.filterCollecte=='DansOuHorsCollecte'" value="DansOuHorsCollecte"
+                                   (selectionChange)="onChipChange($event)" style="height:40px;" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(1353)}}
+                  </mat-chip-option>
+                </mat-chip-listbox>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td style="vertical-align: top; width: 800px; min-width: 800px;" class="border-right-grey">
+          <table style="width:100%;">
+            <tr *ngIf="applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite">
+              <td class="color-primary-a-medium" style="font-size: x-large; font-weight: 600; padding: 10px 0 20px 10px; width: 250px; min-width: 250px;">
+                {{currentMonth}}
+              </td>
+              <td style="font-size:small;">{{applicationUserContext.getCulturedRessourceText(1350)}}</td>
+            </tr>
+            <tr *ngFor="let cPR of collectiviteStandards" style="vertical-align: top;" [@fadeInOnEnter]>
+              <td style="width: 250px; min-width:250px;" class="border-right-grey border-top-grey">
+                <table style="width:100%;">
+                  <tr style="vertical-align: top;">
+                    <td class="mat-caption color-grey">
+                      {{applicationUserContext.getCulturedRessourceText(10038)}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h2>{{cPR.StandardLibelle}}</h2>
+                      {{cPR.StandardCmt}}
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td class="border-top-grey">
+                <table style="width:100%;">
+                  <tr class="mat-caption color-grey border-top-grey" style="vertical-align: top;">
+                    <td>
+                      {{applicationUserContext.getCulturedRessourceText(1354)}}
+                    </td>
+                    <td colspan="2" style="width: 150px; text-align:right;">
+                      {{applicationUserContext.getCulturedRessourceText(1355)}}
+                    </td>
+                  </tr>
+                  <tr *ngFor="let cPR of getPRs(cPR.StandardLibelle)" style="vertical-align:middle; height:50px;">
+                    <td class="border-top-grey">
+                      {{cPR.ProduitNomCommun}}
+                    </td>
+                    <td style="width: 150px; text-align: right; font-size:large; font-weight:500;" class="border-top-grey">
+                      {{cPR.PUHT}}
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td style="width:100%;"></td>
+      </tr>
+    </table>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

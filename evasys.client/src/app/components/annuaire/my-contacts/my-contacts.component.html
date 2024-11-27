@@ -1,0 +1,303 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container" style="padding:0 0 10px 0;">
+        <button mat-raised-button color="primary" class="ev-button-left" [disabled]="modifying" (click)="modifying=!modifying;"
+                type="button" *ngIf="locked==false">{{applicationUserContext.getCulturedRessourceText(1370)}}</button>
+      </div>
+    </div>
+  </header>
+  <div class="ev-dataform-container">
+    <table style="height:100%; width:100%;" class="ev-table-spacy">
+      <tr>
+        <td class="background-color-primary-light" style="width: 250px; vertical-align: top;">
+          <table style="width:100%;">
+            <tr>
+              <td style="text-align:center;"><img alt="visuel" src="assets/images/ville.png" /></td>
+            </tr>
+            <tr>
+              <td style="padding:0 10px 0 10px; font-size:large; font-weight:500;">{{entite?.Libelle}}</td>
+            </tr>
+            <tr>
+              <td style="padding: 0 10px 10px 10px; font-size: medium; font-weight: 500;">{{entite?.CodeEE}}</td>
+            </tr>
+            <tr>
+              <td style="padding:0 10px 10px 10px;">
+                <div *ngIf="entite?.EntiteType.RefEntiteType==4 || entite?.EntiteType.RefEntiteType==2 || entite?.EntiteType.RefEntiteType==1 || entite?.AssujettiTVA || entite?.PopulationContratN || entite?.ContratCollectivites?.length>0">
+                  <mat-divider style="border-top-color:white !important; border-top-width:medium !important"></mat-divider>
+                  <ul>
+                    <li *ngIf="entite?.EntiteType.RefEntiteType===4 || entite?.EntiteType.RefEntiteType==2 || entite?.EntiteType.RefEntiteType===1 || entite?.EntiteType.RefEntiteType===3">{{applicationUserContext.getCulturedRessourceText(787)}}&nbsp;-&nbsp;{{entite?.AssujettiTVA ? applicationUserContext.getCulturedRessourceText(205) : applicationUserContext.getCulturedRessourceText(206)}}</li>
+                    <li *ngIf="entite?.AssujettiTVA">{{applicationUserContext.getCulturedRessourceText(788)}}&nbsp;-&nbsp;{{entite?.CodeTVA}}</li>
+                    <li *ngIf="entite?.PopulationContratN">{{applicationUserContext.getCulturedRessourceText(1356)}}&nbsp;-&nbsp;{{entite?.PopulationContratN.toString()}}</li>
+                    <li *ngIf="entite?.ContratCollectivites?.length>0">{{lastContratCollectivites}}</li>
+                    <li *ngIf="entite?.EcoOrganisme">{{applicationUserContext.getCulturedRessourceText(1416)}}&nbsp;-&nbsp;{{entite?.EcoOrganisme?.Libelle}}</li>
+                    <li *ngIf="entite?.IdNational">{{applicationUserContext.getCulturedRessourceText(1421)}}&nbsp;-&nbsp;{{entite?.IdNational}}</li>
+                  </ul>
+                </div>
+                <div *ngIf="entite?.EntiteStandards?.length>0">
+                  <mat-divider style="border-top-color:white !important; border-top-width:medium !important"></mat-divider>
+                  <div class="color-grey">{{applicationUserContext.getCulturedRessourceText(1360)}}</div>
+                  <ul *ngIf="entite?.EntiteStandards?.length>0">
+                    <li *ngFor="let eS of entite?.EntiteStandards">{{eS.Standard.Libelle}}</li>
+                  </ul>
+                </div>
+                <div *ngIf="entite?.EntiteType.RefEntiteType==1 && centreDeTriAssocies.length>0">
+                  <mat-divider style="border-top-color:white !important; border-top-width:medium !important"></mat-divider>
+                  <div class="color-grey">{{applicationUserContext.getCulturedRessourceText(1167)}}</div>
+                  <ul *ngIf="centreDeTriAssocies.length>0">
+                    <li *ngFor="let eE of centreDeTriAssocies">{{eE.LibelleEntiteRtt}}</li>
+                  </ul>
+                </div>
+                <div *ngIf="entite?.EntiteType.RefEntiteType==3">
+                  <mat-divider style="border-top-color:white !important; border-top-width:medium !important"></mat-divider>
+                  <div class="color-grey">{{applicationUserContext.getCulturedRessourceText(1170)}}</div>
+                  <ul *ngIf="!(entite?.EntiteCamionTypes?.length>0)">
+                    <li>{{applicationUserContext.getCulturedRessourceText(1422)}}</li>
+                  </ul>
+                  <ul *ngIf="entite?.EntiteCamionTypes?.length>0">
+                    <li *ngFor="let eCT of entite?.EntiteCamionTypes">{{eCT.CamionType.Libelle}}</li>
+                  </ul>
+                </div>
+                <div *ngIf="entite?.EntiteType.RefEntiteType==2">
+                  <mat-divider style="border-top-color:white !important; border-top-width:medium !important"></mat-divider>
+                  <div class="color-grey">{{applicationUserContext.getCulturedRessourceText(1169)}}</div>
+                  <ul *ngIf="!(entite?.EntiteCamionTypes?.length>0)">
+                    <li>{{applicationUserContext.getCulturedRessourceText(1422)}}</li>
+                  </ul>
+                  <ul *ngIf="entite?.EntiteCamionTypes?.length>0">
+                    <li *ngFor="let eCT of entite?.EntiteCamionTypes">{{eCT.CamionType.Libelle}}</li>
+                  </ul>
+                </div>
+                <div *ngIf="entite?.EntiteType.RefEntiteType==3 && produitAssocies.length>0">
+                  <mat-divider style="border-top-color:white !important; border-top-width:medium !important"></mat-divider>
+                  <div class="color-grey">{{applicationUserContext.getCulturedRessourceText(1423)}}</div>
+                  <ul *ngIf="produitAssocies.length>0">
+                    <li *ngFor="let eP of produitAssocies">{{eP.Produit.Libelle}}</li>
+                  </ul>
+                </div>
+                <div *ngIf="entite?.EntiteType.RefEntiteType==3 && collectiviteAssociees.length>0">
+                  <mat-divider style="border-top-color:white !important; border-top-width:medium !important"></mat-divider>
+                  <div class="color-grey">{{applicationUserContext.getCulturedRessourceText(1159)}}</div>
+                  <ul *ngIf="collectiviteAssociees.length>0" style="max-height:30vh; overflow-y:auto;">
+                    <li *ngFor="let eE of collectiviteAssociees">{{eE.LibelleEntiteRtt}}</li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td style="vertical-align:top;">
+          <table style="width:100%;">
+            <tr *ngIf="entite?.ContactAdresses?.length>0" style="vertical-align: top;">
+              <td class="border-right-grey border-top-grey" style="width: 250px;">
+                <div class="mat-caption color-grey">{{applicationUserContext.getCulturedRessourceText(1190)}}</div>
+              </td>
+              <td class="border-top-grey">
+                <table style="width:100%;">
+                  <tr class="mat-caption color-grey">
+                    <td>
+                      {{applicationUserContext.getCulturedRessourceText(1145)}}
+                    </td>
+                    <td style="width: 250px; text-align:right;">
+                      {{applicationUserContext.getCulturedRessourceText(420)}}
+                    </td>
+                  </tr>
+                  <tr *ngFor="let ctc of entite?.ContactAdresses" [@fadeInOnEnter]>
+                    <td class="border-top-grey">
+                      <table style="width: 100%;">
+                        <tr style="vertical-align: top;">
+                          <td>
+                            <div class="ev-person-circle">
+                              <span class="ev-person-circle-icone"><mat-icon aria-label="Person" class="color-white material-icons-outlined">person</mat-icon></span>
+                            </div>
+                          </td>
+                          <td style="min-width:300px;">
+                            <div class="mat-body-strong">{{ctc.Contact.Prenom}}&nbsp;{{ctc.Contact.Nom}}</div>
+                            <div class="mat-body" *ngFor="let sF of ctc.ContactAdresseServiceFonctions">
+                              <span *ngIf="sF.Service">{{sF.Service.Libelle}}</span><span *ngIf="sF.Service && sF.Fonction">&nbsp;-&nbsp;</span><span *ngIf="sF.Fonction">{{sF.Fonction.Libelle}}</span>
+                            </div>
+                          </td>
+                          <td style="width:100%;">
+                            <table>
+                              <tr *ngIf="ctc.Tel" style="vertical-align:middle;">
+                                <td style="padding: 0 10px 0 0;">
+                                  <mat-icon aria-label="Telephone" class="color-primary-medium-light material-icons-outlined">phone</mat-icon>
+                                </td>
+                                <td style="width: 100%; padding: 0 10px 0 0;">
+                                  {{ctc.Tel}}
+                                </td>
+                              </tr>
+                              <tr *ngIf="ctc.TelMobile" style="vertical-align:middle;">
+                                <td style="padding: 0 10px 0 0;">
+                                  <mat-icon aria-label="Mobile" class="color-primary-medium-light material-icons-outlined">smartphone</mat-icon>
+                                </td>
+                                <td style="padding: 0 10px 0 0;">
+                                  {{ctc.TelMobile}}
+                                </td>
+                              </tr>
+                              <tr *ngIf="ctc.Email" style="vertical-align:middle;">
+                                <td style="padding: 0 10px 0 0;">
+                                  <mat-icon aria-label="Email" class="color-primary-medium-light material-icons-outlined">email</mat-icon>
+                                </td>
+                                <td style="padding: 0 10px 0 0;">
+                                  <a [href]="'mailto:' + ctc.Email" class="ev-hl-black">{{ctc.Email}}</a>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td style="width:250px; vertical-align:top; text-align:right;" class="border-top-grey">
+                      <div *ngIf="ctc.ContactAdresseContactAdresseProcesss && ctc.ContactAdresseContactAdresseProcesss.length>0">
+                        <div class="color-primary" *ngFor="let cAP of ctc.ContactAdresseContactAdresseProcesss">
+                          {{cAP.ContactAdresseProcess.Libelle}}
+                        </div>
+                      </div>
+                      <div *ngIf="ctc.Utilisateurs?.length>0" class="color-accent-dark">{{applicationUserContext.getCulturedRessourceText(1242)}}</div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr *ngFor="let adr of entite?.Adresses" style="vertical-align: top;">
+              <td class="border-right-grey border-top-grey" style="width: 250px;">
+                <div class="mat-caption color-grey">{{applicationUserContext.getCulturedRessourceText(265)}}&nbsp;-&nbsp;{{adr.AdresseType.Libelle}}</div>
+                <div class="mat-body-strong">{{adr.Libelle}}</div>
+                <div>{{adr.Adr1}}</div>
+                <div *ngIf="adr.Adr2">{{adr.Adr2}}</div>
+                <div>{{adr.CodePostal}}&nbsp;{{adr.Ville}}<span *ngIf="adr.Pays">&nbsp;({{adr.Pays.Libelle}})</span></div>
+                <table>
+                  <tr *ngIf="adr.Tel" style="vertical-align:middle;">
+                    <td style="padding: 0 10px 0 0;">
+                      <mat-icon aria-label="Telephone" class="color-primary-medium-light material-icons-outlined">phone</mat-icon>
+                    </td>
+                    <td style="width: 100%; padding: 0 10px 0 0;">
+                      {{adr.Tel}}
+                    </td>
+                  </tr>
+                  <tr *ngIf="adr.Email" style="vertical-align:middle;">
+                    <td style="padding: 0 10px 0 0;">
+                      <mat-icon aria-label="Email" class="color-primary-medium-light material-icons-outlined">email</mat-icon>
+                    </td>
+                    <td style="padding: 0 10px 0 0;">
+                      <a [href]="'mailto:' + adr.Email" class="ev-hl-black">{{adr.Email}}</a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="adr.SiteWeb" style="vertical-align:middle;">
+                    <td style="padding: 0 10px 0 0;">
+                      <mat-icon aria-label="Web" class="color-primary-medium-light material-icons-outlined">public</mat-icon>
+                    </td>
+                    <td style="padding: 0 10px 0 0;">
+                      <span (click)="onSiteWeb(adr.SiteWeb)" style="text-decoration:underline; cursor:pointer;">{{adr.SiteWeb}}</span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="adr.Horaires" style="vertical-align:middle;">
+                    <td style="padding: 0 10px 0 0;">
+                      <mat-icon aria-label="Web" class="color-primary-medium-light">schedule</mat-icon>
+                    </td>
+                    <td style="padding: 0 10px 0 0;">
+                      {{adr.Horaires}}
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td  class="border-top-grey">
+                <table style="width:100%;">
+                  <tr class="mat-caption color-grey">
+                    <td>
+                      {{applicationUserContext.getCulturedRessourceText(1145)}}
+                    </td>
+                    <td style="width: 250px; text-align:right;">
+                      {{applicationUserContext.getCulturedRessourceText(420)}}
+                    </td>
+                  </tr>
+                  <tr *ngFor="let ctc of adr.ContactAdresses" [@fadeInOnEnter]>
+                    <td class="border-top-grey">
+                      <table style="width: 100%;">
+                        <tr style="vertical-align: top;">
+                          <td>
+                            <div class="ev-person-circle">
+                              <span class="ev-person-circle-icone"><mat-icon aria-label="Person" class="color-white material-icons-outlined">person</mat-icon></span>
+                            </div>
+                          </td>
+                          <td style="min-width:300px;">
+                            <div class="mat-body-strong">{{ctc.Contact.Prenom}}&nbsp;{{ctc.Contact.Nom}}</div>
+                            <div class="mat-body" *ngFor="let sF of ctc.ContactAdresseServiceFonctions">
+                              <span *ngIf="sF.Service">{{sF.Service.Libelle}}</span><span *ngIf="sF.Service && sF.Fonction">&nbsp;-&nbsp;</span><span *ngIf="sF.Fonction">{{sF.Fonction.Libelle}}</span>
+                            </div>
+                          </td>
+                          <td style="width:100%;">
+                            <table>
+                              <tr *ngIf="ctc.Tel" style="vertical-align:middle;">
+                                <td style="padding: 0 10px 0 0;">
+                                  <mat-icon aria-label="Telephone" class="color-primary-medium-light material-icons-outlined">phone</mat-icon>
+                                </td>
+                                <td style="width: 100%; padding: 0 10px 0 0;">
+                                  {{ctc.Tel}}
+                                </td>
+                              </tr>
+                              <tr *ngIf="ctc.TelMobile" style="vertical-align:middle;">
+                                <td style="padding: 0 10px 0 0;">
+                                  <mat-icon aria-label="Mobile" class="color-primary-medium-light material-icons-outlined">smartphone</mat-icon>
+                                </td>
+                                <td style="padding: 0 10px 0 0;">
+                                  {{ctc.TelMobile}}
+                                </td>
+                              </tr>
+                              <tr *ngIf="ctc.Email" style="vertical-align:middle;">
+                                <td style="padding: 0 10px 0 0;">
+                                  <mat-icon aria-label="Email" class="color-primary-medium-light material-icons-outlined">email</mat-icon>
+                                </td>
+                                <td style="padding: 0 10px 0 0;">
+                                  <a [href]="'mailto:' + ctc.Email" class="ev-hl-black">{{ctc.Email}}</a>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td style="width:250px; vertical-align:top; text-align:right;" class="border-top-grey">
+                      <div *ngIf="ctc.ContactAdresseContactAdresseProcesss && ctc.ContactAdresseContactAdresseProcesss.length>0">
+                        <div class="color-primary" *ngFor="let cAP of ctc.ContactAdresseContactAdresseProcesss">
+                          {{cAP.ContactAdresseProcess.Libelle}}
+                        </div>
+                      </div>
+                      <div *ngIf="ctc.Utilisateurs?.length>0" class="color-accent-dark">{{applicationUserContext.getCulturedRessourceText(1242)}}</div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div style="margin:15px 15px 15px 15px;" class="border-top-grey">
+    <div class="mat-body-strong color-primary">{{applicationUserContext.getCulturedRessourceText(422)}}</div>
+    <div class="color-primary">{{applicationUserContext.getCulturedRessourceText(423)}}</div>
+  </div>
+  <div *ngIf="modifying && locked==false" style="margin:15px 15px 15px 15px;" [@fadeInOnEnter]>
+    <form [formGroup]="form" class="ev-vertical-container">
+      <mat-divider></mat-divider>
+      <div>
+        <button mat-raised-button color="primary" style="margin:10px 0px 10px 0px;" type="button" (click)="onSave()" [disabled]="form.invalid" *ngIf="!locked">{{applicationUserContext.getCulturedRessourceText(387)}}</button>
+      </div>
+      <div>
+        <mat-form-field style="width:100%; margin:0px 0px 15px 0px;" appearance="outline">
+          <mat-label>{{applicationUserContext.getCulturedRessourceText(386)}}</mat-label>
+          <textarea matInput formControlName="Cmt" style="height:60px;" tabindex="1" maxlength="1500" required [errorStateMatcher]="matcher"></textarea>
+          <button *ngIf="form.get('Cmt').value" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(385)}}</mat-hint>
+          <mat-error *ngIf="form.get('Cmt').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

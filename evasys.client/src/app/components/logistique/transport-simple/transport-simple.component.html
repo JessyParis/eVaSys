@@ -1,0 +1,43 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave()"
+                *ngIf="!locked">
+          {{applicationUserContext.getCulturedRessourceText(6)}}
+        </button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <mat-form-field style="width:100%;">
+      <mat-label>{{applicationUserContext.getCulturedRessourceText(323)}}</mat-label>
+      <input matInput formControlName="Km" mask="separator" tabindex="1" required [errorStateMatcher]="matcher" />
+      <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(251)}}</span>
+      <button *ngIf="form.get('Km').value && !applicationUserContext.connectedUtilisateur.Transporteur?.RefEntite" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Km').setValue(null)" tabindex="-1" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(324)}}</mat-hint>
+      <mat-error *ngIf="(form.get('Km').touched || form.get('Km').dirty) && form.get('Km').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+      <mat-error align="end" *ngIf="(form.get('Km').touched || form.get('Km').dirty) && form.get('Km').errors?.max">
+        {{applicationUserContext.getCulturedRessourceText(573) + (form.get('Km').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field style="width:100%;">
+      <mat-label>{{applicationUserContext.getCulturedRessourceText(252)}}</mat-label>
+      <input matInput formControlName="PUHT" mask="separator.2" tabindex="2" required [errorStateMatcher]="matcher" />
+      <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(233)}}</span>
+      <button *ngIf="form.get('PUHT').value && !applicationUserContext.connectedUtilisateur.Transporteur?.RefEntite" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PUHT').setValue(null)" tabindex="-1" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(326)}}</mat-hint>
+      <mat-error *ngIf="(form.get('PUHT').touched || form.get('PUHT').dirty) && form.get('PUHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+      <mat-error align="end" *ngIf="(form.get('PUHT').touched || form.get('PUHT').dirty) && form.get('PUHT').errors?.max">
+        {{applicationUserContext.getCulturedRessourceText(573) + (form.get('PUHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+      </mat-error>
+    </mat-form-field>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

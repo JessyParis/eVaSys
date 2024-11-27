@@ -1,0 +1,92 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid" (click)="onSave()">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="clientApplication?.RefClientApplication" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(704)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(16)}}</mat-label>
+              <mat-select formControlName="EntiteList"
+                          required [errorStateMatcher]="matcher" (selectionChange)="manageScreen()">
+                <mat-option *ngFor="let entite of entiteList" [value]="entite.RefEntite">{{entite.Libelle}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(form.get('EntiteList').touched || form.get('EntiteList').dirty) && form.get('EntiteList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(569)}}</mat-label>
+              <mat-select formControlName="YearList"
+                          required [errorStateMatcher]="matcher" (selectionChange)="manageScreen()">
+                <mat-option *ngFor="let year of yearList" [value]="year.y">{{year.y}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(form.get('YearList').touched || form.get('YearList').dirty) && form.get('YearList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(703)}}</mat-label>
+              <mat-select formControlName="ApplicationProduitOrigineList"
+                          required [errorStateMatcher]="matcher" (selectionChange)="manageScreen()">
+                <mat-option *ngFor="let applicationProduitOrigine of applicationProduitOrigineList" [value]="applicationProduitOrigine.RefApplicationProduitOrigine">{{applicationProduitOrigine.Libelle}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(form.get('ApplicationProduitOrigineList').touched || form.get('ApplicationProduitOrigineList').dirty) && form.get('ApplicationProduitOrigineList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td [class]="'cadre_header_' + (form.get('CAAs').errors?.fullPercent ? 'warn' : 'primary')">
+            {{applicationUserContext.getCulturedRessourceText(709)}}
+            &nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(710) + " = " + getSumPercent().toFixed(1)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding: 5px;">{{applicationUserContext.getCulturedRessourceText(705)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(706)}}</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="CAAs">
+                <tr [formGroupName]="i" *ngFor="let group of getFormData.controls; let i=index">
+                  <td style="padding: 0px 5px 0px 5px;">{{clientApplication.ClientApplicationApplications[i].Application.Libelle}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-form-field style="width:180px;">
+                      <input matInput formControlName="Ratio" mask="separator.1" [errorStateMatcher]="matcher" (change)="manageScreen()" />
+                      <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(203)}}</span>
+                      <button *ngIf="group.get('Ratio').value!=null && group.get('Ratio').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Ratio').setValue(null); manageScreen()" tabindex="-1" type="button">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      <mat-error align="end" *ngIf="group.get('Ratio').errors?.max">{{applicationUserContext.getCulturedRessourceText(573) + (group.get('Ratio').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
+                    </mat-form-field>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

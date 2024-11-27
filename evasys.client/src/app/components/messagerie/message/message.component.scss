@@ -1,0 +1,54 @@
+
+
+.fixed_headers {
+  width: 795px;
+  min-width: 795px;
+  max-width: 795px;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  td:nth-child(1), th:nth-child(1) {
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(2), th:nth-child(2) {
+    min-width: 235px;
+    max-width: 235px;
+    width: 235px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(3), th:nth-child(3) {
+    min-width: 245px;
+    max-width: 245px;
+    width: 245px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(4), th:nth-child(4) {
+    min-width: 255px;
+    box-sizing: border-box;
+  }
+
+  thead {
+    tr {
+      display: block;
+      position: relative;
+    }
+    th {
+      text-align: left;
+    }
+  }
+
+  tbody {
+    display: block;
+    overflow: auto;
+    width: 795px;
+    min-width: 795px;
+    max-width: 795px;
+    height: 630px;
+  }
+}

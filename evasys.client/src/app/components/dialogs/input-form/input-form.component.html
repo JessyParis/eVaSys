@@ -1,0 +1,27 @@
+<div class="mat-typography">
+  <h1 mat-dialog-title>{{data.title}}</h1>
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <mat-form-field style="width:100%;" *ngIf="cmtVisible">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+        <textarea matInput formControlName="Cmt" style="height:90px;"></textarea>
+        <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled"
+                matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field style="width:100%;" *ngIf="eMailVisible">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(419)}}</mat-label>
+        <input matInput formControlName="EMail" maxlength="200" [errorStateMatcher]="matcher" />
+        <button *ngIf="form.get('EMail').value!=null && form.get('EMail').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('EMail').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error *ngIf="(form.get('EMail').touched || form.get('EMail').dirty) && form.get('EMail').errors?.email">{{applicationUserContext.getCulturedRessourceText(495)}}</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close="">{{applicationUserContext.getCulturedRessourceText(133)}}</button>
+    <button mat-button [disabled]="form.invalid" (click)="onSave()">{{buttonLabel}}</button>
+  </div>
+</div>

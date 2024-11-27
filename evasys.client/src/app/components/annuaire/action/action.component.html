@@ -1,0 +1,140 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave(true)"
+                *ngIf="!locked">
+          {{applicationUserContext.getCulturedRessourceText(45)}}
+        </button>
+        <button mat-icon-button class="ev-button-left" type="button" (click)="onSave(false);pdf.saveAs('action.pdf');">
+          <mat-icon>print</mat-icon>
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button mat-raised-button color="warn" class="ev-button-left" type="button" mat-dialog-close="">
+          {{applicationUserContext.getCulturedRessourceText(133)}}
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="ev-dataform-container">
+    <form id="MainForm" [formGroup]="form" class="ev-dataform-container">
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary"></td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(1194)}}</mat-label>
+                <mat-select formControlName="FormeContactList" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let formeContact of formeContactList" [value]="formeContact?.RefFormeContact">{{formeContact.Libelle}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('FormeContactList').value && form.get('FormeContactList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="$event.stopPropagation(); form.get('FormeContactList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(487)}}</mat-label>
+                <mat-select formControlName="ContactAdresseList">
+                  <mat-option *ngFor="let contactAdresse of contactAdresseList" [value]="contactAdresse?.RefContactAdresse">{{contactAdresse.ListText}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('ContactAdresseList').value && form.get('ContactAdresseList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="$event.stopPropagation(); form.get('ContactAdresseList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field class="ev-date-picker" style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(1195)}}</mat-label>
+                <input matInput [matDatepicker]="pickerDAction" formControlName="DAction" required [errorStateMatcher]="matcher">
+                <mat-datepicker-toggle matIconPrefix [for]="pickerDAction"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDAction></mat-datepicker>
+                <button *ngIf="form.get('DAction').value && form.get('DAction').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="form.get('DAction').setValue(null)">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('DAction').touched || form.get('DAction').dirty) && form.get('DAction').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(1193)}}</mat-label>
+                <mat-select multiple formControlName="ActionActionTypeList" [compareWith]="compareFnActionActionType">
+                  <mat-option *ngFor="let actionActionType of actionActionTypeList" [value]="actionActionType">{{actionActionType.ActionType.Libelle}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('ActionActionTypeList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="$event.stopPropagation(); onActionActionTypeListReset();" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <div style="margin: 0 0 10px 0;">
+                <mat-card appearance="outlined" style="white-space: pre-wrap;">
+                  <mat-card-content [style.overflow]="'auto'" [style.height.px]="'40'">
+                    <p>{{actionActionTypesLabel()}}</p>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(1196)}}</mat-label>
+                <input matInput formControlName="Libelle" maxlength="69" />
+                <button *ngIf="form.get('Libelle').value && form.get('Libelle').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Libelle').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+                <textarea matInput formControlName="Cmt" maxlength="10000" style="height:150px;"></textarea>
+                <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">
+              {{applicationUserContext.getCulturedRessourceText(623)}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <div class="ev-taskbar-container">
+                <div class="ev-taskbar-left-container">
+                  <button mat-raised-button type="button" (click)="onUploadFile();"
+                          [disabled]="locked">
+                    {{applicationUserContext.getCulturedRessourceText(629)}}
+                  </button>
+                </div>
+              </div>
+              <table class="table-no-pad-no-space" style="width:100%; margin: 10px 0 0 0;">
+                <tr *ngFor="let aF of action.ActionFichierNoFiles">
+                  <td style="padding: 0px 5px 0px 5px; width:40px;">
+                    <button mat-icon-button (click)="onDeleteActionFichier(aF.RefActionFichier)" type="button"
+                            *ngIf="!(locked)">
+                      <mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon>
+                    </button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px; cursor:pointer"
+                      (click)="getFile('ActionFichier', aF.RefActionFichier);" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}>
+                    {{aF.Nom}}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+<div style="position: absolute; right: 10000px; top: 0;">
+  <kendo-pdf-export #pdf paperSize="A4" margin="1cm">
+    <printable-action [action]="action" [entite]="entite"></printable-action>
+  </kendo-pdf-export>
+</div>
+

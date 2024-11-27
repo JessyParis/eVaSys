@@ -1,0 +1,79 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave()"
+                *ngIf="!locked">
+          {{applicationUserContext.getCulturedRessourceText(6)}}
+        </button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <mat-form-field style="width:100%;">
+      <mat-label>{{applicationUserContext.getCulturedRessourceText(469)}}</mat-label>
+      <mat-select formControlName="Civilite">
+        <mat-option *ngFor="let civilite of civiliteList" [value]="civilite?.RefCivilite">{{civilite.Libelle}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width:100%;">
+      <mat-label>{{applicationUserContext.getCulturedRessourceText(470)}}</mat-label>
+      <input matInput formControlName="Prenom" />
+      <button *ngIf="form.get('Prenom').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+              matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Prenom').setValue(null)" tabindex="-1" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field style="width:100%;">
+      <mat-label>{{applicationUserContext.getCulturedRessourceText(471)}}</mat-label>
+      <input matInput formControlName="Nom" required (input)="form.get('Nom').setValue(form.get('Nom').value.toUpperCase())"/>
+      <button *ngIf="form.get('Nom').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+              matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Nom').setValue(null)" tabindex="-1" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-error *ngIf="(form.get('Nom').touched || form.get('Nom').dirty) && form.get('Nom').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+    </mat-form-field>
+    <mat-form-field style="width:100%;">
+      <mat-label>{{applicationUserContext.getCulturedRessourceText(419)}}</mat-label>
+      <input matInput formControlName="Email" />
+      <button *ngIf="form.get('Email').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+              matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Email').setValue(null)" tabindex="-1" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-error *ngIf="(form.get('Email').touched || form.get('Email').dirty) && form.get('Email').errors?.email">{{applicationUserContext.getCulturedRessourceText(495)}}</mat-error>
+    </mat-form-field>
+    <mat-form-field style="width:100%;">
+      <mat-label>{{applicationUserContext.getCulturedRessourceText(417)}}</mat-label>
+      <input matInput formControlName="Tel" />
+      <button *ngIf="form.get('Tel').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+              matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Tel').setValue(null)" tabindex="-1" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field style="width:100%;">
+      <mat-label>{{applicationUserContext.getCulturedRessourceText(437)}}</mat-label>
+      <input matInput formControlName="TelMobile" />
+      <button *ngIf="form.get('TelMobile').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+              matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('TelMobile').setValue(null)" tabindex="-1" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field style="width:100%;">
+      <mat-label>{{applicationUserContext.getCulturedRessourceText(418)}}</mat-label>
+      <input matInput formControlName="Fax" />
+      <button *ngIf="form.get('Fax').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+              matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Fax').setValue(null)" tabindex="-1" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

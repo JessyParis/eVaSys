@@ -1,0 +1,181 @@
+<div class="mat-typography">
+  <h1 mat-dialog-title>{{title}}</h1>
+  <div class="ev-taskbar-container">
+    <div class="ev-taskbar-left-container">
+      <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+      <button mat-raised-button color="primary" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave(false)"
+          *ngIf="!locked && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')">
+    {{applicationUserContext.getCulturedRessourceText(6)}}
+  </button>
+      <button mat-raised-button color="accent" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave(true)"
+              *ngIf="!locked && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                        || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')">
+        {{applicationUserContext.getCulturedRessourceText(676)}}&nbsp;
+        <mat-icon>send</mat-icon>
+      </button>
+      <button mat-raised-button class="ev-button-left" type="button" (click)="onTickets();"
+              *ngIf="!locked && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                        || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')">
+        {{applicationUserContext.getCulturedRessourceText(684)}}
+      </button>
+      <button mat-raised-button [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onUploadFile();"
+              *ngIf="!locked && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                        || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')">
+        {{applicationUserContext.getCulturedRessourceText(629)}}
+      </button>
+    </div>
+    <div class="ev-taskbar-right-container">
+      <button *ngIf="!locked && email.RefEmail" mat-raised-button color="warn"
+              (click)="onDelete()" class="ev-button-right" type="button">
+        {{applicationUserContext.getCulturedRessourceText(133)}}
+      </button>
+    </div>
+  </div>
+  <div mat-dialog-content>
+    <form id="MainForm" [formGroup]="form" class="ev-dataform-container">
+      <div class="boxNormalSizeHalfHeight">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">{{applicationUserContext.getCulturedRessourceText(419)}}</td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <mat-form-field style="width:100%;" *ngIf="email.DEnvoi===null && email.DReception==null">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(668)}}</mat-label>
+                <mat-select formControlName="ParamEmailList" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let paramEmail of paramEmailList" [value]="paramEmail.RefParamEmail">{{paramEmail.EmailExpediteur}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('ParamEmailList').value && form.get('ParamEmailList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('ParamEmailList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('ParamEmailList').touched || form.get('ParamEmailList').dirty) && form.get('ParamEmailList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;" *ngIf="email.DReception!==null || email.DEnvoi!==null">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(668)}}</mat-label>
+                <input matInput formControlName="EmailFrom" maxlength="50" />
+                <button *ngIf="form.get('EmailFrom').value && form.get('EmailFrom').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('EmailFrom').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(669)}}</mat-label>
+                <textarea matInput formControlName="EmailTo" maxlength="500" style="height:45px;" required [errorStateMatcher]="matcher"></textarea>
+                <button *ngIf="form.get('EmailTo').value && form.get('EmailTo').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('EmailTo').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('EmailTo').touched || form.get('EmailTo').dirty) && form.get('EmailTo').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(670)}}</mat-label>
+                <textarea matInput formControlName="EmailSubject" maxlength="200" style="height:45px;" required [errorStateMatcher]="matcher"></textarea>
+                <button *ngIf="form.get('EmailSubject').value && form.get('EmailSubject').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('EmailSubject').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('EmailTo').touched || form.get('EmailTo').dirty) && form.get('EmailTo').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="boxNormalSizeHalfHeight">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">
+              {{applicationUserContext.getCulturedRessourceText(623)}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <table class="table-no-pad-no-space" style="width:100%;">
+                <tr *ngFor="let eF of email.EmailFichiers; let i=index;"> 
+                  <td style="padding: 0px 5px 0px 5px; width:40px;">
+                    <button mat-icon-button (click)="onDeleteEmailFichier(i)" type="button"
+                            *ngIf="!locked">
+                      <mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon>
+                    </button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;cursor:pointer;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
+                      (click)="getFile('EmailFichier', eF.Index); ">
+                    {{eF.Nom}}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="boxDoubleSizeHalfHeight">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">
+              {{applicationUserContext.getCulturedRessourceText(655)}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <kendo-editor formControlName="EmailHTMLBody" style="height: 100%;">
+                <kendo-toolbar>
+                  <kendo-toolbar-buttongroup>
+                    <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorItalicButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorUnderlineButton></kendo-toolbar-button>
+                  </kendo-toolbar-buttongroup>
+                  <kendo-toolbar-buttongroup>
+                    <kendo-toolbar-button kendoEditorAlignLeftButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorAlignCenterButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorAlignRightButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorAlignJustifyButton></kendo-toolbar-button>
+                  </kendo-toolbar-buttongroup>
+                  <kendo-toolbar-dropdownlist kendoEditorFontSize></kendo-toolbar-dropdownlist>
+                  <kendo-toolbar-dropdownlist kendoEditorFontFamily [data]="kendoFontData"></kendo-toolbar-dropdownlist>
+                  <kendo-toolbar-colorpicker kendoEditorForeColor></kendo-toolbar-colorpicker>
+                  <kendo-toolbar-colorpicker kendoEditorBackColor></kendo-toolbar-colorpicker>
+                  <kendo-toolbar-buttongroup>
+                    <kendo-toolbar-button kendoEditorInsertUnorderedListButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorInsertOrderedListButton></kendo-toolbar-button>
+                  </kendo-toolbar-buttongroup>
+                  <kendo-toolbar-buttongroup>
+                    <kendo-toolbar-button kendoEditorCreateLinkButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
+                  </kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorViewSourceButton></kendo-toolbar-button>
+                </kendo-toolbar>
+                <kendo-editor-messages [bold]="applicationUserContext.getCulturedRessourceText(1479)"
+                                       [italic]="applicationUserContext.getCulturedRessourceText(1480)"
+                                       [underline]="applicationUserContext.getCulturedRessourceText(1481)"
+                                       [alignLeft]="applicationUserContext.getCulturedRessourceText(1482)"
+                                       [alignCenter]="applicationUserContext.getCulturedRessourceText(1483)"
+                                       [alignRight]="applicationUserContext.getCulturedRessourceText(1484)"
+                                       [alignJustify]="applicationUserContext.getCulturedRessourceText(1485)"
+                                       [fontFamily]="applicationUserContext.getCulturedRessourceText(1486)"
+                                       [fontSize]="applicationUserContext.getCulturedRessourceText(1487)"
+                                       [foreColor]="applicationUserContext.getCulturedRessourceText(1488)"
+                                       [backColor]="applicationUserContext.getCulturedRessourceText(1494)"
+                                       [insertOrderedList]="applicationUserContext.getCulturedRessourceText(1489)"
+                                       [insertUnorderedList]="applicationUserContext.getCulturedRessourceText(1490)"
+                                       [createLink]="applicationUserContext.getCulturedRessourceText(1491)"
+                                       [unlink]="applicationUserContext.getCulturedRessourceText(1492)"
+                                       [viewSource]="applicationUserContext.getCulturedRessourceText(1493)"
+                                       [dialogUpdate]="applicationUserContext.getCulturedRessourceText(682)"
+                                       [dialogCancel]="applicationUserContext.getCulturedRessourceText(133)"
+                                       [dialogInsert]="applicationUserContext.getCulturedRessourceText(598)"
+                                       [linkOpenInNewWindow]="applicationUserContext.getCulturedRessourceText(1496)"
+                                       [linkText]="applicationUserContext.getCulturedRessourceText(1497)"
+                                       [linkTitle]="applicationUserContext.getCulturedRessourceText(1149)"
+                                       [linkWebAddress]="applicationUserContext.getCulturedRessourceText(1495)"></kendo-editor-messages>
+              </kendo-editor>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+    </div>
+</div>

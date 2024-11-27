@@ -1,0 +1,38 @@
+<input type="file" #file style="display: none" (change)="onFilesAdded()" [multiple]="data.multiple" />
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div class="ev-taskbar-container">
+  <div class="ev-taskbar-left-container">
+    <button [disabled]="uploading || uploadSuccessful || (this.files.size>0 && !data.multiple)" mat-raised-button color="primary" (click)="addFiles()"
+            class="ev-button-left">
+      {{addFilesButtonText}}
+    </button>
+  </div>
+  <div class="ev-taskbar-right-container">
+    <button *ngIf="showCancelButton" mat-raised-button mat-dialog-close class="ev-button-right">{{applicationUserContext.getCulturedRessourceText(133)}}</button>
+    <button mat-raised-button color="primary" [disabled]="!canBeClosed || this.files.size===0" (click)="closeDialog()"
+            class="ev-button-right">
+      {{primaryButtonText}}
+    </button>
+  </div>
+</div>
+<p *ngIf="this.files.size!==0" class="mat-body">&nbsp;</p>
+<div style="overflow-y:auto">
+  <div style="width:80%;">
+    <mat-dialog-content>
+      <mat-progress-spinner *ngIf="displayProgressBar" color="accent" mode="indeterminate"
+                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index:1000000; opacity:0.7"></mat-progress-spinner>
+      <p *ngIf="this.files.size===0" class="mat-body-strong">{{data.message}}</p>
+      <mat-list>
+        <mat-list-item *ngFor="let file of files">
+          <h4 mat-line>{{file.name}}</h4>
+          <mat-progress-bar mat-line *ngIf="progress" mode="determinate" [value]="progress[file.name].progress | async"></mat-progress-bar>
+          <span class="mat-body" mat-line *ngIf="!uploadBodyResult">&nbsp;</span>
+          <span class="mat-body" mat-line *ngIf="uploadBodyResult && !(uploadBodyResult[file.name].uploadBodyResult | async)?.error">{{applicationUserContext.getCulturedRessourceText(335)}}&nbsp;-&nbsp;{{(uploadBodyResult[file.name].uploadBodyResult | async)?.error}}</span>
+          <span class="mat-body color-warn" mat-line *ngIf="uploadBodyResult && (uploadBodyResult[file.name].uploadBodyResult | async)?.error">{{applicationUserContext.getCulturedRessourceText(335)}}&nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(348)}}</span>
+          <span class="mat-body" mat-line *ngIf="uploadBodyResult">{{(uploadBodyResult[file.name].uploadBodyResult | async)?.message}}</span>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+    </mat-dialog-content>
+  </div>
+</div>

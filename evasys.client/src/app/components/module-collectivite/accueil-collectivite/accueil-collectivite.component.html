@@ -1,0 +1,574 @@
+<div class="ev-main-container" [class.background-color-primary]="applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite">
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <table style="width: 100%; margin:10px 0 0 0;" class="table-no-pad-no-space">
+      <tr>
+        <td style="width:50%;"></td>
+        <td>
+          <table style="width: 1440px; min-width: 1440px; max-width: 1440px; height: 1144px;" class="table-no-pad-no-space">
+            <tr style="height:305px;" class="background-color-green-a-light">
+              <td style="width: 365px; padding: 20px 10px 20px 20px;">
+                <div style="background-color: white; height: 265px; width: 335px;">
+                  <table class="table-no-pad-no-space" style="height: 100%; max-height: 100%; width: 100%; ">
+                    <tr style="vertical-align:middle; height:70px;">
+                      <td style="text-align:left; padding:0 0 0 20px;">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu"
+                                matTooltip={{applicationUserContext.getCulturedRessourceText(1384)}}>
+                          <mat-icon class="color-primary-medium">menu</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                          <button mat-menu-item (click)="onMenu('ModuleCollectiviteMenuDocuments','Documents')">
+                            <span>{{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuDocuments')}}</span>
+                          </button>
+                          <button mat-menu-item (click)="onMenu('ModuleCollectiviteMenuPrixReprise','')">
+                            <span>{{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuPrixReprise')}}</span>
+                          </button>
+                          <button mat-menu-item (click)="onMenu('ModuleCollectiviteMenuStatistiques','')">
+                            <span>{{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuStatistiques')}}</span>
+                          </button>
+                          <button mat-menu-item (click)="onMenu('ModuleCollectiviteMenuVisualisationAnnuaire','')">
+                            <span>{{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuVisualisationAnnuaire')}}</span>
+                          </button>
+                        </mat-menu>
+                      </td>
+                      <td style="font-weight: 500; text-transform: uppercase; width:100%;" class="color-primary-a-medium">
+                        {{applicationUserContext.getCulturedRessourceText(1384)}}
+                      </td>
+                    </tr>
+                    <tr style="vertical-align:top;">
+                      <td style="text-align: center;" colspan="2"><img alt="logo" src="assets/images/logo-e-valorplast-moyen.jpg" /></td>
+                    </tr>
+                    <tr style="vertical-align:bottom; height:100%;">
+                      <td style="text-align: center;padding:0 0 30px 0;" colspan="2">
+                        <button mat-stroked-button class="border-primary-a-medium color-primary-a-medium" style="background-color:white;"
+                                (click)="onCommunicationTool()" matTooltip={{applicationUserContext.getCulturedRessourceText(1381)}}>
+                          <mat-icon class=" material-icons-outlined">forum</mat-icon>
+                          {{applicationUserContext.getCulturedRessourceText(1380)}}
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+              <td colspan="2" style="width: 710px; padding: 20px 10px 20px 10px;" matTooltip={{applicationUserContext.getCulturedRessourceText(1393)}}>
+                <div style="background-color: white; height: 265px; width: 690px;">
+                  <a [href]="actualitesUrl" target="_blank"><img alt="news" [src]="'data:image/jpeg;base64,'+accueilCollectiviteImage" style="height:265px; width:690px" /></a>
+                </div>
+              </td>
+              <td style="width: 365px; padding: 20px 20px 20px 10px;">
+                <div style="background-color: white; border-radius: 17px; text-align: center; height: 265px; width: 335px;">
+                  <table class="table-no-pad-no-space" style="height: 100%; width: 100%;">
+                    <tr style="vertical-align:top;">
+                      <td style="text-align: center; width: 100%; padding: 20px 20px 0 0;">
+                        <table class="table-no-pad-no-space" style="width: 100%;">
+                          <tr style="vertical-align:top;">
+                            <td class="vertical-align-center-svg" style="min-width:140px;">
+                              <img alt="Profile" aria-label="Profile"
+                                   [src]="'assets/images/utilisateur-'+applicationUserContext.connectedUtilisateur.UtilisateurType?.toLowerCase()+'-a400.svg'" />
+                              <button mat-icon-button (click)="onChangeProfil()" *ngIf="this.auth.isLoggedIn() && (applicationUserContext.connectedUtilisateur.HasProfils || applicationUserContext.connectedUtilisateur.RefUtilisateurMaitre)"
+                                      class="color-primary-medium" matTooltip={{applicationUserContext.getCulturedRessourceText(1505)}}>
+                                <mat-icon aria-label="Profils">arrow_drop_down</mat-icon>
+                              </button>
+                            </td>
+                            <td (click)="showMessage()" style="cursor:pointer;">
+                              <div class="ev-user-circle" [matTooltip]="getHasMessageTooltipText()"
+                                   [@tada]="applicationUserContext.animMessage" (@tada.done)="applicationUserContext.animMessage=false">
+                                <span class="ev-user-circle-icone">
+                                  <mat-icon aria-label="Person" class="color-white material-icons-outlined" style="cursor:pointer;"
+                                            [matBadge]="applicationUserContext.hasMessage" matBadgeColor="accent" matBadgeOverlap="false" aria-hidden="false">person</mat-icon>
+                                </span>
+                              </div>
+                            </td>
+                            <td style="width:100%;"></td>
+                            <td>
+                              <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1382)}}
+                                      (click)="onHelp()" *ngIf="this.auth.isLoggedIn() && applicationUserContext.visibleHelp">
+                                <mat-icon aria-label="Aide" class="color-primary-a-medium" style="cursor:pointer">help_outline</mat-icon>
+                              </button>
+                            </td>
+                            <td>
+                              <button mat-icon-button (click)="onLogout()" class="ev-button-right color-grey"
+                                      matTooltip={{applicationUserContext.getCulturedRessourceText(1254)}}>
+                                <mat-icon aria-label="Deconnexion">logout</mat-icon>
+                              </button>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr style="height:35px;">
+                      <td style="text-align:center; font-weight:500; padding:5px;" class="color-primary-a-medium">
+                        {{applicationUserContext.connectedUtilisateur.Nom}}
+                      </td>
+                    </tr>
+                    <tr style="height:100%; vertical-align:top;">
+                      <td style="text-align: center; font-size: x-large; font-weight: 500; padding: 5px; line-height: 110%;" class="color-primary-a-medium">
+                        {{entite.Libelle}}
+                        <br />
+                        {{entite.CodeEE}}
+                      </td>
+                    </tr>
+                    <tr style="vertical-align:bottom; ">
+                      <td style="text-align:center; padding:0 0 30px 0;">
+                        <button mat-stroked-button class="border-primary-a-medium color-primary-a-medium" style="background-color:white;"
+                                (click)="onMenu('ModuleCollectiviteMenuVisualisationAnnuaire','mod')" matTooltip={{applicationUserContext.getCulturedRessourceText(1383)}}>
+                          <mat-icon class="material-icons-outlined">textsms</mat-icon>
+                          {{applicationUserContext.getCulturedRessourceText(1369)}}
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+            </tr>
+            <tr style="height:375px;" class="background-color-green-a-dark">
+              <td style="width: 365px; padding: 20px 10px 20px 20px;">
+                <div style="background-color: white; border-radius: 42px 0px 42px 42px; text-align: center; height: 335px; width: 335px;" class="mat-elevation-z10">
+                  <table class="table-no-pad-no-space" style="height: 100%; width: 100%; border-collapse: separate !important;">
+                    <tr style="height:50%;">
+                      <td style="text-align: center; width: 100%; border-radius: 42px 0px 0px 0px; border: 10px solid white;" class="background-color-primary-a-light">
+                        <table class="table-no-pad-no-space" style="height: 100%; width: 100%;">
+                          <tr style="vertical-align:top; height:50%;">
+                            <td class="color-primary-a-medium" style="font-weight:500; font-size:large; padding:30px 0 0 0">
+                              {{getPeriode()}}
+                            </td>
+                          </tr>
+                          <tr style="vertical-align:top;">
+                            <td>
+                              <mat-form-field style="width:140px;" class="ev-button-left" appearance="outline">
+                                <mat-label>{{applicationUserContext.getCulturedRessourceText(668)}}</mat-label>
+                                <mat-select formControlName="MonthList" required [errorStateMatcher]="matcher" (selectionChange)="onFilterChange()">
+                                  <mat-option *ngFor="let month of monthList" [value]="month.n">{{month.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('MonthList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                              </mat-form-field>
+                              <mat-form-field style="width:140px;" appearance="outline">
+                                <mat-label>{{applicationUserContext.getCulturedRessourceText(669)}}</mat-label>
+                                <mat-select formControlName="MonthEndList" required [errorStateMatcher]="matcher" (selectionChange)="onFilterChange()">
+                                  <mat-option *ngFor="let month of monthList" [value]="month.n">{{month.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('MonthEndList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr style="vertical-align:top;">
+                      <td style="text-align:center; font-weight:500; padding: 0 20px 0 20px" class="color-primary-a-medium">
+                        <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Filtre">
+                          <mat-chip-option [selected]="applicationUserContext.filterCollecte=='Collecte'" value="Collecte"
+                                           (selectionChange)="onChipChange($event)" style="height:40px;">
+                            {{applicationUserContext.getCulturedRessourceText(1351)}}
+                          </mat-chip-option>
+                          <mat-chip-option [selected]="applicationUserContext.filterCollecte=='HorsCollecte'" value="HorsCollecte"
+                                           (selectionChange)="onChipChange($event)" style="height:40px;">
+                            {{applicationUserContext.getCulturedRessourceText(1352)}}
+                          </mat-chip-option>
+                          <mat-chip-option [selected]="applicationUserContext.filterCollecte=='DansOuHorsCollecte'" value="DansOuHorsCollecte"
+                                           (selectionChange)="onChipChange($event)" style="height:40px;">
+                            {{applicationUserContext.getCulturedRessourceText(1353)}}
+                          </mat-chip-option>
+                        </mat-chip-listbox>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+              <td style="width: 355px; padding: 20px 10px 20px 10px;">
+                <div style="border-radius: 17px 17px 0px 0px; text-align: center; height: 335px; width: 335px;
+                  background-image: url('assets/images/fond-tonnage.png'); background-repeat: no-repeat; background-position: center;" class="mat-elevation-z10">
+                  <table class="table-no-pad-no-space" style="height: 100%; width: 100%; ">
+                    <tr style="vertical-align: top; height: 80px;">
+                      <td class="color-primary-a-medium" style="font-weight:500; font-size:large; padding:40px 0 0 0;">
+                        {{applicationUserContext.getCulturedRessourceText(1372)}}
+                      </td>
+                    </tr>
+                    <tr style="height: 60px; vertical-align:top;">
+                      <td style="padding:10px 0 0 0">
+                        <span style="font-weight:700; font-size:42px;">{{tonnageText}}</span>
+                        <span style="font-weight: 500; font-size: medium;">{{applicationUserContext.getCulturedRessourceText(584)}}</span>
+                      </td>
+                    </tr>
+                    <tr style="height: 80px;">
+                      <td>
+                        <table class="table-no-pad-no-space" style="width: 100%;">
+                          <tr>
+                            <td style="width:50%;"></td>
+                            <td>
+                              <div *ngIf="tonnage>tonnagePrevious" [@fadeInOnEnter] class="ev-circle-green">
+                                <span class="ev-circle-icone">
+                                  <mat-icon aria-label="Arrow" class="color-white" style="transform: scale(2); font-weight:300;">north_east</mat-icon>
+                                </span>
+                              </div>
+                              <div *ngIf="tonnage==tonnagePrevious" [@fadeInOnEnter] class="ev-circle-primary">
+                                <span class="ev-circle-icone">
+                                  <mat-icon aria-label="Arrow" class="color-white" style="transform: scale(2); font-weight:300;">east</mat-icon>
+                                </span>
+                              </div>
+                              <div *ngIf="tonnage<tonnagePrevious" [@fadeInOnEnter] class="ev-circle-accent">
+                                <span class="ev-circle-icone">
+                                  <mat-icon aria-label="Arrow" class="color-white" style="transform: scale(2); font-weight:300;">south_east</mat-icon>
+                                </span>
+                              </div>
+                            </td>
+                            <td style="width:50%;"></td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr style="height: 40px;">
+                      <td>
+                        <span style="font-size:small; color:white;">{{getPreviousPeriode()}}</span>
+                      </td>
+                    </tr>
+                    <tr style="vertical-align:top;">
+                      <td>
+                        <span style="font-weight: 500; font-size: x-large; color: white;">{{tonnagePreviousText}}</span>
+                        <span style="font-weight: 500; font-size: medium; color: white;">{{applicationUserContext.getCulturedRessourceText(584)}}</span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+              <td style="width: 355px; padding: 20px 10px 20px 10px;">
+                <div *ngIf="!visibleRSE" [@fadeInOnEnter]
+                     style="background-image: url('assets/images/rse-en-construction.png'); border-radius: 0px 45px 45px 45px; text-align: center; height: 335px; width: 335px; background-size:335px 335px; "
+                     class="mat-elevation-z10">
+                </div>
+                <div style="background-color:white; border-radius: 0px 45px 45px 45px; text-align: center; height: 335px; width: 335px; "
+                     class="mat-elevation-z10" *ngIf="visibleRSE" [@fadeInOnEnter] (@fadeInOnEnter.done)="animRSEIcon=true">
+                  <table class="table-no-pad-no-space" style="height: 100%; width: 100%; border-radius: 0px 0px 42px 42px; border-collapse: separate !important; ">
+                    <tr style="vertical-align:top; height:90px;">
+                      <td class="color-primary-a-medium" style="font-weight:500; font-size:large; padding:40px 0 0 0;">
+                        {{applicationUserContext.getCulturedRessourceText(1374)}}
+                        <br/>
+                        {{applicationUserContext.getCulturedRessourceText(1351)}}
+                      </td>
+                    </tr>
+                    <tr style="height:40px; vertical-align:top;">
+                      <td style="padding:10px 0 0 0">
+                        <table class="table-no-pad-no-space">
+                          <tr>
+                            <td style="min-width:50px;"></td>
+                            <td style="width:100%;">
+                              <span style="font-weight:700; font-size:42px;">{{currentEquivalentCO2TonnageText}}</span>
+                              <span style="font-weight: 500; font-size: medium;">{{applicationUserContext.getCulturedRessourceText(584)}}</span>
+                              <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1401)}}
+                                      (click)="onHelpRSE()">
+                                <mat-icon aria-label="Aide" class="color-grey" style="cursor:pointer">help_outline</mat-icon>
+                              </button>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr style="height:80px;">
+                      <td class="color-primary-a-medium" style="font-weight: 500; font-size: x-large; padding: 0 40px 0 40px; line-height: 110%;">
+                        {{applicationUserContext.getCulturedRessourceText(1375)}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="background-color-primary-a-medium"
+                          style="border-radius: 0px 0px 42px 42px; border-collapse: separate !important; ">
+                        <table *ngIf="visibleEquivalentCO2" class="table-no-pad-no-space" style="height: 100%; width: 100%;">
+                          <tr style="height:20px;">
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td style="width:40%; border-right:thin solid white;">
+                              <img *ngIf="currentEquivalentCO2Icone" id="image" [src]="'data:image/jpeg;base64,'+currentEquivalentCO2Icone" height="65" width="65"
+                                   [@flash]="animRSEIcon" (@flash.done)="animRSEIcon=false"/>
+                            </td>
+                            <td>
+                              <div style="font-weight: 500; font-size: x-large; color: white;"
+                                    [@flash]="animRSEIcon" (@flash.done)="animRSEIcon=false">{{getCurrentEconomieCO2TonnageText()}}</div>
+                              <div style="font-size: small; color: white;">{{currentEquivalentCO2Libelle}}</div>
+                            </td>
+                          </tr>
+                          <tr style="height:20px;">
+                            <td></td>
+                            <td></td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+              <td style="width: 365px; padding: 20px 20px 20px 10px;">
+                <div style="border-radius: 17px 17px 0px 0px; text-align: center; height: 335px; width: 335px;
+            background-image: url('assets/images/fond-destination.png'); background-repeat:no-repeat; background-position:center; background-size:335px 335px;" class="mat-elevation-z10">
+                  <table class="table-no-pad-no-space" style="height: 100%; width: 100%; border-radius: 17px 17px 0px 0px; border-collapse: separate !important; ">
+                    <tr style="vertical-align: top; height: 80px; min-height: 80px; ">
+                      <td class="color-primary-a-medium" style="font-weight:500; font-size:large; padding:40px 0 0 0;">
+                        {{applicationUserContext.getCulturedRessourceText(1379)}}
+                      </td>
+                    </tr>
+                    <tr style="height: 100%;">
+                      <td style="height: 100%; width:100%;">
+                        <div style="position: relative; height: 100%; width: 100%;">
+                          <div class="ev-circle-green" style="position:absolute; left:130px; top:45px;" aria-label="FR">
+                            <span class="ev-circle-icone" style="color:white; font-size:x-large;font-weight:500;">
+                              {{destinationFrancePercentageText}}
+                            </span>
+                          </div>
+                          <div class="ev-circle-mini-green" style="position:absolute; left:80px; top:150px;" aria-label="ES"
+                               *ngIf="isDestination('ES')" [@fadeInOnEnter]></div>
+                          <div class="ev-circle-mini-green" style="position:absolute; left:260px; top:150px;" aria-label="IT"
+                               *ngIf="isDestination('IT')" [@fadeInOnEnter]></div>
+                          <div class="ev-circle-mini-green" style="position:absolute; left:200px; top:25px;" aria-label="BE"
+                               *ngIf="isDestination('BE')" [@fadeInOnEnter]></div>
+                          <div class="ev-circle-mini-green" style="position:absolute; left:210px; top:40px;" aria-label="LU"
+                               *ngIf="isDestination('LU')" [@fadeInOnEnter]></div>
+                          <div class="ev-circle-mini-green" style="position:absolute; left:30px; top:130px;" aria-label="PT"
+                               *ngIf="isDestination('PT')" [@fadeInOnEnter]></div>
+                          <div class="ev-circle-mini-green" style="position:absolute; left:250px; top:40px;" aria-label="DE"
+                               *ngIf="isDestination('DE')" [@fadeInOnEnter]></div>
+                          <div class="ev-circle-mini-green" style="position:absolute; left:225px; top:85px;" aria-label="CH"
+                               *ngIf="isDestination('CH')" [@fadeInOnEnter]></div>
+                          <div class="ev-circle-mini-green" style="position:absolute; left:285px; top:80px;" aria-label="AT"
+                               *ngIf="isDestination('AT')" [@fadeInOnEnter]></div>
+                          <div class="ev-circle-mini-green" style="position:absolute; left:290px; top:110px;" aria-label="SI"
+                               *ngIf="isDestination('SI')" [@fadeInOnEnter]></div>
+                          <div class="ev-circle-mini-green" style="position:absolute; left:210px; top:0px;" aria-label="NL"
+                               *ngIf="isDestination('NL')" [@fadeInOnEnter]></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+            </tr>
+            <tr style="height:375px;" class="background-color-green-a-light">
+              <td style="width: 365px; padding: 20px 10px 20px 20px;">
+                <div style="border-radius: 42px 0px 42px 0px; text-align: center; height: 335px; width: 335px; cursor:pointer;"
+                     class="mat-elevation-z10 background-color-primary-a-medium ev-module-collectivite-accueil-bloc-on"
+                     (click)="onMenu('ModuleCollectiviteMenuDocuments','CertificatRecyclageCS')"
+                     matTooltip={{applicationUserContext.getCulturedRessourceText(1394)}}>
+                  <table class="table-no-pad-no-space" style="height: 100%; width: 100%;">
+                    <tr style="vertical-align:top; height:80px;">
+                      <td style="font-weight: 500; font-size: large; padding: 40px 60px 0 60px; color: white; text-transform: uppercase;">
+                        {{applicationUserContext.getCulturedRessourceText(1376)}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><img alt="logo" src="assets/images/big-thumb-up.png" /></td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+              <td style="width: 355px; padding: 20px 10px 20px 10px;">
+                <div style="background-color: white; border-radius: 0px 0px 42px 0px; text-align: center; height: 335px; width: 335px;" class="mat-elevation-z10">
+                  <table class="table-no-pad-no-space" style="height: 100%; width: 100%; border-collapse: separate !important;">
+                    <tr style="vertical-align:top; height:80px;">
+                      <td style="font-weight:500; font-size:large; padding:40px 0 0 0 ;" class="color-primary-a-medium">
+                        <div style="font-size:large;">{{applicationUserContext.getCulturedRessourceText(1378)}}</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding:0 10px 0 0; width:100%;">
+                        <table class="table-no-pad-no-space" style="height: 100%; width: 100%;">
+                          <tbody style="overflow-y: auto; height:230px; width:100%; display:block;">
+                            <tr *ngIf="entiteSAGEDocuments?.length==0" [@fadeInOnEnter] style="vertical-align:middle; height:50px; width:100%;">
+                              <td style="width: 25px; text-align: left;" class="border-bottom-grey border-top-grey"></td>
+                              <td class="border-bottom-grey border-top-grey color-primary-a-medium" style="text-align: left; font-weight: 500; padding: 0 10px 0 10px; width:100%;">
+                                {{applicationUserContext.getCulturedRessourceText(1199)}}
+                              </td>
+                              <td style="min-width: 100px; text-align: right; font-size:large; font-weight:500; padding:0 10px 0 10px;" class="border-bottom-grey border-top-grey">
+                              </td>
+                            </tr>
+                            <tr *ngFor="let sAGEDoc of entiteSAGEDocuments" [@fadeInOnEnter] style="vertical-align:middle; height:50px; width:100%;">
+                              <td style="width: 25px; text-align: left;" class="border-bottom-grey">
+                                <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1364)}}
+                                        (click)="exportPdf('NoteCredit',sAGEDoc.RefSAGEDocument)">
+                                  <mat-icon aria-label="Document" class="color-primary-a-medium">picture_as_pdf</mat-icon>
+                                </button>
+                              </td>
+                              <td class="border-bottom-grey color-primary-a-medium" style="text-align: left; font-weight: 500; padding: 0 10px 0 10px; width:100%;">
+                                {{getSAGEDocumentDate(sAGEDoc)}}
+                              </td>
+                              <td style="text-align: right; font-size:large; font-weight:500; padding:0 10px 0 10px;" class="border-bottom-grey">
+                                {{getSAGEDocumentHT(sAGEDoc)}}
+                              </td>
+                              <td style="min-width: 30px; vertical-align:middle;" class="border-bottom-grey">
+                                  <mat-icon *ngIf="sAGEDoc.SAGEDocumentReglements?.length>0" aria-label="Réglé" class="color-green"
+                                             matTooltip={{applicationUserContext.getCulturedRessourceText(1404)}}>check_circle</mat-icon>
+                                  <mat-icon *ngIf="!sAGEDoc.SAGEDocumentReglements?.length>0" aria-label="Non réglé" class="color-grey"
+                                             matTooltip={{applicationUserContext.getCulturedRessourceText(1405)}}>unpublished</mat-icon>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+              <td style="width: 355px; padding: 20px 10px 20px 10px;">
+                <div style="border-radius: 42px 0px 0px 0px; text-align: center; height: 335px; max-height: 335px; width: 335px; " class="mat-elevation-z10 background-color-accent-dark">
+                  <table class="table-no-pad-no-space" style="height: 100%; width: 100%; border-collapse: separate !important;">
+                    <tr style="vertical-align:top; height:80px;">
+                      <td style=" font-size:large; padding:40px 0 0 0 ; color:white;">
+                        <div style="font-weight: 500; font-size: large;">{{applicationUserContext.getCulturedRessourceText(1377)}}</div>
+                        <div style=" font-size:small;">{{currentMonth}}</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 100%; height:100%; border-radius: 42px 0px 0px 0px; border-width: 10px; border-style: solid; background-color:white; padding:25px 0 0 0;"
+                          class="border-color-accent-dark">
+                        <table class="table-no-pad-no-space" style="height: 100%; max-height: 100%; width: 100%; ">
+                          <tbody style="overflow-y: auto; height:210px; display:block;">
+                            <tr *ngIf="collectivitePrixReprises?.length==0" [@fadeInOnEnter] style="vertical-align:middle; height:50px; width:100%;">
+                              <td style="width: 25px; text-align: left;" class="border-bottom-grey border-top-grey"></td>
+                              <td class="border-bottom-grey border-top-grey color-primary-a-medium" style="text-align: left; font-weight: 500; padding: 0 10px 0 10px; width:100%;">
+                                {{applicationUserContext.getCulturedRessourceText(318)}}
+                              </td>
+                              <td style="min-width: 100px; text-align: right; font-size:large; font-weight:500; padding:0 10px 0 10px;" class="border-bottom-grey border-top-grey">
+                              </td>
+                            </tr>
+                            <tr *ngFor="let cPR of collectivitePrixReprises" [@fadeInOnEnter] style="vertical-align:middle; height:50px;">
+                              <td class="border-bottom-grey color-primary-a-medium" style="text-align: left; font-size: large; font-weight: 500; padding: 0 10px 0 10px; width:100%;">
+                                {{cPR.ProduitNomCommun}}
+                              </td>
+                              <td style="width: 50px; text-align: right; font-size:large; font-weight:500; padding:0 10px 0 10px;" class="border-bottom-grey">
+                                {{cPR.PUHT}}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+              <td style="width: 365px; padding: 20px 20px 20px 10px;">
+                <div style="background-color: white; border-radius: 50%; text-align: center; height: 335px; width: 335px;" class="mat-elevation-z10">
+                  <kendo-chart *ngIf="visibleChart" [style.height.px]="335" [style.width.px]="335" [seriesColors]="seriesColors"
+                               [categoryAxis]="categoryAxis"
+                               renderAs="svg"
+                               [pannable]="{ lock: 'y' }"
+                               [zoomable]="zoomable">
+                    <kendo-chart-area background="transparent" height="335" width="335"></kendo-chart-area>
+                    <ng-template kendoChartDonutCenterTemplate>
+                      <div class="color-primary-a-medium"
+                           style="height:100%; font-size:large; font-weight:500; margin:25px 50px 0 50px; vertical-align:top; line-height:110%; text-transform:uppercase;">
+                        {{applicationUserContext.getCulturedRessourceText(1346)}}&nbsp;{{getYearDeboucheBalle()}}
+                      </div>
+                    </ng-template>
+                    <kendo-chart-legend [visible]="legend"
+                                        orientation="vertical"
+                                        position="custom" [offsetX]="60" [offsetY]="110"
+                                        width="100">
+                    </kendo-chart-legend>
+                    <kendo-chart-series>
+                      <kendo-chart-series-item *ngFor="let serie of chartSeries"
+                                               [type]="serie.type"
+                                               [data]="serie.data"
+                                               [field]="serie.field"
+                                               [categoryField]="serie.categoryField"
+                                               [name]="serie.name"
+                                               [color]="serie.color"
+                                               [holeSize]="130"
+                                               [size]="20">
+                        <kendo-chart-series-item-labels [visible]="false">
+                        </kendo-chart-series-item-labels>
+                      </kendo-chart-series-item>
+                    </kendo-chart-series>
+                    <kendo-chart-axis-defaults [majorGridLines]="{ visible : false}">
+                    </kendo-chart-axis-defaults>
+                    <kendo-chart-value-axis>
+                      <kendo-chart-value-axis-item [line]="{visible:false}" labels="false">
+                      </kendo-chart-value-axis-item>
+                    </kendo-chart-value-axis>
+                  </kendo-chart>
+                  <table *ngIf="!visibleChart" [@fadeInOnEnter] class="table-no-pad-no-space" style="height: 100%; width: 100%; border-collapse: separate !important;">
+                    <tr style="vertical-align:middle; ">
+                      <td class="color-primary-a-medium" style="padding: 0 50px 0 50px; font-size: large; font-weight: 500;">
+                        {{applicationUserContext.getCulturedRessourceText(1346)}}&nbsp;{{getYearDeboucheBalle()}}
+                        <br />
+                        <br />
+                        {{applicationUserContext.getCulturedRessourceText(318)}}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+            </tr>
+            <tr style="height:89px;" class="background-color-primary">
+              <td colspan="4">
+                <table class="table-no-pad-no-space" style="width: 100%;">
+                  <tr>
+                    <td><img alt="logo" src="assets/images/logo-e-valorplast-mono-avec-texte.png" /></td>
+                    <td class="mat-small color-primary-light-light"><a href="assets/docs/mentionslegales.pdf" class="ev-hl-primary-light-light">{{applicationUserContext.getCulturedRessourceText(765)}}</a>&nbsp;- Copyright &copy; Valorplast {{legalMentionEndYear}}</td>
+                    <td>
+                      <div class="mat-body-strong color-accent">{{entiteDR?.DR?.Nom}}</div>
+                      <div class="mat-body color-primary-light-light">{{applicationUserContext.getCulturedRessourceText(1019)}}</div>
+                    </td>
+                    <td>
+                      <table class="table-no-pad-no-space">
+                        <tr *ngIf="entiteDR?.DR?.Tel" style="vertical-align:middle;">
+                          <td style="padding: 0 10px 0 0;">
+                            <mat-icon aria-label="Telephone" class="color-primary-medium-light material-icons-outlined">phone</mat-icon>
+                          </td>
+                          <td style="width: 100%; padding: 0 10px 0 0; color:white;">
+                            {{entiteDR?.DR?.Tel}}
+                          </td>
+                        </tr>
+                        <tr *ngIf="entiteDR?.DR?.TelMobile" style="vertical-align:middle;">
+                          <td style="padding: 0 10px 0 0;">
+                            <mat-icon aria-label="Mobile" class="color-primary-medium-light material-icons-outlined">smartphone</mat-icon>
+                          </td>
+                          <td style="width: 100%; padding: 0 10px 0 0; color:white;">
+                            {{entiteDR?.DR?.TelMobile}}
+                          </td>
+                        </tr>
+                        <tr *ngIf="entiteDR?.DR?.EMail" style="vertical-align:middle;">
+                          <td style="padding: 0 10px 0 0;">
+                            <mat-icon aria-label="Email" class="color-primary-medium-light material-icons-outlined">email</mat-icon>
+                          </td>
+                          <td style="padding: 0 10px 0 0; color: white;">
+                            <a [href]="'mailto:' + entiteDR?.DR?.EMail" class="ev-hl-white">{{entiteDR?.DR?.EMail}}</a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td>
+                      <div class="mat-body-strong color-accent">{{contactAdministratifNom}}</div>
+                      <div class="mat-body color-primary-light-light"> {{applicationUserContext.getCulturedRessourceText(1366)}}</div>
+                    </td>
+                    <td>
+                      <table class="table-no-pad-no-space">
+                        <tr *ngIf="contactAdministratifTel" style="vertical-align:middle;">
+                          <td style="padding: 0 10px 0 0;">
+                            <mat-icon aria-label="Telephone" class="color-primary-medium-light material-icons-outlined">phone</mat-icon>
+                          </td>
+                          <td style="width: 100%; padding: 0 10px 0 0; color:white;">
+                            {{contactAdministratifTel}}
+                          </td>
+                        </tr>
+                        <tr *ngIf="contactAdministratifEmail" style="vertical-align:middle;">
+                          <td style="padding: 0 10px 0 0;">
+                            <mat-icon aria-label="Email" class="color-primary-medium-light material-icons-outlined">email</mat-icon>
+                          </td>
+                          <td style="padding: 0 10px 0 0; color: white;">
+                            <a [href]="'mailto:' + contactAdministratifEmail" class="ev-hl-white">{{contactAdministratifEmail}}</a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td style="width:50%;"></td>
+      </tr>
+    </table>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+<progress-bar [color]="color" [mode]="mode" [value]="value" [backdropEnabled]="true"
+              [displayProgressBar]="displayProgressBar" position="GloballyTop">
+</progress-bar>

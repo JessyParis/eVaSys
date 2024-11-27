@@ -1,0 +1,579 @@
+<div class="ev-main-container">
+  <header>
+    <div *ngIf="this.applicationUserContext.currentMenu.name==='LogistiqueMenuPrixReprise'">
+      <div class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+          <form [formGroup]="formPrixRepriseCopy">
+            <mat-form-field class="ev-control-left">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(571)}}</mat-label>
+              <mat-select formControlName="MonthListFrom">
+                <mat-option *ngFor="let month of monthListFrom" [value]="month.d">{{month.name}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(formPrixRepriseCopy.get('MonthListFrom').touched || formPrixRepriseCopy.get('MonthListFrom').dirty) && formPrixRepriseCopy.get('MonthListFrom').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="ev-control-left">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(569)}}</mat-label>
+              <mat-select formControlName="YearListFrom">
+                <mat-option *ngFor="let year of yearListFrom" [value]="year.y">{{year.y}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(formPrixRepriseCopy.get('YearListFrom').touched || formPrixRepriseCopy.get('YearListFrom').dirty) && formPrixRepriseCopy.get('YearListFrom').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="copyPrixReprise()" [disabled]="formPrixRepriseCopy.invalid" class="ev-control-left">{{applicationUserContext.getCulturedRessourceText(616)}}</button>
+            <mat-form-field class="ev-control-left">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(571)}}</mat-label>
+              <mat-select formControlName="MonthListTo">
+                <mat-option *ngFor="let month of monthListTo" [value]="month.d">{{month.name}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(formPrixRepriseCopy.get('MonthListTo').touched || formPrixRepriseCopy.get('MonthListTo').dirty) && formPrixRepriseCopy.get('MonthListTo').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="ev-control-left">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(569)}}</mat-label>
+              <mat-select formControlName="YearListTo">
+                <mat-option *ngFor="let year of yearListTo" [value]="year.y">{{year.y}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(formPrixRepriseCopy.get('YearListTo').touched || formPrixRepriseCopy.get('YearListTo').dirty) && formPrixRepriseCopy.get('YearListTo').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="this.applicationUserContext.currentMenu.name==='LogistiqueMenuModifierTousPrixTransport' && applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'">
+      <div class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+          <form [formGroup]="formAugmentation">
+            <mat-form-field style="width:200px;" class="ev-control-left">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(290)}}</mat-label>
+              <input matInput formControlName="Augmentation" [allowNegativeNumbers]="true" mask="separator.2">
+              <span matTextSuffix>%</span>
+              <button *ngIf="formAugmentation.get('Augmentation').value" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formAugmentation.get('Augmentation').setValue(null)">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(291)}}</mat-hint>
+              <mat-error *ngIf="(formAugmentation.get('Augmentation').touched || formAugmentation.get('Augmentation').dirty) && formAugmentation.get('Augmentation').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="calculatePrices()" [disabled]="formAugmentation.invalid" class="ev-control-left">{{applicationUserContext.getCulturedRessourceText(292)}}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="this.applicationUserContext.currentMenu.name==='LogistiqueMenuTransportNonValide' && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')">
+      <div class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+          <button mat-raised-button color="primary" (click)="validatePrices()" [disabled]="!selection.hasValue()" class="ev-button-left">{{applicationUserContext.getCulturedRessourceText(285)}}</button>
+          <button mat-raised-button color="primary" (click)="validateAllPrices()" [disabled]="!this.dataSource.items?.length || this.dataSource.items?.length===0" class="ev-buttons-left">{{applicationUserContext.getCulturedRessourceText(286)}}</button>
+        </div>
+        <div class="ev-taskbar-right-container">
+          <button mat-raised-button color="warn" (click)="rejectPrices()" [disabled]="!selection.hasValue()" class="ev-button-right">{{applicationUserContext.getCulturedRessourceText(287)}}</button>
+          <button mat-raised-button color="warn" (click)="rejectAllPrices()" [disabled]="!this.dataSource.items?.length || this.dataSource.items?.length===0" class="ev-button-right">{{applicationUserContext.getCulturedRessourceText(288)}}</button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="this.applicationUserContext.currentMenu.name==='LogistiqueMenuSupprimerTransportEnMasse' && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')">
+      <div class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+          <button mat-raised-button color="primary" (click)="deletePrices()" [disabled]="!selection.hasValue()" class="ev-button-left">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+          <button mat-raised-button color="primary" (click)="deleteAllPrices()" [disabled]="!this.dataSource.items?.length || this.dataSource.items?.length===0" class="ev-buttons-left">{{applicationUserContext.getCulturedRessourceText(289)}}</button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="enAttenteVisible || moisDechargementPrevuVisible">
+      <div class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+          <button mat-raised-button color="primary" (click)="setEnAttente()" [disabled]="!selection.hasValue()" class="ev-button-left"
+                  *ngIf="enAttenteVisible">
+            {{applicationUserContext.getCulturedRessourceText(555)}}
+          </button>
+          <button mat-raised-button color="primary" (click)="changeMoisDechargementPrevu()" [disabled]="!(moisDechargementPrevuItems?.length>0)" class="ev-buttons-left"
+                  *ngIf="moisDechargementPrevuVisible">
+            {{applicationUserContext.getCulturedRessourceText(556)}}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="this.applicationUserContext.currentMenu.name==='AdministrationMenuUtilisateurInactif'">
+      <div class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+          <button mat-raised-button color="primary" (click)="deactivateUtilisateur()" [disabled]="!form.get('DBegin').value" class="ev-buttons-left">
+            {{applicationUserContext.getCulturedRessourceText(1115)}}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="(this.applicationUserContext.currentMenu.name==='LogistiqueMenuModifierTousPrixTransport' && applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')
+             || (this.applicationUserContext.currentMenu.name==='LogistiqueMenuTransportNonValide' && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'))
+             || (this.applicationUserContext.currentMenu.name==='LogistiqueMenuSupprimerTransportEnMasse' && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'))
+             || this.applicationUserContext.currentMenu.name==='LogistiqueMenuPrixReprise'">
+      <mat-divider></mat-divider>
+    </div>
+    <form [formGroup]="form">
+      <div class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+          <mat-form-field *ngIf="visibleFilterFilterText" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(440)}}</mat-label>
+            <input matInput formControlName="FilterText" maxlength="50">
+            <button *ngIf="form.get('FilterText').value" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onFilterTextReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterEnvCommandeFournisseurStatutList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(552)}}</mat-label>
+            <mat-select multiple formControlName="EnvCommandeFournisseurStatutList" [compareWith]="compareFnEnvCommandeFournisseurStatut">
+              <mat-option *ngFor="let envCommandeFournisseurStatut of this.applicationUserContext.envCommandeFournisseurStatuts" [value]="envCommandeFournisseurStatut">{{envCommandeFournisseurStatut.culturedCaption}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('EnvCommandeFournisseurStatutList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onEnvCommandeFournisseurStatutListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterDBegin" class="ev-control-left ev-date-picker">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(212)}}</mat-label>
+            <input matInput [matDatepicker]="pickerBegin" formControlName="DBegin">
+            <mat-datepicker-toggle matIconPrefix [for]="pickerBegin"></mat-datepicker-toggle>
+            <mat-datepicker #pickerBegin></mat-datepicker>
+            <button *ngIf="form.get('DBegin').value" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onDBeginReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-hint align="end">{{labelDBeginFC}}</mat-hint>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterDEnd" class="ev-control-left ev-date-picker">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(213)}}</mat-label>
+            <input matInput [matDatepicker]="pickerEnd" formControlName="DEnd">
+            <mat-datepicker-toggle matIconPrefix [for]="pickerEnd"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEnd></mat-datepicker>
+            <button *ngIf="form.get('DEnd').value" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onDEndReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-hint align="end">{{labelDFinFC}}</mat-hint>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterTransporteurList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(308)}}</mat-label>
+            <mat-select multiple formControlName="TransporteurList" [compareWith]="compareFnTransporteur">
+              <mat-option>
+                <ngx-mat-select-search formControlName="TransporteurListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                       noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let transporteurList of filteredTransporteurList | async" [value]="transporteurList">{{transporteurList.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('TransporteurList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onTransporteurListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterPrestataireList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(1403)}}</mat-label>
+            <mat-select multiple formControlName="PrestataireList" [compareWith]="compareFnPrestataire">
+              <mat-option>
+                <ngx-mat-select-search formControlName="PrestataireListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                       noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let prestataireList of filteredPrestataireList | async" [value]="prestataireList">{{prestataireList.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('PrestataireList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onPrestataireListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterClientList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(314)}}</mat-label>
+            <mat-select multiple formControlName="ClientList" [compareWith]="compareFnClient">
+              <mat-option>
+                <ngx-mat-select-search formControlName="ClientListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                       noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let clientList of filteredClientList | async" [value]="clientList">{{clientList.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('ClientList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onClientListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterCentreDeTriList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(315)}}</mat-label>
+            <mat-select multiple formControlName="CentreDeTriList" [compareWith]="compareFnCentreDeTri">
+              <mat-option>
+                <ngx-mat-select-search formControlName="CentreDeTriListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                       noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let centreDeTriList of filteredCentreDeTriList | async" [value]="centreDeTriList">{{centreDeTriList.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('CentreDeTriList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onCentreDeTriListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterIndustrielList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(582)}}</mat-label>
+            <mat-select multiple formControlName="IndustrielList" [compareWith]="compareFnIndustriel">
+              <mat-option *ngFor="let industrielList of industrielList" [value]="industrielList">{{industrielList.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('IndustrielList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onIndustrielListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterProcessList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(583)}}</mat-label>
+            <mat-select multiple formControlName="ProcessList" [compareWith]="compareFnProcess">
+              <mat-option *ngFor="let processList of processList" [value]="processList">{{processList.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('ProcessList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onProcessListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterProduitList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(317)}}</mat-label>
+            <mat-select multiple formControlName="ProduitList" [compareWith]="compareFnProduit">
+              <mat-option>
+                <ngx-mat-select-search formControlName="ProduitListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                       noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let produitList of filteredProduitList | async" [value]="produitList">{{produitList.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('ProduitList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onProduitListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterComposantList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(615)}}</mat-label>
+            <mat-select multiple formControlName="ComposantList" [compareWith]="compareFnComposant">
+              <mat-option *ngFor="let composantList of composantList" [value]="composantList">{{composantList.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('ComposantList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onComposantListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterDptDepartList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(433)}}</mat-label>
+            <mat-select multiple formControlName="DptDepartList" [compareWith]="compareFnDptDepart">
+              <mat-option *ngFor="let dpt of dptDepartList" [value]="dpt">{{dpt.RefDpt + " - " + dpt.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('DptDepartList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onDptDepartListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterVilleDepartList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(310)}}</mat-label>
+            <mat-select multiple formControlName="VilleDepartList" [compareWith]="compareFnVilleDepart">
+              <mat-option>
+                <ngx-mat-select-search formControlName="VilleDepartListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                       noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let ville of filteredVilleDepartList | async" [value]="ville">{{ville.Ville}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('VilleDepartList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onVilleDepartListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterDptArriveeList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(439)}}</mat-label>
+            <mat-select multiple formControlName="DptArriveeList" [compareWith]="compareFnDptArrivee">
+              <mat-option *ngFor="let dpt of dptArriveeList" [value]="dpt">{{dpt.RefDpt + " - " + dpt.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('DptArriveeList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onDptArriveeListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterVilleArriveeList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(311)}}</mat-label>
+            <mat-select multiple formControlName="VilleArriveeList" [compareWith]="compareFnVilleArrivee">
+              <mat-option>
+                <ngx-mat-select-search formControlName="VilleArriveeListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                       noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let ville of filteredVilleArriveeList | async" [value]="ville">{{ville.Ville}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('VilleArriveeList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onVilleArriveeListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterPaysList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(312)}}</mat-label>
+            <mat-select multiple formControlName="PaysList" [compareWith]="compareFnPays">
+              <mat-option *ngFor="let pays of paysList" [value]="pays">{{pays.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('PaysList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onPaysListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterMonthList" class="ev-control-left">
+            <mat-label>{{labelMonthListFC}}</mat-label>
+            <mat-select multiple formControlName="MonthList" [compareWith]="compareFnMonth">
+              <mat-option *ngFor="let month of monthList" [value]="month">{{month.name}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('MonthList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onMonthListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterYearList" class="ev-control-left">
+            <mat-label>{{labelYearListFC}}</mat-label>
+            <mat-select multiple formControlName="YearList" [compareWith]="compareFnYear">
+              <mat-option *ngFor="let year of yearList" [value]="year">{{year.y}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('YearList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onYearListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterCamionTypeList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(313)}}</mat-label>
+            <mat-select multiple formControlName="CamionTypeList" [compareWith]="compareFnCamionType">
+              <mat-option *ngFor="let camionType of camionTypeList" [value]="camionType">{{camionType.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('CamionTypeList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onCamionTypeListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-checkbox *ngIf="visibleFilterCommandesFournisseurAttribuees" class="ev-control-left"
+                        formControlName="CommandesFournisseurAttribuees">
+            {{applicationUserContext.getCulturedRessourceText(782)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterCommandesFournisseurNonChargees" class="ev-control-left"
+                        formControlName="CommandesFournisseurNonChargees">
+            {{applicationUserContext.getCulturedRessourceText(731)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterValideDPrevues" class="ev-control-left"
+                        formControlName="ValideDPrevues">
+            {{applicationUserContext.getCulturedRessourceText(511)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterDChargementModif" class="ev-control-left"
+                        formControlName="DChargementModif" matTooltip={{applicationUserContext.getCulturedRessourceText(561)}}>
+            {{applicationUserContext.getCulturedRessourceText(554)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterDatesTransporteur" class="ev-control-left"
+                        formControlName="DatesTransporteur" matTooltip={{applicationUserContext.getCulturedRessourceText(562)}}>
+            {{applicationUserContext.getCulturedRessourceText(559)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterAnomalieCommandeFournisseur" class="ev-control-left"
+                        formControlName="AnomalieCommandeFournisseur" matTooltip={{applicationUserContext.getCulturedRessourceText(579)}}>
+            {{applicationUserContext.getCulturedRessourceText(578)}}
+          </mat-checkbox>
+          <mat-form-field *ngIf="visibleFilterMessageTypeList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(643)}}</mat-label>
+            <mat-select multiple formControlName="MessageTypeList" [compareWith]="compareFnMessageType">
+              <mat-option *ngFor="let messageType of messageTypeList" [value]="messageType">{{messageType.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('MessageTypeList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onMessageTypeListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterEntiteTypeList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(646)}}</mat-label>
+            <mat-select multiple formControlName="EntiteTypeList" [compareWith]="compareFnEntiteType">
+              <mat-option *ngFor="let entiteType of entiteTypeList" [value]="entiteType">{{entiteType.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('EntiteTypeList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onEntiteTypeListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterEcoOrganismeList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(1416)}}</mat-label>
+            <mat-select multiple formControlName="EcoOrganismeList" [compareWith]="compareFnEcoOrganisme">
+              <mat-option *ngFor="let ecoOrganisme of ecoOrganismeList" [value]="ecoOrganisme">{{ecoOrganisme.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('EcoOrganismeList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onEcoOrganismeListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterApplicationProduitOrigineList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(703)}}</mat-label>
+            <mat-select multiple formControlName="ApplicationProduitOrigineList" [compareWith]="compareFnApplicationProduitOrigine">
+              <mat-option *ngFor="let applicationProduitOrigine of applicationProduitOrigineList" [value]="applicationProduitOrigine">{{applicationProduitOrigine.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('ApplicationProduitOrigineList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onApplicationProduitOrigineListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterDRList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(764)}}</mat-label>
+            <mat-select multiple formControlName="DRList" [compareWith]="compareFnDR">
+              <mat-option *ngFor="let utilisateur of dRList" [value]="utilisateur">{{utilisateur.Nom}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('DRList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onDRListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field  *ngIf="visibleFilterUtilisateurMaitreList" class="ev-control-left" style="width:400px;">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(1473)}}</mat-label>
+            <mat-select multiple formControlName="UtilisateurMaitreList" [compareWith]="compareFnUtilisateurMaitre">
+              <mat-option>
+                <ngx-mat-select-search formControlName="UtilisateurMaitreListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                       noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let utilisateurMaitre of filteredUtilisateurMaitreList | async" [value]="utilisateurMaitre">{{getProfilInfos(utilisateurMaitre)}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('UtilisateurMaitreList').value && form.get('UtilisateurMaitreList').enabled"
+                    matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('UtilisateurMaitreList').setValue(null)" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterNonConformiteNatureList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(817)}}</mat-label>
+            <mat-select multiple formControlName="NonConformiteNatureList" [compareWith]="compareFnNonConformiteNature">
+              <mat-option *ngFor="let nonConformiteNature of nonConformiteNatureList" [value]="nonConformiteNature">{{nonConformiteNature.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('NonConformiteNatureList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onNonConformiteNatureListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterNonConformiteEtapeTypeList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(859)}}</mat-label>
+            <mat-select multiple formControlName="NonConformiteEtapeTypeList" [compareWith]="compareFnNonConformiteEtapeType">
+              <mat-option *ngFor="let nonConformiteEtapeType of nonConformiteEtapeTypeList" [value]="nonConformiteEtapeType">{{nonConformiteEtapeType.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('NonConformiteEtapeTypeList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onNonConformiteEtapeTypeListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-checkbox *ngIf="visibleFilterControle" class="ev-control-left" formControlName="Controle">
+            {{applicationUserContext.getCulturedRessourceText(52)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterIFFournisseur" class="ev-control-left" formControlName="IFFournisseur">
+            {{applicationUserContext.getCulturedRessourceText(185)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterIFClient" class="ev-control-left" formControlName="IFClient">
+            {{applicationUserContext.getCulturedRessourceText(193)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterIFFournisseurRetourLot" class="ev-control-left" formControlName="IFFournisseurRetourLot">
+            {{applicationUserContext.getCulturedRessourceText(827)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterIFFournisseurAttenteBonCommande" class="ev-control-left" formControlName="IFFournisseurAttenteBonCommande">
+            {{applicationUserContext.getCulturedRessourceText(848)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterIFFournisseurFacture" class="ev-control-left" formControlName="IFFournisseurFacture">
+            {{applicationUserContext.getCulturedRessourceText(864)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterIFFournisseurTransmissionFacturation" class="ev-control-left" formControlName="IFFournisseurTransmissionFacturation">
+            {{applicationUserContext.getCulturedRessourceText(840)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterNonConformitesATransmettre" class="ev-control-left" formControlName="NonConformitesATransmettre">
+            {{applicationUserContext.getCulturedRessourceText(875)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterNonConformitesATraiter" class="ev-control-left" formControlName="NonConformitesATraiter">
+            {{applicationUserContext.getCulturedRessourceText(867)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterNonConformitesPlanActionAValider" class="ev-control-left" formControlName="NonConformitesPlanActionAValider">
+            {{applicationUserContext.getCulturedRessourceText(870)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterNonConformitesPlanActionNR" class="ev-control-left" formControlName="NonConformitesPlanActionNR">
+            {{applicationUserContext.getCulturedRessourceText(1069)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterActif" class="ev-control-left" formControlName="Actif">
+            {{applicationUserContext.getCulturedRessourceText(651)}}
+          </mat-checkbox>
+          <mat-form-field *ngIf="visibleFilterNonRepartissable" class="ev-control-left">
+            <mat-select formControlName="NonRepartissable">
+              <mat-option value="">{{applicationUserContext.getCulturedRessourceText(1060)}}</mat-option>
+              <mat-option value="0">{{applicationUserContext.getCulturedRessourceText(1059)}}</mat-option>
+              <mat-option value="1">{{applicationUserContext.getCulturedRessourceText(1058)}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterCollecte" class="ev-control-left">
+            <mat-select formControlName="Collecte">
+              <mat-option value="DansOuHorsCollecte">{{applicationUserContext.getCulturedRessourceText(949)}}</mat-option>
+              <mat-option value="Collecte">{{applicationUserContext.getCulturedRessourceText(603)}}</mat-option>
+              <mat-option value="HorsCollecte">{{applicationUserContext.getCulturedRessourceText(599)}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field *ngIf="visibleFilterRegionReportingList" class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(10073)}}</mat-label>
+            <mat-select multiple formControlName="RegionReportingList" [compareWith]="compareFnRegionReporting">
+              <mat-option *ngFor="let regionReportingList of regionReportingList" [value]="regionReportingList">{{regionReportingList.Libelle}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('RegionReportingList').value.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onRegionReportingListReset();" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-checkbox *ngIf="visibleFilterDonneeEntiteSage" class="ev-control-left"
+                        formControlName="DonneeEntiteSage" matTooltip={{applicationUserContext.getCulturedRessourceText(1469)}}>
+            {{applicationUserContext.getCulturedRessourceText(1468)}}
+          </mat-checkbox>
+        </div>
+        <div class="ev-taskbar-right-container">
+          <button mat-icon-button (click)="applyFilter()" matTooltip={{applicationUserContext.getCulturedRessourceText(492)}} class="ev-button-right" type="submit">
+            <mat-icon aria-label="Filter">search</mat-icon>
+          </button>
+          <button mat-icon-button (click)="onResetFilter()" matTooltip={{applicationUserContext.getCulturedRessourceText(780)}} class="ev-button-right" type="button" color="warn">
+            <mat-icon aria-label="Reset filters">close</mat-icon>
+          </button>
+          <button mat-icon-button (click)="exportTransport()" matTooltip={{applicationUserContext.getCulturedRessourceText(493)}}
+                  *ngIf="applicationUserContext.currentMenu.name==='LogistiqueMenuModifierTransport'
+                  && applicationUserContext.connectedUtilisateur.Transporteur" class="ev-button-right" type="button">
+            <mat-icon aria-label="Exporter">archive</mat-icon>
+          </button>
+        </div>
+      </div>
+    </form>
+  </header>
+  <div class="ev-datatable-container">
+    <mat-progress-spinner *ngIf="dataSource.loading$ | async" color="accent" mode="indeterminate" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index:1000000"></mat-progress-spinner>
+    <div class="ev-table-full-container">
+      <table mat-table [dataSource]="dataSource" matSort matSortDisableClear>
+        <ng-container matColumnDef="select" sticky>
+          <th mat-header-cell *matHeaderCellDef style="padding:10px !important">
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()" style="padding:10px !important">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="infoTransportConcurrence" sticky>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()" style="padding:0px !important" [class]="setStyle(row, 'infoTransportConcurrence')">
+          <button *ngIf="row.RefTransport" mat-icon-button (click)="onTransportConcurrenceClicked(row)">
+            <mat-icon class="color-grey">info</mat-icon></button></td>
+        </ng-container>
+        <ng-container matColumnDef="infoMessageVisualisations" sticky>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()" style="padding:0px !important" [class]="setStyle(row, 'infoMessageVisualisations')">
+          <button mat-icon-button (click)="onMessageVisualisationsClicked(row)">
+            <mat-icon class="color-grey">info</mat-icon></button></td>
+        </ng-container>
+        <ng-container matColumnDef="moisDechargementPrevu" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="ev-cell">{{applicationUserContext.getCulturedRessourceText(563)}}</th>
+          <td mat-cell *matCellDef="let row" class="ev-cell" (click)="$event.stopPropagation()">
+            <mat-select placeholder={{applicationUserContext.getCulturedRessourceText(459)}} style="width:150px;"
+                        [disabled]="(row.ClientLibelle!=='' && row.ClientLibelle!==null)"
+                        (selectionChange)="setDMoisDechargementPrevu($event.value, row.RefCommandeFournisseur)">
+              <mat-option *ngFor="let month of monthList" [value]="month">{{month.name}}</mat-option>
+            </mat-select>
+          </td>
+        </ng-container>
+        <ng-container *ngFor="let column of dataSource.columns" [matColumnDef]="column.columnDef" [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="ev-cell">{{column.header}}</th>
+          <td mat-cell *matCellDef="let item" [class]="setStyle(item, column)"
+              [matTooltip]="column.cell(item)?.toString()" [matTooltipDisabled]="column.cell(item)?.toString()?.length<100">{{shortenLongText(column.cell(item))}}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="dataSource.displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let item; columns: dataSource.displayedColumns;" (click)="onRowClicked(item)"></tr>
+      </table>
+    </div>
+  </div>
+  <mat-paginator #pagin [length]="this.dataSource.nbRow" [pageSize]="25" [pageSizeOptions]="[10, 25, 50]"></mat-paginator>
+</div>

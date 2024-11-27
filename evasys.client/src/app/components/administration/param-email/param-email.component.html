@@ -1,0 +1,332 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onSave()" [disabled]="form.invalid">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="paramEmail?.RefParamEmail" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1311)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-checkbox formControlName="Actif" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(651)}}</mat-checkbox>
+            <mat-checkbox formControlName="RttClient" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(1304)}}</mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1313)}}</mat-label>
+              <input matInput formControlName="POP" maxlength="200" />
+              <button *ngIf="form.get('POP').value && form.get('POP').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('POP').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1314)}}</mat-label>
+              <input matInput formControlName="PortPOP" type="number" />
+              <button *ngIf="form.get('PortPOP').value && form.get('PortPOP').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('PortPOP').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-checkbox formControlName="TLSPOP" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(1315)}}</mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1316)}}</mat-label>
+              <input matInput formControlName="ComptePOP" maxlength="200" />
+              <button *ngIf="form.get('ComptePOP').value && form.get('ComptePOP').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('ComptePOP').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1317)}}</mat-label>
+              <input matInput formControlName="PwdPOP" maxlength="200" />
+              <button *ngIf="form.get('PwdPOP').value && form.get('PwdPOP').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('PwdPOP').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxDoubleSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1306)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-checkbox formControlName="AR" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(1307)}}</mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1310)}}</mat-label>
+              <input matInput formControlName="AREmailSujet" maxlength="200" [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('AREmailSujet').value && form.get('AREmailSujet').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('AREmailSujet').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1308)}}</mat-label>
+              <input matInput formControlName="ARExpediteurLibelle" maxlength="200" />
+              <button *ngIf="form.get('ARExpediteurLibelle').value && form.get('ARExpediteurLibelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('ARExpediteurLibelle').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1309)}}</mat-label>
+              <input matInput formControlName="ARExpediteurEmail" maxlength="200" />
+              <button *ngIf="form.get('ARExpediteurEmail').value && form.get('ARExpediteurEmail').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('ARExpediteurEmail').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <kendo-editor formControlName="AREmail" style="height: 400px; width:100%;">
+              <kendo-toolbar>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorItalicButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorUnderlineButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorAlignLeftButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignCenterButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignRightButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignJustifyButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-dropdownlist kendoEditorFontSize></kendo-toolbar-dropdownlist>
+                <kendo-toolbar-dropdownlist kendoEditorFontFamily [data]="kendoFontData"></kendo-toolbar-dropdownlist>
+                <kendo-toolbar-colorpicker kendoEditorForeColor></kendo-toolbar-colorpicker>
+                <kendo-toolbar-colorpicker kendoEditorBackColor></kendo-toolbar-colorpicker>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorInsertUnorderedListButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorInsertOrderedListButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorCreateLinkButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-button kendoEditorViewSourceButton></kendo-toolbar-button>
+              </kendo-toolbar>
+              <kendo-editor-messages [bold]="applicationUserContext.getCulturedRessourceText(1479)"
+                                     [italic]="applicationUserContext.getCulturedRessourceText(1480)"
+                                     [underline]="applicationUserContext.getCulturedRessourceText(1481)"
+                                     [alignLeft]="applicationUserContext.getCulturedRessourceText(1482)"
+                                     [alignCenter]="applicationUserContext.getCulturedRessourceText(1483)"
+                                     [alignRight]="applicationUserContext.getCulturedRessourceText(1484)"
+                                     [alignJustify]="applicationUserContext.getCulturedRessourceText(1485)"
+                                     [fontFamily]="applicationUserContext.getCulturedRessourceText(1486)"
+                                     [fontSize]="applicationUserContext.getCulturedRessourceText(1487)"
+                                     [foreColor]="applicationUserContext.getCulturedRessourceText(1488)"
+                                     [backColor]="applicationUserContext.getCulturedRessourceText(1494)"
+                                     [insertOrderedList]="applicationUserContext.getCulturedRessourceText(1489)"
+                                     [insertUnorderedList]="applicationUserContext.getCulturedRessourceText(1490)"
+                                     [createLink]="applicationUserContext.getCulturedRessourceText(1491)"
+                                     [unlink]="applicationUserContext.getCulturedRessourceText(1492)"
+                                     [viewSource]="applicationUserContext.getCulturedRessourceText(1493)"
+                                     [dialogUpdate]="applicationUserContext.getCulturedRessourceText(682)"
+                                     [dialogCancel]="applicationUserContext.getCulturedRessourceText(133)"
+                                     [dialogInsert]="applicationUserContext.getCulturedRessourceText(598)"
+                                     [linkOpenInNewWindow]="applicationUserContext.getCulturedRessourceText(1496)"
+                                     [linkText]="applicationUserContext.getCulturedRessourceText(1497)"
+                                     [linkTitle]="applicationUserContext.getCulturedRessourceText(1149)"
+                                     [linkWebAddress]="applicationUserContext.getCulturedRessourceText(1495)"></kendo-editor-messages>
+            </kendo-editor>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1312)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1305)}}</mat-label>
+              <input matInput formControlName="LibelleExpediteur" maxlength="200" />
+              <button *ngIf="form.get('LibelleExpediteur').value && form.get('LibelleExpediteur').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('LibelleExpediteur').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1333)}}</mat-label>
+              <input matInput formControlName="EmailExpediteur" maxlength="200" />
+              <button *ngIf="form.get('EmailExpediteur').value && form.get('EmailExpediteur').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('EmailExpediteur').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1318)}}</mat-label>
+              <input matInput formControlName="SMTP" maxlength="200" />
+              <button *ngIf="form.get('SMTP').value && form.get('SMTP').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('SMTP').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1319)}}</mat-label>
+              <input matInput formControlName="PortSMTP" type="number" />
+              <button *ngIf="form.get('PortSMTP').value && form.get('PortSMTP').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('PortSMTP').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-checkbox formControlName="AllowAuthSMTP" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(1320)}}</mat-checkbox>
+            <mat-checkbox formControlName="TLSSMTP" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(1321)}}</mat-checkbox>
+            <mat-checkbox formControlName="StartTLSSMTP" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(1322)}}</mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1323)}}</mat-label>
+              <input matInput formControlName="CompteSMTP" maxlength="200" />
+              <button *ngIf="form.get('CompteSMTP').value && form.get('CompteSMTP').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('CompteSMTP').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1324)}}</mat-label>
+              <input matInput formControlName="PwdSMTP" maxlength="200" />
+              <button *ngIf="form.get('PwdSMTP').value && form.get('PwdSMTP').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('PwdSMTP').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxDoubleSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1303)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <kendo-editor formControlName="EnTeteEmail" style="height: 330px; width:100%;">
+              <kendo-toolbar>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorItalicButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorUnderlineButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorAlignLeftButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignCenterButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignRightButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignJustifyButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-dropdownlist kendoEditorFontSize></kendo-toolbar-dropdownlist>
+                <kendo-toolbar-dropdownlist kendoEditorFontFamily [data]="kendoFontData"></kendo-toolbar-dropdownlist>
+                <kendo-toolbar-colorpicker kendoEditorForeColor></kendo-toolbar-colorpicker>
+                <kendo-toolbar-colorpicker kendoEditorBackColor></kendo-toolbar-colorpicker>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorInsertUnorderedListButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorInsertOrderedListButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorCreateLinkButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-button kendoEditorViewSourceButton></kendo-toolbar-button>
+              </kendo-toolbar>
+              <kendo-editor-messages [bold]="applicationUserContext.getCulturedRessourceText(1479)"
+                                     [italic]="applicationUserContext.getCulturedRessourceText(1480)"
+                                     [underline]="applicationUserContext.getCulturedRessourceText(1481)"
+                                     [alignLeft]="applicationUserContext.getCulturedRessourceText(1482)"
+                                     [alignCenter]="applicationUserContext.getCulturedRessourceText(1483)"
+                                     [alignRight]="applicationUserContext.getCulturedRessourceText(1484)"
+                                     [alignJustify]="applicationUserContext.getCulturedRessourceText(1485)"
+                                     [fontFamily]="applicationUserContext.getCulturedRessourceText(1486)"
+                                     [fontSize]="applicationUserContext.getCulturedRessourceText(1487)"
+                                     [foreColor]="applicationUserContext.getCulturedRessourceText(1488)"
+                                     [backColor]="applicationUserContext.getCulturedRessourceText(1494)"
+                                     [insertOrderedList]="applicationUserContext.getCulturedRessourceText(1489)"
+                                     [insertUnorderedList]="applicationUserContext.getCulturedRessourceText(1490)"
+                                     [createLink]="applicationUserContext.getCulturedRessourceText(1491)"
+                                     [unlink]="applicationUserContext.getCulturedRessourceText(1492)"
+                                     [viewSource]="applicationUserContext.getCulturedRessourceText(1493)"
+                                     [dialogUpdate]="applicationUserContext.getCulturedRessourceText(682)"
+                                     [dialogCancel]="applicationUserContext.getCulturedRessourceText(133)"
+                                     [dialogInsert]="applicationUserContext.getCulturedRessourceText(598)"
+                                     [linkOpenInNewWindow]="applicationUserContext.getCulturedRessourceText(1496)"
+                                     [linkText]="applicationUserContext.getCulturedRessourceText(1497)"
+                                     [linkTitle]="applicationUserContext.getCulturedRessourceText(1149)"
+                                     [linkWebAddress]="applicationUserContext.getCulturedRessourceText(1495)"></kendo-editor-messages>
+            </kendo-editor>
+            <kendo-editor formControlName="PiedEmail" style="height: 330px; width:100%;">
+              <kendo-toolbar>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorItalicButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorUnderlineButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorAlignLeftButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignCenterButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignRightButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignJustifyButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-dropdownlist kendoEditorFontSize></kendo-toolbar-dropdownlist>
+                <kendo-toolbar-dropdownlist kendoEditorFontFamily [data]="kendoFontData"></kendo-toolbar-dropdownlist>
+                <kendo-toolbar-colorpicker kendoEditorForeColor></kendo-toolbar-colorpicker>
+                <kendo-toolbar-colorpicker kendoEditorBackColor></kendo-toolbar-colorpicker>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorInsertUnorderedListButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorInsertOrderedListButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorCreateLinkButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-button kendoEditorViewSourceButton></kendo-toolbar-button>
+              </kendo-toolbar>
+              <kendo-editor-messages [bold]="applicationUserContext.getCulturedRessourceText(1479)"
+                                     [italic]="applicationUserContext.getCulturedRessourceText(1480)"
+                                     [underline]="applicationUserContext.getCulturedRessourceText(1481)"
+                                     [alignLeft]="applicationUserContext.getCulturedRessourceText(1482)"
+                                     [alignCenter]="applicationUserContext.getCulturedRessourceText(1483)"
+                                     [alignRight]="applicationUserContext.getCulturedRessourceText(1484)"
+                                     [alignJustify]="applicationUserContext.getCulturedRessourceText(1485)"
+                                     [fontFamily]="applicationUserContext.getCulturedRessourceText(1486)"
+                                     [fontSize]="applicationUserContext.getCulturedRessourceText(1487)"
+                                     [foreColor]="applicationUserContext.getCulturedRessourceText(1488)"
+                                     [backColor]="applicationUserContext.getCulturedRessourceText(1494)"
+                                     [insertOrderedList]="applicationUserContext.getCulturedRessourceText(1489)"
+                                     [insertUnorderedList]="applicationUserContext.getCulturedRessourceText(1490)"
+                                     [createLink]="applicationUserContext.getCulturedRessourceText(1491)"
+                                     [unlink]="applicationUserContext.getCulturedRessourceText(1492)"
+                                     [viewSource]="applicationUserContext.getCulturedRessourceText(1493)"
+                                     [dialogUpdate]="applicationUserContext.getCulturedRessourceText(682)"
+                                     [dialogCancel]="applicationUserContext.getCulturedRessourceText(133)"
+                                     [dialogInsert]="applicationUserContext.getCulturedRessourceText(598)"
+                                     [linkOpenInNewWindow]="applicationUserContext.getCulturedRessourceText(1496)"
+                                     [linkText]="applicationUserContext.getCulturedRessourceText(1497)"
+                                     [linkTitle]="applicationUserContext.getCulturedRessourceText(1149)"
+                                     [linkWebAddress]="applicationUserContext.getCulturedRessourceText(1495)"></kendo-editor-messages>
+            </kendo-editor>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

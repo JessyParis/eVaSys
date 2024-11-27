@@ -1,0 +1,25 @@
+<div class="ev-main-container border-color-accent-dark"
+     style="border-width:10px; border-style:solid; box-sizing:border-box; background-color:transparent !important;">
+  <header class="mat-dialog-title mat-typography" style="padding: 30px 40px 0 40px;">
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <div class="color-primary-a-medium" style="font-size: x-large; font-weight: 600;">
+          {{message?.Titre ? message.Titre : applicationUserContext.getCulturedRessourceText(637)}}
+        </div>
+      </div>
+      <div class="ev-taskbar-right-container" style="padding: 0 40px 20px 0;">
+        <mat-icon *ngIf="message?.Important===false" class="color-primary icon-2x">info</mat-icon>
+        <mat-icon *ngIf="message?.Important===true" class="color-accent icon-2x">warning</mat-icon>
+      </div>
+    </div>
+  </header>
+  <div *ngIf="!message" class="ev-datatable-container" style="overflow-y:auto; width:100%; padding:10px 40px 10px 40px;">
+  </div>
+  <div *ngIf="message" class="ev-datatable-container" style="overflow-y:auto; width:100%; padding:10px 40px 10px 40px;" [innerHTML]="(message?.CorpsHTML ? message?.CorpsHTML: message?.CorpsHTMLFromText) | safeHtml">
+  </div>
+  <mat-divider></mat-divider>
+  <footer style="padding: 20px 40px 30px 40px;">
+    <button mat-raised-button color="primary" (click)="onRead();" class="ev-button-left">{{applicationUserContext.getCulturedRessourceText(636)}}</button>
+    <button mat-button (click)="onDismiss();" class="ev-button-left">{{applicationUserContext.getCulturedRessourceText(635)}}</button>
+  </footer>
+</div>

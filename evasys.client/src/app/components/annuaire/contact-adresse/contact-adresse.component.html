@@ -1,0 +1,172 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onSave()"
+                *ngIf="!locked">
+          {{applicationUserContext.getCulturedRessourceText(45)}}
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button mat-raised-button color="warn" class="ev-button-left" type="button" mat-dialog-close="">
+          {{applicationUserContext.getCulturedRessourceText(133)}}
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="ev-dataform-container">
+    <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary"></td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(476)}}</mat-label>
+                <mat-select formControlName="AdresseList"
+                            [required]="adresseRequired" [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let adresse of adresseList" [value]="adresse.RefAdresse">{{adresse.TexteAdresseList}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('AdresseList').value && form.get('AdresseList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="$event.stopPropagation(); form.get('AdresseList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(469)}}</mat-label>
+                <mat-select formControlName="CiviliteList">
+                  <mat-option *ngFor="let civilite of civiliteList" [value]="civilite?.RefCivilite">{{civilite?.Libelle}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('CiviliteList').value && form.get('CiviliteList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="$event.stopPropagation(); form.get('CiviliteList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(470)}}</mat-label>
+                <input matInput formControlName="Prenom" maxlength="50" />
+                <button *ngIf="form.get('Prenom').value && form.get('Prenom').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Prenom').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(471)}}</mat-label>
+                <input matInput formControlName="Nom" maxlength="50" required [errorStateMatcher]="matcher" (input)="form.get('Nom').setValue(form.get('Nom').value.toUpperCase())" />
+                <button *ngIf="form.get('Nom').value && form.get('Nom').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Nom').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="(form.get('Nom').touched || form.get('Nom').dirty) && form.get('Nom').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(419)}}</mat-label>
+                <input matInput formControlName="Email" maxlength="200" />
+                <button *ngIf="form.get('Email').value && form.get('Email').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Email').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="(form.get('Email').touched || form.get('Email').dirty) && form.get('Email').errors?.email">{{applicationUserContext.getCulturedRessourceText(495)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(417)}}</mat-label>
+                <input matInput formControlName="Tel" maxlength="20" />
+                <button *ngIf="form.get('Tel').value && form.get('Tel').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Tel').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(437)}}</mat-label>
+                <input matInput formControlName="TelMobile" maxlength="20" />
+                <button *ngIf="form.get('TelMobile').value && form.get('TelMobile').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('TelMobile').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+                <textarea matInput formControlName="Cmt" maxlength="1500" style="height:90px;"></textarea>
+                <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary"></td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <mat-checkbox formControlName="Actif" style="width:100%;">
+                {{applicationUserContext.getCulturedRessourceText(1151)}}
+              </mat-checkbox>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(1149)}}</mat-label>
+                <mat-select formControlName="TitreList">
+                  <mat-option *ngFor="let titre of titreList" [value]="titre?.RefTitre">{{titre?.Libelle}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('TitreList').value && form.get('TitreList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="$event.stopPropagation(); form.get('TitreList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(420)}}</mat-label>
+                <mat-select multiple formControlName="ContactAdresseProcessList"
+                            [compareWith]="compareFnContactAdresseProcess" (selectionChange)="onContactAdresseProcessSelected()">
+                  <mat-option *ngFor="let contactAdresseContactAdresseProcess of contactAdresseContactAdresseProcessList" [value]="contactAdresseContactAdresseProcess"
+                              matTooltip={{applicationUserContext.getCulturedRessourceText(GetContactAdresseProcessTooltipRessourceId(contactAdresseContactAdresseProcess.ContactAdresseProcess?.RefContactAdresseProcess))}}>{{contactAdresseContactAdresseProcess.ContactAdresseProcess.Libelle}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('ContactAdresseProcessList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="$event.stopPropagation(); onContactAdresseProcessListReset();" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <table class="contact-adresse-services-fonctions table-no-pad-no-space" style="border:1px solid black; margin: 0 0 10px 0;">
+                <thead class="background-color-accent">
+                  <tr>
+                    <th style="padding:5px;">
+                      <button mat-icon-button (click)="showDetails('AnnuaireContactAdresseServiceFonction', null, 1, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                    </th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1146)}}</th>
+                    <th style="padding:5px;"></th>
+                    <th style="padding:5px;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let cASF of contactAdresse?.ContactAdresseServiceFonctions">
+                    <td style="padding: 0px 5px 0px 5px;">
+                      <button mat-icon-button (click)="showDetails('AnnuaireContactAdresseServiceFonction', cASF.RefContactAdresseServiceFonction, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                    </td>
+                    <td style="padding: 0px 5px 0px 5px;">{{contactAdresseServiceFonctionLabel(cASF)}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">
+                      <button mat-icon-button (click)="onDeleteContactAdresseServiceFonction(cASF.RefContactAdresseServiceFonction)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(1185)}}</mat-label>
+                <textarea matInput formControlName="CmtServiceFonction" maxlength="500" style="height:120px;"></textarea>
+                <button *ngIf="form.get('CmtServiceFonction').value && form.get('CmtServiceFonction').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CmtServiceFonction').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(1189)}}</mat-hint>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

@@ -1,0 +1,8 @@
+
+      <kendo-scrollview [data]="pictures" [width]="width" [height]="height" [arrows]="true" [pageable]="true"
+                        [activeIndex]="activeIndex">
+        <ng-template let-item="item">
+          <h2 class="image-gallery-title">{{item?.Nom}}</h2>
+          <img [src]="item.VignetteBase64?'data:image/jpeg;base64,'+item?.VignetteBase64:''" alt='{{item?.Nom}}' [ngStyle]="{minWidth: width}" draggable="false" />
+        </ng-template>
+      </kendo-scrollview>

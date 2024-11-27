@@ -1,0 +1,114 @@
+<form [formGroup]="form" class="ev-horizontal-container">
+  <div class="boxNormalSize">
+    <table class="cadre_primary">
+      <tr>
+        <td [class]="'cadre_header_' + (form.dirty ? 'accent' : 'primary')">
+          <table class="table-no-pad-no-space">
+            <tr style="vertical-align:middle">
+              <td>
+                <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+              </td>
+              <td style="width:100%;">{{locked?applicationUserContext.getCulturedRessourceText(749):applicationUserContext.getCulturedRessourceText(42)}}</td>
+              <td>
+                <button mat-icon-button class="ev-button-left" type="button" (click)="onSave();" [disabled]="form.invalid" *ngIf="!locked">
+                  <mat-icon>save</mat-icon>
+                </button>
+              </td>
+              <td>
+                <button mat-icon-button class="ev-button-left" type="button" (click)="onDelete();"
+                        *ngIf="descriptionReception?.RefDescriptionReception && !locked">
+                  <mat-icon aria-label="Delete">delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="cadre_body">
+          <mat-form-field style="width:100%;">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(461)}}</mat-label>
+            <input matInput formControlName="Ordre" type="number" pattern="^[0-9]+$" maxlength="2" required [errorStateMatcher]="matcher" />
+            <button *ngIf="form.get('Ordre').value!=null && form.get('Ordre').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Ordre').setValue(null)" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error align="end" *ngIf="(form.get('Ordre').touched || form.get('Ordre').dirty) && form.get('Ordre').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            <mat-error align="end" *ngIf="(form.get('Ordre').touched || form.get('Ordre').dirty) && form.get('Ordre').errors?.max">{{applicationUserContext.getCulturedRessourceText(573) + (form.get('Ordre').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
+            <mat-error align="end" *ngIf="(form.get('Ordre').touched || form.get('Ordre').dirty) && form.get('Ordre').errors?.min">{{applicationUserContext.getCulturedRessourceText(687) + (form.get('Ordre').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
+          </mat-form-field>
+          <mat-checkbox formControlName="Actif" style="width:100%;">
+            {{applicationUserContext.getCulturedRessourceText(651)}}
+          </mat-checkbox>
+          <mat-form-field style="width:100%;">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(741)}}</mat-label>
+            <input matInput formControlName="LibelleFRFR" maxlength="200" required [errorStateMatcher]="matcher" />
+            <button *ngIf="form.get('LibelleFRFR').value && form.get('LibelleFRFR').enabled"
+                    matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('LibelleFRFR').setValue(null)" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error align="end" *ngIf="(form.get('LibelleFRFR').touched || form.get('LibelleFRFR').dirty) && form.get('LibelleFRFR').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(742)}}</mat-label>
+            <input matInput formControlName="LibelleENGB" maxlength="200" required [errorStateMatcher]="matcher" />
+            <button *ngIf="form.get('LibelleENGB').value && form.get('LibelleENGB').enabled"
+                    matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('LibelleENGB').setValue(null)" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error align="end" *ngIf="(form.get('LibelleENGB').touched || form.get('LibelleENGB').dirty) && form.get('LibelleENGB').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(743)}}</mat-label>
+            <input matInput formControlName="OuiFRFR" maxlength="50" required [errorStateMatcher]="matcher" />
+            <button *ngIf="form.get('OuiFRFR').value && form.get('OuiFRFR').enabled"
+                    matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('OuiFRFR').setValue(null)" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error align="end" *ngIf="(form.get('OuiFRFR').touched || form.get('OuiFRFR').dirty) && form.get('OuiFRFR').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(744)}}</mat-label>
+            <input matInput formControlName="OuiENGB" maxlength="50" required [errorStateMatcher]="matcher" />
+            <button *ngIf="form.get('OuiENGB').value && form.get('OuiENGB').enabled"
+                    matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('OuiENGB').setValue(null)" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error align="end" *ngIf="(form.get('OuiENGB').touched || form.get('OuiENGB').dirty) && form.get('OuiENGB').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(745)}}</mat-label>
+            <input matInput formControlName="NonFRFR" maxlength="50" required [errorStateMatcher]="matcher" />
+            <button *ngIf="form.get('NonFRFR').value && form.get('NonFRFR').enabled"
+                    matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('NonFRFR').setValue(null)" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error align="end" *ngIf="(form.get('NonFRFR').touched || form.get('NonFRFR').dirty) && form.get('NonFRFR').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(746)}}</mat-label>
+            <input matInput formControlName="NonENGB" maxlength="50" required [errorStateMatcher]="matcher" />
+            <button *ngIf="form.get('NonENGB').value && form.get('NonENGB').enabled"
+                    matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('NonENGB').setValue(null)" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error align="end" *ngIf="(form.get('NonENGB').touched || form.get('NonENGB').dirty) && form.get('NonENGB').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(759)}}</mat-label>
+            <mat-select formControlName="ReponseParDefautList" required [errorStateMatcher]="matcher">
+              <mat-option value="none">{{applicationUserContext.getCulturedRessourceText(758)}}</mat-option>
+              <mat-option value="yes">{{applicationUserContext.getCulturedRessourceText(756)}}</mat-option>
+              <mat-option value="no">{{applicationUserContext.getCulturedRessourceText(757)}}</mat-option>
+            </mat-select>
+            <button *ngIf="form.get('ReponseParDefautList').value && form.get('ReponseParDefautList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button"
+                    (click)="$event.stopPropagation(); form.get('ReponseParDefautList').setValue(null)">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error align="end" *ngIf="(form.get('ReponseParDefautList').touched || form.get('ReponseParDefautList').dirty) && form.get('ReponseParDefautList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+  </div>
+</form>
+

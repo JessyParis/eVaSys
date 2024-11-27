@@ -1,0 +1,50 @@
+<form id="MainForm" [formGroup]="form">
+  <div class="mat-typography">
+    <div mat-dialog-title>
+      <h1>{{title}}</h1>
+      <div class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+          <button mat-raised-button color="primary" [disabled]="selection.isEmpty()" class="ev-button-left" type="button" (click)="onApply()"
+                  *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')">
+            {{applicationUserContext.getCulturedRessourceText(682)}}
+          </button>
+        </div>
+        <div class="ev-taskbar-right-container">
+          <button mat-raised-button color="warn"
+                  mat-dialog-close="no" class="ev-button-right" type="button">
+            {{applicationUserContext.getCulturedRessourceText(133)}}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <mat-form-field class="ev-control-left">
+          <mat-label>{{applicationUserContext.getCulturedRessourceText(440)}}</mat-label>
+          <input matInput formControlName="FilterText" maxlength="50" >
+        </mat-form-field>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button mat-icon-button (click)="applyFilter()" matTooltip={{applicationUserContext.getCulturedRessourceText(492)}} class="ev-button-right" type="button"><mat-icon aria-label="Filtrer">search</mat-icon></button>
+      </div>
+    </div>
+    <div mat-dialog-content class="mat-elevation-z2">
+      <table class="table-no-pad-no-space" style="max-height:40vh;overflow-y:auto;">
+        <tr *ngFor="let tck of tickets; let i=index;" style="border-bottom:1px solid black;">
+          <td style="padding: 0px 5px 0px 5px; width:40px;">
+            <mat-checkbox (change)="$event ? selection.toggle(tck) : null"
+                          [checked]="selection.isSelected(tck)">
+            </mat-checkbox>
+          </td>
+          <td style="padding: 0px 5px 0px 5px;">
+            {{tck.Libelle}}
+          </td>
+          <td style="padding: 0px 5px 0px 5px;">
+            {{tck.TicketTexte}}
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</form>

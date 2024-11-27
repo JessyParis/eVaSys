@@ -1,0 +1,253 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid"
+                (click)="onSave()">
+          {{applicationUserContext.getCulturedRessourceText(6)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid"
+                (click)="onCopy()">
+          {{applicationUserContext.getCulturedRessourceText(525)}}
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="produit?.RefProduit" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            <table class="table-no-pad-no-space" style="width:100%;">
+              <tr>
+                <td>{{applicationUserContext.getCulturedRessourceText(1127)}}</td>
+                <td style="text-align:right;">{{produit?.RefProduit ? 'id = ' + produit?.RefProduit?.toString() : applicationUserContext.getCulturedRessourceText(9)}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-checkbox formControlName="Actif" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(651)}}
+            </mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(19)}}</mat-label>
+              <input matInput formControlName="Libelle" maxlength="50" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('Libelle').value!=null && form.get('Libelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Libelle').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Libelle').touched || form.get('Libelle').dirty) && form.get('Libelle').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1024)}}</mat-label>
+              <input matInput formControlName="NomCommercial" maxlength="50" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('NomCommercial').value!=null && form.get('NomCommercial').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('NomCommercial').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('NomCommercial').touched || form.get('NomCommercial').dirty) && form.get('NomCommercial').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1025)}}</mat-label>
+              <input matInput formControlName="NomCommun" maxlength="50" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('NomCommun').value!=null && form.get('NomCommun').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('NomCommun').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('NomCommun').touched || form.get('NomCommun').dirty) && form.get('NomCommun').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-checkbox formControlName="Collecte" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(603)}}
+            </mat-checkbox>
+            <mat-checkbox formControlName="Composant" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(595)}}
+            </mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1026)}}</mat-label>
+              <input matInput formControlName="NumeroStatistique" maxlength="50" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('NumeroStatistique').value!=null && form.get('NumeroStatistique').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('NumeroStatistique').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('NumeroStatistique').touched || form.get('NumeroStatistique').dirty) && form.get('NumeroStatistique').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(10081)}}</mat-label>
+              <mat-select formControlName="SAGECodeTransportList" required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let sAGECodeTransport of sAGECodeTransportList" [value]="sAGECodeTransport.RefSAGECodeTransport">{{sAGECodeTransport.Libelle}}&nbsp;-&nbsp;{{sAGECodeTransport.Code}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('SAGECodeTransportList').value && form.get('SAGECodeTransportList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('SAGECodeTransportList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('SAGECodeTransportList').touched || form.get('SAGECodeTransportList').dirty) && form.get('SAGECodeTransportList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1033)}}</mat-label>
+              <input matInput formControlName="CodeListeVerte" required [errorStateMatcher]="matcher" maxlength="50" />
+              <button *ngIf="form.get('CodeListeVerte').value!=null && form.get('CodeListeVerte').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CodeListeVerte').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('CodeListeVerte').touched || form.get('CodeListeVerte').dirty) && form.get('CodeListeVerte').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1388)}}</mat-label>
+              <input matInput formControlName="Co2KgParT" mask="separator" [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('Co2KgParT').value!=null && form.get('Co2KgParT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Co2KgParT').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Co2KgParT').touched || form.get('Co2KgParT').dirty) && form.get('Co2KgParT').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('Co2KgParT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1184)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(703)}}</mat-label>
+              <mat-select formControlName="ApplicationProduitOrigineList" [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let applicationProduitOrigine of applicationProduitOrigineList" [value]="applicationProduitOrigine.RefApplicationProduitOrigine">{{applicationProduitOrigine.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ApplicationProduitOrigineList').value && form.get('ApplicationProduitOrigineList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('ApplicationProduitOrigineList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(976)}}</mat-label>
+              <mat-select formControlName="ProduitGroupeReportingList" [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let produitGroupeReporting of produitGroupeReportingList" [value]="produitGroupeReporting.RefProduitGroupeReporting">{{produitGroupeReporting.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ProduitGroupeReportingList').value && form.get('ProduitGroupeReportingList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('ProduitGroupeReportingList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-checkbox formControlName="IncitationQualite" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(700)}}
+            </mat-checkbox>
+            <mat-checkbox formControlName="PUHTSurtri" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(1031)}}
+            </mat-checkbox>
+            <mat-checkbox formControlName="PUHTTransport" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(714)}}
+            </mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+              <textarea matInput formControlName="Cmt" maxlength="10000" style="height:220px;"></textarea>
+              <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1184)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(615)}}</mat-label>
+              <mat-select multiple formControlName="ComposantList" [compareWith]="compareFnComposant">
+                <mat-option *ngFor="let produitComposant of produitComposantList" [value]="produitComposant">{{produitComposant.Composant.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ComposantList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); onComposantListReset();" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <div style="margin: 0 0 10px 0;">
+              <mat-card appearance="outlined" style="white-space: pre-wrap;">
+                <mat-card-content [style.overflow]="'auto'" [style.height.px]="'80'">
+                  <p>{{composantsLabel()}}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1030)}}</mat-label>
+              <mat-select multiple formControlName="StandardList" [compareWith]="compareFnStandard">
+                <mat-option *ngFor="let produitStandard of produitStandardList" [value]="produitStandard">{{produitStandard.Standard.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('StandardList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); onStandardListReset();" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <div style="margin: 0 0 10px 0;">
+              <mat-card appearance="outlined" style="white-space: pre-wrap;">
+                <mat-card-content [style.overflow]="'auto'" [style.height.px]="'80'">
+                  <p>{{standardsLabel()}}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1027)}}</mat-label>
+              <input matInput formControlName="CodeEE" maxlength="50" [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('CodeEE').value!=null && form.get('CodeEE').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CodeEE').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(104)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1515)}}</mat-label>
+              <textarea matInput formControlName="CmtFournisseur" maxlength="10000" style="height:175px;"></textarea>
+              <button *ngIf="form.get('CmtFournisseur').value && form.get('CmtFournisseur').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('CmtFournisseur').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1516)}}</mat-label>
+              <textarea matInput formControlName="CmtTransporteur" maxlength="10000" style="height:175px;"></textarea>
+              <button *ngIf="form.get('CmtTransporteur').value && form.get('CmtTransporteur').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('CmtTransporteur').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1517)}}</mat-label>
+              <textarea matInput formControlName="CmtClient" maxlength="10000" style="height:175px;"></textarea>
+              <button *ngIf="form.get('CmtClient').value && form.get('CmtClient').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('CmtClient').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

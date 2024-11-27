@@ -1,0 +1,465 @@
+<div class="ev-main-container">
+  <header class="ev-header-container">
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <span class="ev-control-left color-primary" style="font-weight:500; line-height:2em;">{{this.applicationUserContext.getCulturedRessourceText(376)}}</span><span class="ev-control-left color-primary" style="line-height:2em;">{{currentDate}}</span>
+      </div>
+      <div class="ev-taskbar-right-container" *ngIf="applicationUserContext.connectedUtilisateur?.RefUtilisateur
+           &&(!applicationUserContext.connectedUtilisateur.Transporteur
+             && !applicationUserContext.connectedUtilisateur.Client
+             && !applicationUserContext.connectedUtilisateur.CentreDeTri
+             && !applicationUserContext.connectedUtilisateur.Collectivite)">
+        <form [formGroup]="form">
+          <mat-form-field class="ev-control-right" style="width:350px;">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(1335)}}</mat-label>
+            <input matInput formControlName="FilterText" maxlength="50" >
+            <button *ngIf="form.get('FilterText').value" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="form.get('FilterText').setValue(null);" tabindex="-1" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <button mat-icon-button (click)="applyFilter(false, false)" matTooltip={{applicationUserContext.getCulturedRessourceText(492)}}
+                  class="ev-button-right" type="submit" [disabled]="!form.get('FilterText').value || applicationUserContext.connectedUtilisateur.Prestataire">
+            <mat-icon aria-label="Filter">search</mat-icon>
+          </button>
+          <button mat-icon-button (click)="onResetFilter()" matTooltip={{applicationUserContext.getCulturedRessourceText(780)}} class="ev-button-right" type="button" color="warn">
+            <mat-icon aria-label="Reset filters">close</mat-icon>
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+  <mat-divider></mat-divider>
+  <div class="ev-dataform-container" *ngIf="searchMode && searchEntiteResult && searchEntiteResult.length>0">
+    <div *ngFor="let sER of searchEntiteResult" [@fadeInOnEnter]>
+      <search-result elementType="Entite" [elementRef]="sER.toString()" [searchText]="searchText"
+                     (click)="OpenSearchResult('Entite', sER)"></search-result>
+    </div>
+  </div>
+  <mat-divider *ngIf="searchMode && searchContactAdresseResult && searchContactAdresseResult.length>0"></mat-divider>
+  <div class="ev-dataform-container" *ngIf="searchMode && searchContactAdresseResult && searchContactAdresseResult.length>0">
+    <div *ngFor="let sCAR of searchContactAdresseResult" [@fadeInOnEnter]>
+      <search-result elementType="ContactAdresse" [elementRef]="sCAR.toString()" [searchText]="searchText"
+                     (click)="OpenSearchResult('ContactAdresse', sCAR)"></search-result>
+    </div>
+  </div>
+  <div class="ev-dataform-container" *ngIf="!searchMode">
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+            || applicationUserContext.connectedUtilisateur.HabilitationModulePrestataire==='Fournisseur'
+            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'
+            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Client'
+            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri'
+         "
+         class="boxDashboardHeader ev-dashboard-on-color-logistique"
+         [@fadeInOnEnter]>
+      <table style="width:100%; height:100%;">
+        <tr style="height:50%;">
+          <td style="width:10px;"></td>
+          <td style="text-align:center; vertical-align:bottom;"><img src="assets/images/logistique.svg" /></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(256)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+            || applicationUserContext.connectedUtilisateur.HabilitationModulePrestataire==='Fournisseur'
+            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri'
+         "
+         [class]="NouvellesDemandesEnlevementCss"
+         (click)="NouvellesDemandesEnlevementClick()" [@fadeInOnEnter] [@pulse]="NouvellesDemandesEnlevementNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NouvellesDemandesEnlevementNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{NouvellesDemandesEnlevementCaption}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NouvellesDemandesEnlevementNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NouvellesDemandesEnlevementNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Client'
+            || applicationUserContext.connectedUtilisateur.HabilitationModulePrestataire==='Fournisseur'" [class]="CommandesFournisseurAttribueesCss"
+         (click)="CommandesFournisseurAttribueesClick()" [@fadeInOnEnter] [@pulse]="CommandesFournisseurAttribueesNbUrgent>0">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{CommandesFournisseurAttribueesNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(781)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="CommandesFournisseurAttribueesNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{CommandesFournisseurAttribueesNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'" [class]="AnomalieCommandeFournisseurCss"
+         (click)="AnomalieCommandeFournisseurClick()" [@fadeInOnEnter] [@pulse]="AnomalieCommandeFournisseurNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{AnomalieCommandeFournisseurNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(578)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="AnomalieCommandeFournisseurNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{AnomalieCommandeFournisseurNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'" [class]="DatesTransporteurCss"
+         (click)="DatesTransporteurClick()" [@fadeInOnEnter] [@pulse]="DatesTransporteurNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{DatesTransporteurNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(559)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="DatesTransporteurNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{DatesTransporteurNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'
+         && applicationUserContext.connectedUtilisateur?.Transporteur?.VisibiliteAffretementCommun===true"
+         [class]="CommandesBourseAffrettementCss" (click)="CommandesBourseAffrettementClick()" [@fadeInOnEnter] [@pulse]="CommandesBourseAffrettementNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{CommandesBourseAffrettementNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(270)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="CommandesBourseAffrettementNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{CommandesBourseAffrettementNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'
+            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Client'
+            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri'
+            || applicationUserContext.connectedUtilisateur.HabilitationModulePrestataire==='Fournisseur'" [class]="CommandesModifieesCss"
+         (click)="CommandesModifieesClick()" [@fadeInOnEnter] [@pulse]="CommandesModifieesNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{CommandesModifieesNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(554)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="CommandesModifieesNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{CommandesModifieesNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'
+            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri'" [class]="CommandesEnCoursCss"
+         (click)="CommandesEnCoursClick()" [@fadeInOnEnter] [@pulse]="CommandesEnCoursNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{CommandesEnCoursNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(380)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="CommandesEnCoursNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{CommandesEnCoursNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri'" [class]="CommandesNonChargeesCss"
+         (click)="CommandesNonChargeesClick()" [@fadeInOnEnter] [@pulse]="CommandesNonChargeesNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{CommandesNonChargeesNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(731)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="CommandesNonChargeesNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{CommandesNonChargeesNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+         || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Client'
+         || applicationUserContext.connectedUtilisateur.HabilitationModulePrestataire==='Fournisseur'" [class]="CommandesNonReceptionneesCss"
+         (click)="CommandesNonReceptionneesClick()" [@fadeInOnEnter] [@pulse]="CommandesNonReceptionneesNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{CommandesNonReceptionneesNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(560)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="CommandesNonReceptionneesNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{CommandesNonReceptionneesNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+           || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'" [class]="EvolutionPrixTransportCss"
+         (click)="EvolutionPrixTransportClick()" [@fadeInOnEnter] [@pulse]="EvolutionPrixTransportNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{EvolutionPrixTransportNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(377)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="EvolutionPrixTransportNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{EvolutionPrixTransportNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+            || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Qualite'
+            || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client'
+            || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'
+         "
+         class="boxDashboardHeader ev-dashboard-on-color-qualite"
+         [@fadeInOnEnter]>
+      <table style="width:100%; height:100%;">
+        <tr style="height:50%;">
+          <td style="width:10px;"></td>
+          <td style="text-align:center; vertical-align:bottom;"><img src="assets/images/qualite.svg" /></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(264)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Qualite'"
+         [class]="NouvellesNonConformitesCss" (click)="NouvellesNonConformitesClick()" [@fadeInOnEnter] [@pulse]="NouvellesNonConformitesNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NouvellesNonConformitesNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(865)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NouvellesNonConformitesNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NouvellesNonConformitesNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client'" [class]="NonConformitesEnCoursCss"
+         (click)="NonConformitesEnCoursClick()" [@fadeInOnEnter] [@pulse]="NonConformitesEnCoursNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NonConformitesEnCoursNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(866)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NonConformitesEnCoursNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NonConformitesEnCoursNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(874)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'" [class]="NonConformitesATransmettreCss"
+         (click)="NonConformitesATransmettreClick()" [@fadeInOnEnter] [@pulse]="NonConformitesATransmettreNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NonConformitesATransmettreNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(875)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NonConformitesATransmettreNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NonConformitesATransmettreNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'" [class]="NonConformitesATraiterCss"
+         (click)="NonConformitesATraiterClick()" [@fadeInOnEnter] [@pulse]="NonConformitesATraiterNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NonConformitesATraiterNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(867)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NonConformitesATraiterNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NonConformitesATraiterNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'" [class]="NonConformitesAValiderCss"
+         (click)="NonConformitesAValiderClick()" [@fadeInOnEnter] [@pulse]="NonConformitesAValiderNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NonConformitesAValiderNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(868)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NonConformitesAValiderNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NonConformitesAValiderNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'" [class]="NonConformitesEnAttentePlanActionCss"
+         (click)="NonConformitesEnAttentePlanActionClick()" [@fadeInOnEnter] [@pulse]="NonConformitesEnAttentePlanActionNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NonConformitesEnAttentePlanActionNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(869)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NonConformitesEnAttentePlanActionNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NonConformitesEnAttentePlanActionNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'" [class]="NonConformitesPlanActionAValiderCss"
+         (click)="NonConformitesPlanActionAValiderClick()" [@fadeInOnEnter] [@pulse]="NonConformitesPlanActionAValiderNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NonConformitesPlanActionAValiderNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(870)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NonConformitesPlanActionAValiderNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NonConformitesPlanActionAValiderNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'" [class]="NonConformitesAFacturerCss"
+         (click)="NonConformitesAFacturerClick()" [@fadeInOnEnter] [@pulse]="NonConformitesAFacturerNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NonConformitesAFacturerNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(871)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NonConformitesAFacturerNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NonConformitesAFacturerNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'" [class]="NonConformitesACloturerCss"
+         (click)="NonConformitesACloturerClick()" [@fadeInOnEnter] [@pulse]="NonConformitesACloturerNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NonConformitesACloturerNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(872)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NonConformitesACloturerNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NonConformitesACloturerNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client'" [class]="NonConformitesEnAttenteFactureCss"
+         (click)="NonConformitesEnAttenteFactureClick()" [@fadeInOnEnter] [@pulse]="NonConformitesEnAttenteFactureNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{NonConformitesEnAttenteFactureNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(873)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="NonConformitesEnAttenteFactureNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{NonConformitesEnAttenteFactureNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationAnnuaire
+                  && (applicationUserContext.connectedUtilisateur.Transporteur
+                  || this.applicationUserContext.connectedUtilisateur.Client
+                  || this.applicationUserContext.connectedUtilisateur.CentreDeTri
+                  || this.applicationUserContext.connectedUtilisateur.Prestataire
+                  || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire=='Administrateur'
+                  || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire=='Utilisateur')"
+         class="boxDashboardHeader ev-dashboard-on-color-annuaire"
+         [@fadeInOnEnter]>
+      <table style="width:100%; height:100%;">
+        <tr style="height:50%;">
+          <td style="width:10px;"></td>
+          <td style="text-align:center; vertical-align:bottom;"><img src="assets/images/annuaire.svg" /></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(257)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationAnnuaire
+                  && (applicationUserContext.connectedUtilisateur.Transporteur
+                  || this.applicationUserContext.connectedUtilisateur.Client
+                  || this.applicationUserContext.connectedUtilisateur.CentreDeTri
+                  || this.applicationUserContext.connectedUtilisateur.Prestataire
+                  || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire=='Administrateur'
+                  || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire=='Utilisateur')" [class]="ContactModificationRequestCss"
+         (click)="ContactModificationRequestClick()" [@fadeInOnEnter] [@pulse]="ContactModificationRequestNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{ContactModificationRequestNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(438)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="ContactModificationRequestNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{ContactModificationRequestNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationAnnuaire
+                  && (applicationUserContext.connectedUtilisateur.HabilitationAnnuaire=='Administrateur')" [class]="DonneeEntiteSageCss"
+         (click)="DonneeEntiteSageClick()" [@fadeInOnEnter] [@pulse]="DonneeEntiteSageNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{DonneeEntiteSageNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(1468)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="DonneeEntiteSageNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{DonneeEntiteSageNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationMessagerie"
+         class="boxDashboardHeader ev-dashboard-on-color-administration"
+         [@fadeInOnEnter]>
+      <table style="width:100%; height:100%;">
+        <tr style="height:50%;">
+          <td style="width:10px;"></td>
+          <td style="text-align:center; vertical-align:bottom;"><img src="assets/images/administration.svg" /></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(260)}}</td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationMessagerie" [class]="MessagePourDiffusionCss"
+         (click)="MessagePourDiffusionClick()" [@fadeInOnEnter] [@pulse]="MessagePourDiffusionNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{MessagePourDiffusionNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(638)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="MessagePourDiffusionNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{MessagePourDiffusionNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(639)}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

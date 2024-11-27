@@ -1,0 +1,120 @@
+
+
+.fixed_headers_commande_fournisseurs {
+    width: 335px;
+    min-width: 335px;
+    max-width: 335px;
+    table-layout: fixed;
+    border-collapse: collapse;
+
+    td:nth-child(1), th:nth-child(1) {
+        min-width: 115px;
+        max-width: 115px;
+        width: 115px;
+        box-sizing: border-box;
+    }
+
+    td:nth-child(2), th:nth-child(2) {
+        min-width: 100px;
+        max-width: 100px;
+        width: 100px;
+        box-sizing: border-box;
+    }
+
+    td:nth-child(3), th:nth-child(3) {
+        min-width: 100px;
+        box-sizing: border-box;
+    }
+
+    thead {
+
+        tr {
+            display: block;
+            position: relative;
+        }
+
+        th {
+            text-align: left;
+        }
+    }
+
+    tbody {
+        display: block;
+        overflow: auto;
+        width: 335px;
+        min-width: 335px;
+        max-width: 335px;
+        height: 290px;
+    }
+}
+.fixed_headers_repartition {
+  width: 1205px;
+  min-width: 1205px;
+  max-width: 1205px;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  td:nth-child(1), th:nth-child(1) {
+    min-width: 290px;
+    max-width: 290px;
+    width: 290px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(2), th:nth-child(2) {
+    min-width: 170px;
+    max-width: 170px;
+    width: 170px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(3), th:nth-child(3) {
+    min-width: 255px;
+    max-width: 255px;
+    width: 255px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(4), th:nth-child(4) {
+    min-width: 210px;
+    max-width: 210px;
+    width: 210px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(5), th:nth-child(5) {
+    min-width: 210px;
+    max-width: 210px;
+    width: 210px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(6), th:nth-child(6) {
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+    box-sizing: border-box;
+  }
+
+  thead {
+
+    tr {
+      display: block;
+      position: relative;
+    }
+
+    th {
+      text-align: left;
+    }
+  }
+
+  tbody {
+    display: block;
+    overflow: auto;
+    width: 1205px;
+    min-width: 1205px;
+    max-width: 1205px;
+    height: 630px;
+  }
+}
+

@@ -1,0 +1,92 @@
+﻿/// <Propriété>
+/// -----------------------------------------------------------------------------------------------------
+/// Société Enviromatic sarl (Copyright)
+/// 11 rue du Hainaut
+/// 78570 Andrésy
+/// -----------------------------------------------------------------------------------------------------
+/// Projet : e-Valorplast
+/// Création : 16/10/2019
+/// ----------------------------------------------------------------------------------------------------- 
+using eVaSys.Utils;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
+using System.Globalization;
+using System.Linq;
+
+namespace eVaSys.Data
+{
+    /// <summary>
+    /// Class for NonConformiteFichier
+    /// </summary>
+    public class NonConformiteFichier
+    {
+        #region Constructor
+        public NonConformiteFichier()
+        {
+        }
+        private NonConformiteFichier(ILazyLoader lazyLoader)
+        {
+            LazyLoader = lazyLoader;
+        }
+        private ILazyLoader LazyLoader { get; set; }
+        #endregion
+        protected ApplicationDbContext DbContext { get; private set; }
+        public CultureInfo currentCulture = new("fr-FR");
+        public int RefNonConformiteFichier { get; set; }
+        public int RefNonConformite { get; set; }
+        public int? RefNonConformiteFichierType { get; set; }
+        private NonConformiteFichierType _nonConformiteFichierType;
+        public NonConformiteFichierType NonConformiteFichierType
+        {
+            get => LazyLoader.Load(this, ref _nonConformiteFichierType);
+            set => _nonConformiteFichierType = value;
+        }
+        public byte[] Corps { get; set; }
+        public string CorpsBase64
+        {
+            get
+            {
+                return Convert.ToBase64String(Corps);
+            }
+        }
+        public string Nom { get; set; }
+        public string Extension { get; set; }
+        public byte[]? Vignette { get; set; }
+        public string VignetteBase64 
+        {
+            get
+            {
+                string r = "";
+                if(Vignette != null) { r = Convert.ToBase64String(Vignette); }
+                return r;
+            } 
+        }
+        public byte[]? Miniature { get; set; }
+        public string MiniatureBase64
+        {
+            get
+            {
+                string r = "";
+                if (Miniature != null) { r = Convert.ToBase64String(Miniature); }
+                return r;
+            }
+        }
+        /// <summary>
+        /// Checked if model is valid
+        /// </summary>
+        public string IsValid()
+        {
+            string r = "";
+            int c = DbContext.NonConformiteFichiers.Where(q => q.Nom == Nom && q.RefNonConformite == RefNonConformite && q.RefNonConformiteFichier != RefNonConformiteFichier).Count();
+            if (c > 0 || Nom?.Length > 250 || Extension?.Length > 50)
+            {
+                CulturedRessources cR = new(currentCulture, DbContext);
+                if (c > 0) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }
+                if (Nom?.Length > 250) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(621); }
+                if (Extension?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(622); }
+            }
+            return r;
+        }
+    }
+}

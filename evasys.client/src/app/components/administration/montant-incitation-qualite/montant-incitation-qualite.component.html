@@ -1,0 +1,52 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid" (click)="onSave()">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="montantIncitationQualite?.RefMontantIncitationQualite" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-horizontal-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(686)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(569)}}</mat-label>
+              <input matInput formControlName="Annee" type="number" pattern="^[0-9]+$" maxlength="4" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('Annee').value!=null && form.get('Annee').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Annee').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Annee').touched || form.get('Annee').dirty) && form.get('Annee').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('Annee').touched || form.get('Annee').dirty) && form.get('Annee').errors?.max">{{applicationUserContext.getCulturedRessourceText(573) + (form.get('Annee').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('Annee').touched || form.get('Annee').dirty) && form.get('Annee').errors?.min">{{applicationUserContext.getCulturedRessourceText(687) + (form.get('Annee').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(685)}}</mat-label>
+              <input matInput formControlName="Montant" mask="separator.2" required [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(233)}}</span>
+              <button *ngIf="form.get('Montant').value!=null && form.get('Montant').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Montant').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Montant').touched || form.get('Montant').dirty) && form.get('Montant').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('Montant').touched || form.get('Montant').dirty) && form.get('Montant').errors?.max">{{applicationUserContext.getCulturedRessourceText(573) + (form.get('Montant').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('Montant').touched || form.get('Montant').dirty) && form.get('Montant').errors?.min">{{applicationUserContext.getCulturedRessourceText(687) + (form.get('Montant').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

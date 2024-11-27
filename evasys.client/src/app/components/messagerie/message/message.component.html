@@ -1,0 +1,231 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onSave()" [disabled]="form.invalid">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="message?.RefMessage" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <div class="ev-dataform-container">
+    <form id="MyForm" [formGroup]="form" class="ev-horizontal-container">
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">
+              {{applicationUserContext.getCulturedRessourceText(654) + "&nbsp;-&nbsp;id&nbsp;" + (message?.RefMessage>0 ? message.RefMessage : applicationUserContext.getCulturedRessourceText(9))}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <mat-checkbox formControlName="Actif" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(651)}}</mat-checkbox>
+              <mat-checkbox formControlName="Important" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(652)}}</mat-checkbox>
+              <mat-checkbox formControlName="DiffusionUnique" style="width:100%;"
+                            matTooltip={{applicationUserContext.getCulturedRessourceText(1451)}}>{{applicationUserContext.getCulturedRessourceText(653)}}</mat-checkbox>
+              <mat-checkbox formControlName="VisualisationConfirmeUnique" style="width:100%;"
+                            matTooltip={{applicationUserContext.getCulturedRessourceText(1452)}}>{{applicationUserContext.getCulturedRessourceText(1261)}}</mat-checkbox>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(643)}}</mat-label>
+                <mat-select formControlName="MessageTypeList" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let messageType of messageTypeList" [value]="messageType.RefMessageType">{{messageType.Libelle}}</mat-option>
+                </mat-select>
+                <mat-error align="end" *ngIf="(form.get('MessageTypeList').touched || form.get('MessageTypeList').dirty) && form.get('MessageTypeList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(474)}}</mat-label>
+                <input matInput formControlName="Libelle" maxlength="250" required [errorStateMatcher]="matcher" />
+                <button *ngIf="form.get('Libelle').value && form.get('Libelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Libelle').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('Libelle').touched || form.get('Libelle').dirty) && form.get('Libelle').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(642)}}</mat-label>
+                <input matInput formControlName="Titre" maxlength="250" />
+                <button *ngIf="form.get('Titre').value && form.get('Titre').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Titre').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field class="ev-date-picker" style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(644)}}</mat-label>
+                <input matInput [matDatepicker]="pickerDDebut" formControlName="DDebut" required [errorStateMatcher]="matcher">
+                <mat-datepicker-toggle matIconPrefix [for]="pickerDDebut"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDDebut></mat-datepicker>
+                <button *ngIf="form.get('DDebut').value && form.get('DDebut').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('DDebut').touched || form.get('DDebut').dirty) && form.get('DDebut').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field class="ev-date-picker" style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(645)}}</mat-label>
+                <input matInput [matDatepicker]="pickerDFin" formControlName="DFin" required [errorStateMatcher]="matcher">
+                <mat-datepicker-toggle matIconPrefix [for]="pickerDFin"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDFin></mat-datepicker>
+                <button *ngIf="form.get('DFin').value && form.get('DFin').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('DFin').touched || form.get('DFin').dirty) && form.get('DFin').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+                <textarea matInput formControlName="Cmt" style="height:100px;"></textarea>
+                <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="boxDoubleSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">
+              {{applicationUserContext.getCulturedRessourceText(655)}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(661)}}</mat-label>
+                <textarea matInput formControlName="Corps" style="height:240px; width:100%;"></textarea>
+                <button *ngIf="form.get('Corps').value && form.get('Corps').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Corps').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <kendo-editor formControlName="CorpsHTML" style="height: 370px; width:100%;">
+                <kendo-toolbar>
+                  <kendo-toolbar-buttongroup>
+                    <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorItalicButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorUnderlineButton></kendo-toolbar-button>
+                  </kendo-toolbar-buttongroup>
+                  <kendo-toolbar-buttongroup>
+                    <kendo-toolbar-button kendoEditorAlignLeftButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorAlignCenterButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorAlignRightButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorAlignJustifyButton></kendo-toolbar-button>
+                  </kendo-toolbar-buttongroup>
+                  <kendo-toolbar-dropdownlist kendoEditorFontSize></kendo-toolbar-dropdownlist>
+                  <kendo-toolbar-dropdownlist kendoEditorFontFamily [data]="kendoFontData"></kendo-toolbar-dropdownlist>
+                  <kendo-toolbar-colorpicker kendoEditorForeColor></kendo-toolbar-colorpicker>
+                  <kendo-toolbar-colorpicker kendoEditorBackColor></kendo-toolbar-colorpicker>
+                  <kendo-toolbar-buttongroup>
+                    <kendo-toolbar-button kendoEditorInsertUnorderedListButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorInsertOrderedListButton></kendo-toolbar-button>
+                  </kendo-toolbar-buttongroup>
+                  <kendo-toolbar-buttongroup>
+                    <kendo-toolbar-button kendoEditorCreateLinkButton></kendo-toolbar-button>
+                    <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
+                  </kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorViewSourceButton></kendo-toolbar-button>
+                </kendo-toolbar>
+                <kendo-editor-messages
+                  [bold]="applicationUserContext.getCulturedRessourceText(1479)"
+                  [italic]="applicationUserContext.getCulturedRessourceText(1480)"
+                  [underline]="applicationUserContext.getCulturedRessourceText(1481)"
+                  [alignLeft]="applicationUserContext.getCulturedRessourceText(1482)"
+                  [alignCenter]="applicationUserContext.getCulturedRessourceText(1483)"
+                  [alignRight]="applicationUserContext.getCulturedRessourceText(1484)"
+                  [alignJustify]="applicationUserContext.getCulturedRessourceText(1485)"
+                  [fontFamily]="applicationUserContext.getCulturedRessourceText(1486)"
+                  [fontSize]="applicationUserContext.getCulturedRessourceText(1487)"
+                  [foreColor]="applicationUserContext.getCulturedRessourceText(1488)"
+                  [backColor]="applicationUserContext.getCulturedRessourceText(1494)"
+                  [insertOrderedList]="applicationUserContext.getCulturedRessourceText(1489)"
+                  [insertUnorderedList]="applicationUserContext.getCulturedRessourceText(1490)"
+                  [createLink]="applicationUserContext.getCulturedRessourceText(1491)"
+                  [unlink]="applicationUserContext.getCulturedRessourceText(1492)"
+                  [viewSource]="applicationUserContext.getCulturedRessourceText(1493)"
+                  [dialogUpdate]="applicationUserContext.getCulturedRessourceText(682)"
+                  [dialogCancel]="applicationUserContext.getCulturedRessourceText(133)"
+                  [dialogInsert]="applicationUserContext.getCulturedRessourceText(598)"
+                  [linkOpenInNewWindow]="applicationUserContext.getCulturedRessourceText(1496)"
+                  [linkText]="applicationUserContext.getCulturedRessourceText(1497)"
+                  [linkTitle]="applicationUserContext.getCulturedRessourceText(1149)"
+                  [linkWebAddress]="applicationUserContext.getCulturedRessourceText(1495)"
+                  ></kendo-editor-messages>
+              </kendo-editor>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+    <form id="FormDiffusion" [formGroup]="formDiffusion" class="ev-horizontal-container">
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">
+              {{applicationUserContext.getCulturedRessourceText(663)}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <button mat-raised-button color="primary" type="button" (click)="addMessageDiffusion()" *ngIf="!(locked && saveLocked)" [disabled]="formDiffusion.invalid" style="width:100%; margin:0px 0px 10px 0px;">{{applicationUserContext.getCulturedRessourceText(598)}}</button>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(657)}}</mat-label>
+                <mat-select formControlName="ModuleList" required [errorStateMatcher]="matcher"
+                            (selectionChange)="onModuleSelected()">
+                  <mat-option *ngFor="let module of applicationUserContext.envModules" [value]="module.name">{{module.culturedCaption}}</mat-option>
+                </mat-select>
+                <mat-error align="end" *ngIf="(formDiffusion.get('ModuleList').touched || formDiffusion.get('ModuleList').dirty) && formDiffusion.get('ModuleList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(658)}}</mat-label>
+                <mat-select formControlName="HabilitationList"
+                            (selectionChange)="onHabilitationSelected()">
+                  <mat-option *ngFor="let habilitation of habilitationList" [value]="habilitation">{{habilitation}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(659)}}</mat-label>
+                <mat-select formControlName="UtilisateurList">
+                  <mat-option *ngFor="let utilisateur of utilisateurList" [value]="utilisateur.RefUtilisateur">{{utilisateur.Nom}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="boxDoubleSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">
+              {{applicationUserContext.getCulturedRessourceText(656)}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <table class="fixed_headers table-no-pad-no-space">
+                <thead class="background-color-accent">
+                  <tr>
+                    <th style="padding:5px;"></th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(657)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(658)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(659)}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let messageDiffusion of message?.MessageDiffusions; let i=index">
+                    <td style="padding: 0px 5px 0px 5px;">
+                      <button mat-icon-button (click)="onDeleteMessageDiffusion(i)" type="button"><mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon></button>
+                    </td>
+                    <td style="padding: 0px 5px 0px 5px;">{{messageDiffusion.RefModule}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">{{messageDiffusion.RefHabilitation}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">{{messageDiffusion.Utilisateur?.Nom}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

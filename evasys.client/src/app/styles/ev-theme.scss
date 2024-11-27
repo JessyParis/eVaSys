@@ -1,0 +1,1491 @@
+@use '@angular/material' as mat;
+@use "sass:map";
+
+//Imports for other components in your app.
+@import '@progress/kendo-theme-material/dist/all.css';
+
+//Default includes
+@include mat.elevation-classes();
+@include mat.app-background();
+//@include mat.all-component-typographies();
+
+//******************************************************************
+//2022 coor chart
+/*$ev-green: ( 50 : #edf6ea, 100 : #d2e9ca, 200 : #b5dba7, 300 : #97cc83, 400 : #80c169, 500 : #6ab64e, 600 : #60ab44, 700 : #4f9934, 800 : #3f8824, 900 : #347c19, A100 : #d7ffce, A200 : #afff9b, A400 : #86ff68, A700 : #71ff4e, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #000000, 500 : #000000, 600 : #000000, 700 : #000000, 800 : #ffffff, 900 : #ffffff, A100 : #000000, A200 : #000000, A400 : #000000, A700 : #000000, ) );
+$ev-blue: ( 50 : #e8ecf5, 100 : #d1d8eb, 200 : #abb8db, 300 : #8396ca, 400 : #5d75ba, 500 : #435faf, 600 : #3c58a8, 700 : #314d9d, 800 : #264293, 900 : #1e3a8c, A100 : #bddafc, A200 : #8fc6f9, A400 : #4faaf6, A700 : #2196f3, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #ffffff, 500 : #ffffff, 600 : #ffffff, 700 : #ffffff, 800 : #ffffff, 900 : #ffffff, A100 : #000000, A200 : #000000, A400 : #ffffff, A700 : #ffffff, ) );
+$ev-yellow: ( 50 : #fffae0, 100 : #fff2b3, 200 : #ffea80, 300 : #ffe24d, 400 : #ffdb26, 500 : #ffd500, 600 : #fdce00, 700 : #f9c300, 800 : #f5b900, 900 : #f3b100, A100 : #ffffff, A200 : #fffbf2, A400 : #ffebbf, A700 : #ffe4a6, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #000000, 500 : #000000, 600 : #000000, 700 : #000000, 800 : #000000, 900 : #000000, A100 : #000000, A200 : #000000, A400 : #000000, A700 : #000000, ) );
+$ev-red: ( 50 : #feebe9, 100 : #fccec9, 200 : #faada5, 300 : #f88c80, 400 : #f77465, 500 : #f55b4a, 600 : #f45343, 700 : #f2493a, 800 : #f04032, 900 : #ee2f22, A100 : #ffffff, A200 : #fff4f3, A400 : #ffc3c0, A700 : #ffaba7, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #000000, 500 : #000000, 600 : #000000, 700 : #ffffff, 800 : #ffffff, 900 : #ffffff, A100 : #000000, A200 : #000000, A400 : #000000, A700 : #000000, ) );
+*/
+//2023 color chart
+/*$ev-blue: ( 50 : #eef0ff, 100 : #dde1ff, 200 : #bcc3ff, 300 : #9aa4ff, 400 : #7885ff, 500 : #4451cb, 600 : #4451cb, 700 : #333d98, 800 : #232a68, 900 : #14183c, A100 : #ddefd9, A200 : #bbdfb3, A400 : #55b040, A700 : #336a26, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #000000, 500 : #ffffff, 600 : #ffffff, 700 : #ffffff, 800 : #ffffff, 900 : #ffffff, A100 : #000000, A200 : #000000, A400 : #000000, A700 : #ffffff, ) );
+$ev-yellow: ( 50 : #fff8e5, 100 : #ffefbf, 200 : #ffe495, 300 : #ffd96a, 400 : #ffd04a, 500 : #ffc82a, 600 : #ffc225, 700 : #ffbb1f, 800 : #ffb419, 900 : #eb9500, A100 : #fff4d4, A200 : #ffe9aa, A400 : #ffc82a, A700 : #996819, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #000000, 500 : #000000, 600 : #000000, 700 : #000000, 800 : #000000, 900 : #000000, A100 : #000000, A200 : #000000, A400 : #000000, A700 : #ffffff, ) );
+$ev-red: ( 50 : #f6e0e4, 100 : #e7b3bc, 200 : #d88090, 300 : #c84d63, 400 : #bc2641, 500 : #c71050, 600 : #a9001c, 700 : #a00018, 800 : #970013, 900 : #87000b, A100 : #efccd2, A200 : #df99a6, A400 : #b00020, A700 : #6a0013, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #ffffff, 400 : #ffffff, 500 : #ffffff, 600 : #ffffff, 700 : #ffffff, 800 : #ffffff, 900 : #ffffff, A100 : #000000, A200 : #000000, A400 : #ffffff, A700 : #ffffff, ) );
+$ev-green: ( 50 : #edf6ea, 100 : #d2e9ca, 200 : #b5dba7, 300 : #97cc83, 400 : #80c169, 500 : #6ab64e, 600 : #60ab44, 700 : #4f9934, 800 : #3f8824, 900 : #347c19, A100 : #d7ffce, A200 : #afff9b, A400 : #86ff68, A700 : #71ff4e, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #000000, 500 : #000000, 600 : #000000, 700 : #000000, 800 : #ffffff, 900 : #ffffff, A100 : #000000, A200 : #000000, A400 : #000000, A700 : #000000, ) );
+*/
+//2023 module collectivité color chart
+$ev-blue: ( 50 : #eef0ff, 100 : #dde1ff, 200 : #bcc3ff, 300 : #9aa4ff, 400 : #7885ff, 500 : #4451cb, 600 : #4451cb, 700 : #3843a8, 800 : #232a68, 900 : #14183c, a100 : #ffffff, a200 : #dde1ff, a400 : #7c9bff, a700 : #ffffff, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #000000, 500 : #ffffff, 600 : #ffffff, 700 : #ffffff, 800 : #ffffff, 900 : #ffffff, a100 : #000000, a200 : #000000, a400 : #000000, a700 : #000000, ) );
+$ev-yellow: ( 50 : #fff8e5, 100 : #ffefbf, 200 : #ffe495, 300 : #ffd96a, 400 : #ffd04a, 500 : #ffc82a, 600 : #ffbb1f, 700 : #ffb10f, 800 : #fa9e00, 900 : #eb9500, a100 : #fff4d4, a200 : #ffe9aa, a400 : #ffc82a, a700 : #996819, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #000000, 500 : #000000, 600 : #000000, 700 : #000000, 800 : #000000, 900 : #000000, a100 : #000000, a200 : #000000, a400 : #000000, a700 : #ffffff, ) );
+$ev-red: ( 50 : #f8e2ea, 100 : #eeb7cb, 200 : #e388a8, 300 : #d85885, 400 : #cf346a, 500 : #c71050, 600 : #b2001b, 700 : #a00018, 800 : #970013, 900 : #87000b, a100 : #f6dae4, a200 : #ecb1c6, a400 : #c71050, a700 : #6a0013, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #ffffff, 500 : #ffffff, 600 : #ffffff, 700 : #ffffff, 800 : #ffffff, 900 : #ffffff, a100 : #000000, a200 : #000000, a400 : #ffffff, a700 : #ffffff, ) );
+$ev-green: ( 50 : #ddefd9, 100 : #bbdfb3, 200 : #AAD8A0, 300 : #88C879, 400 : #6FBC5D, 500 : #55b040, 600 : #44A032, 700 : #3B972A, 800 : #2A871C, 900 : #336A26, a100 : #ddefd9, a200 : #ffffff, a400 : #92d283, a700 : #7cb36f, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #000000, 500 : #000000, 600 : #000000, 700 : #000000, 800 : #000000, 900 : #ffffff, a100 : #000000, a200 : #000000, a400 : #000000, a700 : #000000, ) );
+$ev-dashboard: ( 50 : #BBDFB3, 100 : #528527, 200 : #DDB8F4, 300 : #A74BE0, 400 : #F2C2D7, 500 : #B44072, 600 : #B9D8DD, 700 : #42818B, 800 : #000000, 900 : #000000, a100 : #000000, a200 : #000000, a400 : #000000, a700 : #000000, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #000000, 400 : #000000, 500 : #000000, 600 : #000000, 700 : #000000, 800 : #000000, 900 : #ffffff, a100 : #000000, a200 : #000000, a400 : #000000, a700 : #000000, ) );
+
+$ev-palette-primary: mat.m2-define-palette($ev-blue);
+$ev-palette-accent: mat.m2-define-palette($ev-yellow);
+$ev-palette-warn: mat.m2-define-palette($ev-red);
+$ev-palette-green: mat.m2-define-palette($ev-green);
+$ev-palette-dashboard: mat.m2-define-palette($ev-dashboard);
+//$ev-typography-config: mat.m2-define-typography-config();
+
+//******************************************************************
+/*CONDENSE CHAR AND LINE SPACE*/
+/* Styles to be applied to buttons */
+$ev-button: mat.m2-define-typography-level( $font-family: 'Roboto', $font-weight: 500, $font-size: 1rem, $line-height: 1, $letter-spacing: 'normal' );
+/* Styles to be applied to input-fields */
+$ev-input: mat.m2-define-typography-level( $font-family: 'Roboto', $font-weight: 400, $font-size: 1rem, $line-height: 1, $letter-spacing: 'normal' );
+/* Merge custom configs into existing config */
+$ev-typography-config: map.merge( mat.m2-define-typography-config(
+  //'button'-property will work out of the box 
+  $button: $ev-button ), (
+  //'input'-property will have to be assigned under '@mixin typography' further below 
+  'input': $ev-input )
+);
+
+/* Apply custom config */
+@include mat.all-component-typographies($ev-typography-config);//
+
+/* Let's assign the custom property 'input' that we defined above */
+@mixin typography($theme) {
+  $custom-typography-config: mat.m2-get-typography-config($theme);
+  .mat-mdc-form-field {
+    @include mat.m2-typography-level($custom-typography-config, 'input')
+  }
+}
+
+
+//******************************************************************
+//Define theme
+$ev-app-theme: mat.m2-define-light-theme(
+    (
+    color:
+      ( primary: $ev-palette-primary,
+      accent: $ev-palette-accent,
+      warn: $ev-palette-warn),
+      typography: $ev-typography-config,
+      density: -1,
+    )
+);
+/* Apply custom app-theme */
+@include typography($ev-app-theme);
+@include mat.all-component-themes($ev-app-theme);
+
+
+
+//*****************************************************************
+//Browsers specifics
+::-ms-reveal {
+  display: none;
+}
+
+//******************************************************************
+//eVa
+
+.mat-mdc-row:hover {
+  background-color: mat.m2-get-color-from-palette($ev-palette-accent, 50) !important;
+}
+
+.mat-row {
+  height: auto;
+}
+
+.ev-cell-pointer {
+  padding: 0px 8px 0px 8px !important;
+  cursor:pointer;
+}
+.ev-cell {
+  padding: 0px 8px 0px 8px !important;
+}
+
+.mat-sidenav-content {
+  background-color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 50);
+}
+
+.mat-sidenav {
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+}
+
+.ev-sidenav {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+}
+
+.mat-expansion-panel {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 800) !important;
+}
+
+.mat-expansion-panel-header {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 700) !important;
+}
+
+.mat-expansion-indicator::after {
+  color: white !important;
+}
+
+.mat-expansion-panel-header-title {
+  color: white !important;
+}
+
+.mat-expansion-panel-content {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 400) !important;
+}
+
+.mat-expansion-panel:not(.mat-expanded) {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 500) !important;
+}
+
+.mat-expansion-panel-header:not(.mat-expanded) {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 500) !important;
+}
+
+.mat-expansion-panel:not(.mat-expanded) .mat-expansion-indicator::after {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 400) !important;
+}
+
+.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header-title {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 400) !important;
+}
+
+.mat-mdc-tooltip {
+  white-space: pre-line;
+}
+
+.mat-vertical-stepper-header {
+  height: 100px !important;
+  display: block;
+}
+
+.ev-radio-group-horizontal {
+  display: flex;
+  flex-direction: row;
+  margin: 15px 0;
+}
+
+.ev-radio-button {
+  margin: 5px;
+}
+
+.table-no-pad-no-space {
+  border-collapse: collapse;
+  border-width: 0px;
+  border-spacing: 0px;
+}
+
+.table-no-pad-no-space td {
+  padding: 0px;
+}
+
+@mixin boxSearchResult {
+  height: 100px;
+  max-height: 100px;
+  min-height: 100px;
+  width: 250px;
+  max-width: 250px;
+  min-width: 250px;
+  padding: 10px 0px 0px 10px;
+  margin: 10px 0px 0px 10px;
+  overflow-y: auto;
+  -ms-overflow-style: scrollbar;
+  cursor: pointer;
+  @include mat.elevation(2);
+}
+
+.boxSearchResultStandard {
+  @include boxSearchResult;
+  border: 3px solid mat.m2-get-color-from-palette(mat.$m2-grey-palette, 500);
+}
+
+.boxSearchResultStandard:hover {
+  @include mat.elevation-transition();
+  @include mat.elevation(8);
+}
+
+.boxSearchResultStandard:active {
+  @include mat.elevation-transition();
+  @include mat.elevation(1);
+}
+
+.boxSearchResultGreen {
+  @include boxSearchResult;
+  border: 3px solid mat.m2-get-color-from-palette($ev-palette-green, 500);
+}
+
+.boxSearchResultGreen:hover {
+  @include mat.elevation-transition();
+  @include mat.elevation(8);
+}
+
+.boxSearchResultGreen:active {
+  @include mat.elevation-transition();
+  @include mat.elevation(1);
+}
+
+.boxSearchResultBlue {
+  @include boxSearchResult;
+  border: 3px solid mat.m2-get-color-from-palette($ev-palette-primary, 500);
+}
+
+.boxSearchResultBlue:hover {
+  @include mat.elevation-transition();
+  @include mat.elevation(8);
+}
+
+.boxSearchResultBlue:active {
+  @include mat.elevation-transition();
+  @include mat.elevation(1);
+}
+
+.boxSearchResultYellow {
+  @include boxSearchResult;
+  border: 3px solid mat.m2-get-color-from-palette($ev-palette-accent, 500);
+}
+
+.boxSearchResultYellow:hover {
+  @include mat.elevation-transition();
+  @include mat.elevation(8);
+}
+
+.boxSearchResultYellow:active {
+  @include mat.elevation-transition();
+  @include mat.elevation(1);
+}
+
+.boxSearchResultRed {
+  @include boxSearchResult;
+  border: 3px solid mat.m2-get-color-from-palette($ev-palette-warn, 500);
+}
+
+.boxSearchResultRed:hover {
+  @include mat.elevation-transition();
+  @include mat.elevation(8);
+}
+
+.boxSearchResultRed:active {
+  @include mat.elevation-transition();
+  @include mat.elevation(1);
+}
+
+.boxNormalSize {
+  height: 700px;
+  max-height: 700px;
+  min-height: 700px;
+  width: 400px;
+  max-width: 400px;
+  min-width: 400px;
+  margin: 10px 0px 0px 10px;
+  overflow: hidden;
+  -ms-overflow-style: none;
+  @include mat.elevation(2);
+}
+
+.boxDoubleSize {
+  height: 700px;
+  max-height: 700px;
+  min-height: 700px;
+  width: 810px;
+  max-width: 810px;
+  min-width: 810px;
+  margin: 10px 0px 0px 10px;
+  @include mat.elevation(2);
+}
+
+.boxTripleSize {
+  height: 700px;
+  max-height: 700px;
+  min-height: 700px;
+  width: 1220px;
+  max-width: 1220px;
+  min-width: 1220px;
+  margin: 10px 0px 0px 10px;
+  @include mat.elevation(2);
+}
+
+.boxNormalSizeDoubleHeight {
+  height: 760px;
+  max-height: 760px;
+  min-height: 760px;
+  width: 400px;
+  max-width: 400px;
+  min-width: 400px;
+  margin: 10px 0px 0px 10px;
+  @include mat.elevation(2);
+}
+
+.boxNormalSizeHalfHeight {
+  height: 340px;
+  max-height: 340px;
+  min-height: 340px;
+  width: 400px;
+  max-width: 400px;
+  min-width: 400px;
+  margin: 10px 0px 0px 10px;
+  overflow: hidden;
+  -ms-overflow-style: none;
+  @include mat.elevation(2);
+}
+
+.boxDoubleSizeHalfHeight {
+  height: 340px;
+  max-height: 340px;
+  min-height: 340px;
+  width: 810px;
+  max-width: 810px;
+  min-width: 810px;
+  margin: 10px 0px 0px 10px;
+  @include mat.elevation(2);
+}
+
+.boxDashboard {
+  border-radius: 12px;
+  margin: 6px;
+  height: 270px;
+  max-height: 270px;
+  min-height: 270px;
+  width: 270px;
+  max-width: 270px;
+  min-width: 270px;
+  box-sizing: border-box;
+  @include mat.elevation(2);
+}
+
+.boxDashboardHeader {
+  border-radius: 134px 0px 0px 134px;
+  margin: 6px;
+  height: 270px;
+  max-height: 270px;
+  min-height: 270px;
+  width: 270px;
+  max-width: 270px;
+  min-width: 270px;
+  box-sizing: border-box;
+  @include mat.elevation(2);
+}
+
+.boxFillEmptySpace {
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.boxFillEmptySpaceNoSpace {
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+.border-accueil-collectivite-header {
+  border: 10px solid mat.m2-get-color-from-palette($ev-palette-green, a400);
+}
+
+.border-right-grey {
+  border-right: thin solid mat.m2-get-color-from-palette(mat.$m2-grey-palette, 300);
+}
+
+.border-top-grey {
+  border-top: thin solid mat.m2-get-color-from-palette(mat.$m2-grey-palette, 300);
+}
+
+.border-bottom-grey {
+  border-bottom: thin solid mat.m2-get-color-from-palette(mat.$m2-grey-palette, 300);
+}
+
+.border-primary-a-medium {
+  border-color: mat.m2-get-color-from-palette($ev-palette-primary, a400) !important;
+  border-width: medium !important;
+  border-style: solid !important;
+}
+
+.border-color-accent-dark {
+  border-color: mat.m2-get-color-from-palette($ev-palette-accent, 700) !important;
+}
+
+.dialog-border-accent {
+  border-width: 10px;
+  border-style: solid;
+  border-color: mat.m2-get-color-from-palette($ev-palette-accent, 400) !important;
+  box-sizing: border-box;
+  background-color: transparent !important;
+}
+
+.dialog-border-primary {
+  border-width: 10px;
+  border-style: solid;
+  border-color: mat.m2-get-color-from-palette($ev-palette-primary, 400) !important;
+  box-sizing: border-box;
+  background-color: transparent !important;
+}
+
+.message-dialog-panel {
+  border-color: mat.m2-get-color-from-palette($ev-palette-accent, 700) !important;
+  border-radius: 42px 0px 42px 42px !important;
+  border-width: 10px !important;
+  border-style: solid !important;
+  padding:20px;
+  border-collapse:separate !important;
+  background-color:white;
+}
+
+legend {
+  display: block;
+  padding-left: 2px;
+  padding-right: 2px;
+  border: none;
+  color: #607d8b;
+}
+
+.cadre_primary {
+  border-collapse: collapse;
+  border-width: 0px;
+  border-spacing: 0px;
+  height: 100%;
+  width: 100%;
+  border: thin solid mat.m2-get-color-from-palette($ev-palette-primary, 500);
+  background-color: white;
+}
+
+.cadre_accent {
+  border-collapse: collapse;
+  border-width: 0px;
+  border-spacing: 0px;
+  height: 100%;
+  width: 100%;
+  border: thin solid mat.m2-get-color-from-palette($ev-palette-accent, 500);
+  background-color: white;
+}
+
+.cadre_warn {
+  border-collapse: collapse;
+  border-width: 0px;
+  border-spacing: 0px;
+  height: 100%;
+  width: 100%;
+  border: thin solid mat.m2-get-color-from-palette($ev-palette-warn, 500);
+  background-color: white;
+}
+
+.cadre_header_primary {
+  height: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+  color: #ffffff;
+  padding: 0px 5px 0px 5px !important;
+}
+
+.cadre_header_accent {
+  height: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  background-color: mat.m2-get-color-from-palette($ev-palette-accent, 500);
+  color: #000000;
+  padding: 0px 5px 0px 5px !important;
+}
+
+.cadre_header_warn {
+  height: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  background-color: mat.m2-get-color-from-palette($ev-palette-warn, 500);
+  color: #ffffff;
+  padding: 0px 5px 0px 5px !important;
+}
+
+.cadre_header_statut_1 {
+  height: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  background-color: #9F9F9F;
+  color: #ffffff;
+  padding: 0px 5px 0px 5px !important;
+}
+
+.cadre_header_statut_2 {
+  height: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  background-color: #69B32A;
+  color: #ffffff;
+  padding: 0px 5px 0px 5px !important;
+}
+
+.cadre_header_statut_3 {
+  height: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  background-color: #E7342F;
+  color: #ffffff;
+  padding: 0px 5px 0px 5px !important;
+}
+
+.cadre_body {
+  height: 100%;
+  width: 100%;
+  padding: 5px !important;
+  vertical-align: top;
+  overflow: auto;
+}
+
+.color-primary {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 500) !important;
+}
+
+.color-primary-light-light {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 200) !important;
+}
+
+.color-primary-medium-light {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 300) !important;
+}
+
+.color-primary-medium {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 400) !important;
+}
+
+.color-primary-a-medium {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, a400) !important;
+}
+
+.color-accent {
+  color: mat.m2-get-color-from-palette($ev-palette-accent, 500) !important;
+}
+
+.color-accent-dark {
+  color: mat.m2-get-color-from-palette($ev-palette-accent, 900) !important;
+}
+
+.color-warn {
+  color: mat.m2-get-color-from-palette($ev-palette-warn, 500) !important;
+}
+
+.color-grey {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 500) !important;
+}
+
+.color-white {
+  color: white !important;
+}
+
+.color-inactif {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 500);
+}
+
+.color-tooltip-info-icon {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 300);
+}
+
+.color-green {
+  color: mat.m2-get-color-from-palette($ev-palette-green, 500) !important;
+}
+
+.background-color-statut-1 {
+  background-color: #9F9F9F !important;
+}
+
+.background-color-statut-2 {
+  background-color: #69B32A !important;
+}
+
+.background-color-statut-3 {
+  background-color: #E7342F !important;
+}
+
+.background-color-anomalie {
+  background-color: #C185F8 !important;
+}
+
+.background-color-donnee-manquante {
+  background-color: #FBB70C !important;
+}
+
+.background-color-camion-incomplet {
+  background-color: #FBB70C !important;
+}
+
+.background-color-accent {
+  background-color: mat.m2-get-color-from-palette($ev-palette-accent, 500) !important;
+}
+
+.background-color-accent-dark {
+  background-color: mat.m2-get-color-from-palette($ev-palette-accent, 700) !important;
+}
+
+.background-color-primary {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 500) !important;
+}
+
+.background-color-warn {
+  background-color: mat.m2-get-color-from-palette($ev-palette-warn, 500) !important;
+}
+
+.background-color-grey {
+  background-color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 500) !important;
+}
+
+.background-color-primary-light {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 50) !important;
+}
+
+.background-color-primary-medium-light {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 200) !important;
+}
+
+.background-color-primary-a-medium {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, a400) !important;
+}
+
+.background-color-primary-a-light {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, a200) !important;
+}
+
+.background-color-primary-dark {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 700) !important;
+}
+
+.background-color-accent-light {
+  background-color: mat.m2-get-color-from-palette($ev-palette-accent, 50) !important;
+}
+
+.background-color-warn-light {
+  background-color: mat.m2-get-color-from-palette($ev-palette-warn, 50) !important;
+}
+
+.background-color-grey-light {
+  background-color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 50) !important;
+}
+
+.background-color-green {
+  background-color: mat.m2-get-color-from-palette($ev-palette-green, 500) !important;
+}
+
+.background-color-green-a-light {
+  background-color: mat.m2-get-color-from-palette($ev-palette-green, a400) !important;
+}
+
+.background-color-green-a-dark {
+  background-color: mat.m2-get-color-from-palette($ev-palette-green, a700) !important;
+}
+
+.border-top-color-primary-light-light {
+  border-top-color: mat.m2-get-color-from-palette($ev-palette-primary, 200) !important;
+}
+
+.background-icon-api {
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="lightgrey" d="M14,12l-2,2l-2-2l2-2L14,12z M12,6l2.12,2.12l2.5-2.5L12,1L7.38,5.62l2.5,2.5L12,6z M6,12l2.12-2.12l-2.5-2.5L1,12 l4.62,4.62l2.5-2.5L6,12z M18,12l-2.12,2.12l2.5,2.5L23,12l-4.62-4.62l-2.5,2.5L18,12z M12,18l-2.12-2.12l-2.5,2.5L12,23l4.62-4.62 l-2.5-2.5L12,18z"></path></svg>');
+  background-position: right 5px top 5px;
+  background-repeat: no-repeat;
+}
+
+.valign-center {
+  display: inline-flex;
+  vertical-align: middle;
+  justify-content: center;
+  align-items: center;
+}
+
+.k-scrollview-wrap {
+  background-color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 200) !important;
+}
+
+.ev-pointer {
+}
+
+.ev-menu {
+  cursor: pointer;
+}
+
+.ev-menu:hover {
+  font-weight: 500;
+  color: white;
+}
+
+.ev-menu-selected {
+  cursor: pointer;
+  color: white;
+}
+
+.ev-module {
+  cursor: pointer;
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 400);
+}
+
+.ev-module:hover {
+  font-weight: 500;
+  color: white;
+}
+
+.ev-module-selected {
+  cursor: pointer;
+  color: white;
+}
+
+.ev-module-current {
+  color: white;
+}
+
+.ev-module-tr {
+  height: 40px;
+}
+
+.ev-module-td-left {
+  width: 25px;
+}
+
+.cdk-overlay-pane {
+  display: block;
+}
+
+.ev-overlay {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 100);
+  border: 2px solid black;
+  border-radius: 10px;
+  padding:20px;
+  @include mat.elevation-transition();
+  @include mat.elevation(4);
+}
+
+.ev-overlay-top-right {
+  position: absolute;
+  top: 50px;
+  right: -250px;
+  height:400px;
+  width:400px;
+}
+
+.ev-language {
+  cursor: pointer;
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+  font-size: 1.5em;
+}
+
+.ev-language:hover {
+  color: black;
+}
+
+.ev-button-link {
+  cursor: pointer;
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+}
+
+.ev-button-link:hover {
+  color: black;
+}
+
+.ev-main-container {
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  display: flex;
+  flex-flow: column;
+}
+
+.ev-horizontal-main-container {
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+}
+
+.ev-horizontal-container {
+  display: flex;
+  flex-flow: row;
+  margin: 0;
+  padding: 0;
+  flex-wrap: nowrap;
+}
+
+.ev-vertical-container {
+  display: flex;
+  flex-flow: column;
+  margin: 0px;
+}
+
+.ev-datatable-container {
+  flex: 1 1 auto;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  border-top: thin solid grey;
+}
+
+.ev-table-full-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.ev-dataform-container {
+  flex: 1;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  margin: 0px 15px 0px 15px;
+  overflow: auto;
+}
+
+.ev-flex-row-container {
+  flex: 1;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  margin: 0;
+  overflow: auto;
+}
+
+.ev-flex-row-container-single-line {
+  flex: 1;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: nowrap;
+  align-content: flex-start;
+  margin: 0;
+  overflow: auto;
+}
+
+.ev-flex-col-container {
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  margin: 0;
+  overflow: auto;
+}
+
+.ev-header-container {
+  padding: 15px 15px 5px 15px;
+}
+
+.ev-taskbar-container {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 15px 5px 15px;
+}
+
+.ev-taskbar-left-container {
+  flex-direction: row;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ev-taskbar-right-container {
+  flex-direction: row;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ev-footer {
+  height: 15px;
+  min-height: 15px;
+  max-height: 15px;
+}
+
+.ev-taskbar-footer {
+  height: 25px;
+  min-height: 25px;
+  max-height: 25px;
+}
+
+.ev-button-left {
+  margin-right: 10px !important;
+}
+
+.ev-button-right {
+  margin-left: 10px !important;
+}
+
+.ev-control-left {
+  margin-right: 10px !important;
+}
+
+.ev-control-right {
+  margin-left: 10px !important;
+}
+
+.ev-date-picker {
+  width: 200px;
+}
+
+.ev-inner-component-container {
+  border: thin solid mat.m2-get-color-from-palette($ev-palette-accent, 500);
+  background-color: mat.m2-get-color-from-palette($ev-palette-accent, 50);
+}
+
+.ev-dashboard-off {
+  border-width: 0px;
+  border-style: none;
+  border-collapse: collapse;
+}
+
+.ev-dashboard-click {
+  cursor:pointer;
+}
+
+.ev-dashboard-on {
+  border-width: 5px;
+  border-style: solid;
+  border-collapse: collapse;
+}
+
+.ev-dashboard-on-warning {
+  border-width: 12px;
+  border-style: solid;
+  border-collapse: collapse;
+  border-color: mat.m2-get-color-from-palette($ev-palette-accent, 500) !important;
+}
+
+.ev-dashboard-on:hover {
+  @include mat.elevation-transition();
+  @include mat.elevation(8);
+}
+
+.ev-dashboard-on:active {
+  @include mat.elevation-transition();
+  @include mat.elevation(1);
+}
+
+.ev-dashboard-on-warning:hover {
+  @include mat.elevation-transition();
+  @include mat.elevation(8);
+}
+
+.ev-dashboard-on-warning:active {
+  @include mat.elevation-transition();
+  @include mat.elevation(1);
+}
+
+.ev-dashboard-table {
+  height: 100%;
+  width: 100%;
+}
+
+.ev-dashboard-table td {
+    padding:7px 10px 7px 10px;
+}
+
+.ev-dashboard-label {
+  font-size: 1.8em;
+  font-weight: 300;
+  line-height: 1.2em;
+  text-align: center;
+  vertical-align: top;
+}
+
+.ev-dashboard-nb-tr {
+  height: 80px;
+  max-height: 80px;
+  min-height: 80px;
+}
+
+.ev-dashboard-nb {
+  font-size: 3em;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.ev-dashboard-warning-tr {
+  height: 50px;
+  max-height: 50px;
+  min-height: 50px;
+}
+
+.ev-dashboard-warning {
+  text-align: center;
+  vertical-align: top;
+  color: mat.m2-get-color-from-palette($ev-palette-accent, 500) !important;
+}
+
+.ev-dashboard-off-color-logistique {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 200);
+}
+
+.ev-dashboard-off-color-logistique td {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+}
+
+.ev-dashboard-on-color-logistique {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+  border-color: mat.m2-get-color-from-palette($ev-palette-primary, 200);
+}
+
+.ev-dashboard-on-color-logistique td {
+  color: white;
+}
+
+.ev-dashboard-off-color-qualite {
+  background-color: mat.m2-get-color-from-palette($ev-palette-dashboard, 50);
+}
+
+.ev-dashboard-off-color-qualite td {
+  color: mat.m2-get-color-from-palette($ev-palette-dashboard, 100);
+}
+
+.ev-dashboard-on-color-qualite {
+  background-color: mat.m2-get-color-from-palette($ev-palette-dashboard, 100);
+  border-color: mat.m2-get-color-from-palette($ev-palette-dashboard, 50);
+}
+
+.ev-dashboard-on-color-qualite td {
+  color: white;
+}
+
+.ev-dashboard-off-color-administration {
+  background-color: mat.m2-get-color-from-palette($ev-palette-dashboard, 200);
+}
+
+.ev-dashboard-off-color-administration td {
+  color: mat.m2-get-color-from-palette($ev-palette-dashboard, 300);
+}
+
+.ev-dashboard-on-color-administration {
+  background-color: mat.m2-get-color-from-palette($ev-palette-dashboard, 300);
+  border-color: mat.m2-get-color-from-palette($ev-palette-dashboard, 200);
+}
+
+.ev-dashboard-on-color-administration td {
+  color: white;
+}
+
+.ev-dashboard-off-color-annuaire {
+  background-color: mat.m2-get-color-from-palette($ev-palette-dashboard, 400);
+}
+
+.ev-dashboard-off-color-annuaire td {
+  color: mat.m2-get-color-from-palette($ev-palette-dashboard, 500);
+}
+
+.ev-dashboard-on-color-annuaire {
+  background-color: mat.m2-get-color-from-palette($ev-palette-dashboard, 500);
+  border-color: mat.m2-get-color-from-palette($ev-palette-dashboard, 400);
+}
+
+.ev-dashboard-on-color-annuaire td {
+  color: white;
+}
+
+.ev-module-collectivite-accueil-bloc-on:hover {
+  @include mat.elevation-transition();
+  @include mat.elevation(20);
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, 800) !important;
+}
+
+.ev-module-collectivite-accueil-bloc-on:active {
+  @include mat.elevation-transition();
+  @include mat.elevation(2);
+}
+
+.ev-profil-item {
+    cursor:pointer;
+}
+
+.ev-profil-item:hover {
+  background-color: mat.m2-get-color-from-palette($ev-palette-accent, 400) !important;
+}
+
+.ev-color-red {
+  background-color: #E74C1A;
+}
+
+.ev-color-orange {
+  background-color: #FFA100;
+}
+
+.ev-color-green {
+  background-color: #C1F59A;
+}
+
+.ev-cible-color-red {
+  background-color: #E74C1A;
+  cursor: pointer;
+}
+
+.ev-cible-color-orange {
+  background-color: #FFA100;
+  cursor: pointer;
+}
+
+.ev-cible-color-green {
+  background-color: #C1F59A;
+  cursor: pointer;
+}
+
+.ev-commande-fournisseur-statut-1 {
+  background-color: #9F9F9F;
+}
+
+.ev-commande-fournisseur-statut-2 {
+  background-color: #69B32A;
+}
+
+.ev-commande-fournisseur-statut-3 {
+  background-color: #E7342F;
+}
+
+.icon-2x {
+  transform: scale(2);
+}
+
+.icon-3x {
+  transform: scale(3);
+}
+
+.mat-form-field {
+  .mat-form-field-wrapper {
+    .mat-form-field-flex {
+      // MS Edge specific hack
+      @supports (-ms-ime-align:auto) {
+        display: inline;
+      }
+    }
+  }
+}
+
+.ev-hl-accent {
+  color: mat.m2-get-color-from-palette($ev-palette-accent, 500);
+}
+
+.ev-hl-accent:link {
+  color: mat.m2-get-color-from-palette($ev-palette-accent, 500);
+}
+
+.ev-hl-accent:visited {
+  color: mat.m2-get-color-from-palette($ev-palette-accent, 500);
+}
+
+.ev-hl-accent:active {
+  color: mat.m2-get-color-from-palette($ev-palette-accent, 500);
+}
+
+.ev-hl-accent:hover {
+  color: mat.m2-get-color-from-palette($ev-palette-accent, 500);
+}
+
+.ev-hl-primary {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+}
+
+.ev-hl-primary:link {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+}
+
+.ev-hl-primary:visited {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+}
+
+.ev-hl-primary:active {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+}
+
+.ev-hl-primary:hover {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 500);
+}
+
+.ev-hl-primary-light-light {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 200);
+}
+
+.ev-hl-primary-light-light:link {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 200);
+}
+
+.ev-hl-primary-light-light:visited {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 200);
+}
+
+.ev-hl-primary-light-light:active {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 200);
+}
+
+.ev-hl-primary-light-light:hover {
+  color: mat.m2-get-color-from-palette($ev-palette-primary, 100);
+}
+
+.ev-hl-grey {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 700);
+  text-decoration: none;
+}
+
+.ev-hl-grey:link {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 700);
+  text-decoration: none;
+}
+
+.ev-hl-grey:visited {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 700);
+  text-decoration: none;
+}
+
+.ev-hl-grey:active {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 700);
+  text-decoration: none;
+}
+
+.ev-hl-grey:hover {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 700);
+  text-decoration: none;
+}
+
+.ev-hl-white {
+  color: white;
+}
+
+.ev-hl-white:link {
+  color: white;
+}
+
+.ev-hl-white:visited {
+  color: white;
+}
+
+.ev-hl-white:active {
+  color: white;
+}
+
+.ev-hl-white:hover {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 400);
+}
+
+.ev-hl-black {
+  color: black;
+}
+
+.ev-hl-black:link {
+  color: black;
+}
+
+.ev-hl-black:visited {
+  color: black;
+}
+
+.ev-hl-black:active {
+  color: black;
+}
+
+.ev-hl-black:hover {
+  color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 400);
+}
+
+.ev-user-circle {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, a400);
+  border-top-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-color: mat.m2-get-color-from-palette($ev-palette-primary, 50);
+  border-width: 5px;
+  border-style: solid;
+  height: 45px;
+  text-align: center;
+  width: 45px;
+}
+
+.ev-user-circle-icone {
+  position: relative;
+  top: 10px;
+}
+
+.ev-user-circle-small {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, a400);
+  border-top-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-color: mat.m2-get-color-from-palette($ev-palette-primary, 50);
+  border-width: 5px;
+  border-style: solid;
+  height: 35px;
+  text-align: center;
+  width: 35px;
+}
+
+.ev-user-circle-small-icone {
+  position: relative;
+  top: 5px;
+}
+
+.ev-person-circle {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, a400);
+  border-radius: 50%;
+  border-color: mat.m2-get-color-from-palette($ev-palette-primary, 50);
+  border-width: 5px;
+  border-style: solid;
+  height: 40px;
+  text-align: center;
+  width: 40px;
+}
+
+.ev-person-circle-icone {
+  position: relative;
+  top: 5px;
+}
+
+.ev-circle-primary {
+  background-color: mat.m2-get-color-from-palette($ev-palette-primary, a400);
+  border-radius: 50%;
+  border-color: mat.m2-get-color-from-palette($ev-palette-primary, 50);
+  border-width: 5px;
+  border-style: solid;
+  height: 74px;
+  text-align: center;
+  width: 74px;
+}
+
+.ev-circle-green {
+  background-color: mat.m2-get-color-from-palette($ev-palette-green, 500);
+  border-radius: 50%;
+  border-color: mat.m2-get-color-from-palette($ev-palette-green, 50);
+  border-width: 5px;
+  border-style: solid;
+  height: 74px;
+  text-align: center;
+  width: 74px;
+}
+
+.ev-circle-mini-green {
+  background-color: mat.m2-get-color-from-palette($ev-palette-green, 500);
+  border-radius: 50%;
+  border-color: mat.m2-get-color-from-palette($ev-palette-green, 50);
+  border-width: 3px;
+  border-style: solid;
+  height: 11px;
+  text-align: center;
+  width: 11px;
+}
+
+.ev-circle-accent {
+  background-color: mat.m2-get-color-from-palette($ev-palette-accent, 500);
+  border-radius: 50%;
+  border-color: mat.m2-get-color-from-palette($ev-palette-accent, 50);
+  border-width: 5px;
+  border-style: solid;
+  height: 74px;
+  text-align: center;
+  width: 74px;
+}
+
+.ev-circle-icone {
+  position: relative;
+  top: 27px;
+}
+
+.ev-table-spacy {
+
+  td {
+    padding: 5px;
+  }
+}
+.fixed-headers-normal-size-one-column-edit-delete {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  td:nth-child(1), th:nth-child(1) {
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(2), th:nth-child(2) {
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(3), th:nth-child(3) {
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+    box-sizing: border-box;
+  }
+
+  thead {
+
+    tr {
+      display: block;
+      position: relative;
+    }
+
+    th {
+      text-align: left;
+    }
+  }
+
+  tbody {
+    display: block;
+    overflow: auto;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    height: 610px;
+  }
+}
+
+
+//******************************************************************
+//Shapes
+.fond-tonnage {
+  height: 100%;
+  width: 100%;
+  clip-path: polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%);
+  background-color: Blue;
+}
+
+//******************************************************************
+//General CSS
+
+//Vertical center SVG images
+.vertical-align-center-svg{
+display: -webkit-flex; /* Safari */
+display: flex;
+-webkit-align-items: center; /* Safari 7.0+ */
+align-items: center;
+-webkit-justify-content: center;
+justify-content: center;
+}
+
+
+//******************************************************************
+//Misc
+
+@font-face {
+  font-family: 'GilMT';
+  src: url('../../assets/fonts/GIL.TTF') format('truetype');
+}
+
+@font-face {
+  font-family: 'GilMTBold';
+  src: url('../../assets/fonts/GILB.TTF') format('truetype');
+}
+
+.kendo-pdf-export-gil {
+  font-family: "GilMT", "Arial", sans-serif;
+  font-size: 12px;
+}
+
+

@@ -1,0 +1,45 @@
+<div class="ev-main-container">
+  <header>
+    <form id="MyForm" [formGroup]="form" class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+          <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+          <mat-form-field class="ev-control-left">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(19)}}</mat-label>
+            <mat-select formControlName="ProduitList"
+                        (selectionChange)="onProduitSelected()">
+              <mat-option>
+                <ngx-mat-select-search formControlName="ProduitListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                       noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let produitList of filteredProduitList | async" [value]="produitList.RefProduit">{{produitList.Libelle}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-raised-button class="ev-button-left" type="button" (click)="onAdd();" *ngIf="form.get('ProduitList').value">
+            {{applicationUserContext.getCulturedRessourceText(598)}}
+          </button>
+        </div>
+        <div class="ev-taskbar-right-container">
+          <button mat-raised-button class="ev-button-right" type="button" (click)="onCopy();" [disabled]="descriptionControles.length===0 || form.get('ProduitDestList').value===null">
+            {{applicationUserContext.getCulturedRessourceText(616)}}
+          </button>
+          <mat-form-field class="ev-control-right">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(19)}}</mat-label>
+            <mat-select formControlName="ProduitDestList">
+              <mat-option>
+                <ngx-mat-select-search formControlName="ProduitDestListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
+                                       noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let produitList of filteredProduitDestList | async" [value]="produitList.RefProduit">{{produitList.Libelle}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+    </form>
+  </header>
+  <div class="ev-dataform-container">
+    <div *ngFor="let descriptionControle of descriptionControles">
+      <description-controle [refDescriptionControle]="descriptionControle.RefDescriptionControle.toString()" [refProduit]="form.get('ProduitList').value.toString()"></description-controle>
+    </div>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

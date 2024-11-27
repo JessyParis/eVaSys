@@ -1,0 +1,966 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid" (click)="onSave()">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" [disabled]="showAll" (click)="onShowAll()">{{applicationUserContext.getCulturedRessourceText(1168)}}</button>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onModuleCollectivite()"
+                *ngIf="entite?.EntiteType?.RefEntiteType==1">{{applicationUserContext.getCulturedRessourceText(263)}}</button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="entite?.RefEntite" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            <table class="table-no-pad-no-space" style="width:100%;">
+              <tr>
+                <td>{{applicationUserContext.getCulturedRessourceText(1127)}}</td>
+                <td style="text-align:right;">{{'id = ' + entite.RefEntite}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-checkbox formControlName="Actif" style="width:50%;">
+              {{applicationUserContext.getCulturedRessourceText(651)}}
+            </mat-checkbox>
+            <mat-form-field style="width:50%;" *ngIf="entite?.EntiteType?.CodeEE">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(64)}}</mat-label>
+              <input matInput formControlName="CodeEE" maxlength="20" />
+              <button *ngIf="form.get('CodeEE').value!=null && form.get('CodeEE').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CodeEE').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-checkbox formControlName="SousContrat" style="width:100%;" *ngIf="entite?.EntiteType?.SousContrat">
+              {{applicationUserContext.getCulturedRessourceText(1155)}}
+            </mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(646)}}</mat-label>
+              <mat-select formControlName="EntiteTypeList"
+                          required [errorStateMatcher]="matcher" (selectionChange)="onEntiteTypeSelected()">
+                <mat-option *ngFor="let entiteTypeList of entiteTypeList" [value]="entiteTypeList.RefEntiteType">{{entiteTypeList.Libelle}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(form.get('EntiteTypeList').touched || form.get('EntiteTypeList').dirty) && form.get('EntiteTypeList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(474)}}</mat-label>
+              <input matInput formControlName="Libelle" required [errorStateMatcher]="matcher" maxlength="200" />
+              <button *ngIf="form.get('Libelle').value!=null && form.get('Libelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Libelle').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Libelle').touched || form.get('Libelle').dirty) && form.get('Libelle').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.Capacite">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1135)}}</mat-label>
+              <input matInput formControlName="Capacite" mask="separator" [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('Capacite').value!=null && form.get('Capacite').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Capacite').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Capacite').touched || form.get('Capacite').dirty) && form.get('Capacite').errors?.max">{{applicationUserContext.getCulturedRessourceText(573) + (form.get('Capacite').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.ActionnaireProprietaire">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1133)}}</mat-label>
+              <input matInput formControlName="ActionnaireProprietaire" maxlength="50" />
+              <button *ngIf="form.get('ActionnaireProprietaire').value!=null && form.get('ActionnaireProprietaire').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('ActionnaireProprietaire').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.Exploitant">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1134)}}</mat-label>
+              <input matInput formControlName="Exploitant" maxlength="50" />
+              <button *ngIf="form.get('Exploitant').value!=null && form.get('Exploitant').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Exploitant').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.DimensionBalle">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1158)}}</mat-label>
+              <input matInput formControlName="DimensionBalle" maxlength="50"
+                     mask="000-000-000" [dropSpecialCharacters]="false" [showMaskTyped]="true" placeHolderCharacter="_" />
+              <button *ngIf="form.get('DimensionBalle').value!=null && form.get('DimensionBalle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('DimensionBalle').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.RefEquipementier">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1156)}}</mat-label>
+              <mat-select formControlName="EquipementierList">
+                <mat-option *ngFor="let equipementierList of equipementierList" [value]="equipementierList.RefEquipementier">{{equipementierList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('EquipementierList').value && form.get('EquipementierList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('EquipementierList').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.RefFournisseurTO">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1157)}}</mat-label>
+              <mat-select formControlName="FournisseurTOList">
+                <mat-option *ngFor="let fournisseurTOList of fournisseurTOList" [value]="fournisseurTOList.RefFournisseurTO">{{fournisseurTOList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('FournisseurTOList').value && form.get('FournisseurTOList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('FournisseurTOList').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.PopulationContratN">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1128)}}</mat-label>
+              <input matInput formControlName="PopulationContratN" mask="separator" />
+              <button *ngIf="form.get('PopulationContratN').value!=null && form.get('PopulationContratN').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PopulationContratN').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-checkbox formControlName="VisibiliteAffretementCommun" style="width:100%;" *ngIf="entite?.EntiteType?.VisibiliteAffretementCommun">
+              {{applicationUserContext.getCulturedRessourceText(1143)}}
+            </mat-checkbox>
+            <mat-checkbox formControlName="SurcoutCarburant" style="width:100%;" *ngIf="entite?.EntiteType?.SurcoutCarburant">
+              {{applicationUserContext.getCulturedRessourceText(714)}}
+            </mat-checkbox>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1184)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.LiaisonEntiteDR">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(764)}}</mat-label>
+              <mat-select multiple formControlName="DRList" [compareWith]="compareFnDR">
+                <mat-option *ngFor="let entiteDR of entiteDRList" [value]="entiteDR">{{entiteDR.DR.Nom}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('DRList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); onDRListReset();" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.Process">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(583)}}</mat-label>
+              <mat-select multiple formControlName="ProcessList" [compareWith]="compareFnProcess">
+                <mat-option *ngFor="let entiteProcess of entiteProcessList" [value]="entiteProcess">{{entiteProcess.Process.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ProcessList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); onProcessListReset();" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <div style="margin: 0 0 10px 0;" *ngIf="entite?.EntiteType?.Process">
+              <mat-card appearance="outlined" style="white-space: pre-wrap;">
+                <mat-card-content [style.overflow]="'auto'" [style.height.px]="'80'">
+                  <p>{{processsLabel()}}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.LiaisonEntiteStandard">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1030)}}</mat-label>
+              <mat-select multiple formControlName="StandardList" [compareWith]="compareFnStandard">
+                <mat-option *ngFor="let entiteStandard of entiteStandardList" [value]="entiteStandard">{{entiteStandard.Standard.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('StandardList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); onStandardListReset();" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <div style="margin: 0 0 10px 0;" *ngIf="entite?.EntiteType?.LiaisonEntiteStandard">
+              <mat-card appearance="outlined" style="white-space: pre-wrap;">
+                <mat-card-content [style.overflow]="'auto'" [style.height.px]="'80'">
+                  <p>{{standardsLabel()}}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.Horaires && entite.Horaires">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1186)}}</mat-label>
+              <textarea matInput formControlName="Horaires" maxlength="500" style="height:45px;"></textarea>
+              <button *ngIf="form.get('Horaires').value && form.get('Horaires').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Horaires').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+              <textarea matInput formControlName="Cmt" maxlength="10000" style="height:120px;"></textarea>
+              <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showAll" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1129)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.CodeValorisation">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1137)}}</mat-label>
+              <input matInput formControlName="CodeValorisation" maxlength="3" />
+              <button *ngIf="form.get('CodeValorisation').value!=null && form.get('CodeValorisation').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CodeValorisation').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.RefEcoOrganisme">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1416)}}</mat-label>
+              <mat-select formControlName="EcoOrganismeList">
+                <mat-option *ngFor="let ecoOrganismeList of ecoOrganismeList" [value]="ecoOrganismeList.RefEcoOrganisme">{{ecoOrganismeList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('EcoOrganismeList').value && form.get('EcoOrganismeList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('EcoOrganismeList').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-checkbox formControlName="RepartitionMensuelle" style="width:100%;" *ngIf="entite?.EntiteType?.RepartitionMensuelle">
+              {{applicationUserContext.getCulturedRessourceText(591)}}
+            </mat-checkbox>
+            <mat-checkbox formControlName="AssujettiTVA" style="width:40%;" *ngIf="entite?.EntiteType?.AssujettiTVA"
+                          (change)="onAssujettiTVAChange()">
+              {{applicationUserContext.getCulturedRessourceText(787)}}
+            </mat-checkbox>
+            <mat-form-field style="width:60%;" *ngIf="entite?.EntiteType?.CodeTVA">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(788)}}</mat-label>
+              <input matInput formControlName="CodeTVA" maxlength="14" [required]="codeTVAFCRequired" [errorStateMatcher]="matcher"
+                     pattern="^[A-Za-z0-9]*$" [matTooltip]="applicationUserContext.getCulturedRessourceText(1466)"/>
+              <button *ngIf="form.get('CodeTVA').value!=null && form.get('CodeTVA').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CodeTVA').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('CodeTVA').touched || form.get('CodeTVA').dirty) && form.get('CodeTVA').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="form.get('CodeTVA').errors?.pattern">{{applicationUserContext.getCulturedRessourceText(1465)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.SAGECodeComptable">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1130)}}</mat-label>
+              <input matInput formControlName="SAGECodeComptable" maxlength="17" />
+              <button *ngIf="form.get('SAGECodeComptable').value!=null && form.get('SAGECodeComptable').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('SAGECodeComptable').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.SAGECompteTiers">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1138)}}</mat-label>
+              <input matInput formControlName="SAGECompteTiers" maxlength="13" />
+              <button *ngIf="form.get('SAGECompteTiers').value!=null && form.get('SAGECompteTiers').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('SAGECompteTiers').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.RefSAGECategorieAchat">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1152)}}</mat-label>
+              <mat-select formControlName="SAGECategorieAchatList">
+                <mat-option *ngFor="let sAGECategorieAchatList of sAGECategorieAchatList"
+                            [value]="sAGECategorieAchatList.RefSAGECategorieAchat">{{sAGECategorieAchatList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('SAGECategorieAchatList').value && form.get('SAGECategorieAchatList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation();  form.get('SAGECategorieAchatList').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.RefSAGEConditionLivraison">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1139)}}</mat-label>
+              <mat-select formControlName="SAGEConditionLivraisonList">
+                <mat-option *ngFor="let sAGEConditionLivraisonList of sAGEConditionLivraisonList"
+                            [value]="sAGEConditionLivraisonList.RefSAGEConditionLivraison">{{sAGEConditionLivraisonList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('SAGEConditionLivraisonList').value && form.get('SAGEConditionLivraisonList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation();  form.get('SAGEConditionLivraisonList').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.RefSAGEPeriodicite">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1140)}}</mat-label>
+              <mat-select formControlName="SAGEPeriodiciteList">
+                <mat-option *ngFor="let sAGEPeriodiciteList of sAGEPeriodiciteList"
+                            [value]="sAGEPeriodiciteList.RefSAGEPeriodicite">{{sAGEPeriodiciteList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('SAGEPeriodiciteList').value && form.get('SAGEPeriodiciteList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation();  form.get('SAGEPeriodiciteList').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.RefSAGEModeReglement">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1141)}}</mat-label>
+              <mat-select formControlName="SAGEModeReglementList">
+                <mat-option *ngFor="let sAGEModeReglementList of sAGEModeReglementList" [value]="sAGEModeReglementList.RefSAGEModeReglement">{{sAGEModeReglementList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('SAGEModeReglementList').value && form.get('SAGEModeReglementList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation();  form.get('SAGEModeReglementList').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.RefSAGECategorieVente">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1142)}}</mat-label>
+              <mat-select formControlName="SAGECategorieVenteList">
+                <mat-option *ngFor="let sAGECategorieVenteList of sAGECategorieVenteList" [value]="sAGECategorieVenteList.RefSAGECategorieVente">{{sAGECategorieVenteList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('SAGECategorieVenteList').value && form.get('SAGECategorieVenteList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation();  form.get('SAGECategorieVenteList').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-checkbox formControlName="ExportSAGE" style="width:100%;" *ngIf="entite?.EntiteType?.ExportSAGE">
+              {{applicationUserContext.getCulturedRessourceText(500)}}
+            </mat-checkbox>
+            <mat-checkbox formControlName="AutoControle" style="width:100%;" *ngIf="entite?.EntiteType?.AutoControle">
+              {{applicationUserContext.getCulturedRessourceText(905)}}
+            </mat-checkbox>
+            <mat-checkbox formControlName="ReconductionIncitationQualite" style="width:100%;" *ngIf="entite?.EntiteType?.IncitationQualite">
+              {{applicationUserContext.getCulturedRessourceText(1136)}}
+            </mat-checkbox>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.RefRepriseType">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1131)}}</mat-label>
+              <mat-select formControlName="RepriseTypeList">
+                <mat-option *ngFor="let repriseTypeList of repriseTypeList" [value]="repriseTypeList.RefRepriseType">{{repriseTypeList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('RepriseTypeList').value && form.get('RepriseTypeList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('RepriseTypeList').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.RefRepreneur">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1132)}}</mat-label>
+              <mat-select formControlName="RepreneurList">
+                <mat-option *ngFor="let repreneurList of repreneurList" [value]="repreneurList.RefRepreneur">{{repreneurList.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('RepreneurList').value && form.get('RepreneurList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('RepreneurList').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.IdNational">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1421)}}</mat-label>
+              <input matInput formControlName="IdNational" maxlength="25" pattern="^[A-Za-z0-9]*$" [errorStateMatcher]="matcher"
+                      [matTooltip]="applicationUserContext.getCulturedRessourceText(1467)"/>
+              <button *ngIf="form.get('IdNational').value!=null && form.get('IdNational').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('IdNational').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="form.get('IdNational').errors?.pattern">{{applicationUserContext.getCulturedRessourceText(1465)}}</mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showContratCollectivites" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1176)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_entiteliees table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('ContratCollectivite', null, null, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1176)}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let contratCollectivite of entite?.ContratCollectivites">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('ContratCollectivite', contratCollectivite.RefContratCollectivite, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="contratCollectivite.Avenant ? 'color-primary' : ''">{{contratCollectiviteLabel(contratCollectivite)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="color-grey" [matTooltip]="getcontratCollectiviteTooltipText(contratCollectivite)">info</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteContratCollectivite(contratCollectivite.RefContratCollectivite)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showContratIncitationQualites" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1180)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed-headers-normal-size-one-column-edit-delete table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('ContratIncitationQualite', null, null, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1180)}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let contratIncitationQualite of entite?.ContratIncitationQualites">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('ContratIncitationQualite', contratIncitationQualite.RefContratIncitationQualite, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">{{contratIncitationQualiteLabel(contratIncitationQualite)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteContratIncitationQualite(contratIncitationQualite.RefContratIncitationQualite)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxDoubleSize" *ngIf="showAdresses" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1144)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_adresses table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireAdresse', null, null, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(265)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(474)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(66)}}</th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let adresse of entite?.Adresses | callback: filterAdresses: applicationUserContext.filterGlobalActif">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireAdresse', adresse.RefAdresse, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="adresse.Actif ? '':'color-inactif'">{{adresse.AdresseType.Libelle}}</td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="adresse.Actif ? '':'color-inactif'">{{adresse.Libelle}}</td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="adresse.Actif ? '':'color-inactif'">{{adresse.Ville}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="ev-button-right color-grey" *ngIf="adresse.Horaires"
+                              [matTooltip]="adresse.Horaires">watch_later</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteAdresse(adresse.RefAdresse)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxDoubleSize" *ngIf="showContactAdresses" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1145)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_contactadresses table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireContactAdresse', null, null, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(470)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(471)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1146)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(420)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(265)}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let contactAdresse of entite?.ContactAdresses | callback: filterContactAdresses: applicationUserContext.filterGlobalActif">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireContactAdresse', contactAdresse.RefContactAdresse, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">{{contactAdresse.Contact?.Prenom}}</td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="contactAdresse.Actif ? '':'color-warn'">{{contactAdresse.Contact?.Nom}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">{{getContactAdresseServiceFonctions(contactAdresse)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">{{getContactAdresseProcesss(contactAdresse)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">{{getAdresseType(contactAdresse)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="ev-button-right color-accent" *ngIf="contactAdresseAccountType(contactAdresse)=='UtilisateurEsclave'"
+                              [matTooltip]="getLoginTooltipText(contactAdresse)">supervised_user_circle</mat-icon>
+                    <mat-icon class="ev-button-right color-accent" *ngIf="contactAdresseAccountType(contactAdresse)=='Utilisateur'"
+                              [matTooltip]="getLoginTooltipText(contactAdresse)">account_circle</mat-icon>
+                    <mat-icon class="ev-button-right color-accent" *ngIf="contactAdresseAccountType(contactAdresse)=='UtilisateurMaitre'"
+                              [matTooltip]="getLoginTooltipText(contactAdresse)">manage_accounts</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteContactAdresse(contactAdresse.RefContactAdresse)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showEntiteProduits" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(317)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_entiteliees table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteProduit', null, null, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(317)}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let eP of entite?.EntiteProduits | callback: filterEntiteProduits: applicationUserContext.filterGlobalActif">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteProduit', eP.RefEntiteProduit, null, '');" type="button"
+                            *ngIf="applicationUserContext.connectedUtilisateur.HabilitationAnnuaire=='Administrateur' || !eP.Interdit">
+                      <mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon>
+                    </button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="!eP.Produit.Actif ? 'color-grey' : (eP.Interdit ? 'color-accent':'')">{{eP.Produit?.Libelle}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="color-grey" [matTooltip]="getEntiteProduitCreationTooltipText(eP.RefEntiteProduit)">info</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteEntiteProduit(eP.RefEntiteProduit)" type="button"
+                            *ngIf="applicationUserContext.connectedUtilisateur.HabilitationAnnuaire=='Administrateur' || !eP.Interdit">
+                      <mat-icon aria-label="Delete" color="warn">delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showEntiteEntites1" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1159)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_entiteliees table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteEntite', null, 1, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1159)}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let eE of entite?.EntiteEntites | callback: filterEntiteEntites: applicationUserContext.filterGlobalActif: 1">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteEntite', eE.RefEntiteEntite, 1, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="eE.Actif && eE.ActifEntiteRtt ? '':'color-inactif'">{{eE.LibelleEntiteRtt}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="color-grey" [matTooltip]="getEntiteEntiteCreationTooltipText(eE.RefEntiteEntite)">info</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteEntiteEntite(eE.RefEntiteEntite)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showEntiteCamionTypes" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{camionTypeLieLabel}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_entiteliees table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteCamionType', null, null, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{camionTypeLieLabel}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let eCT of entite?.EntiteCamionTypes">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteCamionType', eCT.RefEntiteCamionType, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">{{eCT.CamionType?.Libelle}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="color-grey" [matTooltip]="getEntiteCamionTypeCreationTooltipText(eCT.RefEntiteCamionType)">info</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteEntiteCamionType(eCT.RefEntiteCamionType)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showEntiteEntites3" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{centreDeTriLieLabel}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_entiteliees table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteEntite', null, 3, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{centreDeTriLieLabel}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let eE of entite?.EntiteEntites | callback: filterEntiteEntites: applicationUserContext.filterGlobalActif: 3">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteEntite', eE.RefEntiteEntite, 3, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="eE.Actif && eE.ActifEntiteRtt ? '':'color-inactif'">{{eE.LibelleEntiteRtt}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="color-grey" [matTooltip]="getEntiteEntiteCreationTooltipText(eE.RefEntiteEntite)">info</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteEntiteEntite(eE.RefEntiteEntite)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showEntiteEntites2" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1165)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_entiteliees table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteEntite', null, 2, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1165)}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let eE of entite?.EntiteEntites | callback: filterEntiteEntites: applicationUserContext.filterGlobalActif : 2">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteEntite', eE.RefEntiteEntite, 2, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="eE.Actif && eE.ActifEntiteRtt ? '':'color-inactif'">{{eE.LibelleEntiteRtt}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="color-grey" [matTooltip]="getEntiteEntiteCreationTooltipText(eE.RefEntiteEntite)">info</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteEntiteEntite(eE.RefEntiteEntite)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showEntiteEntites4" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1164)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_entiteliees table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteEntite', null, 4, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1164)}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let eE of entite?.EntiteEntites | callback: filterEntiteEntites: applicationUserContext.filterGlobalActif: 4">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteEntite', eE.RefEntiteEntite, 4, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="eE.Actif && eE.ActifEntiteRtt ? '':'color-inactif'">{{eE.LibelleEntiteRtt}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="color-grey" [matTooltip]="getEntiteEntiteCreationTooltipText(eE.RefEntiteEntite)">info</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteEntiteEntite(eE.RefEntiteEntite)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showEntiteEntites5" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1166)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_entiteliees table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteEntite', null, 5, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1166)}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let eE of entite?.EntiteEntites | callback: filterEntiteEntites: applicationUserContext.filterGlobalActif: 5">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireEntiteEntite', eE.RefEntiteEntite, 5, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="eE.Actif && eE.ActifEntiteRtt ? '':'color-inactif'">{{eE.LibelleEntiteRtt}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="color-grey" [matTooltip]="getEntiteEntiteCreationTooltipText(eE.RefEntiteEntite)">info</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteEntiteEntite(eE.RefEntiteEntite)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showPrivateDocuments" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1181)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <div class="ev-taskbar-container">
+              <div class="ev-taskbar-left-container">
+                <button mat-raised-button type="button" (click)="onUploadFile(false);"
+                        [disabled]="locked">
+                  {{applicationUserContext.getCulturedRessourceText(629)}}
+                </button>
+              </div>
+            </div>
+            <table class="table-no-pad-no-space" style="width:100%; margin: 10px 0 0 0;" *ngIf="entite.DocumentEntites?.length>0">
+              <tr *ngFor="let dE of entite.DocumentEntites | callback: filterEntiteDocuments: true: 0: false">
+                <td style="padding: 0px 5px 0px 5px; cursor: pointer; overflow-wrap: break-word; max-width: 200px;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
+                    (click)="getFile('Document', dE.RefDocument); ">
+                  {{dE.DocumentNoFile.Libelle}}
+                </td>
+                <td style="padding: 0px 5px 0px 5px; width: 40px; text-align: center;">
+                  <button mat-icon-button (click)="onDeleteDocumentEntite(dE.RefDocumentEntite)" type="button"
+                          *ngIf="dE.RefDocumentEntite>0" [disabled]="locked">
+                    <mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon>
+                  </button>
+                  <mat-icon class="color-tooltip-info-icon" *ngIf="!(dE.RefDocumentEntite>0)" matTooltip={{applicationUserContext.getCulturedRessourceText(1448)}}>info</mat-icon>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showPublicDocuments" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1182)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <div class="ev-taskbar-container">
+              <div class="ev-taskbar-left-container">
+                <button mat-raised-button type="button" (click)="onUploadFile(true);"
+                        [disabled]="locked">
+                  {{applicationUserContext.getCulturedRessourceText(629)}}
+                </button>
+              </div>
+            </div>
+            <table class="table-no-pad-no-space" style="width: 100%; max-width: 100%; margin: 10px 0 0 0; " *ngIf="entite.DocumentEntites?.length>0">
+              <tr *ngFor="let dE of entite.DocumentEntites | callback: filterEntiteDocuments: true: 0: true">
+                <td style="padding: 0px 5px 0px 5px; cursor: pointer; overflow-wrap: break-word; max-width:200px;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
+                    (click)="getFile('Document', dE.RefDocument); ">
+                  {{dE.DocumentNoFile.Libelle}}
+                </td>
+                <td style="padding: 0px 5px 0px 5px; width:40px; text-align:center;">
+                  <button mat-icon-button (click)="onDeleteDocumentEntite(dE.RefDocumentEntite)" type="button"
+                          *ngIf="dE.RefDocumentEntite>0" [disabled]="locked">
+                    <mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon>
+                  </button>
+                  <mat-icon class="color-tooltip-info-icon" *ngIf="!(dE.RefDocumentEntite>0)" matTooltip={{applicationUserContext.getCulturedRessourceText(1448)}}>info</mat-icon>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxDoubleSize" *ngIf="showActions" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1183)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_actions table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireAction', null, null, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(586)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(468)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1193)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(670)}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let action of entite?.Actions">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('AnnuaireAction', action.RefAction, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">{{getActionDAction(action)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">{{getActionContact(action)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">{{getActionActionTypes(action)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">{{action.Libelle}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon aria-label="Document" *ngIf="action.ActionFichierNoFiles?.length>0" color="accent">folder</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteAction(action.RefAction)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxDoubleSize" *ngIf="showStatistics" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            <table class="table-no-pad-no-space">
+              <tr style="vertical-align:middle">
+                <td style="width:100%;">
+                  {{statisticTitle}}
+                </td>
+                <td>
+                  <button mat-icon-button class="ev-button-right" type="button" (click)="onShowStatistic();">
+                    <mat-icon>open_in_full</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <kendo-chart style="height:640px;" [seriesColors]="seriesColors"
+                         [categoryAxis]="statisticCategoryAxis"
+                         renderAs="canvas"
+                         [pannable]="{ lock: 'y' }"
+                         [zoomable]="{ mousewheel: { lock: 'y' } }">
+              <kendo-chart-series-defaults type="bar">
+                <kendo-chart-series-defaults-labels [content]="labelContent" font="500 1em Roboto">
+                </kendo-chart-series-defaults-labels>
+              </kendo-chart-series-defaults>
+              <kendo-chart-value-axis>
+                <kendo-chart-value-axis-item [title]="statisticAxisTitle">
+                </kendo-chart-value-axis-item>
+              </kendo-chart-value-axis>
+              <kendo-chart-series>
+                <kendo-chart-series-item type="column"
+                                         [data]="statisticResult"
+                                         [field]="statisticField"
+                                         [categoryField]="statisticCategoryField">
+                </kendo-chart-series-item>
+              </kendo-chart-series>
+
+            </kendo-chart>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

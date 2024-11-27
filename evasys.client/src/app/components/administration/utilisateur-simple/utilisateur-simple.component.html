@@ -1,0 +1,85 @@
+<div class="ev-main-container">
+    <header>
+        <div class="ev-taskbar-container">
+          <div class="ev-taskbar-left-container">
+            <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+            <button mat-raised-button color="primary" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave()"
+                    *ngIf="!locked">
+              {{applicationUserContext.getCulturedRessourceText(6)}}
+            </button>
+          </div>
+        </div>
+    </header>
+    <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+      <mat-form-field style="width:100%;" *ngIf="nomVisible">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(1102)}}</mat-label>
+        <input matInput formControlName="Nom" maxlength="100" required [errorStateMatcher]="matcher" />
+        <button *ngIf="form.get('Nom').value!=null && form.get('Nom').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Nom').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error align="end" *ngIf="(form.get('Nom').touched || form.get('Nom').dirty) && form.get('Nom').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+      </mat-form-field>
+      <mat-form-field style="width:100%;" *ngIf="loginVisible">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(912)}}</mat-label>
+        <input matInput formControlName="Login" maxlength="50" [required]="loginRequired" [errorStateMatcher]="matcher" />
+        <button *ngIf="form.get('Login').value!=null && form.get('Login').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Login').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error align="end" *ngIf="(form.get('Login').touched || form.get('Login').dirty) && form.get('Login').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+      </mat-form-field>
+      <mat-form-field style="width:100%;" *ngIf="emailVisible">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(419)}}</mat-label>
+        <input matInput formControlName="EMail" maxlength="200" [required]="emailRequired" [errorStateMatcher]="matcher" />
+        <button *ngIf="form.get('EMail').value!=null && form.get('EMail').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('EMail').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error *ngIf="(form.get('EMail').touched || form.get('EMail').dirty) && form.get('EMail').errors?.email">{{applicationUserContext.getCulturedRessourceText(495)}}</mat-error>
+      </mat-form-field>
+      <mat-form-field style="width:100%;" subscriptSizing="dynamic">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(1088)}}</mat-label>
+        <input matInput formControlName="Pwd" maxlength="50" [required]="pwdRequired" [errorStateMatcher]="matcher"
+               [type]="hide ? 'password' : 'text'" appBlockCopyPaste />
+        <button *ngIf="form.get('Pwd').value!=null && form.get('Pwd').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Pwd').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+        <button mat-icon-button matIconSuffix (click)="hide = !hide" tabindex="-1" type="button">
+          <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+        </button>
+        <mat-error align="end" *ngIf="(form.get('Pwd').touched || form.get('Pwd').dirty) && form.get('Pwd').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+        <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(1087)}}</mat-hint>
+      </mat-form-field>
+      <div style="width:100%; height:15px;"></div>
+      <mat-form-field style="width:100%;" subscriptSizing="dynamic">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(1095)}}</mat-label>
+        <input matInput formControlName="PwdCheck" maxlength="50" [required]="pwdRequired" [errorStateMatcher]="matcher"
+               [type]="hide ? 'password' : 'text'" appBlockCopyPaste />
+        <button *ngIf="form.get('PwdCheck').value!=null && form.get('PwdCheck').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PwdCheck').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+        <button mat-icon-button matIconSuffix (click)="hide = !hide" tabindex="-1" type="button">
+          <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+        </button>
+        <mat-error align="end" *ngIf="(form.get('PwdCheck').touched || form.get('PwdCheck').dirty) && form.get('Pwd').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+        <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(1087)}}</mat-hint>
+      </mat-form-field>
+      <div style="width:100%; height:15px;"></div>
+      <mat-form-field style="width:100%;" *ngIf="telVisible">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(417)}}</mat-label>
+        <input matInput formControlName="Tel" maxlength="20" />
+        <button *ngIf="form.get('Tel').value!=null && form.get('Tel').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Tel').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field style="width:100%;" *ngIf="telMobileVisible">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(437)}}</mat-label>
+        <input matInput formControlName="TelMobile" maxlength="20" />
+        <button *ngIf="form.get('TelMobile').value!=null && form.get('TelMobile').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('TelMobile').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <div style="width:100%; height:40px;" class="color-warn">
+        <mat-label *ngIf="form.errors?.pwdIdentical">{{applicationUserContext.getCulturedRessourceText(1096)}}</mat-label>
+      </div>
+    </form>
+</div>
+

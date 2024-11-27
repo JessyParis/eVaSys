@@ -1,0 +1,37 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()"
+                  *ngIf="createModifTooltipVisible == true">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid" (click)="onSave()">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="GetReference()" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" [class]="formClass">
+    <div *ngFor="let box of boxes; let i = index;">
+      <div [class]="box.boxClass">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">
+              {{GetBoxDescription(box.ressName)}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <div *ngFor="let ctrl of box.Controls; let j = index;">
+                <env-control [form]="form" [matcher]="matcher" [ctrl]="ctrl"></env-control>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

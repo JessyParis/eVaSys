@@ -1,0 +1,52 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-raised-button color="primary" class="ev-button-left" type="submit" (click)="import()">{{applicationUserContext.getCulturedRessourceText(796)}}</button>
+      </div>
+    </div>
+  </header>
+  <div class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table *ngIf="!lastUploadResut?.error" class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">{{applicationUserContext.getCulturedRessourceText(333)}}</td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <p class="mat-body-strong">{{applicationUserContext.getCulturedRessourceText(335)}}</p>
+            <p class="mat-body" *ngIf="!lastUploadResut">{{applicationUserContext.getCulturedRessourceText(334)}}</p>
+            <p class="mat-body" *ngIf="lastUploadResut">{{lastUploadResut?.message}}</p>
+          </td>
+        </tr>
+      </table>
+      <table *ngIf="lastUploadResut?.error" class="cadre_warn mat-elevation-z2">
+        <tr>
+          <td class="cadre_header_warn">{{applicationUserContext.getCulturedRessourceText(333)}}</td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <p class="mat-body-strong">{{applicationUserContext.getCulturedRessourceText(335)}}</p>
+            <p class="mat-body" *ngIf="!lastUploadResut">{{applicationUserContext.getCulturedRessourceText(334)}}</p>
+            <p class="mat-body-strong color-warn">Erreur : {{lastUploadResut?.error}}</p>
+            <p class="mat-body" *ngIf="lastUploadResut">{{lastUploadResut?.message}}</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_accent color-primary">{{applicationUserContext.getCulturedRessourceText(793)}}</td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <p class="mat-body-strong">{{applicationUserContext.getCulturedRessourceText(794)}}</p>
+            <p class="mat-body">{{applicationUserContext.getCulturedRessourceText(795)}}</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>

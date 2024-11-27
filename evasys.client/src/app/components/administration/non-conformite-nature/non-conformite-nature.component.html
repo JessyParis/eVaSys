@@ -1,0 +1,53 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid" (click)="onSave()">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="nonConformiteNature?.RefNonConformiteNature" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-horizontal-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(830)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-checkbox formControlName="Actif" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(651)}}
+            </mat-checkbox><br/>
+            <mat-checkbox formControlName="IncitationQualite" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(700)}}
+            </mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(741)}}</mat-label>
+              <input matInput formControlName="LibelleFRFR" maxlength="50" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('LibelleFRFR').value!=null && form.get('LibelleFRFR').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('LibelleFRFR').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('LibelleFRFR').touched || form.get('LibelleFRFR').dirty) && form.get('LibelleFRFR').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(742)}}</mat-label>
+              <input matInput formControlName="LibelleENGB" maxlength="50" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('LibelleENGB').value!=null && form.get('LibelleENGB').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('LibelleENGB').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('LibelleENGB').touched || form.get('LibelleENGB').dirty) && form.get('LibelleENGB').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

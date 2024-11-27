@@ -1,0 +1,136 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onSave('')" [disabled]="form.invalid || !childrenValid()" *ngIf="!locked">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+        <button mat-raised-button class="ev-button-left" type="button" *ngIf="!locked && visibleAddCVQ" (click)="onAddCVQ();">
+          {{applicationUserContext.getCulturedRessourceText(789)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" *ngIf="!locked && visibleAddControle" (click)="onAddControle();">
+          {{applicationUserContext.getCulturedRessourceText(84)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onCommandeFournisseur();" [disabled]="(form.invalid || !childrenValid()) && !locked">
+          {{applicationUserContext.getCulturedRessourceText(776)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onNonConformite();" [disabled]="(form.invalid || !childrenValid()) && !locked">
+          {{applicationUserContext.getCulturedRessourceText(801)}}
+        </button>
+        <button mat-icon-button class="ev-button-left" type="button" (click)="onSave('Print');" [disabled]="(form.invalid || !childrenValid()) && !locked">
+          <mat-icon>print</mat-icon>
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="!locked && ficheControle.RefFicheControle" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td [class]="'cadre_header_' + (ficheControle.CommandeFournisseur?.CommandeFournisseurStatut ? ('statut_' + ficheControle.CommandeFournisseur.CommandeFournisseurStatut.RefCommandeFournisseurStatut.toString()) : 'primary')">
+            {{applicationUserContext.getCulturedRessourceText(14)}}&nbsp;{{getFormattedNumeroCommande(ficheControle.CommandeFournisseur?.NumeroCommande)}}
+            <br />
+            {{getEnvCommandeFournisseurStatut(ficheControle?.CommandeFournisseur)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%; margin:10px 0 0 0;" appearance="outline">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(769)}}</mat-label>
+              <textarea matInput formControlName="FicheControleText" style="height:350px;" readonly></textarea>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(770)}}</mat-label>
+              <input matInput formControlName="NumeroLotUsine" [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('NumeroLotUsine').value!=null && form.get('NumeroLotUsine').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('NumeroLotUsine').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxDoubleSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            <table class="table-no-pad-no-space">
+              <tr style="vertical-align:middle;">
+                <td>
+                  <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+                </td>
+                <td style="width:100%;">
+                  {{applicationUserContext.getCulturedRessourceText(42)}}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(20)}}</mat-label>
+              <mat-select formControlName="FicheControleControleurList" required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let contactAdresse of ficheControleControleurList" [value]="contactAdresse.RefContactAdresse">{{contactAdresse.ListText}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('FicheControleControleurList').value && form.get('FicheControleControleurList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('FicheControleControleurList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button *ngIf="form.get('FicheControleControleurList').value" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('FicheControleControleur', form.get('FicheControleControleurList').value); " tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="form.get('FicheControleControleurList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-checkbox formControlName="Reserve" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(39)}}
+            </mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+              <textarea matInput formControlName="Cmt" style="height:100px;"></textarea>
+              <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <table class="fixed_headers_fiche_controle_description_receptions table-no-pad-no-space">
+              <tbody formArrayName="FicheControleDescriptionReceptions">
+                <tr [formGroupName]="i" *ngFor="let group of getFormData.controls; let i=index">
+                  <td style="padding: 5px 5px 0px 5px;">
+                    {{ficheControle.FicheControleDescriptionReceptions[i].LibelleCultured}}
+                    <span *ngIf="group.get('Positif').errors?.required" class="color-warn">&nbsp;*</span>
+                  </td>
+                  <td style="padding: 5px 5px 0px 5px;">
+                    <mat-radio-group formControlName="Positif" required >
+                      <mat-radio-button value="true">{{ficheControle.FicheControleDescriptionReceptions[i].OuiCultured}}</mat-radio-button>
+                      <mat-radio-button value="false">{{ficheControle.FicheControleDescriptionReceptions[i].NonCultured}}</mat-radio-button>
+                    </mat-radio-group>
+                    <mat-error align="end" *ngIf="(group.get('Positif').touched || group.get('Positif').dirty) && group.get('Positif').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div *ngFor="let cVQ of ficheControle.CVQs">
+      <cvq *ngIf="!cVQ.Deleted" [refCVQ]="cVQ.RefCVQ.toString()" [refClient]="ficheControle.CommandeFournisseur.AdresseClient.RefEntite.toString()"
+           [refProduit]="ficheControle.CommandeFournisseur.Produit.RefProduit.toString()" [refFicheControle]="ficheControle.RefFicheControle.toString()"
+           [gUID]="cVQ.GUID"
+           (saveResult)="childrenCVQSaved($event)" (deleteResult)="childrenCVQDeleted($event)"></cvq>
+    </div>
+    <div *ngFor="let controle of ficheControle.Controles">
+      <controle *ngIf="!controle.Deleted" [refControle]="controle.RefControle.toString()" [refClient]="ficheControle.CommandeFournisseur.AdresseClient.RefEntite.toString()"
+                [refProduit]="ficheControle.CommandeFournisseur.Produit.RefProduit.toString()" [refFicheControle]="ficheControle.RefFicheControle.toString()"
+                [gUID]="controle.GUID" [poidsFicheControle]="ficheControle.CommandeFournisseur.PoidsDechargement.toString()"
+                (saveResult)="childrenControleSaved($event)" (deleteResult)="childrenControleDeleted($event)"></controle>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+<progress-bar [color]="color" [mode]="mode" [value]="value" [backdropEnabled]="true"
+              [displayProgressBar]="displayProgressBar" position="GloballyTop">
+</progress-bar>
+
+

@@ -1,0 +1,851 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm"
+                [disabled]="form.invalid || saveLocked || (formGroup1.invalid && applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client')" (click)="onSave('', 0)">
+          {{applicationUserContext.getCulturedRessourceText(6)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onCommandeFournisseur();">{{applicationUserContext.getCulturedRessourceText(776)}}</button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onFicheControle();"
+                *ngIf="hasFicheControle">
+          {{applicationUserContext.getCulturedRessourceText(834)}}
+        </button>
+        <button mat-icon-button class="ev-button-left" type="button" (click)="onSave('Print', 0);">
+          <mat-icon>print</mat-icon>
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="nonConformite?.RefNonConformite && applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-horizontal-container">
+    <div class="ev-flex-row-container ev-header-container" style="height:200px; overflow-y:hidden;">
+      <mat-form-field style="min-width:300px; max-width:400px; flex: 1 1 auto; margin: 0 20px 0 0;" appearance="outline">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(769)}}</mat-label>
+        <textarea matInput formControlName="NonConformiteTextCmd" style="height:150px;" readonly></textarea>
+      </mat-form-field>
+      <mat-form-field style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;" appearance="outline">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(473)}}</mat-label>
+        <textarea matInput formControlName="NonConformiteTextClient" style="height:150px;" readonly></textarea>
+      </mat-form-field>
+      <mat-form-field style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;" appearance="outline">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(472)}}</mat-label>
+        <textarea matInput formControlName="NonConformiteTextFournisseur" style="height:150px;" readonly></textarea>
+      </mat-form-field>
+    </div>
+  </form>
+  <div class="ev-dataform-container">
+    <mat-vertical-stepper #stepper>
+      <mat-step [stepControl]="formGroup1"
+                *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Fournisseur'">
+        <form [formGroup]="formGroup1">
+          <ng-template matStepLabel>
+            <div class="ev-flex-row-container-single-line" style="margin: 0 0 0 0">
+              <mat-icon color="accent" *ngIf="getStep(0)?.DValide">check_circle</mat-icon>
+              <mat-icon color="accent" *ngIf="getCurrentStepIndex()===0">person_pin_circle</mat-icon>
+              <div class="ev-flex-col-container" style="min-width: 250px; max-width: 300px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                {{applicationUserContext.getCulturedRessourceText(807)}}
+                <br>
+                <span style="white-space: pre-line;" class="mat-caption">{{getStepText(0)}}</span>
+              </div>
+              <mat-divider [vertical]="true"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 200px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                <div style="white-space: pre-line;" class="mat-caption color-primary" *ngIf="stepper.selectedIndex!==0">{{getStepInfo(0)}}</div>
+              </div>
+              <mat-divider [vertical]="true" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 150px; max-width: 200px; flex: 1 1 auto; margin: 0 20px 0 20px;"
+                   *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">
+                <div style="white-space: pre-line;" class="mat-caption color-accent-dark" *ngIf="nonConformite.NonConformiteEtapes">{{nonConformite.NonConformiteEtapes[0]?.Cmt}}</div>
+              </div>
+            </div>
+          </ng-template>
+          <mat-divider></mat-divider>
+          <div class="ev-flex-row-container" style="padding: 10px 0 0 0">
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;">
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(825)}}</mat-label>
+                <textarea matInput formControlName="DescrClient" style="height:130px;" required [errorStateMatcher]="matcher"></textarea>
+                <button *ngIf="formGroup1.get('DescrClient').value && formGroup1.get('DescrClient').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup1.get('DescrClient').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup1.get('DescrClient').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(802)}}</mat-label>
+                <mat-select formControlName="NonConformiteDemandeClientTypeList" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let nonConformiteDemandeClientType of nonConformiteDemandeClientTypeList" [value]="nonConformiteDemandeClientType.RefNonConformiteDemandeClientType">
+                    {{nonConformiteDemandeClientType.Libelle}}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="formGroup1.get('NonConformiteDemandeClientTypeList').value && formGroup1.get('NonConformiteDemandeClientTypeList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); formGroup1.get('NonConformiteDemandeClientTypeList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup1.get('NonConformiteDemandeClientTypeList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+              <div class="ev-taskbar-container">
+                <div class="ev-taskbar-left-container">
+                  <button mat-raised-button type="button" (click)="onUploadFile(1);"
+                          [disabled]="locked || formGroup1Disabled || getStep(0)?.DValide
+                          || (applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur' && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Client')
+                          || formGroup1.invalid">
+                    {{applicationUserContext.getCulturedRessourceText(629)}}
+                  </button>
+                </div>
+              </div>
+              <table class="table-no-pad-no-space" style="width: 100%; margin: 10px 0 0 0; max-height: 300px; overflow-y: auto; display:block; " *ngIf="nonConformite.NonConformiteFichiers?.length>0">
+                <tr *ngFor="let nCF of nonConformiteFichiersClient; let i=index;">
+                  <td style="padding: 0px 5px 0px 5px; width:70px; text-align:center;">
+                    <img id="image" [src]="'data:image/jpeg;base64,'+nCF.MiniatureBase64" height="50" matTooltip={{applicationUserContext.getCulturedRessourceText(1392)}}
+                         (click)="showPictures('NonConformite_1', nCF.RefNonConformite, nCF.RefNonConformiteFichier); "
+                         style="cursor:pointer;" *ngIf="nCF.MiniatureBase64"/>
+                    <mat-icon aria-hidden="false" aria-label="Fichier" fontIcon="description" class="color-grey"
+                               *ngIf="!nCF.MiniatureBase64"></mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px; cursor: pointer; overflow-wrap: break-word; max-width: 200px; " matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
+                      (click)="getFile('NonConformiteFichier', nCF.RefNonConformiteFichier); ">
+                    {{nCF.Nom}}
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px; width:40px;">
+                    <button mat-icon-button (click)="onDeleteNonConformiteFichier(nCF.RefNonConformiteFichier)" type="button"
+                            *ngIf="!(locked || formGroup1Disabled || getStep(0)?.DValide
+                          || (applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur' && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Client')
+                          || formGroup1.invalid)">
+                      <mat-icon aria-label="Delete" color="warn" class="ev-button-left">delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div>
+            <button mat-button color="accent" (click)="invalidateStep(0)"
+                    [disabled]="!getStep(0)?.DValide || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(845)}}
+            </button>
+            <button mat-button color="primary" matStepperNext (click)="validateStep(0)"
+                    [disabled]="formGroup1.invalid || getStep(0)?.DValide || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(844)}}
+            </button>
+            <button mat-icon-button (click)="commentStep(0)" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' && !locked">
+              <mat-icon aria-label="Comment" color="primary">comment</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="formGroup2">
+        <form [formGroup]="formGroup2">
+          <ng-template matStepLabel>
+            <div class="ev-flex-row-container-single-line" style="margin: 0 0 0 0">
+              <mat-icon color="accent" *ngIf="getStep(1)?.DValide">check_circle</mat-icon>
+              <mat-icon color="accent" *ngIf="getCurrentStepIndex()===1">person_pin_circle</mat-icon>
+              <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                {{applicationUserContext.getCulturedRessourceText(808)}}
+                <br>
+                <span style="white-space: pre-line;" class="mat-caption">{{getStepText(1)}}</span>
+              </div>
+              <mat-divider [vertical]="true"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 200px; max-width: 700px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                <div class="ev-flex-row-container-single-line" style="margin: 0 0 0 0" *ngIf="stepper.selectedIndex!==1">
+                  <div style="white-space: pre-line; margin: 0 10px 0 10px;" class="mat-caption color-primary">{{getStepInfo(1)}}</div>
+                  <mat-divider [vertical]="true"></mat-divider>
+                  <div style="white-space: pre-line; margin: 0 10px 0 10px;" class="mat-caption color-primary">{{getStepInfo2(1)}}</div>
+                  <mat-divider [vertical]="true"
+                               *ngIf="(iFFournisseurDescrFC.value || iFFournisseurFactureMontantFC.value || iFFournisseurDeductionTonnageFC.value)
+                               && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Client'"></mat-divider>
+                  <div style="white-space: pre-line; margin: 0 10px 0 10px;" class="mat-caption color-primary"
+                       *ngIf="(iFFournisseurDescrFC.value || iFFournisseurFactureMontantFC.value || iFFournisseurDeductionTonnageFC.value)
+                               && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Client'">{{getStepInfo3(1)}}</div>
+                  <mat-divider [vertical]="true" *ngIf="(iFClientDescrFC.value || iFClientFactureMontantFC.value)
+                               && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Fournisseur'"></mat-divider>
+                  <div style="white-space: pre-line; margin: 0 10px 0 10px;" class="mat-caption color-primary"
+                       *ngIf="(iFClientDescrFC.value || iFClientFactureMontantFC.value)
+                       && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Fournisseur'">{{getStepInfo4(1)}}</div>
+                </div>
+              </div>
+              <mat-divider [vertical]="true" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 150px; max-width: 200px; flex: 1 1 auto; margin: 0 20px 0 20px;"
+                   *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">
+                <div style="white-space: pre-line;" class="mat-caption color-accent-dark" *ngIf="nonConformite.NonConformiteEtapes">{{nonConformite.NonConformiteEtapes[1]?.Cmt}}</div>
+              </div>
+            </div>
+          </ng-template>
+          <mat-divider></mat-divider>
+          <div class="ev-flex-row-container" style="padding: 10px 0 0 0">
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;">
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(825)}}</mat-label>
+                <textarea matInput formControlName="DescrValorplast" style="height:90px;" required [errorStateMatcher]="matcher"></textarea>
+                <button *ngIf="formGroup2.get('DescrValorplast').value && formGroup2.get('DescrValorplast').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup2.get('DescrValorplast').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(803)}}</mat-label>
+                <mat-select formControlName="NonConformiteNatureList" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let nonConformiteNature of nonConformiteNatureList" [value]="nonConformiteNature.RefNonConformiteNature">
+                    {{nonConformiteNature.Libelle}}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="formGroup2.get('NonConformiteNatureList').value && formGroup2.get('NonConformiteNatureList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); formGroup2.get('NonConformiteNatureList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup2.get('NonConformiteNatureList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-divider [vertical]="true"></mat-divider>
+              <div [class]="formGroup2Disabled ? 'mat-body k-text-disabled' : 'mat-body'">{{applicationUserContext.getCulturedRessourceText(804)}}<ng-container *ngIf="!formGroup2Disabled">*</ng-container></div>
+              <ng-container formArrayName="NonConformiteFamilles" *ngIf="!formGroup2Disabled">
+                <ng-container [formGroupName]="i" *ngFor="let group of getNonConformiteFamilles.controls; let i=index">
+                  <mat-checkbox formControlName="Famille">{{nonConformiteFamilleList[i].Libelle}}</mat-checkbox>
+                </ng-container>
+              </ng-container>
+              <div *ngIf="formGroup2.get('NonConformiteFamilles').errors?.nonConformiteFamilleNotSelected && !formGroup2Disabled" class="color-warn mat-caption">{{applicationUserContext.getCulturedRessourceText(293)}}</div>
+              <div class="mat-body" *ngIf="formGroup2Disabled">{{nonConformiteFamillesLabel()}}</div>
+              <mat-divider style="margin:10px 0 0 0;"></mat-divider>
+              <mat-checkbox formControlName="IFFournisseurRetourLot">{{applicationUserContext.getCulturedRessourceText(827)}}</mat-checkbox>
+            </div>
+            <mat-divider [vertical]="true" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Client'"></mat-divider>
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 10px 0 20px;"
+                 *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Client'">
+              <mat-slide-toggle formControlName="IFFournisseur" (change)="clearIFFournisseurData();" style="margin:0 0 15px 0;">{{applicationUserContext.getCulturedRessourceText(185)}}</mat-slide-toggle>
+              <mat-form-field style="width:100%;" *ngIf="formGroup2.get('IFFournisseur').value">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(825)}}</mat-label>
+                <textarea matInput formControlName="IFFournisseurDescr" style="height:90px;" (change)="clearIFFournisseurRelatedData();"
+                          [errorStateMatcher]="matcher"></textarea>
+                <button *ngIf="formGroup2.get('IFFournisseurDescr').value && formGroup2.get('IFFournisseurDescr').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="formGroup2.get('IFFournisseurDescr').setValue(null); clearIFFournisseurRelatedData();" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;" *ngIf="formGroup2.get('IFFournisseur').value">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(826)}}</mat-label>
+                <input matInput formControlName="IFFournisseurFactureMontant" mask="separator.2"
+                       (change)="clearIFFournisseurRelatedData();" [errorStateMatcher]="matcher" />
+                <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(233)}}</span>
+                <button *ngIf="formGroup2.get('IFFournisseurFactureMontant').value!=null && formGroup2.get('IFFournisseurFactureMontant').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="formGroup2.get('IFFournisseurFactureMontant').setValue(null); clearIFFournisseurRelatedData();" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup2.get('IFFournisseurFactureMontant').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                <mat-error align="end" *ngIf="formGroup2.get('IFFournisseurFactureMontant').errors?.max">
+                  {{applicationUserContext.getCulturedRessourceText(573) + (formGroup2.get('IFFournisseurFactureMontant').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;" *ngIf="formGroup2.get('IFFournisseur').value">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(236)}}</mat-label>
+                <input matInput formControlName="IFFournisseurDeductionTonnage" mask="separator"
+                       (change)="clearIFFournisseurRelatedData();" [errorStateMatcher]="matcher" />
+                <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
+                <button *ngIf="formGroup2.get('IFFournisseurDeductionTonnage').value!=null && formGroup2.get('IFFournisseurDeductionTonnage').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="formGroup2.get('IFFournisseurDeductionTonnage').setValue(null); clearIFFournisseurRelatedData();" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup2.get('IFFournisseurDeductionTonnage').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                <mat-error align="end" *ngIf="formGroup2.get('IFFournisseurDeductionTonnage').errors?.min">
+                  {{applicationUserContext.getCulturedRessourceText(687) + (formGroup2.get('IFFournisseurDeductionTonnage').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                </mat-error>
+                <mat-error align="end" *ngIf="formGroup2.get('IFFournisseurDeductionTonnage').errors?.max">
+                  {{applicationUserContext.getCulturedRessourceText(573) + (formGroup2.get('IFFournisseurDeductionTonnage').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <mat-divider [vertical]="true" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Fournisseur'"></mat-divider>
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;"
+                 *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Fournisseur'">
+              <mat-slide-toggle formControlName="IFClient" (change)="clearIFClientData();" style="margin:0 0 15px 0;">{{applicationUserContext.getCulturedRessourceText(193)}}</mat-slide-toggle>
+              <mat-form-field style="width:100%;" *ngIf="formGroup2.get('IFClient').value">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(825)}}</mat-label>
+                <textarea matInput formControlName="IFClientDescr" style="height:90px;" (change)="clearIFClientRelatedData();"></textarea>
+                <button *ngIf="formGroup2.get('IFClientDescr').value && formGroup2.get('IFClientDescr').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="formGroup2.get('IFClientDescr').setValue(null); clearIFClientRelatedData();" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;" *ngIf="formGroup2.get('IFClient').value">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(826)}}</mat-label>
+                <input matInput formControlName="IFClientFactureMontant" mask="separator.2"
+                       (change)="clearIFClientRelatedData();" [errorStateMatcher]="matcher" />
+                <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(233)}}</span>
+                <button *ngIf="formGroup2.get('IFClientFactureMontant').value!=null && formGroup2.get('IFClientFactureMontant').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="formGroup2.get('IFClientFactureMontant').setValue(null); clearIFClientRelatedData();" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup2.get('IFClientFactureMontant').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                <mat-error align="end" *ngIf="formGroup2.get('IFClientFactureMontant').errors?.max">
+                  {{applicationUserContext.getCulturedRessourceText(573) + (formGroup2.get('IFClientFactureMontant').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div>
+            <button mat-button color="accent" (click)="invalidateStep(1)"
+                    [disabled]="!getStep(1)?.DValide || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(845)}}
+            </button>
+            <button mat-button color="primary" matStepperNext (click)="validateStep(1)"
+                    [disabled]="formGroup2.invalid || getStep(1)?.DValide || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(844)}}
+            </button>
+            <button mat-icon-button (click)="commentStep(1)" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' && !locked">
+              <mat-icon aria-label="Comment" color="primary">comment</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="formGroup3"
+                *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                  || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'">
+        <form [formGroup]="formGroup3">
+          <ng-template matStepLabel>
+            <div class="ev-flex-row-container-single-line" style="margin: 0 0 0 0">
+              <mat-icon color="accent" *ngIf="getStep(2)?.DValide">check_circle</mat-icon>
+              <mat-icon color="accent" *ngIf="getCurrentStepIndex()===2">person_pin_circle</mat-icon>
+              <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                {{applicationUserContext.getCulturedRessourceText(809)}}
+                <br>
+                <span style="white-space: pre-line;" class="mat-caption">{{getStepText(2)}}</span>
+              </div>
+              <mat-divider [vertical]="true"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 200px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                <div style="white-space: pre-line;" class="mat-caption color-primary" *ngIf="stepper.selectedIndex!==2">{{getStepInfo(2)}}</div>
+              </div>
+              <mat-divider [vertical]="true" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 150px; max-width: 200px; flex: 1 1 auto; margin: 0 20px 0 20px;"
+                   *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">
+                <div style="white-space: pre-line;" class="mat-caption color-accent-dark" *ngIf="nonConformite.NonConformiteEtapes">{{nonConformite.NonConformiteEtapes[2]?.Cmt}}</div>
+              </div>
+            </div>
+          </ng-template>
+          <mat-divider></mat-divider>
+          <div class="ev-flex-row-container" style="padding: 10px 0 0 0">
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;">
+              <mat-slide-toggle formControlName="TransmissionFournisseur" (change)="manageScreen()" style="margin:0 0 15px 0;">{{applicationUserContext.getCulturedRessourceText(833)}}</mat-slide-toggle>
+              <mat-form-field class="ev-date-picker" style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(586)}}</mat-label>
+                <input matInput [matDatepicker]="pickerDTransmissionFournisseur" formControlName="DTransmissionFournisseur"
+                       required [errorStateMatcher]="matcher">
+                <mat-datepicker-toggle matIconPrefix [for]="pickerDTransmissionFournisseur"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDTransmissionFournisseur></mat-datepicker>
+                <button *ngIf="formGroup3.get('DTransmissionFournisseur').value && formGroup3.get('DTransmissionFournisseur').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="formGroup3.get('DTransmissionFournisseur').setValue(null)">
+                  <mat-icon>close</mat-icon>
+                  <mat-error align="end" *ngIf="formGroup3.get('DTransmissionFournisseur').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(846)}}</mat-label>
+                <textarea matInput formControlName="ActionDR" style="height:90px;"></textarea>
+                <button *ngIf="formGroup3.get('ActionDR').value && formGroup3.get('ActionDR').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup3.get('ActionDR').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup3.get('ActionDR').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(835)}}</mat-label>
+                <mat-select formControlName="NonConformiteReponseFournisseurTypeList" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let nonConformiteReponseFournisseurType of nonConformiteReponseFournisseurTypeList" [value]="nonConformiteReponseFournisseurType.RefNonConformiteReponseFournisseurType">
+                    {{nonConformiteReponseFournisseurType.Libelle}}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="formGroup3.get('NonConformiteReponseFournisseurTypeList').value && formGroup3.get('NonConformiteReponseFournisseurTypeList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); formGroup3.get('NonConformiteReponseFournisseurTypeList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup3.get('NonConformiteReponseFournisseurTypeList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;" *ngIf="formGroup3.get('TransmissionFournisseur').value">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+                <textarea matInput formControlName="CmtReponseFournisseur" style="height:90px;"></textarea>
+                <button *ngIf="formGroup3.get('CmtReponseFournisseur').value && formGroup3.get('CmtReponseFournisseur').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup3.get('CmtReponseFournisseur').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup3.get('CmtReponseFournisseur').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+              <div class="ev-taskbar-container">
+                <div class="ev-taskbar-left-container">
+                  <button mat-raised-button type="button" (click)="onUploadFile(2);"
+                          [disabled]="locked || formGroup3Disabled || getStep(2)?.DValide || (applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur' && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Utilisateur')">
+                    {{applicationUserContext.getCulturedRessourceText(629)}}
+                  </button>
+                </div>
+              </div>
+              <table class="table-no-pad-no-space" style="width: 100%; margin: 10px 0 0 0; max-height: 300px; overflow-y: auto; display: block;" *ngIf="nonConformite.NonConformiteFichiers?.length>0">
+                <tr *ngFor="let nCF of nonConformiteFichiersFournisseur; let i=index;">
+                  <td style="padding: 0px 5px 0px 5px; width:70px; text-align:center;">
+                    <img id="image" [src]="'data:image/jpeg;base64,'+nCF.MiniatureBase64" height="50" matTooltip={{applicationUserContext.getCulturedRessourceText(1392)}}
+                         (click)="showPictures('NonConformite_2', nCF.RefNonConformite, nCF.RefNonConformiteFichier); "
+                         style="cursor:pointer;" *ngIf="nCF.MiniatureBase64">
+                    <mat-icon aria-hidden="false" aria-label="Fichier" fontIcon="description" class="color-grey"
+                              *ngIf="!nCF.MiniatureBase64"></mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px; cursor: pointer; overflow-wrap: break-word; max-width: 200px;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
+                      (click)="getFile('NonConformiteFichier', nCF.RefNonConformiteFichier); ">
+                    {{nCF.Nom}}
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px; width:40px;">
+                    <button mat-icon-button (click)="onDeleteNonConformiteFichier(nCF.RefNonConformiteFichier)" type="button"
+                            *ngIf="!(locked || formGroup3Disabled || getStep(2)?.DValide || (applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur' && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Utilisateur'))">
+                      <mat-icon aria-label="Delete" color="warn" class="ev-button-left">delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div>
+            <button mat-button color="accent" (click)="invalidateStep(2)"
+                    [disabled]="getStep(2)?.DValide === null || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(845)}}
+            </button>
+            <button mat-button color="primary" matStepperNext (click)="validateStep(2)"
+                    [disabled]="formGroup3.invalid || getStep(2)?.DValide || locked
+                    || (applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur' && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Utilisateur')">
+              {{applicationUserContext.getCulturedRessourceText(844)}}
+            </button>
+            <button mat-icon-button (click)="commentStep(2)" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' && !locked">
+              <mat-icon aria-label="Comment" color="primary">comment</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="formGroup4"
+                *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Fournisseur'">
+        <form [formGroup]="formGroup4">
+          <ng-template matStepLabel>
+            <div class="ev-flex-row-container-single-line" style="margin: 0 0 0 0">
+              <mat-icon color="accent" *ngIf="getStep(3)?.DValide">check_circle</mat-icon>
+              <mat-icon color="accent" *ngIf="getCurrentStepIndex()===3">person_pin_circle</mat-icon>
+              <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                {{applicationUserContext.getCulturedRessourceText(810)}}
+                <br>
+                <span style="white-space: pre-line;" class="mat-caption">{{getStepText(3)}}</span>
+              </div>
+              <mat-divider [vertical]="true"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 200px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                <div style="white-space: pre-line;" class="mat-caption color-primary" *ngIf="stepper.selectedIndex!==3">{{getStepInfo(3)}}</div>
+              </div>
+              <mat-divider [vertical]="true" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 150px; max-width: 200px; flex: 1 1 auto; margin: 0 20px 0 20px;"
+                   *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">
+                <div style="white-space: pre-line;" class="mat-caption color-accent-dark" *ngIf="nonConformite.NonConformiteEtapes">{{nonConformite.NonConformiteEtapes[3]?.Cmt}}</div>
+              </div>
+            </div>
+          </ng-template>
+          <mat-divider></mat-divider>
+          <div class="ev-flex-row-container" style="padding: 10px 0 0 0">
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;">
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(836)}}</mat-label>
+                <mat-select formControlName="NonConformiteReponseClientTypeList" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let nonConformiteReponseClientType of nonConformiteReponseClientTypeList" [value]="nonConformiteReponseClientType.RefNonConformiteReponseClientType">
+                    {{nonConformiteReponseClientType.Libelle}}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="formGroup4.get('NonConformiteReponseClientTypeList').value && formGroup4.get('NonConformiteReponseClientTypeList').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); formGroup4.get('NonConformiteReponseClientTypeList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup4.get('NonConformiteReponseClientTypeList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+                <textarea matInput formControlName="CmtReponseClient" style="height:90px;" required [errorStateMatcher]="matcher"></textarea>
+                <button *ngIf="formGroup4.get('CmtReponseClient').value && formGroup4.get('CmtReponseClient').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup4.get('CmtReponseClient').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup4.get('CmtReponseClient').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div>
+            <button mat-button color="accent" (click)="invalidateStep(3)"
+                    [disabled]="getStep(3)?.DValide === null || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(845)}}
+            </button>
+            <button mat-button color="primary" matStepperNext (click)="validateStep(3)"
+                    [disabled]="formGroup4.invalid || getStep(3)?.DValide || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(844)}}
+            </button>
+            <button mat-icon-button (click)="commentStep(3)" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' && !locked">
+              <mat-icon aria-label="Comment" color="primary">comment</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="formGroup5"
+                *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Fournisseur'">
+        <form [formGroup]="formGroup5">
+          <ng-template matStepLabel>
+            <div class="ev-flex-row-container-single-line" style="margin: 0 0 0 0">
+              <mat-icon color="accent" *ngIf="getStep(4)?.DValide">check_circle</mat-icon>
+              <mat-icon color="accent" *ngIf="getCurrentStepIndex()===4">person_pin_circle</mat-icon>
+              <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                {{applicationUserContext.getCulturedRessourceText(811)}}
+                <br>
+                <span style="white-space: pre-line;" class="mat-caption">{{getStepText(4)}}</span>
+              </div>
+              <mat-divider [vertical]="true"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 200px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                <div style="white-space: pre-line;" class="mat-caption color-primary" *ngIf="stepper.selectedIndex!==4">{{getStepInfo(4)}}</div>
+              </div>
+              <mat-divider [vertical]="true" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 150px; max-width: 200px; flex: 1 1 auto; margin: 0 20px 0 20px;"
+                   *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">
+                <div style="white-space: pre-line;" class="mat-caption color-accent-dark" *ngIf="nonConformite.NonConformiteEtapes">{{nonConformite.NonConformiteEtapes[4]?.Cmt}}</div>
+              </div>
+            </div>
+          </ng-template>
+          <mat-divider></mat-divider>
+          <div class="ev-flex-row-container" style="padding: 10px 0 0 0">
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;">
+              <mat-checkbox formControlName="PlanAction" style="width:100%;" (change)="manageScreen()">{{applicationUserContext.getCulturedRessourceText(837)}}</mat-checkbox>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(847)}}</mat-label>
+                <textarea matInput formControlName="CmtOrigineAction" style="height:90px;" required [errorStateMatcher]="matcher"></textarea>
+                <button *ngIf="formGroup5.get('CmtOrigineAction').value && formGroup5.get('CmtOrigineAction').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup5.get('CmtOrigineAction').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup5.get('CmtOrigineAction').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div>
+            <button mat-button color="accent" (click)="invalidateStep(4)"
+                    [disabled]="getStep(4)?.DValide === null || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(845)}}
+            </button>
+            <button mat-button color="primary" matStepperNext (click)="validateStep(4)"
+                    [disabled]="formGroup5.invalid || getStep(4)?.DValide || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(844)}}
+            </button>
+            <button mat-icon-button (click)="commentStep(4)" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' && !locked">
+              <mat-icon aria-label="Comment" color="primary">comment</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="formGroup6" *ngIf="formGroup2.get('IFFournisseur').value
+                && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Client'">
+        <form [formGroup]="formGroup6">
+          <ng-template matStepLabel>
+            <div class="ev-flex-row-container-single-line" style="margin: 0 0 0 0">
+              <mat-icon color="accent" *ngIf="getStep(5)?.DValide">check_circle</mat-icon>
+              <mat-icon color="accent" *ngIf="getCurrentStepIndex()===5">person_pin_circle</mat-icon>
+              <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                {{applicationUserContext.getCulturedRessourceText(812)}}
+                <br>
+                <span style="white-space: pre-line;" class="mat-caption">{{getStepText(5)}}</span>
+              </div>
+              <mat-divider [vertical]="true"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 200px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                <div style="white-space: pre-line;" class="mat-caption color-primary" *ngIf="stepper.selectedIndex!==5">{{getStepInfo(5)}}</div>
+              </div>
+              <mat-divider [vertical]="true"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 200px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                <div style="white-space: pre-line;" class="mat-caption color-primary" *ngIf="stepper.selectedIndex!==5">{{getStepInfo2(5)}}</div>
+              </div>
+              <mat-divider [vertical]="true" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 150px; max-width: 200px; flex: 1 1 auto; margin: 0 20px 0 20px;"
+                   *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">
+                <div style="white-space: pre-line;" class="mat-caption color-accent-dark" *ngIf="nonConformite.NonConformiteEtapes">{{nonConformite.NonConformiteEtapes[5]?.Cmt}}</div>
+              </div>
+            </div>
+          </ng-template>
+          <mat-divider></mat-divider>
+          <div class="ev-flex-row-container" style="padding: 10px 0 0 0">
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;">
+              <mat-slide-toggle formControlName="BonCommande" (change)="onChangeBonCommande()" style="margin:0 0 15px 0;">{{applicationUserContext.getCulturedRessourceText(838)}}</mat-slide-toggle>
+              <mat-radio-group class="ev-radio-group-horizontal" formControlName="NonConformiteAccordFournisseurType" *ngIf="formGroup6.get('BonCommande').value">
+                <mat-radio-button value="1" class="ev-radio-button">{{nonConformiteAccordFournisseurTypeList[0]?.Libelle}}</mat-radio-button>
+                <mat-radio-button value="2" class="ev-radio-button">{{nonConformiteAccordFournisseurTypeList[1]?.Libelle}}</mat-radio-button>
+              </mat-radio-group>
+              <div *ngIf="formGroup6.get('NonConformiteAccordFournisseurType').errors?.required" class="mat-error mat-small" style="text-align:right; border-top:solid 1px red;">{{applicationUserContext.getCulturedRessourceText(293)}}</div>
+              <mat-form-field style="width:100%;" *ngIf="formGroup6.get('BonCommande').value">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(839)}}</mat-label>
+                <textarea matInput formControlName="IFFournisseurBonCommandeNro" style="height:90px;" required [errorStateMatcher]="matcher" (change)="onChangeIFFournisseurBonCommandeNro($event)"></textarea>
+                <button *ngIf="formGroup6.get('IFFournisseurBonCommandeNro').value!=null && formGroup6.get('IFFournisseurBonCommandeNro').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup6.get('IFFournisseurBonCommandeNro').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup6.get('IFFournisseurBonCommandeNro').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-checkbox formControlName="IFFournisseurAttenteBonCommande" style="width:100%;" *ngIf="formGroup6.get('BonCommande').value">{{applicationUserContext.getCulturedRessourceText(848)}}</mat-checkbox>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+              <mat-slide-toggle formControlName="IFFournisseurFacture" (change)="onChangeIFFournisseurFacture()" style="margin:0 0 15px 0;">{{applicationUserContext.getCulturedRessourceText(864)}}</mat-slide-toggle>
+              <mat-checkbox formControlName="IFFournisseurTransmissionFacturation" *ngIf="formGroup6.get('IFFournisseurFacture').value" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(840)}}</mat-checkbox>
+              <mat-form-field style="width:100%;" *ngIf="formGroup6.get('IFFournisseurFacture').value">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(841)}}</mat-label>
+                <input matInput formControlName="IFFournisseurFactureNro" maxlength="50" required [errorStateMatcher]="matcher" />
+                <button *ngIf="formGroup6.get('IFFournisseurFactureNro').value!=null && formGroup6.get('IFFournisseurFactureNro').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup6.get('IFFournisseurFactureNro').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup6.get('IFFournisseurFactureNro').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;" *ngIf="formGroup6.get('IFFournisseurFacture').value">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+                <textarea matInput formControlName="IFFournisseurCmtFacturation" style="height:90px;"></textarea>
+                <button *ngIf="formGroup6.get('IFFournisseurCmtFacturation').value && formGroup6.get('IFFournisseurCmtFacturation').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup6.get('IFFournisseurCmtFacturation').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup6.get('IFFournisseurCmtFacturation').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+              <div class="ev-taskbar-container">
+                <div class="ev-taskbar-left-container">
+                  <button mat-raised-button type="button" (click)="onUploadFile(3);"
+                          [disabled]="locked || formGroup6Disabled || getStep(5)?.DValide || (applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur' && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Fournisseur')">
+                    {{applicationUserContext.getCulturedRessourceText(629)}}
+                  </button>
+                </div>
+              </div>
+              <table class="table-no-pad-no-space" style="width: 100%; margin: 10px 0 0 0; max-height: 300px; overflow-y: auto; display: block;" *ngIf="nonConformite.NonConformiteFichiers?.length>0">
+                <tr *ngFor="let nCF of nonConformiteFichiersFacturationFournisseur; let i=index;">
+                  <td style="padding: 0px 5px 0px 5px; width:70px; text-align:center;">
+                    <img id="image" [src]="'data:image/jpeg;base64,'+nCF.MiniatureBase64" height="50" matTooltip={{applicationUserContext.getCulturedRessourceText(1392)}}
+                         (click)="showPictures('NonConformite_3', nCF.RefNonConformite, nCF.RefNonConformiteFichier); "
+                         style="cursor:pointer;" *ngIf="nCF.MiniatureBase64">
+                    <mat-icon aria-hidden="false" aria-label="Fichier" fontIcon="description" class="color-grey"
+                              *ngIf="!nCF.MiniatureBase64"></mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px; cursor: pointer; overflow-wrap: break-word; max-width: 200px;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
+                      (click)="getFile('NonConformiteFichier', nCF.RefNonConformiteFichier); ">
+                    {{nCF.Nom}}
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px; width:40px;">
+                    <button mat-icon-button (click)="onDeleteNonConformiteFichier(nCF.RefNonConformiteFichier)" type="button"
+                            *ngIf="!(locked || formGroup6Disabled || getStep(5)?.DValide || (applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur' && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Fournisseur'))">
+                      <mat-icon aria-label="Delete" color="warn" class="ev-button-left">delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div>
+            <button mat-button color="accent" (click)="invalidateStep(5)"
+                    [disabled]="getStep(5)?.DValide === null || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(845)}}
+            </button>
+            <button mat-button color="primary" matStepperNext (click)="validateStep(5)"
+                    [disabled]="formGroup6.invalid || getStep(5)?.DValide || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(844)}}
+            </button>
+            <button mat-icon-button (click)="commentStep(5)" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' && !locked">
+              <mat-icon aria-label="Comment" color="primary">comment</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="formGroup7" *ngIf="formGroup2.get('IFClient').value
+                && applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Fournisseur'">
+        <form [formGroup]="formGroup7">
+          <ng-template matStepLabel>
+            <div class="ev-flex-row-container-single-line" style="margin: 0 0 0 0">
+              <mat-icon color="accent" *ngIf="getStep(6)?.DValide">check_circle</mat-icon>
+              <mat-icon color="accent" *ngIf="getCurrentStepIndex()===6">person_pin_circle</mat-icon>
+              <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                {{applicationUserContext.getCulturedRessourceText(813)}}
+                <br>
+                <span style="white-space: pre-line;" class="mat-caption">{{getStepText(6)}}</span>
+              </div>
+              <mat-divider [vertical]="true"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 200px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                <div style="white-space: pre-line;" class="mat-caption color-primary" *ngIf="stepper.selectedIndex!==6">{{getStepInfo(6)}}</div>
+              </div>
+              <mat-divider [vertical]="true" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 150px; max-width: 200px; flex: 1 1 auto; margin: 0 20px 0 20px;"
+                   *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">
+                <div style="white-space: pre-line;" class="mat-caption color-accent-dark" *ngIf="nonConformite.NonConformiteEtapes">{{nonConformite.NonConformiteEtapes[6]?.Cmt}}</div>
+              </div>
+            </div>
+          </ng-template>
+          <mat-divider></mat-divider>
+          <div class="ev-flex-row-container" style="padding: 10px 0 0 0">
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;">
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(841)}}</mat-label>
+                <input matInput formControlName="IFClientFactureNro" maxlength="50" required [errorStateMatcher]="matcher" />
+                <button *ngIf="formGroup7.get('IFClientFactureNro').value!=null && formGroup7.get('IFClientFactureNro').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup7.get('IFClientFactureNro').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup7.get('IFClientFactureNro').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field class="ev-date-picker" style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(843)}}</mat-label>
+                <input matInput [matDatepicker]="pickerIFClientDFacture" formControlName="IFClientDFacture" required [errorStateMatcher]="matcher">
+                <mat-datepicker-toggle matIconPrefix [for]="pickerIFClientDFacture"></mat-datepicker-toggle>
+                <mat-datepicker #pickerIFClientDFacture></mat-datepicker>
+                <button *ngIf="formGroup7.get('IFClientDFacture').value && formGroup7.get('IFClientDFacture').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="formGroup7.get('IFClientDFacture').setValue(null)">
+                  <mat-icon>close</mat-icon>
+                  <mat-error align="end" *ngIf="formGroup7.get('IFClientDFacture').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                </button>
+              </mat-form-field>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+                <textarea matInput formControlName="IFClientCmtFacturation" style="height:90px;"></textarea>
+                <button *ngIf="formGroup7.get('IFClientCmtFacturation').value && formGroup7.get('IFClientCmtFacturation').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup7.get('IFClientCmtFacturation').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup7.get('IFClientCmtFacturation').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div>
+            <button mat-button color="accent" (click)="invalidateStep(6)"
+                    [disabled]="getStep(6)?.DValide === null || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(845)}}
+            </button>
+            <button mat-button color="primary" matStepperNext (click)="validateStep(6)"
+                    [disabled]="formGroup7.invalid || getStep(6)?.DValide || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(844)}}
+            </button>
+            <button mat-icon-button (click)="commentStep(6)" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' && !locked">
+              <mat-icon aria-label="Comment" color="primary">comment</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="formGroup8"
+                *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                  || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'">
+        <form [formGroup]="formGroup8">
+          <ng-template matStepLabel>
+            <div class="ev-flex-row-container-single-line" style="margin: 0 0 0 0">
+              <mat-icon color="accent" *ngIf="getStep(7)?.DValide">check_circle</mat-icon>
+              <mat-icon color="accent" *ngIf="getCurrentStepIndex()===7">person_pin_circle</mat-icon>
+              <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                {{applicationUserContext.getCulturedRessourceText(814)}}
+                <br>
+                <span style="white-space: pre-line;" class="mat-caption">{{getStepText(7)}}</span>
+              </div>
+              <mat-divider [vertical]="true"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 200px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+                <div style="white-space: pre-line;" class="mat-caption color-primary" *ngIf="stepper.selectedIndex!==7">{{getStepInfo(7)}}</div>
+              </div>
+              <mat-divider [vertical]="true" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'"></mat-divider>
+              <div class="ev-flex-col-container" style="min-width: 150px; max-width: 200px; flex: 1 1 auto; margin: 0 20px 0 20px;"
+                   *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">
+                <div style="white-space: pre-line;" class="mat-caption color-accent-dark" *ngIf="nonConformite.NonConformiteEtapes">{{nonConformite.NonConformiteEtapes[7]?.Cmt}}</div>
+              </div>
+            </div>
+          </ng-template>
+          <mat-divider></mat-divider>
+          <div class="ev-flex-row-container" style="padding: 10px 0 0 0">
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;">
+              <mat-checkbox formControlName="PriseEnCharge">{{applicationUserContext.getCulturedRessourceText(842)}}</mat-checkbox>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(826)}}</mat-label>
+                <input matInput formControlName="MontantPriseEnCharge" mask="separator.2" [errorStateMatcher]="matcher" />
+                <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(233)}}</span>
+                <button *ngIf="formGroup8.get('MontantPriseEnCharge').value!=null && formGroup8.get('MontantPriseEnCharge').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup8.get('MontantPriseEnCharge').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup8.get('MontantPriseEnCharge').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                <mat-error align="end" *ngIf="formGroup8.get('MontantPriseEnCharge').errors?.max">
+                  {{applicationUserContext.getCulturedRessourceText(573) + (formGroup8.get('MontantPriseEnCharge').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+                <textarea matInput formControlName="CmtPriseEnCharge" style="height:90px;"></textarea>
+                <button *ngIf="formGroup8.get('CmtPriseEnCharge').value && formGroup8.get('CmtPriseEnCharge').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup8.get('CmtPriseEnCharge').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="formGroup8.get('CmtPriseEnCharge').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 20px;">
+              <div class="ev-taskbar-container">
+                <div class="ev-taskbar-left-container">
+                  <button mat-raised-button type="button" (click)="onUploadFile(4);"
+                          [disabled]="locked || formGroup8Disabled || getStep(7)?.DValide || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+                    {{applicationUserContext.getCulturedRessourceText(629)}}
+                  </button>
+                </div>
+              </div>
+              <table class="table-no-pad-no-space" style="width: 100%; margin: 10px 0 0 0; max-height: 300px; overflow-y: auto; display: block;" *ngIf="nonConformite.NonConformiteFichiers?.length>0">
+                <tr *ngFor="let nCF of nonConformiteFichiersCloture; let i=index;">
+                  <td style="padding: 0px 5px 0px 5px; width:70px; text-align:center;">
+                    <img id="image" [src]="'data:image/jpeg;base64,'+nCF.MiniatureBase64" height="50" matTooltip={{applicationUserContext.getCulturedRessourceText(1392)}}
+                         (click)="showPictures('NonConformite_4', nCF.RefNonConformite, nCF.RefNonConformiteFichier); "
+                         style="cursor:pointer;" *ngIf="nCF.MiniatureBase64">
+                    <mat-icon aria-hidden="false" aria-label="Fichier" fontIcon="description" class="color-grey"
+                              *ngIf="!nCF.MiniatureBase64"></mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px; cursor: pointer; overflow-wrap: break-word; max-width: 200px;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
+                      (click)="getFile('NonConformiteFichier', nCF.RefNonConformiteFichier); ">
+                    {{nCF.Nom}}
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px; width:40px;">
+                    <button mat-icon-button (click)="onDeleteNonConformiteFichier(nCF.RefNonConformiteFichier)" type="button"
+                            *ngIf="!(locked || formGroup8Disabled || getStep(7)?.DValide || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur') && !formGroup8Disabled">
+                      <mat-icon aria-label="Delete" color="warn" class="ev-button-left">delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div>
+            <button mat-button color="accent" (click)="invalidateStep(7)"
+                    [disabled]="getStep(7)?.DValide === null || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(845)}}
+            </button>
+            <button mat-button color="primary" matStepperNext (click)="validateStep(7)"
+                    [disabled]="formGroup8.invalid || getStep(7)?.DValide || !getStep(0).DValide || !getStep(1).DValide || !getStep(2).DValide || !getStep(3).DValide || !getStep(4).DValide || !getStep(5).DValide || !getStep(6).DValide
+                    || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+              {{applicationUserContext.getCulturedRessourceText(844)}}
+            </button>
+            <button mat-icon-button (click)="commentStep(7)" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' && !locked">
+              <mat-icon aria-label="Comment" color="primary">comment</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-vertical-stepper>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+<progress-bar [color]="color" [mode]="mode" [value]="value" [backdropEnabled]="true"
+              [displayProgressBar]="displayProgressBar" position="GloballyTop">
+</progress-bar>
+

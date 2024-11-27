@@ -1,0 +1,72 @@
+<table class="table-no-pad-no-space" style="display:block;margin:20px;">
+  <tr style="width:100%;" *ngIf="changeProfil==false">
+    <td style="width:100%;">
+      <table class="table-no-pad-no-space" style="width:100%;">
+        <tr style="width: 100%; height: 100%; text-align:center;">
+          <td><img alt="Profile" aria-label="Profile" src="assets/images/utilisateur-collectivite-400.svg" /></td>
+          <td><img alt="Profile" aria-label="Profile" src="assets/images/utilisateur-centredetri-400.svg" /></td>
+          <td><img alt="Profile" aria-label="Profile" src="assets/images/utilisateur-transporteur-400.svg" /></td>
+          <td><img alt="Profile" aria-label="Profile" src="assets/images/utilisateur-client-400.svg" /></td>
+          <td><img alt="Profile" aria-label="Profile" src="assets/images/utilisateur-prestataire-400.svg" /></td>
+          <td><img alt="Profile" aria-label="Profile" src="assets/images/utilisateur-valorplast-400.svg" /></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr style="width:100%; height:120px;" *ngIf="changeProfil==false">
+    <td style="width:100%;" class="background-color-primary">
+      <table class="table-no-pad-no-space" style="width:100%; height:100%;">
+        <tr style="width: 100%; height: 60px;">
+          <td style="width: 100%; font-size: x-large; font-weight:300; vertical-align:bottom; padding: 10px 20px 0 20px;"
+              class="color-accent">
+            {{applicationUserContext.getCulturedRessourceText(1499)}}
+          </td>
+        </tr>
+        <tr style="width: 100%; height: 60px;">
+          <td style="width: 100%; vertical-align: top; padding: 5px 20px 20px 20px; font-weight: 300; font-size:small;"
+              class="color-white">
+            {{applicationUserContext.getCulturedRessourceText(1500)}}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table class="table-no-pad-no-space" style="width:100%; height:100%;">
+        <tbody style="display:block;overflow-y:auto; height:50vh;">
+          <tr *ngFor="let profil of profils" [value]="profil" style="width:100%; height:95px;">
+            <td style="width:100%; height:100%;">
+              <table class="table-no-pad-no-space" style="width:100%; height:100%;">
+                <tr style="height:5px;">
+                  <td></td>
+                </tr>
+                <tr style="height:90px;" [class]="getProfilClass(profil)" (click)="onProfil(profil)">
+                  <td style="width: 100px; text-align:center;" class="color-primary">
+                    <img alt="Profile" aria-label="Profile" [src]="'assets/images/utilisateur-'+profil?.UtilisateurType?.toLowerCase()+'-500.svg'" />
+                  </td>
+                  <td style="width: 300px; padding:10px;" class="color-primary">
+                    <div style="font-weight:500; font-size:larger;">{{getProfilInfos(profil)}}</div>
+                    <div>{{profil.EntiteLibelle}}</div>
+                  </td>
+                  <td style="width: 100px; text-align:center;" class="color-primary"
+                      *ngIf="applicationUserContext.profilSelected && profil.RefUtilisateur == applicationUserContext.connectedUtilisateur.RefUtilisateur">
+                    <button mat-icon-button color="primary">
+                      <mat-icon aria-label="OK">done</mat-icon>
+                    </button>
+                  </td>
+                  <td style="width: 100px; text-align:center;" class="color-primary"
+                      *ngIf="!applicationUserContext.profilSelected || profil.RefUtilisateur != applicationUserContext.connectedUtilisateur.RefUtilisateur">
+                    <button mat-icon-button color="primary">
+                      <mat-icon aria-label="OK">arrow_forward</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+</table>

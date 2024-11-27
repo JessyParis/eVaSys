@@ -1,0 +1,48 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid"
+                (click)="onSave('')">
+          {{applicationUserContext.getCulturedRessourceText(6)}}
+        </button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1109)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1117)}}</mat-label>
+              <input matInput formControlName="DelaiAvantDesactivationUtilisateur" type="number" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('DelaiAvantDesactivationUtilisateur').value!=null && form.get('DelaiAvantDesactivationUtilisateur').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('DelaiAvantDesactivationUtilisateur').setValue(0)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="form.get('DelaiAvantDesactivationUtilisateur').errors?.delaiAvantDesactivationUtilisateurRange">{{applicationUserContext.getCulturedRessourceText(1121)}}</mat-error>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(1119)}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1118)}}</mat-label>
+              <input matInput formControlName="DelaiAvantChangementMotDePasse" type="number" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('DelaiAvantChangementMotDePasse').value!=null && form.get('DelaiAvantChangementMotDePasse').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('DelaiAvantChangementMotDePasse').setValue(0)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="form.get('DelaiAvantChangementMotDePasse').errors?.delaiAvantChangementMotDePasseRange">{{applicationUserContext.getCulturedRessourceText(1121)}}</mat-error>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(1119)}}</mat-hint>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

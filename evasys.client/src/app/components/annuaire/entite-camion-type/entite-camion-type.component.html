@@ -1,0 +1,43 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave()"
+                *ngIf="!locked">
+          {{applicationUserContext.getCulturedRessourceText(45)}}
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button mat-raised-button color="warn" class="ev-button-left" type="button" mat-dialog-close="">
+          {{applicationUserContext.getCulturedRessourceText(133)}}
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="mat-dialog-content">
+    <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+      <mat-form-field style="width:100%;">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(313)}}</mat-label>
+        <mat-select formControlName="CamionTypeList"
+                    required [errorStateMatcher]="matcher">
+          <mat-option *ngFor="let camionType of camionTypeList" [value]="camionType.RefCamionType">{{camionType.Libelle}}</mat-option>
+        </mat-select>
+        <button *ngIf="form.get('CamionTypeList').value && form.get('CamionTypeList').enabled"
+                matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('CamionTypeList').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field style="width:100%;">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+        <textarea matInput formControlName="Cmt" maxlength="500" style="height:90px;"></textarea>
+        <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix
+                mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

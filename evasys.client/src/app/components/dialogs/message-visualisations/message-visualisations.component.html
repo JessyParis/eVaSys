@@ -1,0 +1,18 @@
+<div class="ev-datatable-container" style="overflow-y:auto; width:100%; padding:10px;">
+  <table style="width:100%;">
+    <tr style="font-weight:500;">
+      <td style="padding: 5px; border-bottom: thin solid black; white-space: nowrap;">{{applicationUserContext.getCulturedRessourceText(659)}}</td>
+      <td style="padding: 5px; border-bottom: thin solid black; ">{{applicationUserContext.getCulturedRessourceText(586)}}</td>
+      <td style="padding: 5px; border-bottom: thin solid black; ">{{applicationUserContext.getCulturedRessourceText(1402)}}</td>
+    </tr>
+    <tr *ngIf="message?.MessageVisualisations?.length==0">
+      <td style="padding:5px; white-space:nowrap; text-align:center;" colspan="3"
+          class="color-accent-dark">{{applicationUserContext.getCulturedRessourceText(299)}}</td>
+    </tr>
+    <tr *ngFor="let item of message?.MessageVisualisations">
+      <td style="padding:5px; white-space:nowrap;">{{item.Utilisateur.Nom}}</td>
+      <td style="padding:5px; white-space:nowrap">{{item.D}}</td>
+      <td style="padding:5px;">{{item.Confirme?applicationUserContext.getCulturedRessourceText(1402):""}}</td>
+    </tr>
+  </table>
+</div>

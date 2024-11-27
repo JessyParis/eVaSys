@@ -1,0 +1,284 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm"
+                [disabled]="formRepartitionCollectivite.get('RepartitionCollectivite').invalid || formRepartitionProduit.get('RepartitionProduit').invalid"
+                *ngIf="!(locked && saveLocked)" (click)="saveRepartition()">
+          {{applicationUserContext.getCulturedRessourceText(6)}}
+        </button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onCommandeFournisseur();" *ngIf="repartition.CommandeFournisseur">
+          {{applicationUserContext.getCulturedRessourceText(776)}}
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="!locked && repartition.RefRepartition" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <div class="ev-dataform-container">
+    <form id="MyForm" [formGroup]="form" class="ev-horizontal-container" (ngSubmit)="onSubmit()">
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">
+              {{repartition?.Fournisseur?.RepartitionMensuelle ? applicationUserContext.getCulturedRessourceText(591) : applicationUserContext.getCulturedRessourceText(590)}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <mat-form-field style="width: 100%; margin: 10px 0 0 0;" appearance="outline">
+                <textarea matInput formControlName="InfoText" style="height:300px;" tabindex="-1" readonly></textarea>
+              </mat-form-field>
+              <table class="fixed_headers_commande_fournisseurs table-no-pad-no-space" *ngIf="repartition.CommandeFournisseur===null">
+                <thead class="background-color-accent">
+                  <tr>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(14)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(480)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(229)}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let cmdF of commandeFournisseurs;">
+                    <td style="padding: 0px 5px 0px 5px;">{{cmdF.NumeroCommande}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">{{cmdF.PoidsReparti}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">{{cmdF.PoidsChargement}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary">
+              {{form.get('EnterType').value==='Collectivite' ? applicationUserContext.getCulturedRessourceText(603) : applicationUserContext.getCulturedRessourceText(599)}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <button mat-raised-button color="primary" type="submit" form="MyForm" *ngIf="!(locked && saveLocked)" [disabled]="form.invalid" style="width:100%; margin:0px 0px 10px 0px;">{{applicationUserContext.getCulturedRessourceText(598)}}</button>
+              <mat-radio-group class="ev-radio-group-horizontal" formControlName="EnterType" (change)="onEnterTypeChange()"
+                               *ngIf="repartition?.PoidsChargement !== repartition?.PoidsReparti && repartition?.PoidsReparti>0">
+                <mat-radio-button value="Collectivite" class="ev-radio-button">{{applicationUserContext.getCulturedRessourceText(603)}}</mat-radio-button>
+                <mat-radio-button value="Produit" class="ev-radio-button">{{applicationUserContext.getCulturedRessourceText(599)}}</mat-radio-button>
+              </mat-radio-group>
+              <mat-form-field style="width:100%;" *ngIf="form.get('CollectiviteNAList').value===null">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(596)}}</mat-label>
+                <mat-select id="selectCollectivite" formControlName="CollectiviteList"
+                            (selectionChange)="onCollectiviteSelected($event.value)" [required]="requiredCollectiviteList" [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let collectivite of collectiviteList" [value]="collectivite.RefEntite">{{collectivite.Libelle}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('CollectiviteList').value && form.get('CollectiviteList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); onCollectiviteSelected(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('CollectiviteList').touched || form.get('CollectiviteList').dirty) && form.get('CollectiviteList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;" *ngIf="form.get('CollectiviteList').value===null">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(597)}}</mat-label>
+                <input type="text" matInput [matAutocomplete]="autoCollectiviteNA"
+                       formControlName="CollectiviteNAList" (selectionChange)="onCollectiviteNASelected()" [required]="requiredCollectiviteNAList" [errorStateMatcher]="matcher">
+                <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(611)}}</mat-hint>
+                <button *ngIf="form.get('CollectiviteNAList').value && form.get('CollectiviteNAList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); onCollectiviteSelected(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('CollectiviteNAList').touched || form.get('CollectiviteNAList').dirty) && form.get('CollectiviteNAList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-autocomplete #autoCollectiviteNA="matAutocomplete" [displayWith]="autoCollectiviteNADisplayFn" (optionSelected)="onCollectiviteNASelected()">
+                <mat-option *ngFor="let collectiviteNA of collectiviteNAList | async " [value]="collectiviteNA">{{collectiviteNA.Libelle}}</mat-option>
+              </mat-autocomplete>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(583)}}</mat-label>
+                <mat-select formControlName="ProcessList" (selectionChange)="onProcessSelected()" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let process of processList" [value]="process.RefProcess">{{process.Libelle}}</mat-option>
+                </mat-select>
+                <mat-error align="end" *ngIf="(form.get('ProcessList').touched || form.get('ProcessList').dirty) && form.get('ProcessList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(595)}}</mat-label>
+                <mat-select formControlName="ComposantList" (selectionChange)="onComposantSelected()" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let composant of composantList" [value]="composant.RefProduit">{{composant.Libelle}}</mat-option>
+                </mat-select>
+                <mat-error align="end" *ngIf="(form.get('ComposantList').touched || form.get('ComposantList').dirty) && form.get('ComposantList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <input id="inputPoids" matInput formControlName="Poids" mask="separator" [errorStateMatcher]="matcher" />
+                <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
+                <button *ngIf="form.get('Poids').value!=null && form.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Poids').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('Poids').touched || form.get('Poids').dirty) && form.get('Poids').errors?.max">
+                  {{applicationUserContext.getCulturedRessourceText(573) + (form.get('Poids').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                </mat-error>
+                <mat-error align="end" *ngIf="(form.get('Poids').touched || form.get('Poids').dirty) && form.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%; text-align: right">
+                <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [errorStateMatcher]="matcher" />
+                <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
+                <button *ngIf="form.get('PUHT').value!=null && form.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PUHT').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('PUHT').touched || form.get('PUHT').dirty) && form.get('PUHT').errors?.max">
+                  {{applicationUserContext.getCulturedRessourceText(573) + (form.get('PUHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                </mat-error>
+                <mat-error align="end" *ngIf="(form.get('PUHT').touched || form.get('PUHT').dirty) && form.get('PUHT').errors?.min">
+                  {{applicationUserContext.getCulturedRessourceText(687) + (form.get('PUHT').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                </mat-error>
+                <mat-error align="end" *ngIf="(form.get('PUHT').touched || form.get('PUHT').dirty) && form.get('PUHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                <mat-hint class="color-accent-dark" align="end" *ngIf="!form.get('PUHT').errors?.max && !form.get('PUHT').errors?.min && form.get('PUHT').value<0">{{applicationUserContext.getCulturedRessourceText(800)}}</mat-hint>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+    <form id="FormRepartitionCollectivite" [formGroup]="formRepartitionCollectivite">
+      <div class="boxTripleSize" *ngIf="repartition?.PoidsReparti>0">
+        <table class="cadre_primary">
+          <tr>
+            <td [class]="'cadre_header_' + (formRepartitionCollectivite.get('RepartitionCollectivite').errors?.poidsTotalRepartitionCollectivite || formRepartitionCollectivite.get('RepartitionCollectivite')['controls'].length===0 ? 'warn' : 'primary')">
+              {{applicationUserContext.getCulturedRessourceText(592)}}
+              &nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(608) + " = " + repartition?.PoidsReparti}}
+              &nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(609) + " = " + getSumRepartitionCollectivite()}}
+              &nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(607) + " = " + (repartition?.PoidsReparti - getSumRepartitionCollectivite())}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <table class="fixed_headers_repartition table-no-pad-no-space">
+                <thead class="background-color-accent">
+                  <tr>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(594)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(583)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(595)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(56)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
+                    <th style="padding:5px;"></th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="RepartitionCollectivite">
+                  <tr [formGroupName]="i" *ngFor="let group of getFormRepartitionCollectiviteData.controls; let i=index">
+                    <td style="padding: 0px 5px 0px 5px;">{{repartition?.RepartitionCollectivites[i]?.Collectivite?.Libelle + " (" + repartition?.RepartitionCollectivites[i]?.Collectivite?.CodeEE + ")"}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">{{repartition?.RepartitionCollectivites[i]?.Process?.Libelle}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">{{repartition?.RepartitionCollectivites[i]?.Produit?.Libelle}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">
+                      <mat-form-field style="width:100%;">
+                        <input matInput formControlName="Poids" mask="separator" required [errorStateMatcher]="matcher" />
+                        <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
+                        <button *ngIf="group.get('Poids').value!=null && group.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Poids').setValue(null)" tabindex="-1" type="button">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                        <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.max">
+                          {{applicationUserContext.getCulturedRessourceText(573) + (group.get('Poids').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                        </mat-error>
+                        <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                      </mat-form-field>
+                    </td>
+                    <td style="padding: 0px 5px 0px 5px;">
+                      <mat-form-field style="width:100%; text-align: right">
+                        <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" required [errorStateMatcher]="matcher" />
+                        <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
+                        <button *ngIf="group.get('PUHT').value!=null && group.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHT').setValue(null)" tabindex="-1" type="button">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.max">
+                          {{applicationUserContext.getCulturedRessourceText(573) + (group.get('PUHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                        </mat-error>
+                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.min">
+                          {{applicationUserContext.getCulturedRessourceText(687) + (group.get('PUHT').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                        </mat-error>
+                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                        <mat-hint class="color-accent-dark" align="end" *ngIf="!group.get('PUHT').errors?.max && !group.get('PUHT').errors?.min && group.get('PUHT').value<0">{{applicationUserContext.getCulturedRessourceText(800)}}</mat-hint>
+                      </mat-form-field>
+                    </td>
+                    <td style="padding: 0px 5px 0px 5px;">
+                      <button mat-icon-button (click)="onDeleteRepartitionCollectivite(i)" type="button"><mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+    <form id="FormRepartitionProduit" [formGroup]="formRepartitionProduit">
+      <div class="boxTripleSize" *ngIf="repartition?.PoidsChargement > repartition?.PoidsReparti">
+        <table class="cadre_primary">
+          <tr>
+            <td [class]="'cadre_header_' + (formRepartitionProduit.get('RepartitionProduit').errors?.poidsTotalRepartitionProduit || formRepartitionProduit.get('RepartitionProduit')['controls'].length===0 ? 'warn' : 'primary')">
+              {{applicationUserContext.getCulturedRessourceText(604)}}
+              &nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(608) + " = " + (repartition?.PoidsChargement - repartition?.PoidsReparti)}}
+              &nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(609) + " = " + getSumRepartitionProduit()}}
+              &nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(607) + " = " + (repartition?.PoidsChargement - repartition?.PoidsReparti - getSumRepartitionProduit())}}
+            </td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <table class="fixed_headers_repartition table-no-pad-no-space">
+                <thead class="background-color-accent">
+                  <tr>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(602)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(583)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(595)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(56)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
+                    <th style="padding:5px;"></th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="RepartitionProduit">
+                  <tr [formGroupName]="i" *ngFor="let group of getFormRepartitionProduitData.controls; let i=index">
+                    <td style="padding: 0px 5px 0px 5px;">
+                      {{repartition?.RepartitionProduits[i]?.Fournisseur ? (repartition?.RepartitionProduits[i]?.Fournisseur?.Libelle + " (" + repartition?.RepartitionProduits[i]?.Fournisseur?.CodeEE + ")") : applicationUserContext.getCulturedRessourceText(17)}}
+                    </td>
+                    <td style="padding: 0px 5px 0px 5px;">{{repartition?.RepartitionProduits[i]?.Process?.Libelle}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">{{repartition?.RepartitionProduits[i]?.Produit?.Libelle}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">
+                      <mat-form-field style="width:100%;">
+                        <input matInput formControlName="Poids" mask="separator" required [errorStateMatcher]="matcher" />
+                        <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
+                        <button *ngIf="group.get('Poids').value!=null && group.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Poids').setValue(null)" tabindex="-1" type="button">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                        <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.max">
+                          {{applicationUserContext.getCulturedRessourceText(573) + (group.get('Poids').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                        </mat-error>
+                        <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                      </mat-form-field>
+                    </td>
+                    <td style="padding: 0px 5px 0px 5px;">
+                      <mat-form-field style="width:100%; text-align: right">
+                        <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" required [errorStateMatcher]="matcher" />
+                        <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
+                        <button *ngIf="group.get('PUHT').value!=null && group.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHT').setValue(null)" tabindex="-1" type="button">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.max">
+                          {{applicationUserContext.getCulturedRessourceText(573) + (group.get('PUHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                        </mat-error>
+                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.min">
+                          {{applicationUserContext.getCulturedRessourceText(687) + (group.get('PUHT').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                        </mat-error>
+                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                        <mat-hint class="color-accent-dark" align="end" *ngIf="!group.get('PUHT').errors?.max && !group.get('PUHT').errors?.min && group.get('PUHT').value<0">{{applicationUserContext.getCulturedRessourceText(800)}}</mat-hint>
+                      </mat-form-field>
+                    </td>
+                    <td style="padding: 0px 5px 0px 5px;">
+                      <button mat-icon-button (click)="onDeleteRepartitionProduit(i)" type="button"><mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

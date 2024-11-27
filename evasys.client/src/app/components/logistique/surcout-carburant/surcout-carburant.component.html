@@ -1,0 +1,97 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onSave()" [disabled]="form.invalid" *ngIf="!locked">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(255)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(255)}}</mat-label>
+              <mat-select formControlName="EntiteList" (selectionChange)="selectionChange()"
+                          required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let entite of entiteList" [value]="entite.RefEntite">{{entite.Libelle}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(form.get('EntiteList').touched || form.get('EntiteList').dirty) && form.get('EntiteList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(312)}}</mat-label>
+              <mat-select formControlName="PaysList" (selectionChange)="selectionChange()"
+                          required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let pays of paysList" [value]="pays.RefPays">{{pays.Libelle}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(form.get('PaysList').touched || form.get('PaysList').dirty) && form.get('PaysList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(569)}}</mat-label>
+              <mat-select formControlName="YearList" (selectionChange)="selectionChange()"
+                          required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let year of yearList" [value]="year.y">{{year.y}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(form.get('YearList').touched || form.get('YearList').dirty) && form.get('YearList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxDoubleSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(716)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(571)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(706)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1239)}}</th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody formArrayName="SCs">
+                <tr [formGroupName]="i" *ngFor="let group of getFormData.controls; let i=index">
+                  <td style="padding: 0px 5px 0px 5px;">{{getMonthName(surcoutCarburants[i]?.Mois-1)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-form-field style="width:100%;">
+                      <input matInput formControlName="Ratio" [allowNegativeNumbers]="true" mask="separator.2" [errorStateMatcher]="matcher" />
+                      <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(203)}}</span>
+                      <button *ngIf="group.get('Ratio').value!=null && group.get('Ratio').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Ratio').setValue(null)" tabindex="-1" type="button">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      <mat-error align="end" *ngIf="(group.get('Ratio').touched || group.get('Ratio').dirty) && group.get('Ratio').errors?.max">
+                        {{applicationUserContext.getCulturedRessourceText(573) + (group.get('Ratio').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px; text-align:center">
+                    <mat-checkbox formControlName="AllPays"></mat-checkbox>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="ev-button-right color-tooltip-info-icon" [matTooltip]="getCreationTooltipText(i)">info</mat-icon>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

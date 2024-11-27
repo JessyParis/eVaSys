@@ -1,0 +1,155 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave()"
+                *ngIf="!locked">
+          {{applicationUserContext.getCulturedRessourceText(45)}}
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button mat-raised-button color="warn" class="ev-button-left" type="button" mat-dialog-close="">
+          {{applicationUserContext.getCulturedRessourceText(133)}}
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="mat-dialog-content">
+    <form id="MainForm" [formGroup]="form" class="ev-dataform-container">
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary"></td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <mat-checkbox formControlName="Actif" style="width:100%;">
+                {{applicationUserContext.getCulturedRessourceText(651)}}
+              </mat-checkbox>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(265)}}</mat-label>
+                <mat-select formControlName="AdresseTypeList" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let adresseType of adresseTypeList" [value]="adresseType?.RefAdresseType">{{adresseType.Libelle}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(474)}}</mat-label>
+                <input matInput formControlName="Libelle" maxlength="69" />
+                <button *ngIf="form.get('Libelle').value && form.get('Libelle').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Libelle').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(476)}}</mat-label>
+                <input matInput formControlName="Adr1" maxlength="69" />
+                <button *ngIf="form.get('Adr1').value && form.get('Adr1').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Adr1').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(477)}}</mat-label>
+                <input matInput formControlName="Adr2" maxlength="69" />
+                <button *ngIf="form.get('Adr2').value && form.get('Adr2').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Adr2').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(65)}}</mat-label>
+                <input matInput formControlName="CodePostal" maxlength="9" required [errorStateMatcher]="matcher" />
+                <button *ngIf="form.get('CodePostal').value && form.get('CodePostal').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CodePostal').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="(form.get('CodePostal').touched || form.get('CodePostal').dirty) && form.get('CodePostal').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                <mat-hint *ngIf="adresse?.RegionEE && entite.EntiteType?.RefEntiteType==1" align="end" class="color-accent-dark">
+                  {{applicationUserContext.getCulturedRessourceText(1154) + " -> " + adresse?.RegionEE?.Libelle}}
+                </mat-hint>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(66)}}</mat-label>
+                <input matInput formControlName="Ville" maxlength="35" required [errorStateMatcher]="matcher"
+                       (input)="form.get('Ville').setValue(form.get('Ville').value.toUpperCase())" />
+                <button *ngIf="form.get('Ville').value && form.get('Ville').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Ville').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="(form.get('Ville').touched || form.get('Ville').dirty) && form.get('Ville').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(312)}}</mat-label>
+                <mat-select formControlName="PaysList" required [errorStateMatcher]="matcher">
+                  <mat-option *ngFor="let pays of paysList" [value]="pays?.RefPays">{{pays.Libelle}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('PaysList').value && form.get('PaysList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="$event.stopPropagation(); form.get('PaysList').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary"></td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(417)}}</mat-label>
+                <input matInput formControlName="Tel" maxlength="20" />
+                <button *ngIf="form.get('Tel').value && form.get('Tel').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Tel').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(419)}}</mat-label>
+                <input matInput formControlName="Email" maxlength="200" />
+                <button *ngIf="form.get('Email').value && form.get('Email').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Email').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="(form.get('Email').touched || form.get('Email').dirty) && form.get('Email').errors?.email">{{applicationUserContext.getCulturedRessourceText(495)}}</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(1153)}}</mat-label>
+                <input matInput formControlName="SiteWeb" maxlength="200" />
+                <button *ngIf="form.get('SiteWeb').value && form.get('SiteWeb').enabled"
+                        matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('SiteWeb').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <button *ngIf="form.get('SiteWeb').value && form.get('SiteWeb').enabled"
+                        matIconSuffix mat-icon-button aria-label="Site web" (click)="onSiteWeb()" tabindex="-1" type="button">
+                  <mat-icon>link</mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.Horaires">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(1186)}}</mat-label>
+                <input matInput formControlName="Horaires" maxlength="100" />
+                <button *ngIf="form.get('Horaires').value && form.get('Horaires').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Horaires').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-hint class="color-accent-dark" align="end" *ngIf="form.get('Horaires').value?.length>80">{{applicationUserContext.getCulturedRessourceText(1462)}}</mat-hint>
+              </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+                <textarea matInput formControlName="Cmt" maxlength="1500" style="height:120px;"></textarea>
+                <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

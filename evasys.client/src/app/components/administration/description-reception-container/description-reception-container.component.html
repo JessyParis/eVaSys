@@ -1,0 +1,21 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onAdd();">
+          {{applicationUserContext.getCulturedRessourceText(598)}}
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+      </div>
+    </div>
+  </header>
+  <div class="ev-dataform-container">
+    <div *ngFor="let descriptionReception of descriptionReceptions">
+      <description-reception [refDescriptionReception]="descriptionReception.RefDescriptionReception.toString()"></description-reception>
+    </div>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

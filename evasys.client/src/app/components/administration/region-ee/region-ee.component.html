@@ -1,0 +1,56 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid" (click)="onSave()">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="regionEE?.RefRegionEE" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1132)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(474)}}</mat-label>
+              <input matInput formControlName="Libelle" maxlength="50" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('Libelle').value!=null && form.get('Libelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Libelle').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Libelle').touched || form.get('Libelle').dirty) && form.get('Libelle').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(309)}}</mat-label>
+              <mat-select multiple formControlName="DptList" [compareWith]="compareFnDpt">
+                <mat-option *ngFor="let regionEEDpt of regionEEDptList" [value]="regionEEDpt">{{regionEEDpt.Dpt.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('DptList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); onDptListReset();" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <div style="margin: 0 0 10px 0;">
+              <mat-card appearance="outlined" style="white-space: pre-wrap;">
+                <mat-card-content [style.overflow]="'auto'" [style.height.px]="'470'">
+                  <p>{{dptsLabel()}}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

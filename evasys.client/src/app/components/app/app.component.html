@@ -1,0 +1,1150 @@
+<div class="full-container mat-typography">
+  <mat-toolbar *ngIf="this.auth.isLoggedIn() && applicationUserContext.profilSelected && applicationUserContext.connectedUtilisateur?.RefUtilisateur && !applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite"
+               class="fixed-top-toolbar mat-elevation-z4" [@fadeInOnEnter]>
+    <table class="table-no-pad-no-space" style="width:100%;">
+      <tr style="vertical-align:middle">
+        <td><button mat-icon-button (click)="onHome()" *ngIf="this.auth.isLoggedIn()"><mat-icon aria-label="Accueil">home</mat-icon></button></td>
+        <td><img alt="e-Valorplast" src="assets/images/logo-e-valorplast-texte.png" style="vertical-align:middle" /></td>
+        <td><button mat-icon-button (click)="this.sideNavOpened=!this.sideNavOpened;" *ngIf="this.auth.isLoggedIn()"><mat-icon aria-label="Menu">menu</mat-icon></button></td>
+        <td *ngIf="applicationUserContext.currentModule.name && !this.sideNavOpened" class="mat-caption">&nbsp;>&nbsp;{{applicationUserContext.getEnvModuleCulturedCaption(applicationUserContext.currentModule.name)}}</td>
+        <td *ngIf="applicationUserContext.currentMenu.name && !this.sideNavOpened" class="mat-caption">&nbsp;>&nbsp;{{applicationUserContext.getEnvMenuCulturedCaption(applicationUserContext.currentMenu.name)}}</td>
+        <td style="width:50%;"></td>
+        <td *ngIf="applicationUserContext.environment" class="color-warn" style="font-size:smaller;">{{applicationUserContext.environment}}&nbsp;&nbsp;&nbsp;</td>
+        <td *ngIf="this.auth.isLoggedIn()">
+          <mat-checkbox *ngIf="applicationUserContext.visibleFilterDR" [checked]="applicationUserContext.filterDR" (change)="onFilterDRChange($event)" class="ev-control-right">
+            {{applicationUserContext.getCulturedRessourceText(729)}}
+          </mat-checkbox>
+        </td>
+        <td *ngIf="this.auth.isLoggedIn()">
+          <mat-checkbox [checked]="applicationUserContext.filterGlobalActif" (change)="onFilterGlobalActifChange($event)" class="ev-control-right"
+                        *ngIf="applicationUserContext.connectedUtilisateur.Transporteur == null
+            && applicationUserContext.connectedUtilisateur.Client == null
+            && applicationUserContext.connectedUtilisateur.CentreDeTri == null
+            && applicationUserContext.connectedUtilisateur.Collectivite == null">
+            {{applicationUserContext.getCulturedRessourceText(1070)}}
+          </mat-checkbox>
+        </td>
+        <td style="width:50%;"></td>
+        <td *ngIf="this.auth.isLoggedIn()" style="font-size:smaller; font-weight:400; padding:0 5px 0 10px;" class="color-primary-medium">
+          {{applicationUserContext.connectedUtilisateur?.EntiteLibelle}}
+        </td>
+        <td *ngIf="this.auth.isLoggedIn() && applicationUserContext.connectedUtilisateur.UtilisateurType" class="vertical-align-center-svg">
+          <img alt="Profile" aria-label="Profile"
+               [src]="'assets/images/utilisateur-'+applicationUserContext.connectedUtilisateur.UtilisateurType?.toLowerCase()+'-400.svg'" />
+        </td>
+        <td *ngIf="applicationUserContext.connectedUtilisateur.HasProfils || applicationUserContext.connectedUtilisateur.RefUtilisateurMaitre">
+          <button mat-icon-button (click)="onChangeProfil()" *ngIf="this.auth.isLoggedIn()"
+                  class="color-primary-medium" matTooltip={{applicationUserContext.getCulturedRessourceText(1505)}}>
+            <mat-icon aria-label="Profils">arrow_drop_down</mat-icon>
+          </button>
+        </td>
+        <td *ngIf="this.auth.isLoggedIn()" style="font-size:smaller; font-weight:400">
+          {{applicationUserContext.connectedUtilisateur.Nom}}
+        </td>
+        <td [matTooltip]="getHasMessageTooltipText()">
+          <button mat-icon-button (click)="showMessage()" *ngIf="this.auth.isLoggedIn()" [disabled]="applicationUserContext.hasMessage==0"
+                  color="accent" class="ev-button-right" [@flash]="applicationUserContext.animMessage" (@flash.done)="applicationUserContext.animMessage=false">
+            <mat-icon aria-label="Messages">message</mat-icon>
+          </button>
+        </td>
+        <td>
+          <button mat-icon-button (click)="onHelp()" *ngIf="this.auth.isLoggedIn() && applicationUserContext.visibleHelp"
+                  class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1382)}}>
+            <mat-icon aria-label="Aide">help</mat-icon>
+          </button>
+        </td>
+        <td>
+          <button mat-icon-button (click)="onDocuments()" *ngIf="1!=1"
+                  class="ev-button-right">
+            <mat-icon aria-label="Documents">folder</mat-icon>
+          </button>
+        </td>
+        <td>
+          <button mat-icon-button (click)="onUserAccount()" *ngIf="this.auth.isLoggedIn()" class="ev-button-right"
+                  matTooltip={{applicationUserContext.getCulturedRessourceText(1089)}}>
+            <mat-icon aria-label="Compte">account_circle</mat-icon>
+          </button>
+        </td>
+        <td>
+          <button mat-icon-button (click)="onLogout()" *ngIf="this.auth.isLoggedIn()" class="ev-button-right"
+                  matTooltip={{applicationUserContext.getCulturedRessourceText(1254)}}>
+            <mat-icon aria-label="Deconnexion">logout</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </table>
+  </mat-toolbar>
+  <mat-toolbar *ngIf="this.auth.isLoggedIn() && applicationUserContext.profilSelected && applicationUserContext.connectedUtilisateur?.RefUtilisateur && applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite && applicationUserContext.visibleHeaderCollectivite"
+       class="fixed-top-toolbar" style="height: 82px; max-height: 82px; margin:10px 0 0 0;" [@fadeInOnEnter]>
+    <table class="table-no-pad-no-space border-accueil-collectivite-header" style="width:100%; height:100%;">
+      <tr style="vertical-align:middle">
+        <td>
+          <button mat-icon-button (click)="onHome()" *ngIf="this.auth.isLoggedIn()"
+                  matTooltip={{applicationUserContext.getCulturedRessourceText(31)}}>
+            <mat-icon aria-label="Accueil" class="color-primary-medium">home</mat-icon>
+          </button>
+        </td>
+        <td><img alt="e-Valorplast" src="assets/images/logo-e-valorplast-texte.png" style="vertical-align:middle" /></td>
+        <td style="padding:0 10px 0 0;">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu"
+                  matTooltip={{applicationUserContext.getCulturedRessourceText(1384)}}>
+            <mat-icon class="color-primary-medium">menu</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onMenu('ModuleCollectiviteMenuDocuments','')">
+              <span>{{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuDocuments')}}</span>
+            </button>
+            <button mat-menu-item (click)="onMenu('ModuleCollectiviteMenuPrixReprise','')">
+              <span>{{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuPrixReprise')}}</span>
+            </button>
+            <button mat-menu-item (click)="onMenu('ModuleCollectiviteMenuStatistiques','')">
+              <span>{{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuStatistiques')}}</span>
+            </button>
+            <button mat-menu-item (click)="onMenu('ModuleCollectiviteMenuVisualisationAnnuaire','')">
+              <span>{{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuVisualisationAnnuaire')}}</span>
+            </button>
+          </mat-menu>
+        </td>
+        <td *ngIf="applicationUserContext.currentModule.name" class="color-grey" style="font-size:small;">>&nbsp;{{applicationUserContext.getEnvModuleCulturedCaption(applicationUserContext.currentModule.name)}}</td>
+        <td *ngIf="applicationUserContext.currentMenu.name" class="color-grey" style="font-size:small;">&nbsp;>&nbsp;{{applicationUserContext.getEnvMenuCulturedCaption(applicationUserContext.currentMenu.name)}}</td>
+        <td style="width:50%;"></td>
+        <td *ngIf="applicationUserContext.environment" class="color-warn" style="font-size:smaller;">{{applicationUserContext.environment}}&nbsp;&nbsp;&nbsp;</td>
+        <td style="width:50%;"></td>
+        <td *ngIf="this.auth.isLoggedIn()" style="font-size:smaller; font-weight:400; padding:0 5px 0 10px;" class="color-primary-a-medium">
+          {{applicationUserContext.connectedUtilisateur?.EntiteLibelle}}
+        </td>
+        <td *ngIf="this.auth.isLoggedIn() && applicationUserContext.connectedUtilisateur.UtilisateurType" class="vertical-align-center-svg">
+          <img alt="Profile" aria-label="Profile"
+               [src]="'assets/images/utilisateur-'+applicationUserContext.connectedUtilisateur.UtilisateurType?.toLowerCase()+'-a400.svg'" />
+        </td>
+        <td *ngIf="applicationUserContext.connectedUtilisateur.HasProfils || applicationUserContext.connectedUtilisateur.RefUtilisateurMaitre">
+          <button mat-icon-button (click)="onChangeProfil()" *ngIf="this.auth.isLoggedIn()"
+                  class="color-primary-a-medium" matTooltip={{applicationUserContext.getCulturedRessourceText(1505)}}>
+            <mat-icon aria-label="Profils">arrow_drop_down</mat-icon>
+          </button>
+        </td>
+        <td *ngIf="this.auth.isLoggedIn()" style="font-weight:500; font-size:smaller; padding:0 10px 0 10px;" class="color-primary-a-medium">
+          {{applicationUserContext.connectedUtilisateur.Nom}}
+        </td>
+        <td style="padding: 0 10px 0 10px; cursor: pointer;" (click)="showMessage()">
+          <div class="ev-user-circle-small" [matTooltip]="getHasMessageTooltipText()">
+            <span class="ev-user-circle-small-icone">
+              <mat-icon aria-label="Person" class="color-white material-icons-outlined" style="cursor:pointer;"
+                        [matBadge]="applicationUserContext.hasMessage" matBadgeColor="accent" matBadgeOverlap="false" aria-hidden="false">person</mat-icon>
+            </span>
+          </div>
+        </td>
+        <td>
+          <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1382)}}
+                  (click)="onHelp()">
+            <mat-icon aria-label="Aide" class="color-primary-a-medium" style="cursor:pointer">help_outline</mat-icon>
+          </button>
+        </td>
+        <td>
+          <button mat-icon-button (click)="onLogout()" *ngIf="this.auth.isLoggedIn()" class="ev-button-right color-grey"
+                  matTooltip={{applicationUserContext.getCulturedRessourceText(1254)}}>
+            <mat-icon aria-label="Deconnexion">logout</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </table>
+  </mat-toolbar>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav mode="side" [opened]="this.sideNavOpened && this.auth.isLoggedIn() && applicationUserContext.profilSelected && applicationUserContext.connectedUtilisateur?.RefUtilisateur && !applicationUserContext.connectedUtilisateur?.Collectivite"
+                 class="mat-sidenav mat-mdc-elevation-specific mat-elevation-z4 ">
+      <div style="display:flex; flex-direction:column ; justify-content: space-between; height:100%;" class="ev-sidenav">
+        <div style="padding:5px 0px 5px 0px;" class="background-color-primary">
+          <div *ngIf="!menuModules
+                 && applicationUserContext.connectedUtilisateur.HabilitationLogistique!='Transporteur'
+                 && !applicationUserContext.connectedUtilisateur.Prestataire
+                 && !applicationUserContext.connectedUtilisateur.CentreDeTri
+                 && applicationUserContext.connectedUtilisateur.HabilitationLogistique!='Client'" style="padding:0px 0px 0px 15px; cursor:pointer;" (click)="menuModules=true;">
+            <table class="table-no-pad-no-space">
+              <tr style="vertical-align:middle;">
+                <td><button mat-icon-button color="accent"><mat-icon aria-label="Retour">arrow_back</mat-icon></button></td>
+                <td><span class="color-accent">{{applicationUserContext.getCulturedRessourceText(383)}}</span></td>
+              </tr>
+            </table>
+          </div>
+          <mat-divider></mat-divider>
+          <div [@fadeInOnEnter] *ngIf="menuModules
+                 && applicationUserContext.connectedUtilisateur.HabilitationLogistique!='Transporteur'
+                 && !applicationUserContext.connectedUtilisateur.Prestataire
+                 && applicationUserContext.connectedUtilisateur.HabilitationLogistique!='CentreDeTri'
+                 && applicationUserContext.connectedUtilisateur.HabilitationLogistique!='Client'">
+            <table class="table-no-pad-no-space mat-subtitle-1" style="width:100%;">
+              <tr style="height:20px;"><td class="ev-module-td-left"></td><td></td></tr>
+              <tr *ngIf="this.auth.isLoggedIn() && applicationUserContext.connectedUtilisateur.HabilitationAdministration" class="ev-module-tr">
+                <td class="ev-module-td-left"></td>
+                <td (click)="onModule('Administration')" [class]="administrationModuleStyle">{{applicationUserContext.getEnvModuleCulturedCaption('Administration')}}</td>
+              </tr>
+              <tr *ngIf="this.auth.isLoggedIn()
+                  && applicationUserContext.connectedUtilisateur.HabilitationAnnuaire
+                  && (applicationUserContext.connectedUtilisateur.Transporteur
+                  || this.applicationUserContext.connectedUtilisateur.Client
+                  || this.applicationUserContext.connectedUtilisateur.Prestataire
+                  || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire=='Administrateur'
+                  || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire=='Utilisateur')" class="ev-module-tr">
+                <td class="ev-module-td-left"></td>
+                <td (click)="onModule('Annuaire')" [class]="annuaireModuleStyle">{{applicationUserContext.getEnvModuleCulturedCaption('Annuaire')}}</td>
+              </tr>
+              <tr *ngIf="this.auth.isLoggedIn() && applicationUserContext.connectedUtilisateur.HabilitationLogistique" class="ev-module-tr">
+                <td class="ev-module-td-left"></td>
+                <td (click)="onModule('Logistique')" [class]="logistiqueModuleStyle">{{applicationUserContext.getEnvModuleCulturedCaption('Logistique')}}</td>
+              </tr>
+              <tr *ngIf="this.auth.isLoggedIn() && applicationUserContext.connectedUtilisateur.HabilitationMessagerie" class="ev-module-tr">
+                <td class="ev-module-td-left"></td>
+                <td (click)="onModule('Messagerie')" [class]="messagerieModuleStyle">{{applicationUserContext.getEnvModuleCulturedCaption('Messagerie')}}</td>
+              </tr>
+              <tr *ngIf="this.auth.isLoggedIn() && applicationUserContext.connectedUtilisateur.HabilitationModuleCollectivite && 1!=1" class="ev-module-tr">
+                <td class="ev-module-td-left"></td>
+                <td (click)="onModule('ModuleCollectivite')" [class]="moduleCollectiviteModuleStyle">{{applicationUserContext.getEnvModuleCulturedCaption('ModuleCollectivite')}}</td>
+              </tr>
+              <tr *ngIf="this.auth.isLoggedIn() && applicationUserContext.connectedUtilisateur.HabilitationQualite" class="ev-module-tr">
+                <td class="ev-module-td-left"></td>
+                <td (click)="onModule('Qualite')" [class]="qualiteModuleStyle">{{applicationUserContext.getEnvModuleCulturedCaption('Qualite')}}</td>
+              </tr>
+              <tr *ngIf="this.auth.isLoggedIn() && applicationUserContext.connectedUtilisateur.HabilitationModulePrestataire" class="ev-module-tr">
+                <td class="ev-module-td-left"></td>
+                <td (click)="onModule('ModulePrestataire')" [class]="modulePrestataireModuleStyle">{{applicationUserContext.getEnvModuleCulturedCaption('ModulePrestataire')}}</td>
+              </tr>
+            </table>
+          </div>
+          <div [@fadeInOnEnter] *ngIf="!menuModules
+                 && applicationUserContext.connectedUtilisateur.HabilitationLogistique!='Transporteur'
+                 && applicationUserContext.connectedUtilisateur.HabilitationLogistique!='CentreDeTri'
+                 && applicationUserContext.connectedUtilisateur.HabilitationLogistique!='Client'">
+            <table class="table-no-pad-no-space mat-subtitle-1" style="width:100%;">
+              <tr *ngIf="this.auth.isLoggedIn() && applicationUserContext.connectedUtilisateur.HabilitationLogistique" class="ev-module-tr">
+                <td class="ev-module-td-left"></td>
+                <td class="ev-module-current">{{applicationUserContext.getEnvModuleCulturedCaption(applicationUserContext.currentModule.name)}}</td>
+              </tr>
+            </table>
+          </div>
+          <div *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri" style="padding:10px;">
+            <button mat-raised-button color="accent" type="button" style="width:100%;height:60px;"
+                    (click)="onNew('LogistiqueMenuCommandeFournisseur')">
+              {{applicationUserContext.getCulturedRessourceText(1432).toUpperCase()}}
+            </button>
+          </div>
+          <mat-accordion displayMode="flat" *ngIf="!menuModules">
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn()
+                                   && (applicationUserContext.connectedUtilisateur.HabilitationAnnuaire)
+                                   && (applicationUserContext.connectedUtilisateur.Transporteur
+                                    || this.applicationUserContext.connectedUtilisateur.Client
+                                    || this.applicationUserContext.connectedUtilisateur.CentreDeTri
+                                    || this.applicationUserContext.connectedUtilisateur.Prestataire)"
+                                 [expanded]="panelInformationsExpanded" (opened)="setExpanded('panelInformationsExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(1428)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr>
+                  <td (click)="onMenu('MenuVisualisationAnnuaire')" [class]="menuVisualisationAnnuaireStyle">{{applicationUserContext.getEnvMenuCulturedCaption('MenuVisualisationAnnuaire')}}</td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('MenuDocuments')" [class]="menuDocumentsStyle">{{applicationUserContext.getEnvMenuCulturedCaption('MenuDocuments')}}</td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn()
+                                   && (applicationUserContext.currentModule.name==='Logistique'
+                                    || applicationUserContext.connectedUtilisateur.Client
+                                    || applicationUserContext.connectedUtilisateur.Transporteur
+                                    || applicationUserContext.connectedUtilisateur.CentreDeTri)
+                                   && applicationUserContext.connectedUtilisateur.HabilitationLogistique" [expanded]="panelLogistiqueExpanded" (opened)="setExpanded('panelLogistiqueExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(256)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                  <td (click)="onMenu('LogistiqueMenuCommandeClient')" [class]="logistiqueMenuCommandeClientStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuCommandeClient')}}</td>
+                  <td *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                    <button mat-icon-button (click)="onNew('LogistiqueMenuCommandeClient')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Client'
+                                || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri'">
+                  <td (click)="onMenu('LogistiqueMenuCommandeFournisseur')" [class]="logistiqueMenuCommandeFournisseurStyle"
+                      style="width:100%;">
+                    {{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuCommandeFournisseur')}}
+                  </td>
+                  <td *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri'">
+                    <button mat-icon-button (click)="onNew('LogistiqueMenuCommandeFournisseur')" matTooltip={{applicationUserContext.getCulturedRessourceText(1432)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                  <td (click)="onMenu('LogistiqueMenuRepartition')" [class]="logistiqueMenuRepartitionStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuRepartition')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                  <td (click)="onMenu('LogistiqueMenuImpression')" [class]="logistiqueMenuImpressionStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuImpression')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                  <td (click)="onMenu('LogistiqueMenuExportSAGE')" [class]="logistiqueMenuExportSAGEStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuExportSAGE')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                                || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                  <td (click)="onMenu('LogistiqueMenuPrixReprise')" [class]="logistiqueMenuPrixRepriseStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuPrixReprise')}}</td>
+                  <td *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                    <button mat-icon-button (click)="onNew('LogistiqueMenuPrixReprise')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'
+                      && applicationUserContext.connectedUtilisateur?.Transporteur?.VisibiliteAffretementCommun===true">
+                  <td (click)="onMenu('LogistiqueMenuTransportDemandeEnlevement')" [class]="logistiqueMenuTransportDemandeEnlevementStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuTransportDemandeEnlevement')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'">
+                  <td (click)="onMenu('LogistiqueMenuTransportCommandeModifiee')" [class]="logistiqueMenuTransportCommandeModifieesStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuTransportCommandeModifiee')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'">
+                  <td (click)="onMenu('LogistiqueMenuTransportCommandeEnCours')" [class]="logistiqueMenuTransportCommandeEnCoursStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuTransportCommandeEnCours')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'">
+                  <td (click)="onMenu('LogistiqueMenuTransportCommande')" [class]="logistiqueMenuTransportCommandeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuTransportCommande')}}</td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn() && applicationUserContext.currentModule.name==='Logistique'
+                                         && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')" [expanded]="panelTransportExpanded" (opened)="setExpanded('panelTransportExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(284)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr>
+                  <td (click)="onMenu('LogistiqueMenuTransportNonValide')" [class]="logistiqueMenuTransportNonValideStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuTransportNonValide')}}</td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('LogistiqueMenuModifierTransport')" [class]="logistiqueMenuModifierTransportStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuModifierTransport')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'">
+                  <td (click)="onMenu('LogistiqueMenuModifierTousPrixTransport')" [class]="logistiqueMenuModifierTousPrixTransportStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuModifierTousPrixTransport')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'">
+                  <td (click)="onMenu('LogistiqueMenuImporterTransport')" [class]="logistiqueMenuImporterTransportStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuImporterTransport')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                  <td (click)="onMenu('LogistiqueMenuSupprimerTransportEnMasse')" [class]="logistiqueMenuSupprimerTransportEnMasseStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuSupprimerTransportEnMasse')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                  <td (click)="onMenu('LogistiqueMenuSurcoutCarburant')" [class]="logistiqueMenuSurcoutCarburantStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuSurcoutCarburant')}}</td>
+                  <td *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                    <button mat-icon-button (click)="onNew('LogistiqueMenuSurcoutCarburant')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('LogistiqueMenuEtatCoutTransport')" [class]="logistiqueMenuEtatCoutTransportStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatCoutTransport')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                  <td (click)="onMenu('LogistiqueMenuEtatTarifTransporteurClient')" [class]="logistiqueMenuEtatTarifTransporteurClientStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatTarifTransporteurClient')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+                  <td (click)="onMenu('LogistiqueMenuPartMarcheTransporteur')" [class]="logistiqueMenuPartMarcheTransporteurStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuPartMarcheTransporteur')}}</td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn() && applicationUserContext.currentModule.name==='Administration'
+                               && (applicationUserContext.connectedUtilisateur.HabilitationAdministration==='Administrateur')"
+                                 [expanded]="panelParametreGeneralExpanded" (opened)="setExpanded('panelParametreGeneralExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(917)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuUtilisateur')" [class]="administrationMenuUtilisateurStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuUtilisateur')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuUtilisateur')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuSecurite')" [class]="administrationMenuSecuriteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuSecurite')}}</td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuUtilisateurInactif')" [class]="administrationMenuUtilisateurInactifStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuUtilisateurInactif')}}</td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuApplication')" [class]="administrationMenuApplicationStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuApplication')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuApplication')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuApplicationProduitOrigine')" [class]="administrationMenuApplicationProduitOrigineStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuApplicationProduitOrigine')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuApplicationProduitOrigine')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuClientApplication')" [class]="administrationMenuClientApplicationStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuClientApplication')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuClientApplication')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuProduit')" [class]="administrationMenuProduitStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuProduit')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuProduit')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuProduitGroupeReportingType')" [class]="administrationMenuProduitGroupeReportingTypeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuProduitGroupeReportingType')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuProduitGroupeReportingType')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuProduitGroupeReporting')" [class]="administrationMenuProduitGroupeReportingStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuProduitGroupeReporting')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuProduitGroupeReporting')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuRegionReporting')" [class]="administrationMenuRegionReportingStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuRegionReporting')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuRegionReporting')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuProcess')" [class]="administrationMenuProcessStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuProcess')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuProcess')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuStandard')" [class]="administrationMenuStandardStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuStandard')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuStandard')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuRessource')" [class]="administrationMenuRessourceStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuRessource')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuRessource')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuParamEmail')" [class]="administrationMenuParamEmailStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuParamEmail')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuParamEmail')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuEquivalentCO2')" [class]="administrationMenuEquivalentCO2Style">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuEquivalentCO2')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuEquivalentCO2')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuParametre')" [class]="administrationMenuParametreStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuParametre')}}</td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuAide')" [class]="administrationMenuAideStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuAide')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuAide')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn() && applicationUserContext.currentModule.name==='Administration'
+                               && (applicationUserContext.connectedUtilisateur.HabilitationAdministration==='Administrateur')"
+                                 [expanded]="panelParametreAdminAnnuaireExpanded" (opened)="setExpanded('panelParametreAdminAnnuaireExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(934)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuEntiteType')" [class]="administrationMenuEntiteTypeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuEntiteType')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuEntiteType')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuAdresseType')" [class]="administrationMenuAdresseTypeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuAdresseType')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuAdresseType')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuPays')" [class]="administrationMenuPaysStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuPays')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuPays')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuTitre')" [class]="administrationMenuTitreStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuTitre')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuTitre')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuCivilite')" [class]="administrationMenuCiviliteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuCivilite')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuCivilite')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuService')" [class]="administrationMenuServiceStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuService')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuService')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuFonction')" [class]="administrationMenuFonctionStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuFonction')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuFonction')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuFormeContact')" [class]="administrationMenuFormeContactStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuFormeContact')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuFormeContact')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuActionType')" [class]="administrationMenuActionTypeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuActionType')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuActionType')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuRepriseType')" [class]="administrationMenuRepriseTypeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuRepriseType')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuRepriseType')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuRepreneur')" [class]="administrationMenuRepreneurStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuRepreneur')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuRepreneur')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuEquipementier')" [class]="administrationMenuEquipementierStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuEquipementier')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuEquipementier')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuFournisseurTO')" [class]="administrationMenuFournisseurTOStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuFournisseurTO')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuFournisseurTO')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuRegionEE')" [class]="administrationMenuRegionEEStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuRegionEE')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuRegionEE')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuEcoOrganisme')" [class]="administrationMenuEcoOrganismeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuEcoOrganisme')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuEcoOrganisme')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuDocument')" [class]="administrationMenuDocumentStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuDocument')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuDocument')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn() && applicationUserContext.currentModule.name==='Annuaire'
+                                   && (applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Utilisateur'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur')"
+                                 [expanded]="panelGestionEntiteExpanded" (opened)="setExpanded('panelGestionEntiteExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(1123)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Utilisateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur')">
+                  <td (click)="onMenu('AnnuaireMenuEntite')" [class]="annuaireMenuEntiteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AnnuaireMenuEntite')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AnnuaireMenuEntite')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn() && applicationUserContext.currentModule.name==='Administration'
+                               && (applicationUserContext.connectedUtilisateur.HabilitationAdministration==='Administrateur')"
+                                 [expanded]="panelParametreLogistiqueExpanded" (opened)="setExpanded('panelParametreLogistiqueExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(262)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuSAGECodeTransport')" [class]="administrationMenuSAGECodeTransportStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuSAGECodeTransport')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuSAGECodeTransport')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuTicket')" [class]="administrationMenuTicketStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuTicket')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuTicket')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuJourFerie')" [class]="administrationMenuJourFerieStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuJourFerie')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuJourFerie')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuMotifAnomalieChargement')" [class]="administrationMenuMotifAnomalieChargementStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuMotifAnomalieChargement')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuMotifAnomalieChargement')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuMotifAnomalieClient')" [class]="administrationMenuMotifAnomalieClientStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuMotifAnomalieClient')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuMotifAnomalieClient')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuMotifAnomalieTransporteur')" [class]="administrationMenuMotifAnomalieTransporteurStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuMotifAnomalieTransporteur')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuMotifAnomalieTransporteur')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuMotifCamionIncomplet')" [class]="administrationMenuMotifCamionIncompletStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuMotifCamionIncomplet')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuMotifCamionIncomplet')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuCamionType')" [class]="administrationMenuCamionTypeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuCamionType')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuCamionType')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuModeTransportEE')" [class]="administrationMenuModeTransportEEStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuModeTransportEE')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuModeTransportEE')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn() && applicationUserContext.currentModule.name==='Administration'
+                               && (applicationUserContext.connectedUtilisateur.HabilitationAdministration==='Administrateur')"
+                                 [expanded]="panelParametreMessagerieExpanded" (opened)="setExpanded('panelParametreMessagerieExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(10000)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuMessageType')" [class]="administrationMenuMessageTypeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuMessageType')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuMessageType')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn() && applicationUserContext.currentModule.name==='Administration'
+                               && (applicationUserContext.connectedUtilisateur.HabilitationAdministration==='Administrateur')"
+                                 [expanded]="panelParametreQualiteExpanded" (opened)="setExpanded('panelParametreQualiteExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(738)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuDescriptionReception')" [class]="administrationMenuDescriptionReceptionStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuDescriptionReception')}}</td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuDescriptionCVQ')" [class]="administrationMenuDescriptionCVQStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuDescriptionCVQ')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuDescriptionCVQ')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuDescriptionControle')" [class]="administrationMenuDescriptionControleStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuDescriptionControle')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuDescriptionControle')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuNonConformiteDemandeClientType')" [class]="administrationMenuNonConformiteDemandeClientTypeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuNonConformiteDemandeClientType')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuNonConformiteDemandeClientType')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuNonConformiteNature')" [class]="administrationMenuNonConformiteNatureStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuNonConformiteNature')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuNonConformiteNature')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuNonConformiteFamille')" [class]="administrationMenuNonConformiteFamilleStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuNonConformiteFamille')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuNonConformiteFamille')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuNonConformiteReponseFournisseurType')" [class]="administrationMenuNonConformiteReponseFournisseurTypeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuNonConformiteReponseFournisseurType')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuNonConformiteReponseFournisseurType')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuNonConformiteReponseClientType')" [class]="administrationMenuNonConformiteReponseClientTypeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuNonConformiteReponseClientType')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuNonConformiteReponseClientType')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('AdministrationMenuMontantIncitationQualite')" [class]="administrationMenuMontantIncitationQualiteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuMontantIncitationQualite')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('AdministrationMenuMontantIncitationQualite')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn() && applicationUserContext.currentModule.name==='Messagerie' && applicationUserContext.connectedUtilisateur.HabilitationMessagerie" [expanded]="panelMessagerieExpanded" (opened)="setExpanded('panelMessagerieExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(259)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr>
+                  <td (click)="onMenu('MessagerieMenuMessage')" [class]="messagerieMenuMessageStyle">{{applicationUserContext.getEnvMenuCulturedCaption('MessagerieMenuMessage')}}</td>
+                  <td>
+                    <button mat-icon-button (click)="onNew('MessagerieMenuMessage')" matTooltip={{applicationUserContext.getCulturedRessourceText(494)}} type="button"><mat-icon aria-label="Nouveau">add_box</mat-icon></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('MessagerieMenuVisualisation')" [class]="messagerieMenuVisualisationStyle">{{applicationUserContext.getEnvMenuCulturedCaption('MessagerieMenuVisualisation')}}</td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn()
+                                   && (applicationUserContext.currentModule.name==='Qualite' || applicationUserContext.connectedUtilisateur.Client)
+                                   && applicationUserContext.connectedUtilisateur.HabilitationQualite" [expanded]="panelQualiteExpanded" (opened)="setExpanded('panelQualiteExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(264)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr>
+                  <td (click)="onMenu('QualiteMenuControle')" [class]="qualiteMenuControleStyle">{{applicationUserContext.getEnvMenuCulturedCaption('QualiteMenuControle')}}</td>
+                </tr>
+                <tr>
+                  <td (click)="onMenu('QualiteMenuNonConformite')" [class]="qualiteMenuNonConformiteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('QualiteMenuNonConformite')}}</td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn()
+                                   && (
+                                      (applicationUserContext.currentModule.name==='Logistique'
+                                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'))
+                                    ||(applicationUserContext.currentModule.name==='Qualite'
+                                      && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'))
+                                    ||(applicationUserContext.currentModule.name==='Annuaire'
+                                      && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'))
+                                    ||(applicationUserContext.currentModule.name==='Administration'
+                                      && applicationUserContext.connectedUtilisateur.HabilitationAdministration==='Administrateur')
+                                    || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client'
+                                    || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri'
+                                   )" [expanded]="panelStatistiqueExpanded" (opened)="setExpanded('panelStatistiqueExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(258)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuLotDisponible')" [class]="logistiqueMenuLotDisponibleStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuLotDisponible')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri')">
+                  <td (click)="onMenu('LogistiqueMenuDelaiCommandeEnlevement')" [class]="logistiqueMenuDelaiCommandeEnlevementStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuDelaiCommandeEnlevement')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuSuiviCommandeClient')" [class]="logistiqueMenuSuiviCommandeClientStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuSuiviCommandeClient')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuSuiviCommandeClientProduit')" [class]="logistiqueMenuSuiviCommandeClientProduitStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuSuiviCommandeClientProduit')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatReceptionFournisseurChargement')" [class]="logistiqueMenuEtatReceptionFournisseurChargementStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatReceptionFournisseurChargement')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatReception')" [class]="logistiqueMenuEtatReceptionStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatReception')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatReceptionProduit')" [class]="logistiqueMenuEtatReceptionProduitStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatReceptionProduit')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatReceptionProduitDR')" [class]="logistiqueMenuEtatReceptionProduitDRStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatReceptionProduitDR')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuExtractionReception')" [class]="logistiqueMenuExtractionReceptionStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuExtractionReception')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuExtractionCommande')" [class]="logistiqueMenuExtractionCommandeStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuExtractionCommande')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatDesPoids')" [class]="logistiqueMenuEtatDesPoidsStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatDesPoids')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatKmMoyen')" [class]="logistiqueMenuEtatKmMoyenStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatKmMoyen')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatTonnageParProcess')" [class]="logistiqueMenuEtatTonnageParProcessStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatTonnageParProcess')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatVenteAnnuelleProduitClient')" [class]="logistiqueMenuEtatVenteAnnuelleProduitClientStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatVenteAnnuelleProduitClient')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatDestinationAnnuelleProduitClient')" [class]="logistiqueMenuEtatDestinationAnnuelleProduitClientStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatDestinationAnnuelleProduitClient')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuSuiviFacturationHC')" [class]="logistiqueMenuSuiviFacturationHCStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuSuiviFacturationHC')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuTonnageCollectiviteProduit')" [class]="logistiqueMenuTonnageCollectiviteProduitStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuTonnageCollectiviteProduit')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuTonnageCDTProduitComposant')" [class]="logistiqueMenuTonnageCDTProduitComposantStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuTonnageCDTProduitComposant')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuTonnageCLSousContrat')" [class]="logistiqueMenuTonnageCLSousContratStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuTonnageCLSousContrat')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuChargementAnnule')" [class]="logistiqueMenuChargementAnnuleStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuChargementAnnule')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuListeProduit')" [class]="logistiqueMenuListeProduitStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuListeProduit')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Qualite'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'))
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client'">
+                  <td (click)="onMenu('QualiteMenuEtatControleReception')" [class]="qualiteMenuEtatControleReceptionStyle">{{applicationUserContext.getEnvMenuCulturedCaption('QualiteMenuEtatControleReception')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Qualite'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'))
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client'">
+                  <td (click)="onMenu('QualiteMenuRepartitionControleClient')" [class]="qualiteMenuRepartitionControleClientStyle">{{applicationUserContext.getEnvMenuCulturedCaption('QualiteMenuRepartitionControleClient')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Qualite'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'))
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client'">
+                  <td (click)="onMenu('QualiteMenuExtractionFicheControle')" [class]="qualiteMenuExtractionFicheControleStyle">{{applicationUserContext.getEnvMenuCulturedCaption('QualiteMenuExtractionFicheControle')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Qualite'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'))
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client'">
+                  <td (click)="onMenu('QualiteMenuExtractionCVQ')" [class]="qualiteMenuExtractionCVQStyle">{{applicationUserContext.getEnvMenuCulturedCaption('QualiteMenuExtractionCVQ')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Qualite'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'))
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client'">
+                  <td (click)="onMenu('QualiteMenuExtractionControle')" [class]="qualiteMenuExtractionControleStyle">{{applicationUserContext.getEnvMenuCulturedCaption('QualiteMenuExtractionControle')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Qualite'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'))
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client'">
+                  <td (click)="onMenu('QualiteMenuExtractionNonConformite')" [class]="qualiteMenuExtractionNonConformiteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('QualiteMenuExtractionNonConformite')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Qualite'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationQualite==='Utilisateur'))">
+                  <td (click)="onMenu('QualiteMenuEtatIncitationQualite')" [class]="qualiteMenuEtatIncitationQualiteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('QualiteMenuEtatIncitationQualite')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Annuaire'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Utilisateur'))">
+                  <td (click)="onMenu('AnnuaireMenuExtractionAnnuaire')" [class]="annuaireMenuExtractionAnnuaireStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AnnuaireMenuExtractionAnnuaire')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Annuaire'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Utilisateur'))">
+                  <td (click)="onMenu('AnnuaireMenuExtractionAction')" [class]="annuaireMenuExtractionActionStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AnnuaireMenuExtractionAction')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Annuaire'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Utilisateur'))">
+                  <td (click)="onMenu('AnnuaireMenuEvolutionTonnage')" [class]="annuaireMenuEvolutionTonnageStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AnnuaireMenuEvolutionTonnage')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.currentModule.name==='Annuaire'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Utilisateur'))">
+                  <td (click)="onMenu('AnnuaireMenuNbAffretementTransporteur')" [class]="annuaireMenuNbAffretementTransporteurStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AnnuaireMenuNbAffretementTransporteur')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Administration'
+                      && applicationUserContext.connectedUtilisateur.HabilitationAdministration==='Administrateur'">
+                  <td (click)="onMenu('AdministrationMenuSuiviLogin')" [class]="administrationMenuSuiviLoginStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuSuiviLogin')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Administration'
+                      && applicationUserContext.connectedUtilisateur.HabilitationAdministration==='Administrateur'">
+                  <td (click)="onMenu('AdministrationMenuExtractionLogin')" [class]="administrationMenuExtractionLoginStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AdministrationMenuExtractionLogin')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri')">
+                  <td (click)="onMenu('LogistiqueMenuEtatDesEnlevements')" [class]="logistiqueMenuEtatDesEnlevementsStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatDesEnlevements')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri')">
+                  <td (click)="onMenu('LogistiqueMenuPoidsMoyenChargementProduit')" [class]="logistiqueMenuPoidsMoyenChargementProduitStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuPoidsMoyenChargementProduit')}}</td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn()
+                                   && (
+                                    (applicationUserContext.currentModule.name==='Logistique'
+                                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'))
+                                   )" [expanded]="panelStatistiqueCITEOExpanded" (opened)="setExpanded('panelStatistiqueCITEOExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(910)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatReceptionEmballagePlastique')" [class]="logistiqueMenuEtatReceptionEmballagePlastiqueStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatReceptionEmballagePlastique')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatSuiviTonnageRecycleur')" [class]="logistiqueMenuEtatSuiviTonnageRecycleurStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatSuiviTonnageRecycleur')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatDesFluxDev')" [class]="logistiqueMenuEtatDesFluxDevStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatDesFluxDev')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuExtractionLeko')" [class]="logistiqueMenuExtractionLekoStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuExtractionLeko')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuEtatDesFluxDevLeko')" [class]="logistiqueMenuEtatDesFluxDevLekoStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuEtatDesFluxDevLeko')}}</td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn() && applicationUserContext.currentModule.name==='Annuaire'
+                                   && applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur'"
+                                 [expanded]="panelParametreAnnuaireExpanded" (opened)="setExpanded('panelParametreAnnuaireExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(1005)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur')">
+                  <td (click)="onMenu('AnnuaireMenuIncitationQualite')" [class]="annuaireMenuIncitationQualiteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AnnuaireMenuIncitationQualite')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur')">
+                  <td (click)="onMenu('AnnuaireMenuEmailNoteCreditCollectivite')" [class]="annuaireMenuEmailNoteCreditCollectiviteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AnnuaireMenuEmailNoteCreditCollectivite')}}</td>
+                </tr>
+                <tr *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur')">
+                  <td (click)="onMenu('AnnuaireMenuSuiviEnvois')" [class]="annuaireMenuSuiviEnvoisStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AnnuaireMenuSuiviEnvois')}}</td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn()
+                                   && applicationUserContext.connectedUtilisateur.HabilitationModulePrestataire" [expanded]="panelModulePrestataireExpanded" (opened)="setExpanded('panelModulePrestataireExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(1250)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationModulePrestataire==='Fournisseur'
+                                || applicationUserContext.connectedUtilisateur.HabilitationModulePrestataire==='Administrateur'">
+                  <td (click)="onMenu('ModulePrestataireMenuCommandeFournisseur')" [class]="modulePrestataireMenuCommandeFournisseurStyle"
+                      style="width:100%;">
+                    {{applicationUserContext.getEnvMenuCulturedCaption('ModulePrestataireMenuCommandeFournisseur')}}
+                  </td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="this.auth.isLoggedIn()
+                                   && applicationUserContext.currentModule.name==='ModuleCollectivite'
+                                   && applicationUserContext.connectedUtilisateur.HabilitationModuleCollectivite=='Administrateur'" [expanded]="panelModuleCollectiviteExpanded" (opened)="setExpanded('panelModuleCollectiviteExpanded')">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{applicationUserContext.getCulturedRessourceText(1340)}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <table>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationModuleCollectivite==='Administrateur'">
+                  <td (click)="onMenu('ModuleCollectiviteMenuAccueil')" [class]="moduleCollectiviteMenuAccueilStyle"
+                      style="width:100%;">
+                    {{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuAccueil')}}
+                  </td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationModuleCollectivite==='Administrateur'">
+                  <td (click)="onMenu('ModuleCollectiviteMenuDocuments')" [class]="moduleCollectiviteMenuDocumentsStyle"
+                      style="width:100%;">
+                    {{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuDocuments')}}
+                  </td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationModuleCollectivite==='Administrateur'">
+                  <td (click)="onMenu('ModuleCollectiviteMenuPrixReprise')" [class]="moduleCollectiviteMenuPrixRepriseStyle"
+                      style="width:100%;">
+                    {{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuPrixReprise')}}
+                  </td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationModuleCollectivite==='Administrateur'">
+                  <td (click)="onMenu('ModuleCollectiviteMenuStatistiques')" [class]="moduleCollectiviteMenuStatistiquesStyle"
+                      style="width:100%;">
+                    {{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuStatistiques')}}
+                  </td>
+                </tr>
+                <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationModuleCollectivite==='Administrateur'">
+                  <td (click)="onMenu('ModuleCollectiviteMenuVisualisationAnnuaire')" [class]="moduleCollectiviteMenuVisualisationAnnuaireStyle"
+                      style="width:100%;">
+                    {{applicationUserContext.getEnvMenuCulturedCaption('ModuleCollectiviteMenuVisualisationAnnuaire')}}
+                  </td>
+                </tr>
+              </table>
+            </mat-expansion-panel>
+          </mat-accordion>
+          <div class="background-color-primary">
+          <div *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri
+               || applicationUserContext.connectedUtilisateur.Client
+               || applicationUserContext.connectedUtilisateur.Transporteur" style="padding:20px 10px 20px 10px; margin: 20px 0 0 0; border-radius:20px"
+               class="background-color-primary-dark">
+            <table class="table-no-pad-no-space" style="width:100%; text-align:center;">
+              <tr>
+                <td style="padding:5px;"><img src="assets/images/contact.svg" /></td>
+              </tr>
+              <tr>
+                <td style="padding:10px 10px 20px 10px; color: white; font-size:1.2em;">{{applicationUserContext.getCulturedRessourceText(1441)}}</td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.Client">
+                <td class="mat-small color-primary-light-light" style="padding: 0 10px 0 10px;">{{applicationUserContext.getCulturedRessourceText(29)}}</td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.Client && contactQualiteTel">
+                <td style="padding:0 10px 0 10px;" class="mat-small color-white">{{contactQualiteTel}}</td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.Client">
+                <td style="padding:0 10px 0 10px;" class="mat-small color-white"><a [href]="'mailto:' + contactQualiteEmail" class="ev-hl-white">{{contactQualiteEmail}}</a></td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri">
+                <td class="mat-small color-primary-light-light" style="padding: 0 10px 0 10px;">{{applicationUserContext.getCulturedRessourceText(1019)}}</td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri">
+                <td class="mat-body-strong color-accent" style="padding: 0 10px 0 10px;">{{getEntiteDR()?.DR?.Nom}}</td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri">
+                <td style="padding:0 10px 0 10px;" class="mat-small color-white">{{getEntiteDR()?.DR?.TelMobile}}</td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri">
+                <td style="padding:0 10px 0 10px;" class="mat-small color-white"><a [href]="'mailto:' + getEntiteDR()?.DR?.EMail" class="ev-hl-white">{{getEntiteDR()?.DR?.EMail}}</a></td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri">
+                <td style="padding: 0 10px 0 10px;"><a [href]="'mailto:' + entiteDR?.DR?.EMail" class="ev-hl-white">{{entiteDR?.DR?.EMail}}</a></td>
+              </tr>
+              <tr>
+                <td *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri
+                    || applicationUserContext.connectedUtilisateur.Client" style="padding:10px 80px 10px 80px;"><mat-divider style="border-top-width:thin !important" class="border-top-color-primary-light-light"></mat-divider></td>
+              </tr>
+              <tr>
+                <td class="mat-small color-primary-light-light" style="padding: 0 10px 0 10px;">{{applicationUserContext.getCulturedRessourceText(1440)}}</td>
+              </tr>
+              <tr>
+                <td *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri" style="padding:0 10px 0 10px;" class="mat-small color-white">{{responsableLogistiqueADVTel}}</td>
+              </tr>
+              <tr>
+                <td style="padding:0 10px 0 10px;" class="mat-small color-white"><a [href]="'mailto:' + responsableLogistiqueADVEmail" class="ev-hl-white">{{responsableLogistiqueADVEmail}}</a></td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri">
+                <td style="padding:10px 80px 10px 80px;"><mat-divider style="border-top-width:thin !important" class="border-top-color-primary-light-light"></mat-divider></td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri">
+                <td class="mat-small color-primary-light-light" style="padding: 0 10px 0 10px;">{{applicationUserContext.getCulturedRessourceText(432)}}</td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri">
+                <td class="mat-body-strong color-accent" style="padding: 0 10px 0 10px;">{{contactAdministratifNom}}</td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri">
+                <td style="padding:0 10px 0 10px;" class="mat-small color-white">{{contactAdministratifTel}}</td>
+              </tr>
+              <tr *ngIf="applicationUserContext.connectedUtilisateur.CentreDeTri">
+                <td style="padding:0 10px 0 10px;" class="mat-small color-white"><a [href]="'mailto:' + entiteDR?.DR?.EMail" class="ev-hl-white">{{contactAdministratifEmail}}</a></td>
+              </tr>
+            </table>
+            </div>
+          </div>
+        </div>
+        <div class="mat-small background-color-primary" style="text-align:center; padding:10px;">
+          <table class="table-no-pad-no-space" style="width:100%;">
+            <tr>
+              <td style="padding:5px;"><img src="assets/images/logo-valorplast-mini.svg" /></td>
+            </tr>
+            <tr>
+              <td style="padding:5px; font-size:1.3em;"><a href="https://www.valorplast.com" target="_blank" class="ev-hl-white">VALORPLAST.COM</a></td>
+            </tr>
+            <tr>
+              <td style="padding:5px; cursor:pointer;" class="ev-hl-primary-light-light"
+                   (click)="onMentionsLegales()">{{applicationUserContext.getCulturedRessourceText(765)}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div [@routeAnimations]="prepareRoute(outlet)" style="height:100%;">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

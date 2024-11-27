@@ -1,0 +1,94 @@
+<form [formGroup]="form" class="ev-horizontal-container">
+  <div class="boxTripleSize">
+    <table class="cadre_primary">
+      <tr>
+        <td class="cadre_header_primary">
+          <table class="table-no-pad-no-space">
+            <tr style="vertical-align:middle;">
+              <td>
+                <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+              </td>
+              <td style="width:100%;">
+                {{applicationUserContext.getCulturedRessourceText(51)}}
+              </td>
+              <td class="valign-center">
+                <button mat-icon-button class="ev-button-left" type="button" (click)="onDelete();" *ngIf="!locked">
+                  <mat-icon aria-label="Delete">delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="cadre_body">
+          <table class="table-no-pad-no-space">
+            <tr style="vertical-align:top;">
+              <td>
+                <mat-form-field class="ev-date-picker" style="width:100%;">
+                  <mat-label>{{applicationUserContext.getCulturedRessourceText(22)}}</mat-label>
+                  <input matInput [matDatepicker]="pickerDCVQ" formControlName="DCVQ" required [errorStateMatcher]="matcher">
+                  <mat-datepicker-toggle matIconPrefix [for]="pickerDCVQ"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerDCVQ></mat-datepicker>
+                  <button *ngIf="form.get('DCVQ').value && form.get('DCVQ').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="form.get('DCVQ').setValue(null);">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error align="end" *ngIf="form.get('DCVQ').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                </mat-form-field>
+                <mat-form-field style="width:100%;">
+                  <mat-label>{{applicationUserContext.getCulturedRessourceText(20)}}</mat-label>
+                  <mat-select formControlName="CVQControleurList" required [errorStateMatcher]="matcher">
+                    <mat-option *ngFor="let contactAdresse of cVQControleurList" [value]="contactAdresse.RefContactAdresse">{{contactAdresse.ListText}}</mat-option>
+                  </mat-select>
+                  <button *ngIf="form.get('CVQControleurList').value && form.get('CVQControleurList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('CVQControleurList').setValue(null)" tabindex="-1" type="button">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <button *ngIf="form.get('CVQControleurList').value" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CVQControleur', form.get('CVQControleurList').value); " tabindex="-1" type="button">
+                    <mat-icon>details</mat-icon>
+                  </button>
+                  <mat-error align="end" *ngIf="(form.get('CVQControleurList').touched || form.get('CVQControleurList').dirty) && form.get('CVQControleurList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                </mat-form-field>
+                <mat-form-field style="width:100%;">
+                  <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+                  <textarea matInput formControlName="Cmt" style="height:300px;"></textarea>
+                  <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </td>
+              <td style="width:20px;"></td>
+              <td>
+                <table class="fixed_headers_cvq_description_cvqs table-no-pad-no-space">
+                  <tbody formArrayName="CVQDescriptionCVQs">
+                    <tr [formGroupName]="i" *ngFor="let group of getFormData.controls; let i=index">
+                      <td style="padding: 5px 5px 0px 5px; text-align:right;">
+                        {{cVQ.CVQDescriptionCVQs[i].LibelleCultured}}
+                      </td>
+                      <td style="padding: 5px 5px 0px 5px;">
+                        <mat-form-field style="width:100%;">
+                          <mat-label>{{applicationUserContext.getCulturedRessourceText(28)}}</mat-label>
+                          <input matInput formControlName="Nb" type="number" pattern="^[0-9]+$" [errorStateMatcher]="matcher" />
+                          <button *ngIf="group.get('Nb').value!=null && group.get('Nb').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Nb').setValue(null)" tabindex="-1" type="button">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <mat-error align="end" *ngIf="group.get('Nb').errors?.max">
+                            {{applicationUserContext.getCulturedRessourceText(573) + (group.get('Nb').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                          </mat-error>
+                          <mat-hint align="end" class="color-accent-dark">{{applicationUserContext.getCulturedRessourceText(747)}}&nbsp;=&nbsp;{{cVQ.CVQDescriptionCVQs[i].LimiteBasse}}&nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(748)}}&nbsp;=&nbsp;{{cVQ.CVQDescriptionCVQs[i].LimiteHaute}}</mat-hint>
+                        </mat-form-field>
+                      </td>
+                      <td [class]="getQualityCss(group.get('Nb').value, cVQ.CVQDescriptionCVQs[i].LimiteBasse, cVQ.CVQDescriptionCVQs[i].LimiteHaute)"
+                          style="text-align:center; border:10px solid white; border-collapse:collapse;">
+                        {{getQuality(group.get('Nb').value, cVQ.CVQDescriptionCVQs[i].LimiteBasse, cVQ.CVQDescriptionCVQs[i].LimiteHaute)}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</form>

@@ -1,0 +1,16 @@
+<div class="mat-typography dialog-border-primary">
+  <h1 mat-dialog-title>{{data.title}}</h1>
+  <div mat-dialog-content *ngIf="data.message">
+    {{data.message}}
+    <ul style="list-style:none;" *ngIf="data.browserCompat">
+      <li class="browser"><a href="https://www.mozilla.org/firefox" class="ev-hl-grey"><img width="72" height="72" alt="" src="assets/images/firefox.png"><h3>Mozilla Firefox</h3></a></li>
+      <li class="browser"><a href="https://www.google.com/chrome" class="ev-hl-grey"><img width="72" height="72" alt="" src="assets/images/chrome.png"><h3>Google Chrome</h3></a></li>
+      <li class="browser"><a href="https://www.microsoft.com/edge" class="ev-hl-grey"><img width="72" height="72" alt="" src="assets/images/edgium.png"><h3>Microsoft Edge</h3></a></li>
+    </ul>
+  </div>
+  <div mat-dialog-content [innerHTML]="data.htmlMessage">
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close="ok" cdkFocusInitial *ngIf="!data.browserCompat">{{applicationUserContext.getCulturedRessourceText(45)}}</button>
+  </div>
+</div>

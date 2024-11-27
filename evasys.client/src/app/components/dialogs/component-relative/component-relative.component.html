@@ -1,0 +1,83 @@
+<div class="mat-typography">
+  <h1 mat-dialog-title class="color-accent-dark" *ngIf="data?.changeProfil && data?.changeProfil==true">
+  {{data.type=='Utilisateur' && data.elementType=='ResetPwd'? applicationUserContext.getCulturedRessourceText(1089) : data.title}}</h1>
+  <div>
+    <utilisateur-simple *ngIf="data.type=='Utilisateur'"
+                        [refUtilisateur]="data.ref" [type]="data.type" (askClose)="closeAsked($event)"></utilisateur-simple>
+    <adresse-simple *ngIf="data.type=='CommandeFournisseurAdresse'
+                      || data.type=='CommandeFournisseurClientAdresse'
+                      || data.type=='CommandeClientAdresse'"
+                    [refAdresse]="data.ref" [type]="data.type"
+                    (askClose)="closeAsked($event)"></adresse-simple>
+    <contact-adresse-simple *ngIf="data.type=='CommandeFournisseurContactAdresse'
+                                || data.type=='CommandeFournisseurTransporteurContactAdresse'
+                                || data.type=='CommandeFournisseurClientContactAdresse'
+                                || data.type=='ControleControleur'|| data.type=='CVQControleur'"
+                            [refContactAdresse]="data.ref" [type]="data.type"
+                            (askClose)="closeAsked($event)"></contact-adresse-simple>
+    <action *ngIf="data.type=='AnnuaireAction'"
+            [refAction]="data.ref" [type]="data.type" [entite]="data.entite" [a]="data.action"
+            (askClose)="closeAsked($event)"></action>
+    <adresse *ngIf="data.type=='AnnuaireAdresse'"
+             [refAdresse]="data.ref" [type]="data.type" [ent]="data.entite" [adr]="data.adresse"
+             (askClose)="closeAsked($event)"></adresse>
+    <contact-adresse *ngIf="data.type=='AnnuaireContactAdresse'"
+                     [refContactAdresse]="data.ref" [type]="data.type" [entite]="data.entite"
+                     [cA]="data.contactAdresse" [adresseList]="data.adresseList"
+                     (askClose)="closeAsked($event)"></contact-adresse>
+    <contact-adresse-service-fonction *ngIf="data.type=='AnnuaireContactAdresseServiceFonction'"
+                                      [refContactAdresseServiceFonction]="data.ref" [type]="data.type" [contactAdresse]="data.contactAdresse"
+                                      [cASF]="data.cASF"
+                                      (askClose)="closeAsked($event)"></contact-adresse-service-fonction>
+    <entite-camion-type *ngIf="data.type=='AnnuaireEntiteCamionType'"
+                        [refEntiteCamionType]="data.ref" [type]="data.type" [entite]="data.entite"
+                        [eCT]="data.entiteCamionType" [refEntiteType]="data.refEntiteType"
+                        (askClose)="closeAsked($event)"></entite-camion-type>
+    <contrat-incitation-qualite *ngIf="data.type=='ContratIncitationQualite'"
+                                [type]="data.type" [entite]="data.entite"
+                                [contratIncitationQualite]="data.contratIncitationQualite"
+                                (askClose)="closeAsked($event)"></contrat-incitation-qualite>
+    <contrat-collectivite *ngIf="data.type=='ContratCollectivite'"
+                          [type]="data.type" [entite]="data.entite"
+                          [contratCollectivite]="data.contratCollectivite"
+                          (askClose)="closeAsked($event)"></contrat-collectivite>
+    <entite-entite *ngIf="data.type=='AnnuaireEntiteEntite'"
+                   [refEntiteEntite]="data.ref" [type]="data.type" [entite]="data.entite"
+                   [eE]="data.entiteEntite" [refEntiteType]="data.refEntiteType"
+                   (askClose)="closeAsked($event)"></entite-entite>
+    <entite-produit *ngIf="data.type=='AnnuaireEntiteProduit'"
+                    [refEntiteProduit]="data.ref" [type]="data.type" [entite]="data.entite"
+                    [eP]="data.entiteProduit"
+                    (askClose)="closeAsked($event)"></entite-produit>
+    <transport-simple *ngIf="data.type=='CommandeFournisseurTransport'" [refAdresseOrigine]="data.ref"
+                      [refAdresseDestination]="data.ref1" [refTransporteur]="data.ref2" [refCamionType]="data.ref3"
+                      [type]="data.type" (askClose)="closeAsked($event)"></transport-simple>
+    <cible *ngIf="data.type==='Cible'" [type]="data.type" [refTransporteur]="data.refTransporteur"
+           [refFournisseur]="data.refFournisseur" [refAdresseFournisseur]="data.refAdresseFournisseur"
+           [refProduit]="data.refProduit" [refCamionType]="data.refCamionType" [refClient]="data.refClient"
+           [dMoisDechargementPrevu]="data.dMoisDechargementPrevu" (askClose)="closeAsked($event)"></cible>
+    <grid-simple *ngIf="data.type==='Mixte' || data.type==='TransporteurForUtilisateur' || data.type==='CentreDeTriForUtilisateur'
+                 || data.type==='CollectiviteForUtilisateur' || data.type==='ClientForUtilisateur' || data.type==='PrestataireForUtilisateur'
+                 || data.type==='UtilisateurMaitreForUtilisateur'
+                 || data.type==='EntiteForDocument' || data.type==='AnnuaireAdresseInactive'
+                 || data.type==='AnnuaireContactAdresseInactive'|| data.type==='ContactModificationRequest'"
+                 [type]="data.type" (askClose)="closeAsked($event)" [dataItems]="data.dataItems" [exclude]="data.exclude"></grid-simple>
+    <message-visualisations *ngIf="data.type=='MessageVisualisations'"
+                            [refMessage]="data.ref"></message-visualisations>
+    <transport-concurrence *ngIf="data.type=='TransportConcurrence'"
+                           [refTransport]="data.ref"></transport-concurrence>
+    <profils *ngIf="data.type=='Profils'"
+                           [changeProfil]="data.changeProfil" (askClose)="closeAsked($event)"></profils>
+    <table *ngIf="data.type==='ImageGallery'" class="table-no-pad-no-space" style="width: 100%; display:block; padding: 0 0 20px 0">
+      <tr>
+        <td style="width:50%;"></td>
+        <td>
+          <image-gallery *ngIf="data.type==='ImageGallery'" [elementType]="data.elementType"
+                         [elementId]="data.ref" [pictureId]="data.pictureId"></image-gallery>
+        </td>
+        <td style="width:50%;"></td>
+      </tr>
+    </table>
+    <document-entite *ngIf="data.type==='DocumentEntite'" [refEntite]="data.refEntite"></document-entite>
+  </div>
+</div>

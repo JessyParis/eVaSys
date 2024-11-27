@@ -1,0 +1,19 @@
+<div class="ev-main-container">
+  <p *ngIf="documentEntites?.length==0">{{applicationUserContext.getCulturedRessourceText(1199)}}</p>
+  <table class="table-no-pad-no-space" style="width:100%; margin: 10px 0 0 0;" *ngIf="documentEntites?.length>0">
+    <tr *ngFor="let dE of documentEntites | callback: filterEntiteDocuments: true: 0: true">
+      <td style="padding: 0px 5px 0px 5px; width:40px; border-bottom:1px solid black;">
+        <button mat-icon-button (click)="getFile('Document', dE.RefDocument); " type="button" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}>
+          <mat-icon aria-label="Download" class="ev-button-left">file_download</mat-icon>
+        </button>
+      </td>
+      <td style="padding: 0px 5px 0px 5px; cursor: pointer; border-bottom:1px solid black;"
+          (click)="getFile('Document', dE.RefDocument); " matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}>
+        {{dE.DocumentNoFile.Nom}}
+      </td>
+    </tr>
+  </table>
+  <mat-divider style="width:100%;"></mat-divider>
+  <footer class="ev-footer"></footer>
+</div>
+

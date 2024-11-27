@@ -1,0 +1,94 @@
+<div app class="mat-typography" style="height: 100%; background-image: url(assets/images/bandeau-login.jpg);
+      background-position: left; background-repeat: no-repeat; background-size: auto 100%; ">
+  <table class="table-no-pad-no-space" style="width:100%; height:100%;">
+    <tr style="height:80px;">
+      <td></td>
+    </tr>
+    <tr style="min-height:650px;">
+      <td style="width:50%"></td>
+      <td>
+        <table class="table-no-pad-no-space" >
+          <tr *ngIf="applicationUserContext.environment">
+            <td class="color-warn">{{applicationUserContext.environment}}</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;" class="mat-elevation-z20">
+              <mat-card style="height:500px;width:350px;">
+                <table class="table-no-pad-no-space" style="width:100%;">
+                  <tr style="vertical-align:top;">
+                    <td style="text-align:right; padding:15px 15px 0px 0px"><mat-label (click)="onChangeCulture();" class="ev-language">{{applicationUserContext.currentCultureName.substr(0,2).toUpperCase()}}</mat-label></td>
+                  </tr>
+                </table>
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                  <table class="table-no-pad-no-space" style="width:100%;">
+                    <tr style="vertical-align:middle; height:120px;">
+                      <td style="text-align:center;"><img alt="e-Valorplast" src="assets/images/logo-e-valorplast-moyen.jpg" /></td>
+                    </tr>
+                    <tr style="vertical-align:middle; height:40px;">
+                      <td style="padding:10px;">
+                        <div *ngIf="form.errors?.auth" class="color-warn">{{form.errors.auth}}</div>
+                      </td>
+                    </tr>
+                    <tr style="vertical-align:middle;">
+                      <td style="text-align:center;">
+                        <mat-form-field style="width:320px;">
+                          <mat-label>{{(applicationUserContext.getCulturedRessourceText(279)==="---???---")?"Login ou e-mail":applicationUserContext.getCulturedRessourceText(1091)}}</mat-label>
+                          <input matInput formControlName="Login" maxlength="50" tabindex="1" required>
+                          <button *ngIf="form.get('Login').value" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Login').setValue(null)" tabindex="-1" type="button">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <mat-hint align="end">{{(applicationUserContext.getCulturedRessourceText(1)==="---???---")?"Saisissez ici votre identifiant de connexion.":applicationUserContext.getCulturedRessourceText(1)}}</mat-hint>
+                          <mat-error *ngIf="(form.get('Login').touched || form.get('Login').dirty) && form.get('Login').errors?.required">{{(applicationUserContext.getCulturedRessourceText(3)==="---???---")?"L'identifiant de connexion est une donnée obligatoire.":applicationUserContext.getCulturedRessourceText(3)}}</mat-error>
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <tr style="vertical-align:middle; height:25px;"><td></td></tr>
+                    <tr style="vertical-align:middle;">
+                      <td style="text-align:center;">
+                        <mat-form-field style="width:320px;">
+                          <mat-label>{{(applicationUserContext.getCulturedRessourceText(280)==="---???---")?"Mot de passe":applicationUserContext.getCulturedRessourceText(280)}}</mat-label>
+                          <input matInput formControlName="Pwd" maxlength="50" [type]="hide ? 'password' : 'text'" tabindex="2" required>
+                          <button *ngIf="form.get('Pwd').value" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Pwd').setValue(null)" tabindex="-1" type="button">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button mat-icon-button matIconSuffix (click)="hide = !hide" tabindex="-1" type="button">
+                            <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                          </button>
+                          <mat-hint align="end">{{(applicationUserContext.getCulturedRessourceText(2)==="---???---")?"Saisissez ici votre mot de passe de connexion.":applicationUserContext.getCulturedRessourceText(2)}}</mat-hint>
+                          <mat-error *ngIf="(form.get('Pwd').touched || form.get('Pwd').dirty) && form.get('Pwd').errors?.required">{{(applicationUserContext.getCulturedRessourceText(4)==="---???---")?"Le mot de passe de connexion est une donnée obligatoire.":applicationUserContext.getCulturedRessourceText(4)}}</mat-error>
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <tr style="vertical-align:middle; height:25px;"><td></td></tr>
+                    <tr style="vertical-align:middle; height:15px;"><td><mat-label (click)="onPasswordLost();" class="ev-button-link">{{(applicationUserContext.getCulturedRessourceText(1090)==="---???---")?"Mot de passe oublié ?":applicationUserContext.getCulturedRessourceText(1090)}}</mat-label></td></tr>
+                    <tr style="vertical-align:middle; height:15px;"><td></td></tr>
+                    <tr style="vertical-align:middle;">
+                      <td style="text-align:center;"><button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" style="width:250px;" tabindex="3">{{(applicationUserContext.getCulturedRessourceText(281)==="---???---")?"CONNEXION":applicationUserContext.getCulturedRessourceText(281)}}</button></td>
+                    </tr>
+                  </table>
+                </form>
+              </mat-card>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td style="width:50%"></td>
+    </tr>
+    <tr style="height:40px;">
+      <td colspan="3"></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td style="text-align:center;"><img alt="SSL" src="assets/images/ssl.png" style="width:150px;" /></td>
+      <td></td>
+    </tr>
+    <tr style="height:100%; min-height:20px;">
+      <td colspan="3"></td>
+    </tr>
+    <tr style="height:40px;">
+      <td></td>
+      <td class="mat-small" style="text-align:center;"><a href="http://www.valorplast.com" class="ev-hl-primary" target="_blank">valorplast.com</a>&nbsp;- Copyright &copy; Valorplast {{legalMentionEndYear}}</td>
+      <td></td>
+    </tr>
+  </table>
+</div>

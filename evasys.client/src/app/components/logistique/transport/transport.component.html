@@ -1,0 +1,113 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave()" *ngIf="!locked">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="transport.RefTransport && !locked" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">{{applicationUserContext.getCulturedRessourceText(465)}}</td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width: 100%; margin: 10px 0 0 0;" appearance="outline">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(320)}}</mat-label>
+              <textarea matInput formControlName="AdresseOrigine" style="height:150px;" readonly></textarea>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" appearance="outline">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(321)}}</mat-label>
+              <textarea matInput formControlName="AdresseDestination" style="height:150px;" readonly></textarea>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" appearance="outline">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(250)}}</mat-label>
+              <input matInput formControlName="CamionType" readonly/>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" appearance="outline">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(255)}}</mat-label>
+              <input matInput formControlName="Transporteur" readonly/>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">{{applicationUserContext.getCulturedRessourceText(322)}}</td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(323)}}</mat-label>
+              <input matInput formControlName="Km" mask="separator" tabindex="1" required [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(251)}}</span>
+              <button *ngIf="form.get('Km').value && !applicationUserContext.connectedUtilisateur.Transporteur?.RefEntite" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Km').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint>{{applicationUserContext.getCulturedRessourceText(324)}}</mat-hint>
+              <mat-error align="end" *ngIf="(form.get('Km').touched || form.get('Km').dirty) && form.get('Km').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('Km').touched || form.get('Km').dirty) && form.get('Km').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('Km').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(252)}}</mat-label>
+              <input matInput formControlName="PUHT" mask="separator.2" tabindex="2" required [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(233)}}</span>
+              <button *ngIf="form.get('PUHT').value && !applicationUserContext.connectedUtilisateur.Transporteur?.RefEntite" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PUHT').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint>{{applicationUserContext.getCulturedRessourceText(326)}}</mat-hint>
+              <mat-error align="end" *ngIf="(form.get('PUHT').touched || form.get('PUHT').dirty) && form.get('PUHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('PUHT').touched || form.get('PUHT').dirty) && form.get('PUHT').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('PUHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(253)}}</mat-label>
+              <input matInput formControlName="PUHTDemande" mask="separator.2" tabindex="3" [required]="applicationUserContext.connectedUtilisateur.Transporteur?.RefEntite!==null" [errorStateMatcher]="matcher" />
+              <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(233)}}</span>
+              <button *ngIf="form.get('PUHTDemande').value" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PUHTDemande').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint>{{applicationUserContext.getCulturedRessourceText(328)}}</mat-hint>
+              <mat-error align="end" *ngIf="(form.get('PUHTDemande').touched || form.get('PUHTDemande').dirty) && form.get('PUHTDemande').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="(form.get('PUHTDemande').touched || form.get('PUHTDemande').dirty) && form.get('PUHTDemande').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(573) + (form.get('PUHTDemande').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+              </mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="transport.RefTransport  && !applicationUserContext.connectedUtilisateur.Transporteur?.RefEntite">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">{{applicationUserContext.getCulturedRessourceText(726)}}</td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table style="width: 100%; box-sizing: border-box;">
+              <tr *ngFor="let item of competitors">
+                <td style="padding:5px;">{{item.TransporteurLibelle}}</td>
+                <td style="padding:5px;">{{item.TransportPUHT}}€</td>
+                <td class="color-accent-dark" style="padding:5px;">{{item.Nb}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

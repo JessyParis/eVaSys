@@ -1,0 +1,111 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave()"
+                *ngIf="!locked">
+          {{applicationUserContext.getCulturedRessourceText(6)}}
+        </button>
+      </div>
+    </div>
+  </header>
+  <form id="MainForm" [formGroup]="form" class="ev-dataform-container">
+    <mat-divider style="width:100%;"></mat-divider>
+    <mat-label class="mat-body-strong" style="width:100%;">{{applicationUserContext.getCulturedRessourceText(265) + ' - ' + adresse.AdresseType?.Libelle}}</mat-label>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary"></td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(474)}}</mat-label>
+              <input matInput formControlName="Libelle" />
+              <button *ngIf="form.get('Libelle').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Libelle').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(476)}}</mat-label>
+              <input matInput formControlName="Adr1" />
+              <button *ngIf="form.get('Adr1').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Adr1').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(477)}}</mat-label>
+              <input matInput formControlName="Adr2" />
+              <button *ngIf="form.get('Adr2').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Adr2').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(65)}}</mat-label>
+              <input matInput formControlName="CodePostal" required />
+              <button *ngIf="form.get('CodePostal').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CodePostal').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error *ngIf="(form.get('CodePostal').touched || form.get('CodePostal').dirty) && form.get('CodePostal').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(66)}}</mat-label>
+              <input matInput formControlName="Ville" required (input)="form.get('Ville').setValue(form.get('Ville').value.toUpperCase())" />
+              <button *ngIf="form.get('Ville').value
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Ville').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error *ngIf="(form.get('Ville').touched || form.get('Ville').dirty) && form.get('Ville').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(312)}}</mat-label>
+              <mat-select formControlName="PaysList">
+                <mat-option *ngFor="let pays of paysList" [value]="pays?.RefPays">{{pays.Libelle}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary"></td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;" *ngIf="adresse.Entite?.EntiteType?.Horaires">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1186)}}</mat-label>
+              <input matInput formControlName="Horaires" maxlength="100" />
+              <button *ngIf="form.get('Horaires').value && form.get('Horaires').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Horaires').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-hint class="color-accent-dark" align="end" *ngIf="form.get('Horaires').value?.length>80">{{applicationUserContext.getCulturedRessourceText(1462)}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+              <textarea matInput formControlName="Cmt" maxlength="1500" style="height:120px;"></textarea>
+              <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled
+                                    && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

@@ -1,0 +1,364 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid"
+                (click)="onSave('')">
+          {{applicationUserContext.getCulturedRessourceText(6)}}
+        </button>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid || !form.get('EMail').value || !form.get('Actif').value"
+                (click)="onSave('sendEmailPasswordFR')">
+          {{applicationUserContext.getCulturedRessourceText(1106)}}
+        </button>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid || !form.get('EMail').value || !form.get('Actif').value"
+                (click)="onSave('sendEmailPasswordEN')">
+          {{applicationUserContext.getCulturedRessourceText(1107)}}
+        </button>
+        <form id="UtilisateurTypeForm" [formGroup]="utilisateurTypeForm">
+          <mat-form-field appearance="outline">
+            <mat-label>{{applicationUserContext.getCulturedRessourceText(1446)}}</mat-label>
+            <mat-select formControlName="UtilisateurType"(selectionChange)="choseUtilisateurType($event.value);">
+              <mat-option value="Valorplast">{{applicationUserContext.getCulturedRessourceText(1447)}}</mat-option>
+              <mat-option value="Collectivite">{{applicationUserContext.getCulturedRessourceText(594)}}</mat-option>
+              <mat-option value="CentreDeTri">{{applicationUserContext.getCulturedRessourceText(17)}}</mat-option>
+              <mat-option value="Transporteur">{{applicationUserContext.getCulturedRessourceText(255)}}</mat-option>
+              <mat-option value="Client">{{applicationUserContext.getCulturedRessourceText(16)}}</mat-option>
+              <mat-option value="Prestataire">{{applicationUserContext.getCulturedRessourceText(1251)}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="utilisateur?.RefUtilisateur" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            <table class="table-no-pad-no-space" style="width:100%;">
+              <tr>
+                <td>{{applicationUserContext.getCulturedRessourceText(659)}}</td>
+                <td style="text-align:right;">{{utilisateur?.RefUtilisateur ? 'id = ' + utilisateur?.RefUtilisateur?.toString() : applicationUserContext.getCulturedRessourceText(9)}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-checkbox formControlName="Actif" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(651)}}
+            </mat-checkbox><br />
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1102)}}</mat-label>
+              <input matInput formControlName="Nom" maxlength="100" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('Nom').value!=null && form.get('Nom').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Nom').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Nom').touched || form.get('Nom').dirty) && form.get('Nom').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="profils?.length==0">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1473)}}</mat-label>
+              <textarea matInput formControlName="UtilisateurMaitreLibelle" readonly style="height:100px;"></textarea>
+              <button *ngIf="form.get('UtilisateurMaitreLibelle').value && form.get('UtilisateurMaitreLibelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="removeUtilisateurMaitre();" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button matIconSuffix mat-icon-button aria-label="Choisir" (click)="choseElement('UtilisateurMaitreForUtilisateur');" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+            </mat-form-field>
+            <div style="margin: 0 0 10px 0;" *ngIf="profils.length>0">
+              <mat-card appearance="outlined" style="white-space: pre-wrap;">
+                <mat-card-content [style.overflow]="'auto'" [style.height.px]="'80'">
+                  <p>{{profilsLabel()}}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <mat-form-field style="width:100%;" *ngIf="!form.get('EMail').value">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(912)}}</mat-label>
+              <input matInput formControlName="Login" maxlength="50" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('Login').value!=null && form.get('Login').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Login').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Login').touched || form.get('Login').dirty) && form.get('Login').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(419)}}</mat-label>
+              <input matInput formControlName="EMail" maxlength="200" [errorStateMatcher]="matcher" (change)="onChangeEMail($event)" />
+              <button *ngIf="form.get('EMail').value!=null && form.get('EMail').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('EMail').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error *ngIf="(form.get('EMail').touched || form.get('EMail').dirty) && form.get('EMail').errors?.email">{{applicationUserContext.getCulturedRessourceText(495)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" subscriptSizing="dynamic">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1088)}}</mat-label>
+              <input matInput formControlName="Pwd" maxlength="50" [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('Pwd').value!=null && form.get('Pwd').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Pwd').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Pwd').touched || form.get('Pwd').dirty) && form.get('Pwd').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(1087)}}</mat-hint>
+            </mat-form-field>
+            <div style="width:100%; height:15px;"></div>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(417)}}</mat-label>
+              <input matInput formControlName="Tel" maxlength="20" />
+              <button *ngIf="form.get('Tel').value!=null && form.get('Tel').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Tel').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(437)}}</mat-label>
+              <input matInput formControlName="TelMobile" maxlength="20" />
+              <button *ngIf="form.get('TelMobile').value!=null && form.get('TelMobile').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('TelMobile').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="1!=1">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(418)}}</mat-label>
+              <input matInput formControlName="Fax" maxlength="20" />
+              <button *ngIf="form.get('Fax').value!=null && form.get('Fax').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Fax').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(468)}}</mat-label>
+              <mat-select formControlName="ContactAdresseList" required [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let contactAdresse of contactAdresseList" [value]="contactAdresse.RefContactAdresse">{{contactAdresse.ListText}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ContactAdresseList').value && form.get('ContactAdresseList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('ContactAdresseList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('ContactAdresseList').touched || form.get('ContactAdresseList').dirty) && form.get('ContactAdresseList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(914)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(925)}}</mat-label>
+              <mat-select formControlName="HabilitationAdministration">
+                <mat-option *ngFor="let habilitationAdministration of habilitationAdministrationList" [value]="habilitationAdministration">{{habilitationAdministration}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('HabilitationAdministration').value && form.get('HabilitationAdministration').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); form.get('HabilitationAdministration').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(923)}}</mat-label>
+              <mat-select formControlName="HabilitationAnnuaire">
+                <mat-option *ngFor="let habilitationAnnuaire of habilitationAnnuaireList" [value]="habilitationAnnuaire">{{habilitationAnnuaire}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('HabilitationAnnuaire').value && form.get('HabilitationAnnuaire').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); form.get('HabilitationAnnuaire').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(922)}}</mat-label>
+              <mat-select formControlName="HabilitationLogistique"
+                          (selectionChange)="choseHabilitationLogistique($event.value);">
+                <mat-option *ngFor="let habilitationLogistique of habilitationLogistiqueList" [value]="habilitationLogistique" [disabled]="habilitationLogistiqueDisabled(habilitationLogistique)">{{habilitationLogistique}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('HabilitationLogistique').value && form.get('HabilitationLogistique').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); form.get('HabilitationLogistique').setValue(null); choseHabilitationLogistique(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="utilisateur.Transporteur || form.get('HabilitationLogistique').value==='Transporteur'">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(255)}}</mat-label>
+              <input matInput formControlName="TransporteurLibelle" maxlength="200" readonly />
+              <button *ngIf="form.get('TransporteurLibelle').value && form.get('TransporteurLibelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('HabilitationLogistique').setValue(null); choseHabilitationLogistique(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button matIconSuffix mat-icon-button aria-label="Choisir" (click)="choseElement('TransporteurForUtilisateur');" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(924)}}</mat-label>
+              <mat-select formControlName="HabilitationMessagerie">
+                <mat-option *ngFor="let habilitationMessagerie of habilitationMessagerieList" [value]="habilitationMessagerie">{{habilitationMessagerie}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('HabilitationMessagerie').value && form.get('HabilitationMessagerie').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); form.get('HabilitationMessagerie').setValue(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(929)}}</mat-label>
+              <mat-select formControlName="HabilitationModuleCentreDeTri"
+                          (selectionChange)="choseHabilitationModuleCentreDeTri($event.value);">
+                <mat-option *ngFor="let habilitationModuleCentreDeTri of habilitationModuleCentreDeTriList" [value]="habilitationModuleCentreDeTri">{{habilitationModuleCentreDeTri}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('HabilitationModuleCentreDeTri').value && form.get('HabilitationModuleCentreDeTri').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); form.get('HabilitationModuleCentreDeTri').setValue(null); choseHabilitationModuleCentreDeTri(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="utilisateur.CentreDeTri || form.get('HabilitationModuleCentreDeTri').value==='Utilisateur'">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(17)}}</mat-label>
+              <input matInput formControlName="CentreDeTriLibelle" maxlength="200" readonly />
+              <button *ngIf="form.get('CentreDeTriLibelle').value && form.get('CentreDeTriLibelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('HabilitationModuleCentreDeTri').setValue(null); choseHabilitationModuleCentreDeTri(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button matIconSuffix mat-icon-button aria-label="Choisir" (click)="choseElement('CentreDeTriForUtilisateur');" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(928)}}</mat-label>
+              <mat-select formControlName="HabilitationModuleCollectivite"
+                          (selectionChange)="choseHabilitationModuleCollectivite($event.value);">
+                <mat-option *ngFor="let habilitationModuleCollectivite of habilitationModuleCollectiviteList" [value]="habilitationModuleCollectivite">{{habilitationModuleCollectivite}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('HabilitationModuleCollectivite').value && form.get('HabilitationModuleCollectivite').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); form.get('HabilitationModuleCollectivite').setValue(null); choseHabilitationModuleCollectivite(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="utilisateur.Collectivite || form.get('HabilitationModuleCollectivite').value==='Utilisateur'">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(594)}}</mat-label>
+              <input matInput formControlName="CollectiviteLibelle" maxlength="200" readonly />
+              <button *ngIf="form.get('CollectiviteLibelle').value && form.get('CollectiviteLibelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('HabilitationModuleCollectivite').setValue(null); choseHabilitationModuleCollectivite(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button matIconSuffix mat-icon-button aria-label="Choisir" (click)="choseElement('CollectiviteForUtilisateur');" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(926)}}</mat-label>
+              <mat-select formControlName="HabilitationQualite"
+                          (selectionChange)="choseHabilitationQualite($event.value);">
+                <mat-option *ngFor="let habilitationQualite of habilitationQualiteList" [value]="habilitationQualite" [disabled]="habilitationQualiteDisabled(habilitationQualite)">{{habilitationQualite}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('HabilitationQualite').value && form.get('HabilitationQualite').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); form.get('HabilitationQualite').setValue(null); choseHabilitationQualite(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="utilisateur.Client || form.get('HabilitationQualite').value==='Client'">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(16)}}</mat-label>
+              <input matInput formControlName="ClientLibelle" maxlength="200" readonly />
+              <button *ngIf="form.get('ClientLibelle').value && form.get('ClientLibelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('HabilitationQualite').setValue(null); choseHabilitationQualite(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button matIconSuffix mat-icon-button aria-label="Choisir" (click)="choseElement('ClientForUtilisateur');" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1252)}}</mat-label>
+              <mat-select formControlName="HabilitationModulePrestataire"
+                          (selectionChange)="choseHabilitationModulePrestataire($event.value);">
+                <mat-option *ngFor="let habilitationModulePrestataire of habilitationModulePrestataireList" [value]="habilitationModulePrestataire">{{habilitationModulePrestataire}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('HabilitationModulePrestataire').value && form.get('HabilitationModulePrestataire').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); form.get('HabilitationModulePrestataire').setValue(null); choseHabilitationModulePrestataire(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field style="width:100%;" *ngIf="utilisateur.Prestataire || (form.get('HabilitationModulePrestataire').value && form.get('HabilitationModulePrestataire').value!='Administrateur')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1251)}}</mat-label>
+              <input matInput formControlName="PrestataireLibelle" maxlength="200" readonly />
+              <button *ngIf="form.get('PrestataireLibelle').value && form.get('PrestataireLibelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="form.get('HabilitationModulePrestataire').setValue(null); choseHabilitationModulePrestataire(null);" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button matIconSuffix mat-icon-button aria-label="Choisir" (click)="choseElement('PrestataireForUtilisateur');" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxDoubleSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1510)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <kendo-editor formControlName="PiedEmailHTML" style="height: 100%; width:100%;">
+              <kendo-toolbar>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorItalicButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorUnderlineButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorAlignLeftButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignCenterButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignRightButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorAlignJustifyButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-dropdownlist kendoEditorFontSize></kendo-toolbar-dropdownlist>
+                <kendo-toolbar-dropdownlist kendoEditorFontFamily [data]="kendoFontData"></kendo-toolbar-dropdownlist>
+                <kendo-toolbar-colorpicker kendoEditorForeColor></kendo-toolbar-colorpicker>
+                <kendo-toolbar-colorpicker kendoEditorBackColor></kendo-toolbar-colorpicker>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorInsertUnorderedListButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorInsertOrderedListButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-buttongroup>
+                  <kendo-toolbar-button kendoEditorCreateLinkButton></kendo-toolbar-button>
+                  <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
+                </kendo-toolbar-buttongroup>
+                <kendo-toolbar-button kendoEditorViewSourceButton></kendo-toolbar-button>
+              </kendo-toolbar>
+              <kendo-editor-messages [bold]="applicationUserContext.getCulturedRessourceText(1479)"
+                                     [italic]="applicationUserContext.getCulturedRessourceText(1480)"
+                                     [underline]="applicationUserContext.getCulturedRessourceText(1481)"
+                                     [alignLeft]="applicationUserContext.getCulturedRessourceText(1482)"
+                                     [alignCenter]="applicationUserContext.getCulturedRessourceText(1483)"
+                                     [alignRight]="applicationUserContext.getCulturedRessourceText(1484)"
+                                     [alignJustify]="applicationUserContext.getCulturedRessourceText(1485)"
+                                     [fontFamily]="applicationUserContext.getCulturedRessourceText(1486)"
+                                     [fontSize]="applicationUserContext.getCulturedRessourceText(1487)"
+                                     [foreColor]="applicationUserContext.getCulturedRessourceText(1488)"
+                                     [backColor]="applicationUserContext.getCulturedRessourceText(1494)"
+                                     [insertOrderedList]="applicationUserContext.getCulturedRessourceText(1489)"
+                                     [insertUnorderedList]="applicationUserContext.getCulturedRessourceText(1490)"
+                                     [createLink]="applicationUserContext.getCulturedRessourceText(1491)"
+                                     [unlink]="applicationUserContext.getCulturedRessourceText(1492)"
+                                     [viewSource]="applicationUserContext.getCulturedRessourceText(1493)"
+                                     [dialogUpdate]="applicationUserContext.getCulturedRessourceText(682)"
+                                     [dialogCancel]="applicationUserContext.getCulturedRessourceText(133)"
+                                     [dialogInsert]="applicationUserContext.getCulturedRessourceText(598)"
+                                     [linkOpenInNewWindow]="applicationUserContext.getCulturedRessourceText(1496)"
+                                     [linkText]="applicationUserContext.getCulturedRessourceText(1497)"
+                                     [linkTitle]="applicationUserContext.getCulturedRessourceText(1149)"
+                                     [linkWebAddress]="applicationUserContext.getCulturedRessourceText(1495)"></kendo-editor-messages>
+            </kendo-editor>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

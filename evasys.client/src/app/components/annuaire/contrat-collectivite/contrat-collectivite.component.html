@@ -1,0 +1,55 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-raised-button color="primary" [disabled]="form.invalid" class="ev-button-left" type="button" (click)="onSave()"
+                *ngIf="!locked">
+          {{applicationUserContext.getCulturedRessourceText(45)}}
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button mat-raised-button color="warn" class="ev-button-left" type="button" mat-dialog-close="">
+          {{applicationUserContext.getCulturedRessourceText(133)}}
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="mat-dialog-content">
+    <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+      <mat-form-field class="ev-date-picker" style="width:100%;">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(212)}}</mat-label>
+        <input matInput [matDatepicker]="pickerDDebut" formControlName="DDebut" required [errorStateMatcher]="matcher">
+        <mat-datepicker-toggle matIconPrefix [for]="pickerDDebut"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDDebut></mat-datepicker>
+        <button *ngIf="form.get('DDebut').value && form.get('DDebut').enabled"
+                matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="form.get('DDebut').setValue(null)">
+          <mat-icon>close</mat-icon>
+          <mat-error align="end" *ngIf="form.get('DDebut').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+        </button>
+      </mat-form-field>
+      <mat-form-field class="ev-date-picker" style="width:100%;">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(213)}}</mat-label>
+        <input matInput [matDatepicker]="pickerDFin" formControlName="DFin" required [errorStateMatcher]="matcher">
+        <mat-datepicker-toggle matIconPrefix [for]="pickerDFin"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDFin></mat-datepicker>
+        <button *ngIf="form.get('DFin').value && form.get('DFin').enabled"
+                matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="form.get('DFin').setValue(null)">
+          <mat-icon>close</mat-icon>
+          <mat-error align="end" *ngIf="form.get('DFin').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+        </button>
+      </mat-form-field>
+      <mat-checkbox formControlName="Avenant" style="width:100%;">
+        {{applicationUserContext.getCulturedRessourceText(1177)}}
+      </mat-checkbox>
+      <mat-form-field style="width:100%;">
+        <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
+        <textarea matInput formControlName="Cmt" maxlength="500" style="height:120px;"></textarea>
+        <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+

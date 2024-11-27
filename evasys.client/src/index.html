@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html style="margin:0; padding:0; height:100%" lang="fr-fr" class="notranslate" translate="no">
+<head>
+  <meta name="google" content="notranslate" />
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=2024">
+  <title>e-Valorplast</title>
+  <base href="/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body style="margin:0; padding:0; height:100%; width:100%;">
+  <script type="text/javascript">
+    //Creates a cookie if renew password asked
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const pwdlost = urlParams.get('pwdlost');
+    if (pwdlost) {
+      document.cookie = "passwordlost=" + pwdlost;
+    }
+  </script>
+  <app>
+    <div style="height:100%; background-image:url(images/splash-screen.jpg);  background-position: center; background-repeat: no-repeat;
+      background-size: cover;">
+      <table class="table-no-pad-no-space" style="width:100%; height:100%">
+        <tr style="height:60px;">
+          <td style="width:20%"></td>
+          <td></td>
+          <td style="width:20%"></td>
+        </tr>
+        <tr style="height:50px;">
+          <td style="width:20%"></td>
+          <td style="text-align:center; font-family:Roboto; color:black;">
+            <h2>Chargement/Loading...</h2>
+            <h5>Appuyez sur Ctrl+F5 si l'application ne se charge pas.</h5>
+            <h5>Press Ctrl+F5 if the app does not load.</h5>
+          </td>
+          <td style="width:20%"></td>
+        </tr>
+        <tr style="height:100px;">
+          <td colspan="3"></td>
+        </tr>
+      </table>
+    </div>
+  </app>
+</body>
+</html>

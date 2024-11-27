@@ -1,0 +1,42 @@
+
+
+.fixed_headers_fiche_controle_description_receptions {
+  width: 795px;
+  min-width: 795px;
+  max-width: 795px;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  td:nth-child(1), th:nth-child(1) {
+    min-width: 250px;
+    max-width: 250px;
+    width: 250px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(2), th:nth-child(2) {
+    width: 525px;
+    box-sizing: border-box;
+  }
+
+  thead {
+
+    tr {
+      display: block;
+      position: relative;
+    }
+
+    th {
+      text-align: left;
+    }
+  }
+
+  tbody {
+    display: block;
+    overflow: auto;
+    width: 795px;
+    min-width: 795px;
+    max-width: 795px;
+    height: 380px;
+  }
+}

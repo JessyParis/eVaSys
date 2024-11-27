@@ -1,0 +1,16 @@
+<div [formGroup]="form">
+  <mat-checkbox *ngIf="IsCheckbox()" [formControlName]="ctrl.field" style="width:100%;">{{description()}}</mat-checkbox>
+  <mat-form-field *ngIf="!IsCheckbox()" style="width:100%;">
+    <mat-label>{{description()}}</mat-label>
+    <textarea *ngIf="IsTextArea()" matInput [formControlName]="ctrl.field" [required]="IsRequired()" [maxlength]="ctrl.maxlength" [errorStateMatcher]="matcher" [style]="ctrl.style"></textarea>
+    <input *ngIf="IsInput()" matInput [formControlName]="ctrl.field" [maxlength]="ctrl.maxlength" [required]="IsRequired()" [errorStateMatcher]="matcher" />
+    <mat-select *ngIf="IsSelect()" [formControlName]="ctrl.field" [required]="IsRequired()" [errorStateMatcher]="matcher">
+      <mat-option *ngFor="let item of ctrl.listItems" [value]="item">{{item[ctrl.listDesc]}}</mat-option>
+    </mat-select>
+    <input *ngIf="IsDatePicker()" matInput [matDatepicker]="pickerD" [formControlName]="ctrl.field" [required]="IsRequired()" [errorStateMatcher]="matcher">
+    <mat-datepicker-toggle *ngIf="IsDatePicker()" matIconSuffix [for]="pickerD"></mat-datepicker-toggle>
+    <mat-datepicker #pickerD></mat-datepicker>
+    <button *ngIf="CanReset()" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="Reset()" tabindex="-1" type="button"><mat-icon>close</mat-icon></button>
+    <mat-error align="end" *ngIf="WarnRequired()">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+  </mat-form-field>
+</div>

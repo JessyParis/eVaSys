@@ -1,0 +1,159 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid"
+                (click)="onSave('')">
+          {{applicationUserContext.getCulturedRessourceText(6)}}
+        </button>
+      </div>
+      <div class="ev-taskbar-right-container">
+        <button *ngIf="document?.RefDocument" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1127)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-checkbox formControlName="Actif" style="width:100%;">
+              {{applicationUserContext.getCulturedRessourceText(651)}}
+            </mat-checkbox>
+            <mat-checkbox formControlName="VisibiliteTotale" style="width:100%;" matTooltip={{applicationUserContext.getCulturedRessourceText(1445)}}>
+              {{applicationUserContext.getCulturedRessourceText(1444)}}
+            </mat-checkbox>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(474)}}</mat-label>
+              <input matInput formControlName="Libelle" maxlength="250" required [errorStateMatcher]="matcher" />
+              <button *ngIf="form.get('Libelle').value!=null && form.get('Libelle').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Libelle').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('Libelle').touched || form.get('Libelle').dirty) && form.get('Libelle').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="ev-date-picker" style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(644)}}</mat-label>
+              <input matInput [matDatepicker]="pickerDDebut" formControlName="DDebut" [errorStateMatcher]="matcher">
+              <mat-datepicker-toggle matIconPrefix [for]="pickerDDebut"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDDebut></mat-datepicker>
+              <button *ngIf="form.get('DDebut').value && form.get('DDebut').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button"
+                       (click)="form.get('DDebut').setValue(null)">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('DDebut').touched || form.get('DDebut').dirty) && form.get('DDebut').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="ev-date-picker" style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(645)}}</mat-label>
+              <input matInput [matDatepicker]="pickerDFin" formControlName="DFin" [errorStateMatcher]="matcher">
+              <mat-datepicker-toggle matIconPrefix [for]="pickerDFin"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDFin></mat-datepicker>
+              <button *ngIf="form.get('DFin').value && form.get('DFin').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button"
+                       (click)="form.get('DFin').setValue(null)">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('DFin').touched || form.get('DFin').dirty) && form.get('DFin').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(825)}}</mat-label>
+              <textarea matInput formControlName="Description" maxlength="10000" style="height:220px;"></textarea>
+              <button *ngIf="form.get('Description').value && form.get('Description').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Description').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <table>
+              <tr>
+                <td style="padding:0 20px 0 0;">
+                  <button mat-raised-button type="button" (click)="onUploadFile();" [disabled]="form.invalid">
+                    {{applicationUserContext.getCulturedRessourceText(797)}}
+                  </button>
+                </td>
+              </tr>
+            </table>
+            <table *ngIf="document.Nom">
+              <tr>
+                <td style="text-align: left; padding: 0 10px 0 10px;">
+                  {{document.Nom}}
+                </td>
+                <td style="padding:5px;">
+                  <button mat-icon-button (click)="getFile('Document', document.RefDocument)" type="button" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}>
+                    <mat-icon aria-label="Download" class="color-primary-a-medium material-icons-outlined">file_download</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(10066)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(10066)}}</mat-label>
+              <mat-select multiple formControlName="EntiteTypeList" [compareWith]="compareFnEntiteType">
+                <mat-option *ngFor="let documentEntiteType of documentEntiteTypeList" [value]="documentEntiteType">{{documentEntiteType.EntiteType.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('EntiteTypeList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                      (click)="$event.stopPropagation(); onEntiteTypeListReset();" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <div style="margin: 0 0 10px 0;">
+              <mat-card appearance="outlined" style="white-space: pre-wrap;">
+                <mat-card-content [style.overflow]="'auto'" [style.height.px]="'80'">
+                  <p>{{entiteTypesLabel()}}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1124)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_entiteliees table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1124)}}</th>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="addDocumentEntite();" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let dE of document?.DocumentEntites">
+                  <td style="padding: 0px 5px 0px 5px;">{{dE.Entite.Libelle}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteDocumentEntite(dE.RefEntite)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
+</div>
+

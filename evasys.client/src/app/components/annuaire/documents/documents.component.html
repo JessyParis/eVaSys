@@ -1,0 +1,335 @@
+<div class="ev-main-container">
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+      </div>
+    </div>
+  </header>
+  <div class="ev-dataform-container">
+    <table style="height: 100%; width: 100%;" class="ev-table-spacy" [class.border-top-grey]="applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite">
+      <tr>
+        <td [class.background-color-primary-light]="!applicationUserContext.connectedUtilisateur.Collectivite?.RefEntite"
+            class="border-right-grey" style="vertical-align: top;">
+          <table>
+            <tr>
+              <td style="width:250px; min-width:250px; padding:10px 20px 0 20px;">
+                <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Filtre">
+                  <mat-chip-option [selected]="documentsType=='FicheRepartition'" value="FicheRepartition"
+                                   (selectionChange)="onChipChange($event)" style="height:40px;"
+                                   *ngIf="applicationUserContext.filterCentreDeTris.length == 1" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(1449)}}
+                  </mat-chip-option>
+                  <mat-chip-option [selected]="documentsType=='EtatTrimestrielCS'" value="EtatTrimestrielCS"
+                                   (selectionChange)="onChipChange($event)" style="height:40px;"
+                                   *ngIf="etatTrimestrielCSs.length!=0" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(1361)}}
+                  </mat-chip-option>
+                  <mat-chip-option [selected]="documentsType=='EtatMensuelHCS'" value="EtatMensuelHCS"
+                                   (selectionChange)="onChipChange($event)" style="height:40px;"
+                                   *ngIf="etatMensuelHCSs.length!=0" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(1385)}}
+                  </mat-chip-option>
+                  <mat-chip-option [selected]="documentsType=='CertificatRecyclageCS'" value="CertificatRecyclageCS"
+                                   (selectionChange)="onChipChange($event)" style="height:40px;"
+                                   *ngIf="certificatRecyclageCSs.length!=0" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(1386)}}
+                  </mat-chip-option>
+                  <mat-chip-option [selected]="documentsType=='CertificatRecyclageHCS'" value="CertificatRecyclageHCS"
+                                   (selectionChange)="onChipChange($event)" style="height:40px;"
+                                   *ngIf="certificatRecyclageHCSs.length!=0" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(1387)}}
+                  </mat-chip-option>
+                  <mat-chip-option [selected]="documentsType=='NoteCredit'" value="NoteCredit"
+                                   (selectionChange)="onChipChange($event)" style="height: 40px;"
+                                   *ngIf="entiteSAGEDocuments.length!=0" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(699)}}
+                  </mat-chip-option>
+                  <mat-chip-option [selected]="documentsType=='EtatMensuelReception'" value="EtatMensuelReception"
+                                   (selectionChange)="onChipChange($event)" style="height:40px;"
+                                   *ngIf="etatMensuelReceptions.length!=0" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(1431)}}
+                  </mat-chip-option>
+                  <mat-chip-option [selected]="documentsType=='Documents'" value="Documents"
+                                   (selectionChange)="onChipChange($event)" style="height: 40px;" [@fadeInOnEnter]>
+                    {{applicationUserContext.getCulturedRessourceText(1362)}}
+                  </mat-chip-option>
+                </mat-chip-listbox>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td class="border-right-grey" style="vertical-align:top; width:800px; min-width:800px;">
+          <div *ngIf="documentsType=='FicheRepartition'" class="color-primary-a-medium" style="font-size:x-large; font-weight:600; padding:10px 0 20px 10px">
+            {{applicationUserContext.getCulturedRessourceText(1449)}}
+          </div>
+          <table *ngIf="documentsType=='FicheRepartition'" style="width:100%;">
+            <tr class="mat-caption color-grey">
+              <td style="width: 150px;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1442)}}
+              </td>
+              <td style="width: 150px; text-align:right;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1364)}}
+              </td>
+            </tr>
+            <tr style="vertical-align: middle;" [@fadeInOnEnter]>
+              <td class="border-bottom-grey" style="text-align: left; padding: 0 10px 0 10px; width:100%;">
+                {{applicationUserContext.getCulturedRessourceText(1449)}}
+              </td>
+              <td style="width: 150px; min-width: 150px; text-align: right; " class="border-bottom-grey">
+                <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1364)}}
+                        (click)="exportFicheRepartion()">
+                  <mat-icon aria-label="Download" class="color-primary-a-medium material-icons-outlined">file_download</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+          <div *ngIf="documentsType=='NoteCredit'" class="color-primary-a-medium" style="font-size:x-large; font-weight:600; padding:10px 0 20px 10px">
+            {{applicationUserContext.getCulturedRessourceText(699)}}
+          </div>
+          <table *ngIf="documentsType=='NoteCredit'" style="width:100%;">
+            <tr class="mat-caption color-grey">
+              <td style="width: 150px;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(586)}}
+              </td>
+              <td class="border-bottom-grey" style="text-align:right;">
+                {{applicationUserContext.getCulturedRessourceText(826)}}
+              </td>
+              <td style="width: 50px; text-align:right;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1404)}}
+              </td>
+              <td style="width: 150px; text-align:right;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1364)}}
+              </td>
+            </tr>
+            <tr *ngIf="entiteSAGEDocuments.length==0">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1199)}}
+              </td>
+              <td class="border-bottom-grey">
+              </td>
+            </tr>
+            <tr *ngFor="let sAGEDoc of entiteSAGEDocuments" style="vertical-align: middle;" [@fadeInOnEnter]>
+              <td class="border-bottom-grey" style="text-align: left; padding: 0 10px 0 10px; width:50%;">
+                {{getSAGEDocumentDate(sAGEDoc)}}
+              </td>
+              <td style="width: 50%; text-align: right; padding:0 10px 0 10px;" class="border-bottom-grey">
+                {{getSAGEDocumentHT(sAGEDoc)}}
+              </td>
+              <td style="min-width: 50px; vertical-align:middle; text-align:center;" class="border-bottom-grey">
+                <mat-icon *ngIf="sAGEDoc.SAGEDocumentReglements?.length>0" aria-label="Réglé" class="color-green"
+                          matTooltip={{applicationUserContext.getCulturedRessourceText(1404)}}>check_circle</mat-icon>
+                <mat-icon *ngIf="!sAGEDoc.SAGEDocumentReglements?.length>0" aria-label="Non réglé" class="color-grey"
+                          matTooltip={{applicationUserContext.getCulturedRessourceText(1405)}}>unpublished</mat-icon>
+              </td>
+              <td style="min-width: 150px; text-align: right;" class="border-bottom-grey">
+                <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1364)}}
+                        (click)="exportPdf('NoteCredit',sAGEDoc.RefSAGEDocument)">
+                  <mat-icon aria-label="Document" class="color-primary-a-medium">picture_as_pdf</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+          <div *ngIf="documentsType=='EtatTrimestrielCS'" class="color-primary-a-medium" style="font-size:x-large; font-weight:600; padding:10px 0 20px 10px">
+            {{applicationUserContext.getCulturedRessourceText(1361)}}
+          </div>
+          <table *ngIf="documentsType=='EtatTrimestrielCS'" style="width:100%;">
+            <tr class="mat-caption color-grey">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(586)}}
+              </td>
+              <td style="width: 150px; text-align:right;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1364)}}
+              </td>
+            </tr>
+            <tr *ngIf="etatTrimestrielCSs.length==0">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1199)}}
+              </td>
+              <td class="border-bottom-grey">
+              </td>
+            </tr>
+            <tr *ngFor="let doc of etatTrimestrielCSs" style="vertical-align: middle;" [@fadeInOnEnter]>
+              <td class="border-bottom-grey" style="text-align: left; padding: 0 10px 0 10px;">
+                {{doc.Name}}
+              </td>
+              <td style="min-width: 150px; text-align: right;" class="border-bottom-grey">
+                <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1364)}}
+                        (click)="exportEtatTrimestrielCS(doc)">
+                  <mat-icon aria-label="Document" class="color-primary-a-medium">picture_as_pdf</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+          <div *ngIf="documentsType=='EtatMensuelHCS'" class="color-primary-a-medium" style="font-size:x-large; font-weight:600; padding:10px 0 20px 10px">
+            {{applicationUserContext.getCulturedRessourceText(1385)}}
+          </div>
+          <table *ngIf="documentsType=='EtatMensuelHCS'" style="width:100%;">
+            <tr class="mat-caption color-grey">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(586)}}
+              </td>
+              <td style="width: 150px; text-align:right;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1364)}}
+              </td>
+            </tr>
+            <tr *ngIf="etatMensuelHCSs.length==0">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1199)}}
+              </td>
+              <td class="border-bottom-grey">
+              </td>
+            </tr>
+            <tr *ngFor="let doc of etatMensuelHCSs" style="vertical-align: middle;" [@fadeInOnEnter]>
+              <td class="border-bottom-grey" style="text-align: left; padding: 0 10px 0 10px;">
+                {{doc.Name}}&nbsp;{{doc.Year.toString()}}
+              </td>
+              <td style="min-width: 150px; text-align: right;" class="border-bottom-grey">
+                <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1364)}}
+                        (click)="exportEtatMensuelHCS(doc)">
+                  <mat-icon aria-label="Document" class="color-primary-a-medium">picture_as_pdf</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+          <div *ngIf="documentsType=='CertificatRecyclageCS'" class="color-primary-a-medium"
+               style="font-size:x-large; font-weight:600; padding:10px 0 20px 10px;">
+            {{applicationUserContext.getCulturedRessourceText(1386)}}
+          </div>
+          <table *ngIf="documentsType=='CertificatRecyclageCS'" style="width:100%;">
+            <tr class="mat-caption color-grey">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(586)}}
+              </td>
+              <td style="width: 150px; text-align:right;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1364)}}
+              </td>
+            </tr>
+            <tr *ngIf="certificatRecyclageCSs.length==0">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1199)}}
+              </td>
+              <td class="border-bottom-grey">
+              </td>
+            </tr>
+            <tr *ngFor="let doc of certificatRecyclageCSs" style="vertical-align: middle;" [@fadeInOnEnter]>
+              <td class="border-bottom-grey" style="text-align: left; padding: 0 10px 0 10px;">
+                {{doc.Name}}
+              </td>
+              <td style="min-width: 150px; text-align: right;" class="border-bottom-grey">
+                <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1364)}}
+                        (click)="exportCertificatRecyclage(doc, true)">
+                  <mat-icon aria-label="Document" class="color-primary-a-medium">picture_as_pdf</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+          <div *ngIf="documentsType=='CertificatRecyclageHCS'" class="color-primary-a-medium"
+               style="font-size:x-large; font-weight:600; padding:10px 0 20px 10px;">
+            {{applicationUserContext.getCulturedRessourceText(1387)}}
+          </div>
+          <table *ngIf="documentsType=='CertificatRecyclageHCS'" style="width:100%;">
+            <tr class="mat-caption color-grey">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(586)}}
+              </td>
+              <td style="width: 150px; text-align:right;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1364)}}
+              </td>
+            </tr>
+            <tr *ngIf="certificatRecyclageHCSs.length==0">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1199)}}
+              </td>
+              <td class="border-bottom-grey">
+              </td>
+            </tr>
+            <tr *ngFor="let doc of certificatRecyclageHCSs" style="vertical-align: middle;" [@fadeInOnEnter]>
+              <td class="border-bottom-grey" style="text-align: left; padding: 0 10px 0 10px;">
+                {{doc.Name}}
+              </td>
+              <td style="min-width: 150px; text-align: right;" class="border-bottom-grey">
+                <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1364)}}
+                        (click)="exportCertificatRecyclage(doc, false)">
+                  <mat-icon aria-label="Document" class="color-primary-a-medium">picture_as_pdf</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+          <div *ngIf="documentsType=='EtatMensuelReception'" class="color-primary-a-medium" style="font-size:x-large; font-weight:600; padding:10px 0 20px 10px">
+            {{applicationUserContext.getCulturedRessourceText(1431)}}
+          </div>
+          <table *ngIf="documentsType=='EtatMensuelReception'" style="width:100%;">
+            <tr class="mat-caption color-grey">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(586)}}
+              </td>
+              <td style="width: 150px; text-align:right;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1364)}}
+              </td>
+            </tr>
+            <tr *ngIf="etatMensuelReceptions.length==0">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1199)}}
+              </td>
+              <td class="border-bottom-grey">
+              </td>
+            </tr>
+            <tr *ngFor="let doc of etatMensuelReceptions" style="vertical-align: middle;" [@fadeInOnEnter]>
+              <td class="border-bottom-grey" style="text-align: left; padding: 0 10px 0 10px;">
+                {{doc.Name}}&nbsp;{{doc.Year.toString()}}
+              </td>
+              <td style="min-width: 150px; text-align: right;" class="border-bottom-grey">
+                <button mat-icon-button class="ev-button-right" matTooltip={{applicationUserContext.getCulturedRessourceText(1364)}}
+                        (click)="exportEtatMensuelReception(doc)">
+                  <mat-icon aria-label="Document" class="color-primary-a-medium">picture_as_pdf</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+          <div *ngIf="documentsType=='Documents'" class="color-primary-a-medium" style="font-size:x-large; font-weight:600; padding:10px 0 20px 10px">
+            {{applicationUserContext.getCulturedRessourceText(1362)}}
+          </div>
+          <table *ngIf="documentsType=='Documents'" style="width:100%;">
+            <tr class="mat-caption color-grey">
+              <td style="width: 100px;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(586)}}
+              </td>
+              <td style="width: 100%;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1365)}}
+              </td>
+              <td style="text-align:right;" class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1364)}}
+              </td>
+            </tr>
+            <tr *ngIf="documentEntites.length==0">
+              <td class="border-bottom-grey">
+                {{applicationUserContext.getCulturedRessourceText(1199)}}
+              </td>
+              <td class="border-bottom-grey">
+              </td>
+            </tr>
+            <tr *ngFor="let dE of documentEntites" style="vertical-align: middle;" [@fadeInOnEnter]>
+              <td class="border-bottom-grey" style="text-align: left; padding: 0 10px 0 10px; width:150px;">
+                {{formatDateToStandard(dE.DocumentNoFile.DCreation)}}
+              </td>
+              <td class="border-bottom-grey" style="text-align: left; padding: 0 10px 0 10px;">
+                {{dE.DocumentNoFile.Libelle}}
+              </td>
+              <td style="text-align:right; min-width:50px;" class="border-bottom-grey">
+                <button mat-icon-button (click)="getFile('Document', dE.DocumentNoFile.RefDocument, dE)" type="button" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}>
+                  <mat-icon aria-label="Download" class="color-primary-a-medium material-icons-outlined">file_download</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td style="width:100%;"></td>
+      </tr>
+    </table>
+  </div>
+  <footer class="ev-footer"></footer>
+</div>
+<progress-bar [color]="color" [mode]="mode" [value]="value" [backdropEnabled]="true"
+              [displayProgressBar]="displayProgressBar" position="GloballyTop">
+</progress-bar>
+

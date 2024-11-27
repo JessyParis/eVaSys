@@ -1,0 +1,47 @@
+
+
+.fixed_headers_cvq_description_cvqs {
+  width: 795px;
+  min-width: 795px;
+  max-width: 795px;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  td:nth-child(1), th:nth-child(1) {
+    min-width: 375px;
+    max-width: 375px;
+    width: 375px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(2), th:nth-child(2) {
+    width: 300px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(3), th:nth-child(3) {
+    width: 100px;
+    box-sizing: border-box;
+  }
+
+  thead {
+
+    tr {
+      display: block;
+      position: relative;
+    }
+
+    th {
+      text-align: left;
+    }
+  }
+
+  tbody {
+    display: block;
+    overflow: auto;
+    width: 795px;
+    min-width: 795px;
+    max-width: 795px;
+    height: 590px;
+  }
+}
