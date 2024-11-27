@@ -2473,7 +2473,7 @@ export class GridDataSource implements DataSource<any> {
         //Modify data
         if (this.displayedColumns.includes(DataColumnName.AideComposant)){
           this.items.forEach((item) => {
-            let composant: EnvComponent = this.applicationUserContext.envComponents.find(e => e.name === item.RefComposant);
+            let composant: EnvComponent = this.applicationUserContext.envComponents.find(e => e.name === item.AideComposant);
             item.AideComposant = this.applicationUserContext.getCulturedRessourceText(composant.ressLibel);
           })
         }
