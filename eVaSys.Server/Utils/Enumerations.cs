@@ -346,6 +346,8 @@ namespace eVaSys.Utils
             AdresseTypeLibelle,
             AideComposant,
             AideValeurHTML,
+            AideLibelleFRFR,
+            AideLibelleENGB,
             ApplicationLibelle,
             ApplicationProduitOrigineLibelle,
             Annee,

@@ -83,6 +83,7 @@ namespace eVaSys.Utils
         {
             if (EnvComponents.Count == 0)
             {
+                CreateEnvComponent(typeof(ActionType), 1301, 1528, 1529, true, true);
                 CreateEnvComponent(typeof(AdresseType), 265, 10041, 10042, true, true);
                 CreateEnvComponent(typeof(Aide), 10069, 10044, 10045, true, true);
                 CreateEnvComponent(typeof(Application), 10069, 10044, 10045, true, true);
@@ -140,6 +141,14 @@ namespace eVaSys.Utils
                     .Where(x => x.Name != "DModif" && x.PropertyType == typeof(DateTime?))
                     .Select(x => x.Name))
             };
+            if (CurrentCulture.Name == "en-GB")
+            {
+                cmp.Libelle = DbContext.Ressources.Where(e => e.RefRessource == ressLibel).FirstOrDefault()?.LibelleENGB;
+            }
+            else
+            {
+                cmp.Libelle = DbContext.Ressources.Where(e => e.RefRessource == ressLibel).FirstOrDefault()?.LibelleFRFR;
+            }
             EnvComponents[type.Name + "Component"] = cmp;
             return cmp;
         }
@@ -238,7 +247,8 @@ namespace eVaSys.Utils
                 SetMenuGrid(menu, DataColumnName.ActionTypeLibelle, true, "action-type", "RefActionType");
 
                 menu = CreateEnvMenu(cR, MenuName.AdministrationMenuAide, 1518, ModuleName.Administration, "");
-                SetMenuGrid(menu, DataColumnName.AideComposant, true, "aide", "RefAide");
+                if (CurrentCulture.Name == "en-GB") { SetMenuGrid(menu, DataColumnName.AideLibelleENGB, true, "aide", "RefAide"); }
+                else { SetMenuGrid(menu, DataColumnName.AideLibelleFRFR, true, "aide", "RefAide"); }
 
                 menu = CreateEnvMenu(cR, MenuName.AdministrationMenuApplication, 10046, ModuleName.Administration, "");
                 SetMenuGrid(menu, DataColumnName.ApplicationLibelle, true, "application", "RefApplication");
@@ -859,6 +869,8 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.AdresseTypeLibelle, 265, EnvDataColumnDataType.text, "Libelle", "tbrAdresseType.Libelle");
                 CreateEnvDataColumn(cR, DataColumnName.AideComposant, 595, EnvDataColumnDataType.text, "Composant", "tblAide.Composant");
                 CreateEnvDataColumn(cR, DataColumnName.AideValeurHTML, 1518, EnvDataColumnDataType.text, "ValeurHTML", "tblAide.ValeurHTML");
+                CreateEnvDataColumn(cR, DataColumnName.AideLibelleENGB, 595, EnvDataColumnDataType.text, "LibelleENGB", "tblAide.LibelleENGB");
+                CreateEnvDataColumn(cR, DataColumnName.AideLibelleFRFR, 595, EnvDataColumnDataType.text, "LibelleFRFR", "tblAide.LibelleFRFR");
                 CreateEnvDataColumn(cR, DataColumnName.ApplicationLibelle, 10069, EnvDataColumnDataType.text, "Libelle", "tblApplication.Libelle");
                 CreateEnvDataColumn(cR, DataColumnName.CentreDeTriListeCamionTypes, 1170, EnvDataColumnDataType.text, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.CommandeFournisseurCmtChargementAnnule, 1247, EnvDataColumnDataType.text, "CmtChargementAnnule", "tblCommandeFournisseur.CmtChargementAnnule");

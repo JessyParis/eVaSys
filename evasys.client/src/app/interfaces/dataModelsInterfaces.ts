@@ -55,6 +55,7 @@ export interface ActionType {
   ActionTypeEntiteTypes: ActionTypeEntiteType[];
   CreationText: string;
   ModificationText: string;
+  AllowBaseForm: boolean;
 }
 export interface ActionTypeEntiteType {
   RefActionType: number;
@@ -97,8 +98,11 @@ export interface Aide {
   RefAide: number;
   Composant: string;
   ValeurHTML: string;
+  LibelleFRFR: string;
+  LibelleENGB: string;
   CreationText: string;
   ModificationText: string;
+  RefRessource: number;
   AllowStandardCRUD: string;
 }
 export interface Application {

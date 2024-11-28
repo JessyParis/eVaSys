@@ -749,6 +749,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     );
     this.visibleFilterFilterText = (
       this.applicationUserContext.currentMenu.name === MenuName.AnnuaireMenuEntite
+      || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuActionType
       || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuAdresseType
       || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuAide
       || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuApplication
@@ -2470,13 +2471,13 @@ export class GridDataSource implements DataSource<any> {
         //Load data 
         this.itemsSubject.next(resp.body);
         this.items = resp.body;
-        //Modify data
-        if (this.displayedColumns.includes(DataColumnName.AideComposant)){
-          this.items.forEach((item) => {
-            let composant: EnvComponent = this.applicationUserContext.envComponents.find(e => e.name === item.AideComposant);
-            item.AideComposant = this.applicationUserContext.getCulturedRessourceText(composant.ressLibel);
-          })
-        }
+        ////Modify data
+        //if (this.displayedColumns.includes(DataColumnName.AideComposant)){
+        //  this.items.forEach((item) => {
+        //    let composant: EnvComponent = this.applicationUserContext.envComponents.find(e => e.name === item.AideComposant);
+        //    item.AideComposant = this.applicationUserContext.getCulturedRessourceText(composant.ressLibel);
+        //  })
+        //}
         //Info
         if (this.nbAugmentation) {
           this.snackBarQueueService.addMessage({ text: this.nbAugmentation + " " + this.applicationUserContext.getCulturedRessourceText(304), duration: 4000 } as appInterfaces.SnackbarMsg);

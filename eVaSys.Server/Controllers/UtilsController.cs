@@ -201,9 +201,10 @@ namespace eVaSys.Controllers
             dT.Columns.Add("getId0", typeof(bool));
             dT.Columns.Add("createModifTooltipVisible", typeof(bool));
             dT.Columns.Add("hasHelp", typeof(bool));
+            dT.Columns.Add("libelle", typeof(string));
             foreach (EnvComponent cmp in ctx.EnvComponents.Values)
             {
-                object[] rowVals = new object[11];
+                object[] rowVals = new object[12];
                 rowVals[0] = cmp.Name;
                 rowVals[1] = cmp.URL;
                 rowVals[2] = cmp.Ref;
@@ -215,6 +216,7 @@ namespace eVaSys.Controllers
                 rowVals[8] = cmp.GetId0;
                 rowVals[9] = cmp.CreateModifTooltipVisible;
                 rowVals[10] = cmp.HasHelp;
+                rowVals[11] = cmp.Libelle;
                 dT.Rows.Add(rowVals);
             }
             return new JsonResult(dT, JsonSettings);

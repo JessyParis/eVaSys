@@ -233,6 +233,8 @@ export enum DataColumnName {
   AdresseTypeLibelle = "AdresseTypeLibelle",
   AideComposant = "AideComposant",
   AideValeurHTML = "AideValeurHTML",
+  AideLibelleFRFR = "AideLibelleFRFR",
+  AideLibelleENGB = "AideLibelleENGB",
   Annee = "Annee",
   AnneeNb = "AnneeNb",
   AnneeTexte = "AnneeTexte",

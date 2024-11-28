@@ -1,9 +1,7 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, FormGroupDirective, NgForm } from "@angular/forms";
+import { Component, OnInit } from "@angular/core";
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { HttpClient } from "@angular/common/http";
 import { ApplicationUserContext } from "../../../globals/globals";
-import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { DataModelService } from "../../../services/data-model.service";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
@@ -11,17 +9,10 @@ import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { cmp, getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
+import { UtilsService } from "../../../services/utils.service";
+import { DomSanitizer } from "@angular/platform-browser";
 import { ListService } from "../../../services/list.service";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
 
 @Component({
     selector: "action-type",
@@ -29,8 +20,7 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
     standalone: false
 })
 
-export class ActionTypeComponent implements OnInit {
-  matcher = new MyErrorStateMatcher();
+export class ActionTypeComponent extends BaseFormComponent<dataModelsInterfaces.ActionType> implements OnInit {
   //Form
   form: UntypedFormGroup;
   actionType: dataModelsInterfaces.ActionType = {} as dataModelsInterfaces.ActionType;
@@ -38,16 +28,19 @@ export class ActionTypeComponent implements OnInit {
   libelleFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
   documentTypeFC: UntypedFormControl = new UntypedFormControl(null);
   entiteTypeListFC: UntypedFormControl = new UntypedFormControl(null);
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = false;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private listService: ListService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected listService: ListService
+    , protected utilsService: UtilsService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("ActionTypeComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     //Init data
     this.actionType.RefActionType = 0;
     if (this.actionType.ActionTypeEntiteTypes == null) { this.actionType.ActionTypeEntiteTypes = []; }
@@ -153,7 +146,6 @@ export class ActionTypeComponent implements OnInit {
     });
   }
   delete() {
-    var url = this.baseUrl + "evapi/regionee/" + this.actionType.RefActionType;
     this.dataModelService.deleteActionType(this.actionType)
       .subscribe(result => {
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1064), duration: 4000 } as appInterfaces.SnackbarMsg);
@@ -176,15 +168,5 @@ export class ActionTypeComponent implements OnInit {
       .map(item => item.EntiteType.Libelle).join("\n");
     //End
     return s;
-  }
-  //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    this.router.navigate(["grid"]);
-  }
-  //-----------------------------------------------------------------------------------
-  //Format multiline tooltip text for creation/modification
-  getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.actionType);
   }
 }

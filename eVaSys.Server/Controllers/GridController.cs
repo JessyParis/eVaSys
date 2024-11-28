@@ -1502,17 +1502,26 @@ namespace eVaSys.Controllers
                             break;
                         case "AdministrationMenuAide":
                             ////Chaine SQL globale
-                            //sqlStr = "select tblAide.RefAide as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefAide.ToString()].Name + "]"
-                            //    + "     , tblRessource.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AideComposant.ToString()].Name + "]"
-                            //    + "     , tblAide.ValeurHTML as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AideValeurHTML.ToString()].Name + "]"
-                            //    + " from tblAide"
-                            //    + " where 1=1";
-                            sqlStr = Utils.Utils.CreateSQLSelectColumns(CurrentContext, new List<Enumerations.DataColumnName> {
-                                Enumerations.DataColumnName.RefAide
-                                , Enumerations.DataColumnName.AideComposant
-                                , Enumerations.DataColumnName.AideValeurHTML
-                            });
-                            sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, filterText, new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.AideComposant });
+                            sqlStr = "select tblAide.RefAide as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefAide.ToString()].Name + "]";
+                            if(CurrentContext.CurrentCulture.Name == "en-GB")
+                            {
+                                sqlStr += "     , tblAide.LibelleENGB as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AideLibelleENGB.ToString()].Name + "]";
+                            }
+                            else
+                            {
+                                sqlStr += "     , tblAide.LibelleFRFR as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AideLibelleFRFR.ToString()].Name + "]";
+                            }
+                            sqlStr+= "     , tblAide.ValeurHTML as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AideValeurHTML.ToString()].Name + "]"
+                                + " from tblAide"
+                                + " where 1=1";
+                            if (CurrentContext.CurrentCulture.Name == "en-GB")
+                            {
+                                sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, filterText, new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.AideLibelleENGB });
+                            }
+                            else
+                            {
+                                sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, filterText, new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.AideLibelleFRFR });
+                            }
                             break;
                         case "AdministrationMenuParametre":
                             sqlStr = Utils.Utils.CreateSQLSelectColumns(CurrentContext, new List<Enumerations.DataColumnName> {
@@ -2202,8 +2211,8 @@ namespace eVaSys.Controllers
                     //Get the total row count
                     cmd.CommandText = "select count(*) from (" + sqlStr + ") as univers";
                     nbRow = cmd.ExecuteScalar().ToString();
-                    sqlConn.Close();
-                    sqlConn.Open();
+                    //sqlConn.Close();
+                    //sqlConn.Open();
                     //Get formatted data page
                     if (menu == Enumerations.MenuName.LogistiqueMenuCommandeFournisseur.ToString() && string.IsNullOrEmpty(sortExpression))
                     {

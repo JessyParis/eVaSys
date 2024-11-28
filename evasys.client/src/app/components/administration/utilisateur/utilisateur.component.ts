@@ -498,6 +498,7 @@ export class UtilisateurComponent implements OnInit {
     //Open dialog
     const dialogRef = this.dialog.open(ComponentRelativeComponent, {
       width: "50%",
+      maxHeight: "80vh",
       data,
       autoFocus: false,
       restoreFocus: false

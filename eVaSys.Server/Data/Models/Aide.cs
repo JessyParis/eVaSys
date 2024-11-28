@@ -30,6 +30,8 @@ namespace eVaSys.Data
         public int RefAide { get; set; }
         public string Composant { get; set; }
         public string ValeurHTML { get; set; }
+        public string LibelleFRFR { get; set; }
+        public string LibelleENGB { get; set; }
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
         [NotMapped]

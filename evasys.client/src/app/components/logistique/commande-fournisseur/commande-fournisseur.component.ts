@@ -1342,7 +1342,7 @@ export class CommandeFournisseurComponent implements OnInit {
     //Check controls errors
     Object.keys(this.form.controls).forEach(key => {
       if (this.form.get(key).errors) {
-        console.log(this.form.get(key).errors);
+        //console.log(this.form.get(key).errors);
         controlErrors = true;
       }
     });

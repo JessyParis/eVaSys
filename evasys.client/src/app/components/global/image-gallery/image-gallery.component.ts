@@ -32,9 +32,9 @@ export class ImageGalleryComponent implements OnInit {
   //Data loading
   ngOnInit() {
     //Check parameters
-    console.log(this.elementType);
-    console.log(this.elementId);
-    console.log(this.pictureId);
+    //console.log(this.elementType);
+    //console.log(this.elementId);
+    //console.log(this.pictureId);
     let elId: number = parseInt(this.elementId, 10);
     if (!isNaN(elId)) {
       //Get pictures array

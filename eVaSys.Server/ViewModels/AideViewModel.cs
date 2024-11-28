@@ -25,8 +25,11 @@ namespace eVaSys.ViewModels
         public int? RefAide { get; set; }
         public string Composant { get; set; }
         public string ValeurHTML { get; set; }
+        public string LibelleFRFR { get; set; }
+        public string LibelleENGB { get; set; }
         public string CreationText { get; set;}
         public string ModificationText { get; set; }
+        public int RefRessource { get; set; }
         #endregion Properties
     }
 }

@@ -49,6 +49,8 @@ import { AdresseSimpleComponent } from "./components/annuaire/adresse-simple/adr
 import { AdresseTypeComponent } from "./components/administration/administration-components";
 import { AdresseComponent } from "./components/annuaire/adresse/adresse.component";
 import { AideComponent } from "./components/administration/aide/aide.component";
+import { AideConteneurComponent } from "./components/global/aide/aide-conteneur.component";
+import { AideBoutonComponent } from "./components/global/aide/aide-bouton.component";
 import { AppComponent } from "./components/app/app.component";
 import { ApplicationComponent } from "./components/administration/administration-components";
 import { ApplicationProduitOrigineComponent } from "./components/administration/administration-components";
@@ -270,6 +272,8 @@ const progressModules = [
     AdresseSimpleComponent,
     AdresseTypeComponent,
     AideComponent,
+    AideConteneurComponent,
+    AideBoutonComponent,
     AppComponent,
     ApplicationComponent,
     ApplicationProduitOrigineComponent,
@@ -396,7 +400,6 @@ const progressModules = [
       { path: "", redirectTo: "home", pathMatch: "full" },
       { path: "accueil-collectivite", component: AccueilCollectiviteComponent, data: { animation: "FadeIn" } },
       { path: "action-type/:id", component: ActionTypeComponent, data: { animation: "Item" } },
-      { path: "adressetype/:id", component: AdresseTypeComponent, data: { animation: "Item" } },
       { path: "adressetype/:id", component: AdresseTypeComponent, data: { animation: "Item" } },
       { path: "application-produit-origine/:id", component: ApplicationProduitOrigineComponent, data: { animation: "Item" } },
       { path: "aide/:id", component: AideComponent, data: { animation: "Item" } },

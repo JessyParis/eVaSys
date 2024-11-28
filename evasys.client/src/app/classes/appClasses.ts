@@ -30,11 +30,13 @@ export class EnvComponent {
   ressBeforeDel: number;
   ressAfterDel: number;
   ressLibel: number;
+  libelle: string;
   moments: string;
   getId0: boolean;
   createModifTooltipVisible: boolean = false;
   hasHelp: boolean = false;
-}//--------------------------------------------------------------------------------------------------------
+}
+//--------------------------------------------------------------------------------------------------------
 //Class for managing app menus
 export class EnvMenu {
   name: string;

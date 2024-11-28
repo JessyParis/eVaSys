@@ -116,6 +116,7 @@ namespace eVaSys.Utils
         public string URL { get; set; }
         public string Ref { get; set; }
         public int RessLibel { get; set; }
+        public string Libelle { get; set; }
         public int RessBeforeDel { get; set; }
         public int RessAfterDel { get; set; }
         public string Moments { get; set; }

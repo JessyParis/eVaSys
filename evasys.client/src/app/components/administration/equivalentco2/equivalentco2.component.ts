@@ -10,9 +10,9 @@ import { UtilsService } from "../../../services/utils.service";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
-import { ListService } from "../../../services/list.service";
 import { UploadComponent } from "../../dialogs/upload/upload.component";
 import { BaseFormComponent } from "../../_ancestors/base-form.component";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
     selector: "equivalentco2",
@@ -28,9 +28,6 @@ export class EquivalentCO2Component extends BaseFormComponent<dataModelsInterfac
   libelleFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
   ordreFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
   ratioFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = false;
   //Misc
   lastUploadResut: appInterfaces.UploadResponseBody;
   //Constructor
@@ -38,11 +35,13 @@ export class EquivalentCO2Component extends BaseFormComponent<dataModelsInterfac
     , protected router: Router
     , private fb: UntypedFormBuilder
     , public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private utilsService: UtilsService
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
     , protected snackBarQueueService: SnackBarQueueService
-    , protected dialog: MatDialog) {
-    super("EquivalentCO2Component", activatedRoute, router, applicationUserContext, snackBarQueueService, dialog);
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("EquivalentCO2Component", activatedRoute, router, applicationUserContext, dataModelService
+      ,utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -79,15 +78,6 @@ export class EquivalentCO2Component extends BaseFormComponent<dataModelsInterfac
       //Route back to list
       this.router.navigate(["grid"]);
     }
-    //Get help
-    this.utilsService.getAide("EquivalentCO2Component", this.applicationUserContext, this.dataModelService)
-      .subscribe({
-        next: (result) => {
-          this.aide = result;
-          if (this.aide && this.aide?.ValeurHTML) { this.hasAide = true; }
-        },
-        error: (error) => { showErrorToUser(this.dialog, error, this.applicationUserContext) }
-      });
   }
   //-----------------------------------------------------------------------------------
   //Form creation when data model exists

@@ -5,11 +5,11 @@ import { ApplicationUserContext } from "../../globals/globals";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import * as dataModelsInterfaces from "../../interfaces/dataModelsInterfaces";
-import * as appInterfaces from "../../interfaces/appInterfaces";
-import { ConfirmComponent } from "../dialogs/confirm/confirm.component";
 import { getCreationModificationTooltipText, showErrorToUser } from "../../globals/utils";
 import { SnackBarQueueService } from "../../services/snackbar-queue.service";
 import { DataModelService } from "../../services/data-model.service";
+import { UtilsService } from "../../services/utils.service";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -40,13 +40,17 @@ export abstract class BaseFormComponent<T extends { AllowBaseForm: boolean }> {
   hasAide: boolean = false;
   visibleAide: boolean = false;
   aide: dataModelsInterfaces.Aide;
+  safeValeurHTML: SafeHtml;
   //Constructor
   constructor(protected componentName: string
     , protected activatedRoute: ActivatedRoute
     , protected router: Router
     , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
     , protected snackBarQueueService: SnackBarQueueService
     , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer
   ) {
     let cmp = applicationUserContext.envComponents.find(x => x.name === this.componentName)
     if (cmp) {
@@ -57,6 +61,9 @@ export abstract class BaseFormComponent<T extends { AllowBaseForm: boolean }> {
       this.formClass = cmp.formClass;
       this.getId0 = cmp.getId0;
       this.createModifTooltipVisible = cmp.createModifTooltipVisible;
+      if (cmp.hasHelp) {
+        this.getHelp();
+      }
     }
   }
   //-----------------------------------------------------------------------------------
@@ -82,13 +89,24 @@ export abstract class BaseFormComponent<T extends { AllowBaseForm: boolean }> {
     }
   }
   //-----------------------------------------------------------------------------------
-  //Init
-  ngOnInit() {
-  }
-  //-----------------------------------------------------------------------------------
   //Back to list
   onBack() {
     this.router.navigate(["grid"]);
+  }
+  //-----------------------------------------------------------------------------------
+  //Get help
+  getHelp() {
+    //Get help
+    this.utilsService.getAide(this.componentName, this.applicationUserContext, this.dataModelService)
+      .subscribe({
+        next: (result) => {
+          this.aide = result;
+          if (result && result?.ValeurHTML) {
+            this.hasAide = true;
+            this.safeValeurHTML=this.sanitizer.bypassSecurityTrustHtml(this.aide.ValeurHTML);
+          }
+        }
+      });
   }
   //-----------------------------------------------------------------------------------
   //Get object reference

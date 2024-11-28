@@ -87,6 +87,8 @@ namespace eVaSys.Controllers
             //Set values
             aide.Composant = Utils.Utils.SetEmptyStringToNull(model.Composant);
             aide.ValeurHTML = Utils.Utils.SetEmptyStringToNull(model.ValeurHTML);
+            aide.LibelleFRFR=DbContext.Ressources.Where(e=> e.RefRessource == model.RefRessource).FirstOrDefault()?.LibelleFRFR;
+            aide.LibelleENGB=DbContext.Ressources.Where(e=> e.RefRessource == model.RefRessource).FirstOrDefault()?.LibelleENGB;
             //Register session user
             aide.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
             //Check validation

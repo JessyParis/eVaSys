@@ -48,7 +48,8 @@ export class AideComponent implements OnInit {
   lastUploadResut: appInterfaces.UploadResponseBody;
   //Constructor
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
+    private http: HttpClient, private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
     , private dataModelService: DataModelService
     , private downloadService: DownloadService
     , private snackBarQueueService: SnackBarQueueService
@@ -91,7 +92,7 @@ export class AideComponent implements OnInit {
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
     //Load initial data
     this.envComponents = this.applicationUserContext.envComponents.filter(e => e.hasHelp);
-    this.envComponents.sort(function (a, b) { return cmp(this.applicationUserContext.getCulturedRessourceText(a.ressLibel), this.applicationUserContext.getCulturedRessourceText(b.ressLibel)); })
+    this.envComponents.sort(function (a, b) { return cmp(a.libelle, b.libelle); })
     //Check parameters
     if (!isNaN(id)) {
       if (id != 0) {
@@ -125,6 +126,8 @@ export class AideComponent implements OnInit {
   saveData() {
     this.aide.Composant = this.envComponentListFC.value;
     this.aide.ValeurHTML = this.valeurHTMLFC.value;
+    let cmp = this.applicationUserContext.envComponents.find(e => e.name == this.aide.Composant);
+    this.aide.RefRessource = cmp.ressLibel;
   }
   //-----------------------------------------------------------------------------------
   //Saves the data model in DB
