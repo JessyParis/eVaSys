@@ -14,16 +14,9 @@ import { DownloadService } from "../../../services/download.service";
 import { kendoFontData } from "../../../globals/kendo-utils";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { EnvComponent } from "../../../classes/appClasses";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
+import { DomSanitizer } from "@angular/platform-browser";
+import { UtilsService } from "../../../services/utils.service";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
 
 @Component({
     selector: "aide",
@@ -31,8 +24,7 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
     standalone: false
 })
 
-export class AideComponent implements OnInit {
-  matcher = new MyErrorStateMatcher();
+export class AideComponent extends BaseFormComponent<dataModelsInterfaces.Aide> {
   //Form
   form: UntypedFormGroup;
   aide: dataModelsInterfaces.Aide = {} as dataModelsInterfaces.Aide;
@@ -41,19 +33,18 @@ export class AideComponent implements OnInit {
   valeurHTMLFC: UntypedFormControl = new UntypedFormControl(null);
   //Misc
   public kendoFontData = kendoFontData;
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = false;
-  //Misc
-  lastUploadResut: appInterfaces.UploadResponseBody;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, private fb: UntypedFormBuilder
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
     , public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private downloadService: DownloadService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("EquivalentCO2Component", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -63,28 +54,6 @@ export class AideComponent implements OnInit {
       EnvComponentList: this.envComponentListFC,
       ValeurHTML: this.valeurHTMLFC,
     });
-  }
-  //-----------------------------------------------------------------------------------
-  //Lock all controls
-  lockScreen() {
-    this.locked = true;
-  }
-  //-----------------------------------------------------------------------------------
-  //Unlock all controls
-  unlockScreen() {
-    this.locked = false;
-  }
-  //-----------------------------------------------------------------------------------
-  //Manage screen
-  manageScreen() {
-    //Global lock
-    if (1 !== 1) {
-      this.lockScreen();
-    }
-    else {
-      //Init
-      this.unlockScreen();
-    }
   }
   //-----------------------------------------------------------------------------------
   //Init
@@ -166,15 +135,5 @@ export class AideComponent implements OnInit {
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1527), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-  }
-  //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    this.router.navigate(["grid"]);
-  }
-  //-----------------------------------------------------------------------------------
-  //Format multiline tooltip text for creation/modification
-  getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.aide);
   }
 }

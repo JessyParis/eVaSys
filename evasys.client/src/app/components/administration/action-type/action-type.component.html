@@ -4,11 +4,7 @@
       <div class="ev-taskbar-left-container">
         <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
         <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
-        <button mat-icon-button (click)="visibleAide=true" type="button" *ngIf="hasAide"
-                class="ev-button-left">
-          <mat-icon aria-label="Aide" [matTooltip]="applicationUserContext.getCulturedRessourceText(1525)"
-                    class="color-tooltip-info-icon">help</mat-icon>
-        </button>
+        <aide-bouton (clicked)="visibleAide=true" *ngIf="hasAide"></aide-bouton>
         <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid" (click)="onSave()">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
       </div>
       <div class="ev-taskbar-right-container">

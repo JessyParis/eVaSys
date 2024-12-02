@@ -104,6 +104,7 @@ export interface Aide {
   ModificationText: string;
   RefRessource: number;
   AllowStandardCRUD: string;
+  AllowBaseForm: boolean;
 }
 export interface Application {
   RefApplication: number;
