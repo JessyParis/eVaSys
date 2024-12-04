@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\debug.log" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="GemBox.Bundle" Version="51.0.1256" />
     <PackageReference Include="Mail.dll" Version="3.0.24303.1333" />

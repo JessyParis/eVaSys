@@ -1,11 +1,8 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, FormGroupDirective, NgForm } from "@angular/forms";
+import { Component, ViewEncapsulation } from "@angular/core";
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { HttpClient } from "@angular/common/http";
 import { ApplicationUserContext } from "../../../globals/globals";
-import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ListService } from "../../../services/list.service";
 import { DataModelService } from "../../../services/data-model.service";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
@@ -14,16 +11,8 @@ import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { kendoFontData } from "../../../globals/kendo-utils";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-    //Constructor
-    constructor() { }
-    isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        let result: boolean = false;
-        result = !!((control && control.invalid));
-        return result;
-    }
-}
+import { DomSanitizer } from "@angular/platform-browser";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
 
 @Component({
     selector: "param-email",
@@ -32,8 +21,7 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
     standalone: false
 })
 
-export class ParamEmailComponent implements OnInit {
-  matcher = new MyErrorStateMatcher();
+export class ParamEmailComponent extends BaseFormComponent<dataModelsInterfaces.ParamEmail> {
   //Variables
   paramEmail: dataModelsInterfaces.ParamEmail = {} as dataModelsInterfaces.ParamEmail;
   //Form
@@ -63,17 +51,18 @@ export class ParamEmailComponent implements OnInit {
   aRExpediteurLibelleFC: UntypedFormControl = new UntypedFormControl(null);
   //Misc
   public kendoFontData = kendoFontData;
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = false;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private listService: ListService
-    , private dataModelService: DataModelService
-    , private utilsService: UtilsService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("ParamEmailComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -106,37 +95,16 @@ export class ParamEmailComponent implements OnInit {
     });
   }
   //-----------------------------------------------------------------------------------
-  //Lock all controls
-  lockScreen() {
-    this.locked = true;
-  }
-  //-----------------------------------------------------------------------------------
-  //Unlock all controls
-  unlockScreen() {
-    this.locked = false;
-  }
-  //-----------------------------------------------------------------------------------
-  //Manage screen
-  manageScreen() {
-    //Global lock
-    if (1 !== 1) {
-      this.lockScreen();
-    }
-    else {
-      //Init
-      this.unlockScreen();
-    }
-  }
-  //-----------------------------------------------------------------------------------
   //Init
   ngOnInit() {
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
     //Load initial data
     //Check parameters
     if (!isNaN(id)) {
-      this.dataModelService.getParamEmail(id).subscribe(result => {
+      this.dataModelService.getDataModel<dataModelsInterfaces.ParamEmail>(id, this.componentName).subscribe(result => {
         //Get data
         this.paramEmail = result;
+        this.sourceObj = result;
         //Update form
         this.updateForm();
       }, error => {
@@ -209,10 +177,10 @@ export class ParamEmailComponent implements OnInit {
   //Saves the data model in DB
   onSave() {
     this.saveData();
-    //Send data
-    this.dataModelService.postParamEmail(this.paramEmail)
+    //Update
+    this.dataModelService.postDataModel<dataModelsInterfaces.ParamEmail>(this.paramEmail, this.componentName)
       .subscribe(result => {
-        //Redirect to grid and inform user
+        //Inform user
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -223,9 +191,8 @@ export class ParamEmailComponent implements OnInit {
   onDelete(): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
-      data: { title: this.applicationUserContext.getCulturedRessourceText(300), paramEmail: this.applicationUserContext.getCulturedRessourceText(690) },
-      autoFocus: false,
-      restoreFocus: false
+      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(this.ressBeforeDel) },
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -235,20 +202,11 @@ export class ParamEmailComponent implements OnInit {
     });
   }
   delete() {
-    this.dataModelService.deleteParamEmail(this.paramEmail)
+    let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
+    this.dataModelService.deleteDataModel<dataModelsInterfaces.ParamEmail>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(691), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-  }
-  //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    this.router.navigate(["grid"]);
-  }
-  //-----------------------------------------------------------------------------------
-  //Format multiline tooltip text for creation/modification
-  getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.paramEmail);
   }
 }

@@ -21,16 +21,8 @@ import { EnvComponent } from "../../../classes/appClasses";
 import { kendoFontData } from "../../../globals/kendo-utils";
 import { UtilisateurList } from "../../../interfaces/dataModelsInterfaces";
 import { environment } from "../../../../environments/environment";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
+import { DomSanitizer } from "@angular/platform-browser";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
 
 @Component({
     selector: "utilisateur",
@@ -38,10 +30,8 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
     standalone: false
 })
 
-export class UtilisateurComponent implements OnInit {
-  cmp = new EnvComponent();
+export class UtilisateurComponent extends BaseFormComponent<dataModelsInterfaces.Utilisateur> {
   //Data
-  matcher = new MyErrorStateMatcher();
   habilitationAdministrationList: string[] = [];
   habilitationAnnuaireList: string[] = [];
   habilitationLogistiqueList: string[] = [];
@@ -87,20 +77,22 @@ export class UtilisateurComponent implements OnInit {
   filteredUtilisateurMaitreList: ReplaySubject<dataModelsInterfaces.UtilisateurList[]> = new ReplaySubject<dataModelsInterfaces.UtilisateurList[]>(1);
   public kendoFontData = kendoFontData;
   profils: dataModelsInterfaces.UtilisateurList[] = [];
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = false;
   // Subject that emits when the component has been destroyed.
   protected _onDestroy = new Subject<void>();
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private utilsService: UtilsService
-    , private listService: ListService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    this.cmp = applicationUserContext.envComponents.find(x => x.name === "UtilisateurComponent")
+  constructor(protected activatedRoute: ActivatedRoute
+    , private http: HttpClient, @Inject("BASE_URL") private baseUrl: string
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected listService: ListService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("UtilisateurComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -135,16 +127,6 @@ export class UtilisateurComponent implements OnInit {
     this.utilisateurTypeForm = this.fb.group({
       UtilisateurType: this.utilisateurTypeFC
     });
-  }
-  //-----------------------------------------------------------------------------------
-  //Lock all controls
-  lockScreen() {
-    this.locked = true;
-  }
-  //-----------------------------------------------------------------------------------
-  //Unlock all controls
-  unlockScreen() {
-    this.locked = false;
   }
   //-----------------------------------------------------------------------------------
   //Manage screen
@@ -269,9 +251,10 @@ export class UtilisateurComponent implements OnInit {
     //Check parameters
     if (!isNaN(id)) {
       if (id != 0) {
-        this.dataModelService.getDataModel<dataModelsInterfaces.Utilisateur>(id, this.cmp.name).subscribe(result => {
+        this.dataModelService.getDataModel<dataModelsInterfaces.Utilisateur>(id, this.componentName).subscribe(result => {
           //Get data
           this.utilisateur = result;
+          this.sourceObj = result;
           this.originalActif = this.utilisateur.Actif;
           this.fillContactAdresse();
           //Get available Maitres
@@ -778,7 +761,7 @@ export class UtilisateurComponent implements OnInit {
     //Process
     var url = this.baseUrl + "evapi/utilisateur";
     //Update 
-    this.dataModelService.postDataModel<dataModelsInterfaces.Utilisateur>(this.utilisateur, this.cmp.name)
+    this.dataModelService.postDataModel<dataModelsInterfaces.Utilisateur>(this.utilisateur, this.componentName)
       .subscribe(result => {
         //Redirect to grid and inform user
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
@@ -818,7 +801,7 @@ export class UtilisateurComponent implements OnInit {
   onDelete(): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
-      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(this.cmp.ressBeforeDel) },
+      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(this.ressBeforeDel) },
       autoFocus: false,
       restoreFocus: false
     });
@@ -830,16 +813,11 @@ export class UtilisateurComponent implements OnInit {
     });
   }
   delete() {
-    this.dataModelService.deleteDataModel<dataModelsInterfaces.Utilisateur>(this.utilisateur.RefUtilisateur, this.cmp.name)
+    this.dataModelService.deleteDataModel<dataModelsInterfaces.Utilisateur>(this.utilisateur.RefUtilisateur, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.cmp.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-  }
-  //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    this.router.navigate(["grid"]);
   }
   //-----------------------------------------------------------------------------------
   //Format multiline tooltip text for creation/modification

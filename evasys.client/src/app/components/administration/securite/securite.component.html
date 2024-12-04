@@ -3,8 +3,9 @@
     <div class="ev-taskbar-container">
       <div class="ev-taskbar-left-container">
         <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <aide-bouton (clicked)="visibleAide=true" *ngIf="hasAide"></aide-bouton>
         <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid"
-                (click)="onSave('')">
+                (click)="onSave()">
           {{applicationUserContext.getCulturedRessourceText(6)}}
         </button>
       </div>
@@ -45,4 +46,5 @@
   </form>
   <footer class="ev-footer"></footer>
 </div>
+<aide-conteneur [safeValeurHTML]="safeValeurHTML" (askClose)="visibleAide=false" *ngIf="visibleAide"></aide-conteneur>
 

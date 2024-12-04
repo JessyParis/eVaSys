@@ -4,6 +4,7 @@
       <div class="ev-taskbar-left-container">
         <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
         <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <aide-bouton (clicked)="visibleAide=true" *ngIf="hasAide"></aide-bouton>
         <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid"
                 (click)="onSave('')">
           {{applicationUserContext.getCulturedRessourceText(6)}}
@@ -56,9 +57,13 @@
                   </button>
                 </td>
                 <td class="background-color-primary-a-medium" style="padding:5px;"
-                     *ngIf="parametre.ValeurBinaireBase64"><img id="image" [src]="'data:image/jpeg;base64,'+parametre.ValeurBinaireBase64" height="65" width="65" /></td>
+                    *ngIf="parametre.ValeurBinaireBase64">
+                  <img id="image" [src]="'data:image/jpeg;base64,'+parametre.ValeurBinaireBase64" height="65" width="65" />
+                </td>
                 <td style="padding:5px; cursor:pointer; text-decoration:underline;" *ngIf="parametre.ValeurBinaireBase64"
-                    (click)="onGetParametreFile()">{{applicationUserContext.getCulturedRessourceText(1450)}}</td>
+                    (click)="onGetParametreFile()">
+                  {{applicationUserContext.getCulturedRessourceText(1450)}}
+                </td>
               </tr>
             </table>
             <mat-form-field style="width:100%;">
@@ -146,4 +151,5 @@
   </form>
   <footer class="ev-footer"></footer>
 </div>
+<aide-conteneur [safeValeurHTML]="safeValeurHTML" (askClose)="visibleAide=false" *ngIf="visibleAide"></aide-conteneur>
 

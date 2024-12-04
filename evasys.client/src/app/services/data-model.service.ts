@@ -110,13 +110,6 @@ export class DataModelService {
     });
   }
   //-----------------------------------------------------------------------------------
-  //Get existing ClientApplication
-  getClientApplication(refClientApplication: number): Observable<dataModelsInterfaces.ClientApplication> {
-    return this.http.get<dataModelsInterfaces.ClientApplication>(this.baseUrl + "evapi/clientapplication/" + refClientApplication.toString(), {
-      responseType: "json"
-    });
-  }
-  //-----------------------------------------------------------------------------------
   //Get existing CommandeClient
   getCommandeClient(refCommandeClient: number, refClient: number, refAdresse: number, refProduit: number, d: moment.Moment): Observable<dataModelsInterfaces.CommandeClient> {
     return this.http.get<dataModelsInterfaces.CommandeClient>(this.baseUrl + "evapi/commandeclient/" + refCommandeClient.toString(), {
@@ -376,57 +369,6 @@ export class DataModelService {
         .set("refParametre", refParametre.toString()),
       responseType: "json"
     });
-  }
-  //-----------------------------------------------------------------------------------
-  //Get existing ActionType
-  getActionType(refActionType: number): Observable<dataModelsInterfaces.ActionType> {
-    return this.http.get<dataModelsInterfaces.ActionType>(this.baseUrl + "evapi/actiontype/" + (refActionType ? refActionType.toString() : "0"), {
-      responseType: "json"
-    });
-  }
-  //-----------------------------------------------------------------------------------
-  //Post ActionType
-  postActionType(actionType: dataModelsInterfaces.ActionType): Observable<dataModelsInterfaces.ActionType> {
-    return this.http.post<dataModelsInterfaces.ActionType>(this.baseUrl + "evapi/actiontype", actionType);
-  }
-  //-----------------------------------------------------------------------------------
-  //Delete ActionType
-  deleteActionType(actionType: dataModelsInterfaces.ActionType): Observable<any> {
-    return this.http.delete(this.baseUrl + "evapi/actiontype/" + actionType.RefActionType.toString());
-  }
-  //-----------------------------------------------------------------------------------
-  //Get existing ParamEmail
-  getParamEmail(refParamEmail: number): Observable<dataModelsInterfaces.ParamEmail> {
-    return this.http.get<dataModelsInterfaces.ParamEmail>(this.baseUrl + "evapi/paramemail/" + (refParamEmail ? refParamEmail.toString() : "0"), {
-      responseType: "json"
-    });
-  }
-  //-----------------------------------------------------------------------------------
-  //Post ParamEmail
-  postParamEmail(paramEmail: dataModelsInterfaces.ParamEmail): Observable<dataModelsInterfaces.ParamEmail> {
-    return this.http.post<dataModelsInterfaces.ParamEmail>(this.baseUrl + "evapi/paramemail", paramEmail);
-  }
-  //-----------------------------------------------------------------------------------
-  //Delete ParamEmail
-  deleteParamEmail(paramEmail: dataModelsInterfaces.ParamEmail): Observable<any> {
-    return this.http.delete(this.baseUrl + "evapi/paramemail/" + paramEmail.RefParamEmail.toString());
-  }
-  //-----------------------------------------------------------------------------------
-  //Get existing RegionEE
-  getRegionEE(refRegionEE: number): Observable<dataModelsInterfaces.RegionEE> {
-    return this.http.get<dataModelsInterfaces.RegionEE>(this.baseUrl + "evapi/regionee/" + (refRegionEE ? refRegionEE.toString() : "0"), {
-      responseType: "json"
-    });
-  }
-  //-----------------------------------------------------------------------------------
-  //Post RegionEE
-  postRegionEE(regionEE: dataModelsInterfaces.RegionEE): Observable<dataModelsInterfaces.RegionEE> {
-    return this.http.post<dataModelsInterfaces.RegionEE>(this.baseUrl + "evapi/regionee", regionEE);
-  }
-  //-----------------------------------------------------------------------------------
-  //Delete RegionEE
-  deleteRegionEE(regionEE: dataModelsInterfaces.RegionEE): Observable<any> {
-    return this.http.delete(this.baseUrl + "evapi/regionee/" + regionEE.RefRegionEE.toString());
   }
   //-----------------------------------------------------------------------------------
   //Get existing Action
@@ -693,28 +635,16 @@ export class DataModelService {
     });
   }
   //-----------------------------------------------------------------------------------
-  //Get existing Process
-  getProcess(refProcess: number): Observable<dataModelsInterfaces.Process> {
-    return this.http.get<dataModelsInterfaces.Process>(this.baseUrl + "evapi/process/" + refProcess.toString(), {
-      responseType: "json"
-    });
-  }
-  /*
-  //-----------------------------------------------------------------------------------
-  //Post Process
-  postProcess(process: dataModelsInterfaces.Process): Observable<dataModelsInterfaces.Process> {
-    return this.http.post<dataModelsInterfaces.Process>(this.baseUrl + "evapi/process", process);
-  }
-  //-----------------------------------------------------------------------------------
-  //Delete Process
-  deleteProcess(process: dataModelsInterfaces.Process): Observable<any> {
-    return this.http.delete(this.baseUrl + "evapi/Process/" + process.RefProcess.toString());
-  }
-  */
-  //-----------------------------------------------------------------------------------
   //Get existing Produit
   getProduit(refProduit: number): Observable<dataModelsInterfaces.Produit> {
     return this.http.get<dataModelsInterfaces.Produit>(this.baseUrl + "evapi/produit/" + refProduit.toString(), {
+      responseType: "json"
+    });
+  }
+  //-----------------------------------------------------------------------------------
+  //Get existing Process
+  getProcess(refProcess: number): Observable<dataModelsInterfaces.Process> {
+    return this.http.get<dataModelsInterfaces.Process>(this.baseUrl + "evapi/process/" + refProcess.toString(), {
       responseType: "json"
     });
   }
@@ -817,9 +747,6 @@ export class DataModelService {
   setMomentFromTextAction(obj: dataModelsInterfaces.Action) {
     obj.DAction = (obj.DAction == null ? null : moment(obj.DAction));
   }
-  setMomentFromTextClientApplication(obj: dataModelsInterfaces.ClientApplication) {
-    obj.D = (obj.D == null ? null : moment(obj.D));
-  }
   setMomentFromTextCommandeClient(obj: dataModelsInterfaces.CommandeClient) {
     obj.D = (obj.D == null ? null : moment(obj.D));
   }
@@ -898,9 +825,6 @@ export class DataModelService {
   //Change moment dates to text dates
   setTextFromMomentAction(obj: dataModelsInterfaces.Action) {
     obj.DAction = (obj.DAction == null ? null : moment(obj.DAction).format("YYYY-MM-DDTHH:mm:ss"));
-  }
-  setTextFromMomentClientApplication(obj: dataModelsInterfaces.ClientApplication) {
-    obj.D = (obj.D == null ? null : moment(obj.D).format("YYYY-MM-DDTHH:mm:ss"));
   }
   setTextFromMomentCommandeClient(obj: dataModelsInterfaces.CommandeClient) {
     obj.D = (obj.D == null ? null : moment(obj.D).format("YYYY-MM-DDTHH:mm:ss"));

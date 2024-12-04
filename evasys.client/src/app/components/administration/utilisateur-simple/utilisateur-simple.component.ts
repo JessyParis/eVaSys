@@ -11,16 +11,9 @@ import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { DataModelService } from "../../../services/data-model.service";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { AuthService } from "../../../services/auth.service";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
+import { DomSanitizer } from "@angular/platform-browser";
+import { UtilsService } from "../../../services/utils.service";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
 
 //Passwords must be identicals
 const pwdIdenticalValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -35,8 +28,7 @@ const pwdIdenticalValidator: ValidatorFn = (control: AbstractControl): Validatio
     standalone: false
 })
 
-export class UtilisateurSimpleComponent implements OnInit {
-  matcher = new MyErrorStateMatcher();
+export class UtilisateurSimpleComponent extends BaseFormComponent<dataModelsInterfaces.Utilisateur> {
   @Input() refUtilisateur: number;
   @Input() type: string;
   @Output() askClose = new EventEmitter<any>();
@@ -50,8 +42,6 @@ export class UtilisateurSimpleComponent implements OnInit {
   eMailFC: UntypedFormControl = new UntypedFormControl(null, [Validators.email]);
   telFC: UntypedFormControl = new UntypedFormControl(null);
   telMobileFC: UntypedFormControl = new UntypedFormControl(null);
-  //Global lock
-  locked: boolean = true;
   //Required
   pwdRequired: boolean = false;
   emailRequired: boolean = false;
@@ -64,12 +54,20 @@ export class UtilisateurSimpleComponent implements OnInit {
   telMobileVisible: boolean = false;
   hide: boolean = true;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private snackBarQueueService: SnackBarQueueService
-    , private authService: AuthService
-    , public dialog: MatDialog) {
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected authService: AuthService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("AideComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
+    //Creates the form
+    this.createForm();
   }
   //-----------------------------------------------------------------------------------
   //Form initial creation
@@ -97,8 +95,6 @@ export class UtilisateurSimpleComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Data loading
   ngOnInit() {
-    //Creates the form
-    this.createForm();
     //If password reset
     if (this.applicationUserContext.ckiePasswordLost) {
       this.utilisateur.RefUtilisateur = 0;
@@ -107,9 +103,10 @@ export class UtilisateurSimpleComponent implements OnInit {
     }
     else {
       //Get Utilisateur
-      this.dataModelService.getDataModel<dataModelsInterfaces.Utilisateur>(this.refUtilisateur, "UtilisateurComponent").subscribe(result => {
+      this.dataModelService.getDataModel<dataModelsInterfaces.Utilisateur>(this.refUtilisateur, this.componentName).subscribe(result => {
         //Get data
         this.utilisateur = result;
+        this.sourceObj = result;
         //Update form
         this.updateForm();
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -220,10 +217,8 @@ export class UtilisateurSimpleComponent implements OnInit {
       });
     }
     else {
-      var url = this.baseUrl + "evapi/utilisateur";
       //Send data
-      this.http
-        .post<dataModelsInterfaces.Utilisateur>(url, this.utilisateur)
+      this.dataModelService.postDataModel<dataModelsInterfaces.Utilisateur>(this.utilisateur, this.componentName)
         .subscribe(result => {
           this.utilisateur = result;
           this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
@@ -231,10 +226,5 @@ export class UtilisateurSimpleComponent implements OnInit {
           this.askClose.emit({ type: this.type, ref: this.refUtilisateur });
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     }
-  }
-  //-----------------------------------------------------------------------------------
-  //Format multiline tooltip text for creation/modification
-  getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.utilisateur);
   }
 }

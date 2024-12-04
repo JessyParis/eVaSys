@@ -55,6 +55,7 @@ export interface ActionType {
   ActionTypeEntiteTypes: ActionTypeEntiteType[];
   CreationText: string;
   ModificationText: string;
+  AllowStandardCRUD: string;
   AllowBaseForm: boolean;
 }
 export interface ActionTypeEntiteType {
@@ -144,6 +145,8 @@ export interface ClientApplication {
   ClientApplicationApplications: ClientApplicationApplication[];
   CreationText: string;
   ModificationText: string;
+  AllowStandardCRUD: string;
+  AllowBaseForm: boolean;
 }
 export interface ClientApplicationApplication {
   RefClientApplicationApplication: number;
@@ -493,6 +496,7 @@ export interface Document {
   CreationText: string;
   ModificationText: string;
   AllowStandardCRUD: string;
+  AllowBaseForm: boolean;
 }
 export interface DocumentNoFile {
   RefDocument: number;
@@ -901,6 +905,8 @@ export interface NonConformiteDemandeClientType {
   Actif: boolean;
   CreationText: string;
   ModificationText: string;
+  AllowStandardCRUD: string;
+  AllowBaseForm: boolean;
 }
 export interface NonConformiteEtape {
   RefNonConformiteEtape: number;
@@ -1059,6 +1065,8 @@ export interface ParamEmail {
   ARExpediteurLibelle: string;
   CreationText: string;
   ModificationText: string;
+  AllowStandardCRUD: string;
+  AllowBaseForm: boolean;
 }
 export interface ParamEmailList {
   RefParamEmail: number;
@@ -1077,6 +1085,7 @@ export interface Parametre {
   CreationText: string;
   ModificationText: string;
   AllowStandardCRUD: string;
+  AllowBaseForm: boolean;
 }
 export interface Parcours {
   RefParcours: number;
@@ -1142,6 +1151,8 @@ export interface Produit {
   ProduitStandards : ProduitStandard[]
   CreationText: string;
   ModificationText: string;
+  AllowStandardCRUD: string;
+  AllowBaseForm: boolean;
 }
 export interface ProduitList {
   RefProduit: number;
@@ -1190,6 +1201,8 @@ export interface RegionEE {
   RegionEEDpts: RegionEEDpt[];
   CreationText: string;
   ModificationText: string;
+  AllowStandardCRUD: string;
+  AllowBaseForm: boolean;
 }
 export interface RegionEEDpt {
   RefRegionEEDpt: number;
@@ -1350,6 +1363,7 @@ export interface Securite {
   Libelle: string;
   CreationText: string;
   ModificationText: string;
+  AllowBaseForm: boolean;
 }
 export interface Standard {
   RefStandard: number;
@@ -1438,6 +1452,7 @@ export interface Utilisateur {
   PwdModificationText: string;
   AffectationUtilisateurMaitreText: string;
   AllowStandardCRUD: string;
+  AllowBaseForm: boolean;
 }
 export interface UtilisateurList {
   RefUtilisateur: number;

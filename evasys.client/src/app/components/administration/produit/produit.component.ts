@@ -1,9 +1,7 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, FormGroupDirective, NgForm } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ApplicationUserContext } from "../../../globals/globals";
-import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { DataModelService } from "../../../services/data-model.service";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
@@ -12,17 +10,9 @@ import { UtilsService } from "../../../services/utils.service";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { cmp, getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
+import { DomSanitizer } from "@angular/platform-browser";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
 import { ListService } from "../../../services/list.service";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
 
 @Component({
     selector: "produit",
@@ -30,8 +20,7 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
     standalone: false
 })
 
-export class ProduitComponent implements OnInit {
-  matcher = new MyErrorStateMatcher();
+export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Produit> {
   sAGECodeTransportList: dataModelsInterfaces.SAGECodeTransport[] = [];
   applicationProduitOrigineList: dataModelsInterfaces.ApplicationProduitOrigine[] = [];
   produitGroupeReportingList: dataModelsInterfaces.ProduitGroupeReporting[] = [];
@@ -62,17 +51,19 @@ export class ProduitComponent implements OnInit {
   cmtFournisseurFC: UntypedFormControl = new UntypedFormControl(null);
   cmtTransporteurFC: UntypedFormControl = new UntypedFormControl(null);
   cmtClientFC: UntypedFormControl = new UntypedFormControl(null);
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = false;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private utilsService: UtilsService
-    , private listService: ListService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected listService: ListService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("ProduitComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -104,28 +95,6 @@ export class ProduitComponent implements OnInit {
     });
   }
   //-----------------------------------------------------------------------------------
-  //Lock all controls
-  lockScreen() {
-    this.locked = true;
-  }
-  //-----------------------------------------------------------------------------------
-  //Unlock all controls
-  unlockScreen() {
-    this.locked = false;
-  }
-  //-----------------------------------------------------------------------------------
-  //Manage screen
-  manageScreen() {
-    //Global lock
-    if (1 !== 1) {
-      this.lockScreen();
-    }
-    else {
-      //Init
-      this.unlockScreen();
-    }
-  }
-  //-----------------------------------------------------------------------------------
   //Init
   ngOnInit() {
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
@@ -153,9 +122,10 @@ export class ProduitComponent implements OnInit {
     //Check parameters
     if (!isNaN(id)) {
       if (id != 0) {
-        this.dataModelService.getProduit(id).subscribe(result => {
+        this.dataModelService.getDataModel<dataModelsInterfaces.Produit>(id, this.componentName).subscribe(result => {
           //Get data
           this.produit = result;
+          this.sourceObj = result;
           //Update form
           this.updateForm();
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -242,13 +212,10 @@ export class ProduitComponent implements OnInit {
   //Saves the data model in DB
   onSave() {
     this.saveData();
-    //Process
-    var url = this.baseUrl + "evapi/produit";
-    //Update 
-    this.http
-      .post<dataModelsInterfaces.Produit>(url, this.produit)
+    //Update
+    this.dataModelService.postDataModel<dataModelsInterfaces.Produit>(this.produit, this.componentName)
       .subscribe(result => {
-        //Redirect to grid and inform user
+        //Inform user
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -259,9 +226,8 @@ export class ProduitComponent implements OnInit {
   onDelete(): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
-      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(915) },
-      autoFocus: false,
-      restoreFocus: false
+      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(this.ressBeforeDel) },
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -271,18 +237,12 @@ export class ProduitComponent implements OnInit {
     });
   }
   delete() {
-    var url = this.baseUrl + "evapi/produit/" + this.produit.RefProduit;
-    this.http
-      .delete(url)
+    let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
+    this.dataModelService.deleteDataModel<dataModelsInterfaces.Produit>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(916), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-  }
-  //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    this.router.navigate(["grid"]);
   }
   //-----------------------------------------------------------------------------------
   //Multi select
@@ -315,10 +275,5 @@ export class ProduitComponent implements OnInit {
       .map(item => item.Standard.Libelle).join("\n");
     //End
     return s;
-  }
-  //-----------------------------------------------------------------------------------
-  //Format multiline tooltip text for creation/modification
-  getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.produit);
   }
 }

@@ -84,12 +84,18 @@ lifetime.ApplicationStarted.Register(() =>OnAppStarted(builder.Configuration));
 app.UseSession();
 app.UseDefaultFiles();
 app.MapStaticAssets();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+else
+{
+    //app.UseExceptionHandler("/Error");
+    //app.MapGet("/Error", () => Results.Problem());
+    //app.UseHsts();
+}
+
 
 app.UseHttpsRedirection();
 

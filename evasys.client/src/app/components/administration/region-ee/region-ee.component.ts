@@ -1,27 +1,18 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, FormGroupDirective, NgForm } from "@angular/forms";
+import { Component } from "@angular/core";
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { HttpClient } from "@angular/common/http";
 import { ApplicationUserContext } from "../../../globals/globals";
-import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { DataModelService } from "../../../services/data-model.service";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
-import { cmp, getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
+import { cmp, showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { ListService } from "../../../services/list.service";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
+import { DomSanitizer } from "@angular/platform-browser";
+import { UtilsService } from "../../../services/utils.service";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
 
 @Component({
     selector: "region-ee",
@@ -29,27 +20,26 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
     standalone: false
 })
 
-export class RegionEEComponent implements OnInit {
-  matcher = new MyErrorStateMatcher();
+export class RegionEEComponent extends BaseFormComponent<dataModelsInterfaces.RegionEE> {
   //Form
   form: UntypedFormGroup;
   regionEE: dataModelsInterfaces.RegionEE = {} as dataModelsInterfaces.RegionEE;
   regionEEDptList: dataModelsInterfaces.RegionEEDpt[] = [];
   libelleFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
   dptListFC: UntypedFormControl = new UntypedFormControl(null);
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = false;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private listService: ListService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    //Init data
-    this.regionEE.RefRegionEE = 0;
-    if (this.regionEE.RegionEEDpts == null) { this.regionEE.RegionEEDpts = []; }
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected listService: ListService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("RegionEEComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     //Create form
     this.createForm();
   }
@@ -62,28 +52,6 @@ export class RegionEEComponent implements OnInit {
     });
   }
   //-----------------------------------------------------------------------------------
-  //Lock all controls
-  lockScreen() {
-    this.locked = true;
-  }
-  //-----------------------------------------------------------------------------------
-  //Unlock all controls
-  unlockScreen() {
-    this.locked = false;
-  }
-  //-----------------------------------------------------------------------------------
-  //Manage screen
-  manageScreen() {
-    //Global lock
-    if (1 !== 1) {
-      this.lockScreen();
-    }
-    else {
-      //Init
-      this.unlockScreen();
-    }
-  }
-  //-----------------------------------------------------------------------------------
   //Init
   ngOnInit() {
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
@@ -93,9 +61,10 @@ export class RegionEEComponent implements OnInit {
     }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     //Check parameters
     if (!isNaN(id)) {
-      this.dataModelService.getRegionEE(id).subscribe(result => {
+      this.dataModelService.getDataModel<dataModelsInterfaces.RegionEE>(id, this.componentName).subscribe(result => {
         //Get data
         this.regionEE = result;
+        this.sourceObj = result;
         //Update form
         this.updateForm();
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -123,10 +92,10 @@ export class RegionEEComponent implements OnInit {
   //Saves the data model in DB
   onSave() {
     this.saveData();
-    //Dpt
-    this.dataModelService.postRegionEE(this.regionEE)
+    //Update
+    this.dataModelService.postDataModel<dataModelsInterfaces.RegionEE>(this.regionEE, this.componentName)
       .subscribe(result => {
-        //Redirect to grid and inform user
+        //Inform user
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -137,9 +106,8 @@ export class RegionEEComponent implements OnInit {
   onDelete(): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
-      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(821) },
-      autoFocus: false,
-      restoreFocus: false
+      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(this.ressBeforeDel) },
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -149,10 +117,10 @@ export class RegionEEComponent implements OnInit {
     });
   }
   delete() {
-    var url = this.baseUrl + "evapi/regionee/" + this.regionEE.RefRegionEE;
-    this.dataModelService.deleteRegionEE(this.regionEE)
+    let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
+    this.dataModelService.deleteDataModel<dataModelsInterfaces.RegionEE>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1064), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
@@ -172,15 +140,5 @@ export class RegionEEComponent implements OnInit {
       .map(item => item.Dpt.Libelle).join("\n");
     //End
     return s;
-  }
-  //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    this.router.navigate(["grid"]);
-  }
-  //-----------------------------------------------------------------------------------
-  //Format multiline tooltip text for creation/modification
-  getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.regionEE);
   }
 }

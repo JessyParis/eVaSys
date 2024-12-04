@@ -17,16 +17,8 @@ import moment from "moment";
 import { UploadComponent } from "../../dialogs/upload/upload.component";
 import { DownloadService } from "../../../services/download.service";
 import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
+import { DomSanitizer } from "@angular/platform-browser";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
 
 @Component({
     selector: "document",
@@ -35,8 +27,7 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
     standalone: false
 })
 
-export class DocumentComponent implements OnInit {
-  matcher = new MyErrorStateMatcher();
+export class DocumentComponent extends BaseFormComponent<dataModelsInterfaces.Document> {
   sAGECodeTransportList: dataModelsInterfaces.SAGECodeTransport[] = [];
   documentEntiteList: dataModelsInterfaces.DocumentEntite[] = [];
   documentEntiteTypeList: dataModelsInterfaces.DocumentEntiteType[] = [];
@@ -50,20 +41,22 @@ export class DocumentComponent implements OnInit {
   dDebutFC: UntypedFormControl = new UntypedFormControl(null);
   dFinFC: UntypedFormControl = new UntypedFormControl(null);
   entiteTypeListFC: UntypedFormControl = new UntypedFormControl(null);
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = false;
   //Misc
   lastUploadResut: appInterfaces.UploadResponseBody;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private utilsService: UtilsService
-    , private downloadService: DownloadService
-    , private listService: ListService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected listService: ListService
+    , protected downloadService: DownloadService
+    , protected utilsService: UtilsService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("DocumentComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -80,28 +73,6 @@ export class DocumentComponent implements OnInit {
     });
   }
   //-----------------------------------------------------------------------------------
-  //Lock all controls
-  lockScreen() {
-    this.locked = true;
-  }
-  //-----------------------------------------------------------------------------------
-  //Unlock all controls
-  unlockScreen() {
-    this.locked = false;
-  }
-  //-----------------------------------------------------------------------------------
-  //Manage screen
-  manageScreen() {
-    //Global lock
-    if (1 !== 1) {
-      this.lockScreen();
-    }
-    else {
-      //Init
-      this.unlockScreen();
-    }
-  }
-  //-----------------------------------------------------------------------------------
   //Init
   ngOnInit() {
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
@@ -113,9 +84,10 @@ export class DocumentComponent implements OnInit {
     //Check parameters
     if (!isNaN(id)) {
       if (id != 0) {
-        this.dataModelService.getDataModel<dataModelsInterfaces.Document>(id, "DocumentComponent").subscribe(result => {
+        this.dataModelService.getDataModel<dataModelsInterfaces.Document>(id, this.componentName).subscribe(result => {
           //Get data
           this.document = result;
+          this.sourceObj = result;
           //Update form
           this.updateForm();
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -159,7 +131,7 @@ export class DocumentComponent implements OnInit {
   onSave(next: string) {
     this.saveData();
     //Update
-    this.dataModelService.postDataModel<dataModelsInterfaces.Document>(this.document, "DocumentComponent")
+    this.dataModelService.postDataModel<dataModelsInterfaces.Document>(this.document, this.componentName)
       .subscribe(result => {
         //Reload data
         this.document = result;
@@ -193,7 +165,7 @@ export class DocumentComponent implements OnInit {
   }
   delete() {
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
-    this.dataModelService.deleteDataModel<dataModelsInterfaces.Document>(id, "DocumentComponent")
+    this.dataModelService.deleteDataModel<dataModelsInterfaces.Document>(id, this.componentName)
       .subscribe(result => {
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1443), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
@@ -243,11 +215,6 @@ export class DocumentComponent implements OnInit {
     });
   }
   //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    this.router.navigate(["grid"]);
-  }
-  //-----------------------------------------------------------------------------------
   //Multi select
   compareFnEntiteType(item: dataModelsInterfaces.DocumentEntiteType, selectedItem: dataModelsInterfaces.DocumentEntiteType) {
     return item && selectedItem ? item.EntiteType.RefEntiteType === selectedItem.EntiteType.RefEntiteType : item === selectedItem;
@@ -263,11 +230,6 @@ export class DocumentComponent implements OnInit {
       .map(item => item.EntiteType.Libelle).join("\n");
     //End
     return s;
-  }
-  //-----------------------------------------------------------------------------------
-  //Format multiline tooltip text for creation/modification
-  getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.document);
   }
   //-----------------------------------------------------------------------------------
   //Download a file

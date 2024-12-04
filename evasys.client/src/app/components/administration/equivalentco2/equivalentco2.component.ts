@@ -62,9 +62,10 @@ export class EquivalentCO2Component extends BaseFormComponent<dataModelsInterfac
     //Check parameters
     if (!isNaN(id)) {
       if (id != 0) {
-        this.dataModelService.getDataModel<dataModelsInterfaces.EquivalentCO2>(id, "EquivalentCO2Component").subscribe(result => {
+        this.dataModelService.getDataModel<dataModelsInterfaces.EquivalentCO2>(id, this.componentName).subscribe(result => {
           //Get data
           this.equivalentCO2 = result;
+          this.sourceObj = result;
           //Update form
           this.updateForm();
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -102,7 +103,7 @@ export class EquivalentCO2Component extends BaseFormComponent<dataModelsInterfac
   onSave(next: string) {
     this.saveData();
     //Update
-    this.dataModelService.postDataModel<dataModelsInterfaces.EquivalentCO2>(this.equivalentCO2, "EquivalentCO2Component")
+    this.dataModelService.postDataModel<dataModelsInterfaces.EquivalentCO2>(this.equivalentCO2, this.componentName)
       .subscribe(result => {
         //Reload data
         this.equivalentCO2 = result;
@@ -124,7 +125,7 @@ export class EquivalentCO2Component extends BaseFormComponent<dataModelsInterfac
   onDelete(): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
-      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(1396) },
+      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(this.ressBeforeDel) },
       autoFocus: false
     });
 
@@ -136,9 +137,9 @@ export class EquivalentCO2Component extends BaseFormComponent<dataModelsInterfac
   }
   delete() {
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
-    this.dataModelService.deleteDataModel<dataModelsInterfaces.EquivalentCO2>(id, "EquivalentCO2Component")
+    this.dataModelService.deleteDataModel<dataModelsInterfaces.EquivalentCO2>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1397), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

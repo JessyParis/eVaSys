@@ -1,16 +1,13 @@
-import { Component, OnInit } from "@angular/core";
-import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, FormGroupDirective, NgForm } from "@angular/forms";
+import { Component } from "@angular/core";
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { HttpClient } from "@angular/common/http";
 import { ApplicationUserContext } from "../../../globals/globals";
-import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { DataModelService } from "../../../services/data-model.service";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
-import { cmp, getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
+import { cmp, showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
-import { DownloadService } from "../../../services/download.service";
 import { kendoFontData } from "../../../globals/kendo-utils";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { EnvComponent } from "../../../classes/appClasses";
@@ -43,7 +40,7 @@ export class AideComponent extends BaseFormComponent<dataModelsInterfaces.Aide> 
     , protected snackBarQueueService: SnackBarQueueService
     , protected dialog: MatDialog
     , protected sanitizer: DomSanitizer) {
-    super("EquivalentCO2Component", activatedRoute, router, applicationUserContext, dataModelService
+    super("AideComponent", activatedRoute, router, applicationUserContext, dataModelService
       , utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
@@ -65,9 +62,10 @@ export class AideComponent extends BaseFormComponent<dataModelsInterfaces.Aide> 
     //Check parameters
     if (!isNaN(id)) {
       if (id != 0) {
-        this.dataModelService.getDataModel<dataModelsInterfaces.Aide>(id, "AideComponent").subscribe(result => {
+        this.dataModelService.getDataModel<dataModelsInterfaces.Aide>(id, this.componentName).subscribe(result => {
           //Get data
           this.aide = result;
+          this.sourceObj = result;
           //Update form
           this.updateForm();
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -100,13 +98,11 @@ export class AideComponent extends BaseFormComponent<dataModelsInterfaces.Aide> 
   }
   //-----------------------------------------------------------------------------------
   //Saves the data model in DB
-  onSave(next: string) {
+  onSave() {
     this.saveData();
     //Update
-    this.dataModelService.postDataModel<dataModelsInterfaces.Aide>(this.aide, "AideComponent")
+    this.dataModelService.postDataModel<dataModelsInterfaces.Aide>(this.aide, this.componentName)
       .subscribe(result => {
-        //Reload data
-        this.aide = result;
         //Inform user
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
@@ -118,7 +114,7 @@ export class AideComponent extends BaseFormComponent<dataModelsInterfaces.Aide> 
   onDelete(): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
-      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(1526) },
+      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(this.ressBeforeDel) },
       autoFocus: false
     });
 
@@ -130,9 +126,9 @@ export class AideComponent extends BaseFormComponent<dataModelsInterfaces.Aide> 
   }
   delete() {
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
-    this.dataModelService.deleteDataModel<dataModelsInterfaces.Aide>(id, "AideComponent")
+    this.dataModelService.deleteDataModel<dataModelsInterfaces.Aide>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1527), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

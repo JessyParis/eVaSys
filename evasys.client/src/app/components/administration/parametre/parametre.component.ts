@@ -14,16 +14,9 @@ import { UploadComponent } from "../../dialogs/upload/upload.component";
 import { DownloadService } from "../../../services/download.service";
 import { DocumentType } from "../../../globals/enums";
 import { kendoFontData } from "../../../globals/kendo-utils";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
+import { DomSanitizer } from "@angular/platform-browser";
+import { UtilsService } from "../../../services/utils.service";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
 
 @Component({
     selector: "parametre",
@@ -31,8 +24,7 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
     standalone: false
 })
 
-export class ParametreComponent implements OnInit {
-  matcher = new MyErrorStateMatcher();
+export class ParametreComponent extends BaseFormComponent<dataModelsInterfaces.Parametre> {
   //Form
   form: UntypedFormGroup;
   parametre: dataModelsInterfaces.Parametre = {} as dataModelsInterfaces.Parametre;
@@ -44,18 +36,21 @@ export class ParametreComponent implements OnInit {
   cmtFC: UntypedFormControl = new UntypedFormControl(null);
   //Misc
   public kendoFontData = kendoFontData;
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = false;
   //Misc
   lastUploadResut: appInterfaces.UploadResponseBody;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private downloadService: DownloadService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected downloadService: DownloadService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("ParametreComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -71,28 +66,6 @@ export class ParametreComponent implements OnInit {
     });
   }
   //-----------------------------------------------------------------------------------
-  //Lock all controls
-  lockScreen() {
-    this.locked = true;
-  }
-  //-----------------------------------------------------------------------------------
-  //Unlock all controls
-  unlockScreen() {
-    this.locked = false;
-  }
-  //-----------------------------------------------------------------------------------
-  //Manage screen
-  manageScreen() {
-    //Global lock
-    if (1 !== 1) {
-      this.lockScreen();
-    }
-    else {
-      //Init
-      this.unlockScreen();
-    }
-  }
-  //-----------------------------------------------------------------------------------
   //Init
   ngOnInit() {
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
@@ -100,9 +73,10 @@ export class ParametreComponent implements OnInit {
     //Check parameters
     if (!isNaN(id)) {
       if (id != 0) {
-        this.dataModelService.getDataModel<dataModelsInterfaces.Parametre>(id, "ParametreComponent").subscribe(result => {
+        this.dataModelService.getDataModel<dataModelsInterfaces.Parametre>(id, this.componentName).subscribe(result => {
           //Get data
           this.parametre = result;
+          this.sourceObj = result;
           //Update form
           this.updateForm();
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -144,7 +118,7 @@ export class ParametreComponent implements OnInit {
   onSave(next: string) {
     this.saveData();
     //Update
-    this.dataModelService.postDataModel<dataModelsInterfaces.Parametre>(this.parametre, "ParametreComponent")
+    this.dataModelService.postDataModel<dataModelsInterfaces.Parametre>(this.parametre, this.componentName)
       .subscribe(result => {
         //Reload data
         this.parametre = result;
@@ -159,16 +133,6 @@ export class ParametreComponent implements OnInit {
           this.router.navigate(["grid"]);
         }
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-  }
-  //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    this.router.navigate(["grid"]);
-  }
-  //-----------------------------------------------------------------------------------
-  //Format multiline tooltip text for creation/modification
-  getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.parametre);
   }
   //-----------------------------------------------------------------------------------
   //Open dialog for uploading file
@@ -202,7 +166,7 @@ export class ParametreComponent implements OnInit {
       }
       else {
         //Reload data
-        this.dataModelService.getDataModel<dataModelsInterfaces.Parametre>(this.parametre.RefParametre, "ParametreComponent").subscribe(result => {
+        this.dataModelService.getDataModel<dataModelsInterfaces.Parametre>(this.parametre.RefParametre, this.componentName).subscribe(result => {
           //Get data
           this.parametre = result;
           //Update form

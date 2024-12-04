@@ -14,16 +14,9 @@ import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { cmp, getCreationModificationTooltipText } from "../../../globals/utils";
 import { showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
+import { UtilsService } from "../../../services/utils.service";
+import { DomSanitizer } from "@angular/platform-browser";
 
 class MyValidators {
   //Constructor
@@ -40,7 +33,6 @@ class MyValidators {
   }
 }
 
-
 @Component({
     selector: "client-application",
     templateUrl: "./client-application.component.html",
@@ -48,8 +40,7 @@ class MyValidators {
     standalone: false
 })
 
-export class ClientApplicationComponent implements OnInit {
-  matcher = new MyErrorStateMatcher();
+export class ClientApplicationComponent extends BaseFormComponent<dataModelsInterfaces.ClientApplication> {
   //Variables
   clientApplication: dataModelsInterfaces.ClientApplication;
   //Form
@@ -61,16 +52,19 @@ export class ClientApplicationComponent implements OnInit {
   entiteListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   yearListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   applicationProduitOrigineListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = true;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private listService: ListService
-    , private dataModelService: DataModelService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected listService: ListService
+    , protected utilsService: UtilsService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("ClientApplicationComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -156,11 +150,10 @@ export class ClientApplicationComponent implements OnInit {
     }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     //Check parameters
     if (!isNaN(id)) {
-      this.dataModelService.getClientApplication(id).subscribe(result => {
+      this.dataModelService.getDataModel<dataModelsInterfaces.ClientApplication>(id, this.componentName).subscribe(result => {
         //Get data
         this.clientApplication = result;
-        //Format dates
-        this.dataModelService.setMomentFromTextClientApplication(this.clientApplication);
+        this.sourceObj = result;
         //Sort ClientApplicationApplication
         var sortedArray: dataModelsInterfaces.ClientApplicationApplication[] = this.clientApplication.ClientApplicationApplications.sort(function (a, b) {
           return cmp(
@@ -230,14 +223,10 @@ export class ClientApplicationComponent implements OnInit {
   //Saves the data model in DB
   onSave() {
     this.saveData();
-    this.dataModelService.setTextFromMomentClientApplication(this.clientApplication);
-    //Process
-    var url = this.baseUrl + "evapi/clientapplication";
-    //Update 
-    this.http
-      .post<dataModelsInterfaces.ClientApplication>(url, this.clientApplication)
+    //Update
+    this.dataModelService.postDataModel<dataModelsInterfaces.ClientApplication>(this.clientApplication, this.componentName)
       .subscribe(result => {
-        //Redirect to grid and inform user
+        //Inform user
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -248,9 +237,8 @@ export class ClientApplicationComponent implements OnInit {
   onDelete(): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
-      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(707) },
-      autoFocus: false,
-      restoreFocus: false
+      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(this.ressBeforeDel) },
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -260,23 +248,11 @@ export class ClientApplicationComponent implements OnInit {
     });
   }
   delete() {
-
-    var url = this.baseUrl + "evapi/clientapplication/" + this.clientApplication.RefClientApplication;
-    this.http
-      .delete(url)
+    let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
+    this.dataModelService.deleteDataModel<dataModelsInterfaces.ClientApplication>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(708), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-  }
-  //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    this.router.navigate(["grid"]);
-  }
-  //-----------------------------------------------------------------------------------
-  //Format multiline tooltip text for creation/modification
-  getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.clientApplication);
   }
 }

@@ -4,6 +4,7 @@
       <div class="ev-taskbar-left-container">
         <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
         <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <aide-bouton (clicked)="visibleAide=true" *ngIf="hasAide"></aide-bouton>
         <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm" [disabled]="form.invalid"
                 (click)="onSave('')">
           {{applicationUserContext.getCulturedRessourceText(6)}}
@@ -44,7 +45,7 @@
               <mat-datepicker-toggle matIconPrefix [for]="pickerDDebut"></mat-datepicker-toggle>
               <mat-datepicker #pickerDDebut></mat-datepicker>
               <button *ngIf="form.get('DDebut').value && form.get('DDebut').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button"
-                       (click)="form.get('DDebut').setValue(null)">
+                      (click)="form.get('DDebut').setValue(null)">
                 <mat-icon>close</mat-icon>
               </button>
               <mat-error align="end" *ngIf="(form.get('DDebut').touched || form.get('DDebut').dirty) && form.get('DDebut').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
@@ -55,7 +56,7 @@
               <mat-datepicker-toggle matIconPrefix [for]="pickerDFin"></mat-datepicker-toggle>
               <mat-datepicker #pickerDFin></mat-datepicker>
               <button *ngIf="form.get('DFin').value && form.get('DFin').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button"
-                       (click)="form.get('DFin').setValue(null)">
+                      (click)="form.get('DFin').setValue(null)">
                 <mat-icon>close</mat-icon>
               </button>
               <mat-error align="end" *ngIf="(form.get('DFin').touched || form.get('DFin').dirty) && form.get('DFin').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
@@ -156,4 +157,4 @@
   </form>
   <footer class="ev-footer"></footer>
 </div>
-
+<aide-conteneur [safeValeurHTML]="safeValeurHTML" (askClose)="visibleAide=false" *ngIf="visibleAide"></aide-conteneur>

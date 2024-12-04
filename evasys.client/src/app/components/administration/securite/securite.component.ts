@@ -1,23 +1,16 @@
-import { Component, OnInit } from "@angular/core";
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, FormGroupDirective, NgForm, ValidatorFn, AbstractControl, ValidationErrors } from "@angular/forms";
+import { Component } from "@angular/core";
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, ValidationErrors } from "@angular/forms";
 import { ApplicationUserContext } from "../../../globals/globals";
-import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { DataModelService } from "../../../services/data-model.service";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
-import { getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
+import { showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
+import { DomSanitizer } from "@angular/platform-browser";
+import { ActivatedRoute, Router } from "@angular/router";
+import { UtilsService } from "../../../services/utils.service";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
 
 /** 0 or 90 to 365  for delaiAvantDesactivationUtilisateurFC*/
 const delaiAvantDesactivationUtilisateurRange: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -37,22 +30,24 @@ const delaiAvantChangementMotDePasseRange: ValidatorFn = (control: AbstractContr
     standalone: false
 })
 
-export class SecuriteComponent implements OnInit {
-  matcher = new MyErrorStateMatcher();
-
+export class SecuriteComponent extends BaseFormComponent<dataModelsInterfaces.Securite> {
   //Form
   form: UntypedFormGroup;
   securite: dataModelsInterfaces.Securite = {} as dataModelsInterfaces.Securite;
   delaiAvantDesactivationUtilisateurFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, delaiAvantDesactivationUtilisateurRange, Validators.pattern('^[0-9]+$')]);
   delaiAvantChangementMotDePasseFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, delaiAvantChangementMotDePasseRange, Validators.pattern('^[0-9]+$')]);
-  //Global lock
-  locked: boolean = true;
-  saveLocked: boolean = false;
   //Constructor
-  constructor(private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer) {
+    super("SecuriteComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -64,34 +59,13 @@ export class SecuriteComponent implements OnInit {
     });
   }
   //-----------------------------------------------------------------------------------
-  //Lock all controls
-  lockScreen() {
-    this.locked = true;
-  }
-  //-----------------------------------------------------------------------------------
-  //Unlock all controls
-  unlockScreen() {
-    this.locked = false;
-  }
-  //-----------------------------------------------------------------------------------
-  //Manage screen
-  manageScreen() {
-    //Global lock
-    if (1 !== 1) {
-      this.lockScreen();
-    }
-    else {
-      //Init
-      this.unlockScreen();
-    }
-  }
-  //-----------------------------------------------------------------------------------
   //Init
   ngOnInit() {
     //Load initial data
     this.dataModelService.getSecurite().subscribe(result => {
       //Get data
       this.securite = result;
+      this.sourceObj = result;
       //Update form
       this.updateForm();
     }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -112,19 +86,13 @@ export class SecuriteComponent implements OnInit {
   }
   //-----------------------------------------------------------------------------------
   //Saves the data model in DB
-  onSave(nextAction: string) {
+  onSave() {
     this.saveData();
-    //Process
     //Update 
     this.dataModelService.postSecurite(this.securite)
       .subscribe(result => {
         //Inform user
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-  }
-  //-----------------------------------------------------------------------------------
-  //Format multiline tooltip text for creation/modification
-  getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.securite);
   }
 }

@@ -66,9 +66,10 @@ export class ActionTypeComponent extends BaseFormComponent<dataModelsInterfaces.
     }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     //Check parameters
     if (!isNaN(id)) {
-      this.dataModelService.getActionType(id).subscribe(result => {
+      this.dataModelService.getDataModel<dataModelsInterfaces.ActionType>(id, this.componentName).subscribe(result => {
         //Get data
         this.actionType = result;
+        this.sourceObj = result;
         //Update form
         this.updateForm();
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -98,10 +99,10 @@ export class ActionTypeComponent extends BaseFormComponent<dataModelsInterfaces.
   //Saves the data model in DB
   onSave() {
     this.saveData();
-    //EntiteType
-    this.dataModelService.postActionType(this.actionType)
+    //Update
+    this.dataModelService.postDataModel<dataModelsInterfaces.ActionType>(this.actionType, this.componentName)
       .subscribe(result => {
-        //Redirect to grid and inform user
+        //Inform user
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -112,9 +113,8 @@ export class ActionTypeComponent extends BaseFormComponent<dataModelsInterfaces.
   onDelete(): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
-      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(821) },
-      autoFocus: false,
-      restoreFocus: false
+      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(this.ressBeforeDel) },
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -124,9 +124,10 @@ export class ActionTypeComponent extends BaseFormComponent<dataModelsInterfaces.
     });
   }
   delete() {
-    this.dataModelService.deleteActionType(this.actionType)
+    let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
+    this.dataModelService.deleteDataModel<dataModelsInterfaces.ActionType>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1064), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
