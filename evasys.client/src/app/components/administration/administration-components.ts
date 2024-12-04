@@ -9,6 +9,8 @@ import { DataModelService } from "../../services/data-model.service";
 import { SnackBarQueueService } from "../../services/snackbar-queue.service";
 import * as dataModelsInterfaces from "../../interfaces/dataModelsInterfaces";
 import { FormControlType, ListContentType } from "../../globals/enums";
+import { DomSanitizer } from "@angular/platform-browser";
+import { UtilsService } from "../../services/utils.service";
 
 @Component({
     selector: "adressetype",
@@ -21,8 +23,11 @@ export class AdresseTypeComponent extends AncestorComponent<dataModelsInterfaces
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("AdresseTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("AdresseTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -37,8 +42,11 @@ export class ApplicationComponent extends AncestorComponent<dataModelsInterfaces
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("ApplicationComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("ApplicationComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -53,8 +61,11 @@ export class ApplicationProduitOrigineComponent extends AncestorComponent<dataMo
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("ApplicationProduitOrigineComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("ApplicationProduitOrigineComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -69,8 +80,11 @@ export class CamionTypeComponent extends AncestorComponent<dataModelsInterfaces.
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("CamionTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("CamionTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing);
@@ -90,8 +104,11 @@ export class RessourceComponent extends AncestorComponent<dataModelsInterfaces.R
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("RessourceComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("RessourceComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing);
@@ -111,8 +128,11 @@ export class CiviliteComponent extends AncestorComponent<dataModelsInterfaces.Ci
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("CiviliteComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("CiviliteComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing);
@@ -132,8 +152,11 @@ export class SAGECodeTransportComponent extends AncestorComponent<dataModelsInte
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("SAGECodeTransportComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("SAGECodeTransportComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing);
@@ -156,8 +179,11 @@ export class EcoOrganismeComponent extends AncestorComponent<dataModelsInterface
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("EcoOrganismeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("EcoOrganismeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing);
@@ -176,8 +202,11 @@ export class EntiteTypeComponent extends AncestorComponent<dataModelsInterfaces.
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("EntiteTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("EntiteTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing);
@@ -241,8 +270,11 @@ export class EquipementierComponent extends AncestorComponent<dataModelsInterfac
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("EquipementierComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("EquipementierComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -257,8 +289,11 @@ export class FonctionComponent extends AncestorComponent<dataModelsInterfaces.Fo
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("FonctionComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("FonctionComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -273,8 +308,11 @@ export class FormeContactComponent extends AncestorComponent<dataModelsInterface
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("FormeContactComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("FormeContactComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -289,8 +327,11 @@ export class FournisseurTOComponent extends AncestorComponent<dataModelsInterfac
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("FournisseurTOComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("FournisseurTOComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -305,8 +346,11 @@ export class JourFerieComponent extends AncestorComponent<dataModelsInterfaces.J
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("JourFerieComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("JourFerieComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing);
@@ -325,8 +369,11 @@ export class MessageTypeComponent extends AncestorComponent<dataModelsInterfaces
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("MessageTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("MessageTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -341,8 +388,11 @@ export class ModeTransportEEComponent extends AncestorComponent<dataModelsInterf
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("ModeTransportEEComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("ModeTransportEEComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -357,8 +407,11 @@ export class MotifAnomalieChargementComponent extends AncestorComponent<dataMode
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("MotifAnomalieChargementComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("MotifAnomalieChargementComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
     //Specific lax length
     this.boxes[0].Controls[0].maxlength = 100;
   }
@@ -375,8 +428,11 @@ export class MotifAnomalieClientComponent extends AncestorComponent<dataModelsIn
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("MotifAnomalieClientComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("MotifAnomalieClientComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
     //Specific lax length
     this.boxes[0].Controls[0].maxlength = 100;
   }
@@ -393,8 +449,11 @@ export class MotifAnomalieTransporteurComponent extends AncestorComponent<dataMo
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("MotifAnomalieTransporteurComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("MotifAnomalieTransporteurComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
     //Specific lax length
     this.boxes[0].Controls[0].maxlength = 100;
   }
@@ -411,8 +470,11 @@ export class MotifCamionIncompletComponent extends AncestorComponent<dataModelsI
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("MotifCamionIncompletComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("MotifCamionIncompletComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -427,8 +489,11 @@ export class PaysComponent extends AncestorComponent<dataModelsInterfaces.Pays> 
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("PaysComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("PaysComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing);
@@ -450,8 +515,11 @@ export class ProcessComponent extends AncestorComponent<dataModelsInterfaces.Pro
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("ProcessComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("ProcessComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -466,8 +534,11 @@ export class ProduitGroupeReportingTypeComponent extends AncestorComponent<dataM
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("ProduitGroupeReportingTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("ProduitGroupeReportingTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -482,8 +553,11 @@ export class ProduitGroupeReportingComponent extends AncestorComponent<dataModel
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("ProduitGroupeReportingComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("ProduitGroupeReportingComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing);
@@ -504,8 +578,11 @@ export class RegionReportingComponent extends AncestorComponent<dataModelsInterf
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("RegionReportingComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("RegionReportingComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -520,8 +597,11 @@ export class RepreneurComponent extends AncestorComponent<dataModelsInterfaces.R
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("RepreneurComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("RepreneurComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing);
@@ -541,8 +621,11 @@ export class RepriseTypeComponent extends AncestorComponent<dataModelsInterfaces
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("RepriseTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("RepriseTypeComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -557,8 +640,11 @@ export class ServiceComponent extends AncestorComponent<dataModelsInterfaces.Ser
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("ServiceComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("ServiceComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -573,8 +659,11 @@ export class StandardComponent extends AncestorComponent<dataModelsInterfaces.St
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("StandardComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("StandardComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }
 
@@ -589,8 +678,11 @@ export class TicketComponent extends AncestorComponent<dataModelsInterfaces.Tick
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("TicketComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("TicketComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
   initControls() {
     this.CreateBox(this.ressLibelSing).boxClass = "boxDoubleSize";
@@ -613,7 +705,10 @@ export class TitreComponent extends AncestorComponent<dataModelsInterfaces.Titre
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
-    super("TitreComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog);
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
+    super("TitreComponent", activatedRoute, router, fb, applicationUserContext, dataModelService, listService, snackBarQueueService, dialog, utilsService, sanitizer);
   }
 }

@@ -153,7 +153,7 @@ export class DocumentComponent extends BaseFormComponent<dataModelsInterfaces.Do
   onDelete(): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
-      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(1396) },
+      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(this.ressBeforeDel) },
       autoFocus: false
     });
 
@@ -167,7 +167,7 @@ export class DocumentComponent extends BaseFormComponent<dataModelsInterfaces.Do
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
     this.dataModelService.deleteDataModel<dataModelsInterfaces.Document>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1443), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

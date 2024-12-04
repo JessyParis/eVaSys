@@ -84,47 +84,47 @@ namespace eVaSys.Utils
             if (EnvComponents.Count == 0)
             {
                 CreateEnvComponent(typeof(ActionType), 1301, 1528, 1529, true, true);
-                CreateEnvComponent(typeof(AdresseType), 265, 10041, 10042, true, false);
+                CreateEnvComponent(typeof(AdresseType), 265, 10041, 10042, true, true);
                 CreateEnvComponent(typeof(Aide), 1518, 1526, 1527, true, true);
-                CreateEnvComponent(typeof(Application), 10069, 10044, 10045, true, false);
-                CreateEnvComponent(typeof(ApplicationProduitOrigine), 703, 1262, 1263, true, false);
-                CreateEnvComponent(typeof(CamionType), 10047, 10048, 10049, true, false);
-                CreateEnvComponent(typeof(Civilite), 469, 10003, 10004, true, false);
+                CreateEnvComponent(typeof(Application), 10069, 10044, 10045, true, true);
+                CreateEnvComponent(typeof(ApplicationProduitOrigine), 703, 1262, 1263, true, true);
+                CreateEnvComponent(typeof(CamionType), 10047, 10048, 10049, true, true);
+                CreateEnvComponent(typeof(Civilite), 469, 10003, 10004, true, true);
                 CreateEnvComponent(typeof(ClientApplication), 425, 707, 708, true, true);
                 CreateEnvComponent(typeof(Document), 1442, 1198, 1443, true, true);
-                CreateEnvComponent(typeof(EcoOrganisme), 1416, 1417, 1418, true, false);
+                CreateEnvComponent(typeof(EcoOrganisme), 1416, 1417, 1418, true, true);
                 CreateEnvComponent(typeof(EntiteType), 646, 10067, 10068, true, false).GetId0 = true;
-                CreateEnvComponent(typeof(Equipementier), 1156, 10017, 10018, true, false);
+                CreateEnvComponent(typeof(Equipementier), 1156, 10017, 10018, true, true);
                 CreateEnvComponent(typeof(EquivalentCO2), 1395, 1396, 1397, true, true);
-                CreateEnvComponent(typeof(Fonction), 10014, 10012, 10013, true, false);
-                CreateEnvComponent(typeof(FormeContact), 10062, 10064, 10065, true, false);
-                CreateEnvComponent(typeof(FournisseurTO), 1157, 10019, 10020, true, false);
-                CreateEnvComponent(typeof(JourFerie), 10085, 10087, 10088, true, false);
-                CreateEnvComponent(typeof(MessageType), 643, 10055, 10056, true, false);
-                CreateEnvComponent(typeof(ModeTransportEE), 10058, 10059, 10060, true, false);
-                CreateEnvComponent(typeof(MotifAnomalieChargement), 503, 10027, 10028, true, false);
-                CreateEnvComponent(typeof(MotifAnomalieClient), 504, 10030, 10031, true, false);
-                CreateEnvComponent(typeof(MotifAnomalieTransporteur), 505, 10033, 10034, true, false);
-                CreateEnvComponent(typeof(MotifCamionIncomplet), 10022, 10023, 10024, true, false);
+                CreateEnvComponent(typeof(Fonction), 10014, 10012, 10013, true, true);
+                CreateEnvComponent(typeof(FormeContact), 10062, 10064, 10065, true, true);
+                CreateEnvComponent(typeof(FournisseurTO), 1157, 10019, 10020, true, true);
+                CreateEnvComponent(typeof(JourFerie), 10085, 10087, 10088, true, true);
+                CreateEnvComponent(typeof(MessageType), 643, 10055, 10056, true, true);
+                CreateEnvComponent(typeof(ModeTransportEE), 10058, 10059, 10060, true, true);
+                CreateEnvComponent(typeof(MotifAnomalieChargement), 503, 10027, 10028, true, true);
+                CreateEnvComponent(typeof(MotifAnomalieClient), 504, 10030, 10031, true, true);
+                CreateEnvComponent(typeof(MotifAnomalieTransporteur), 505, 10033, 10034, true, true);
+                CreateEnvComponent(typeof(MotifCamionIncomplet), 10022, 10023, 10024, true, true);
                 CreateEnvComponent(typeof(ParamEmail), 1007, 1532, 1533, true, true);
                 CreateEnvComponent(typeof(Parametre), 1413, 1414, 1415, true, true);
-                CreateEnvComponent(typeof(Pays), 10002, 10078, 10079, true, false);
-                CreateEnvComponent(typeof(Data.Process), 583, 10035, 10036, true, false);
+                CreateEnvComponent(typeof(Pays), 10002, 10078, 10079, true, true);
+                CreateEnvComponent(typeof(Data.Process), 583, 10035, 10036, true, true);
                 CreateEnvComponent(typeof(Produit), 19, 1534, 1535, true, true);
-                CreateEnvComponent(typeof(ProduitGroupeReporting), 976, 1264, 1265, true, false);
-                CreateEnvComponent(typeof(ProduitGroupeReportingType), 1039, 1276, 1277, true, false);
+                CreateEnvComponent(typeof(ProduitGroupeReporting), 976, 1264, 1265, true, true);
+                CreateEnvComponent(typeof(ProduitGroupeReportingType), 1039, 1276, 1277, true, true);
                 CreateEnvComponent(typeof(RegionEE), 1154, 1536, 1537, true, true);
-                CreateEnvComponent(typeof(RegionReporting), 10073, 10075, 10076, true, false);
-                CreateEnvComponent(typeof(Repreneur), 1132, 1294, 1295, true, false);
-                CreateEnvComponent(typeof(RepriseType), 1131, 1279, 1280, true, false);
+                CreateEnvComponent(typeof(RegionReporting), 10073, 10075, 10076, true, true);
+                CreateEnvComponent(typeof(Repreneur), 1132, 1294, 1295, true, true);
+                CreateEnvComponent(typeof(RepriseType), 1131, 1279, 1280, true, true);
                 CreateEnvComponent(typeof(Ressource), 1285, 1286, 1287, false, false);
-                CreateEnvComponent(typeof(SAGECodeTransport), 1028, 10082, 10083, true, false);
+                CreateEnvComponent(typeof(SAGECodeTransport), 1028, 10082, 10083, true, true);
                 CreateEnvComponent(typeof(Securite), 1109, 0, 0, true, true);
-                CreateEnvComponent(typeof(Service), 10010, 10008, 10009, true, false);
-                CreateEnvComponent(typeof(Standard), 10038, 10039, 10040, true, false);
-                CreateEnvComponent(typeof(Ticket), 10051, 10052, 10053, true, false);
-                CreateEnvComponent(typeof(Titre), 1149, 10006, 10007, true, false);
-                CreateEnvComponent(typeof(Utilisateur), 659, 915, 916, true, true);
+                CreateEnvComponent(typeof(Service), 10010, 10008, 10009, true, true);
+                CreateEnvComponent(typeof(Standard), 10038, 10039, 10040, true, true);
+                CreateEnvComponent(typeof(Ticket), 10051, 10052, 10053, true, true);
+                CreateEnvComponent(typeof(Titre), 1149, 10006, 10007, true, true);
+                CreateEnvComponent(typeof(Utilisateur), 659, 1538, 1539, true, true);
             }
         }
         private EnvComponent CreateEnvComponent(Type type, int ressLibel, int ressBeforeDel, int ressAfterDel, bool createModifTooltipVisible, bool hasHelp)
@@ -168,7 +168,6 @@ namespace eVaSys.Utils
                 CulturedRessources cR = new(CurrentCulture, DbContext);
                 EnvMenus = new Dictionary<string, EnvMenu>
                 {
-                    [MenuName.AdministrationMenuAdresseType.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuAdresseType.ToString(), RefRessource = 265, CulturedCaption = cR.GetTextRessource(265) == "" ? "?Type d''adresse?" : cR.GetTextRessource(265), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
                     [MenuName.AdministrationMenuClientApplication.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuClientApplication.ToString(), RefRessource = 702, CulturedCaption = cR.GetTextRessource(702) == "" ? "?Applications client?" : cR.GetTextRessource(702), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
                     [MenuName.AdministrationMenuDescriptionControle.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuDescriptionControle.ToString(), RefRessource = 52, CulturedCaption = cR.GetTextRessource(52) == "" ? "?Contrôle de balle?" : cR.GetTextRessource(52), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
                     [MenuName.AdministrationMenuDescriptionCVQ.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuDescriptionCVQ.ToString(), RefRessource = 51, CulturedCaption = cR.GetTextRessource(51) == "" ? "?Contrôle visuel quantifié?" : cR.GetTextRessource(51), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },

@@ -779,6 +779,7 @@ namespace eVaSys.Utils
             rowVals = new object[2];
             rowVals[0] = Enumerations.MenuName.AdministrationMenuAdresseType.ToString();
             rowVals[1] = Enumerations.HabilitationAdministration.Administrateur.ToString();
+            menuRights.Rows.Add(rowVals);
             rowVals = new object[2];
             rowVals[0] = Enumerations.MenuName.AdministrationMenuAide.ToString();
             rowVals[1] = Enumerations.HabilitationAdministration.Administrateur.ToString();

@@ -13,6 +13,8 @@ import { getCreationModificationTooltipText, showErrorToUser } from "../../globa
 import { SnackBarQueueService } from "../../services/snackbar-queue.service";
 import { EnvComponentControl, EnvBox } from "../../classes/appClasses";
 import { FormControlType, ListContentType } from "../../globals/enums";
+import { SafeHtml, DomSanitizer } from "@angular/platform-browser";
+import { UtilsService } from "../../services/utils.service";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -45,13 +47,21 @@ export abstract class AncestorComponent<T extends { AllowStandardCRUD: string }>
   saveLocked: boolean = false;
   // Dropdown lists
   paysList: dataModelsInterfaces.Pays[];
+  //Help
+  hasAide: boolean = false;
+  visibleAide: boolean = false;
+  aide: dataModelsInterfaces.Aide;
+  safeValeurHTML: SafeHtml;
   //Constructor
   constructor(protected componentName: string, protected activatedRoute: ActivatedRoute, protected router: Router,
     protected fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
     , protected dataModelService: DataModelService
     , protected listService: ListService
     , protected snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+    , public dialog: MatDialog
+    , protected utilsService: UtilsService
+    , protected sanitizer: DomSanitizer
+  ) {
     let cmp = applicationUserContext.envComponents.find(x => x.name === this.componentName)
     if (cmp) {
       this.ressLibelSing = cmp.ressLibel;
@@ -61,6 +71,9 @@ export abstract class AncestorComponent<T extends { AllowStandardCRUD: string }>
       this.formClass = cmp.formClass;
       this.getId0 = cmp.getId0;
       this.createModifTooltipVisible = cmp.createModifTooltipVisible;
+      if (cmp.hasHelp) {
+        this.getHelp();
+      }
     }
     this.createForm();
   }
@@ -338,5 +351,20 @@ export abstract class AncestorComponent<T extends { AllowStandardCRUD: string }>
         CreationText: (this.sourceObj["CreationText"] ? this.sourceObj["CreationText"] : "")
         , ModificationText: (this.sourceObj["ModificationText"] ? this.sourceObj["ModificationText"] : "")
       } as any);
+  }
+  //-----------------------------------------------------------------------------------
+  //Get help
+  getHelp() {
+    //Get help
+    this.utilsService.getAide(this.componentName, this.applicationUserContext, this.dataModelService)
+      .subscribe({
+        next: (result) => {
+          this.aide = result;
+          if (result && result?.ValeurHTML) {
+            this.hasAide = true;
+            this.safeValeurHTML = this.sanitizer.bypassSecurityTrustHtml(this.aide.ValeurHTML);
+          }
+        }
+      });
   }
 }
