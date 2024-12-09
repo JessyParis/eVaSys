@@ -30,7 +30,9 @@
               "lodash",
               "moment",
               "@angular/material-moment-adapter"
-            ]
+            ],
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {

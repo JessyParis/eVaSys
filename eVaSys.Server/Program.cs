@@ -88,9 +88,11 @@ app.MapStaticAssets();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseDeveloperExceptionPage();
 }
 else
 {
+    app.UseDeveloperExceptionPage();
     //app.UseExceptionHandler("/Error");
     //app.MapGet("/Error", () => Results.Problem());
     //app.UseHsts();

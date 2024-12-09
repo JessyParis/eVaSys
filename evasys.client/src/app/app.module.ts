@@ -1,8 +1,9 @@
-import { NgModule, APP_INITIALIZER, LOCALE_ID } from "@angular/core";
+import { NgModule, APP_INITIALIZER, LOCALE_ID, isDevMode } from "@angular/core";
 import { CommonModule, APP_BASE_HREF } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { SwUpdate } from '@angular/service-worker';
 import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from "@angular/material/core";
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
@@ -190,6 +191,7 @@ import { BackButtonDisableModule } from 'angular-disable-browser-back-button';
 import "moment/locale/fr";
 import "moment/locale/en-gb";
 import { environment } from "../environments/environment";
+import { ServiceWorkerModule } from '@angular/service-worker';
 registerLocaleData(localeFr);
 
 export function configurationParametres(config: ApplicationUserContext) {
@@ -249,9 +251,15 @@ const modules = [
   , MatDividerModule, MatDialogModule, MatSnackBarModule, MatSelectModule, MatListModule, MatProgressBarModule, MatDatepickerModule, MatRadioModule
   , MatAutocompleteModule, MatRippleModule, MatSlideToggleModule, MatButtonToggleModule, MatStepperModule, MatChipsModule
   , DragDropModule, NgxMatSelectSearchModule, NgxMaskDirective, NgxMaskPipe, OverlayModule, BackButtonDisableModule
-];
+  ];
 @NgModule({
-  imports: [...modules],
+  imports: [...modules, ServiceWorkerModule.register('ngsw-worker.js', {
+  enabled: true,
+    //enabled: environment.production,
+  // Register the ServiceWorker as soon as the application is stable
+  // or after 30 seconds (whichever comes first).
+  registrationStrategy: 'registerWhenStable:30000'
+})],
   exports: [...modules]
 }) export class MaterialModule { };
 const progressModules = [
