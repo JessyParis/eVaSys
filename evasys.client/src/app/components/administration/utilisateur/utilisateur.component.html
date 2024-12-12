@@ -229,7 +229,8 @@
               <mat-label>{{applicationUserContext.getCulturedRessourceText(928)}}</mat-label>
               <mat-select formControlName="HabilitationModuleCollectivite"
                           (selectionChange)="choseHabilitationModuleCollectivite($event.value);">
-                <mat-option *ngFor="let habilitationModuleCollectivite of habilitationModuleCollectiviteList" [value]="habilitationModuleCollectivite">{{habilitationModuleCollectivite}}</mat-option>
+                <mat-option *ngFor="let habilitationModuleCollectivite of habilitationModuleCollectiviteList" [value]="habilitationModuleCollectivite"
+                             [disabled]="habilitationModuleCollectiviteDisabled(habilitationModuleCollectivite)">{{habilitationModuleCollectivite}}</mat-option>
               </mat-select>
               <button *ngIf="form.get('HabilitationModuleCollectivite').value && form.get('HabilitationModuleCollectivite').enabled" matIconSuffix mat-icon-button aria-label="Supprimer"
                       (click)="$event.stopPropagation(); form.get('HabilitationModuleCollectivite').setValue(null); choseHabilitationModuleCollectivite(null);" tabindex="-1" type="button">

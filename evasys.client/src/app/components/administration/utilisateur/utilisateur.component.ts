@@ -161,7 +161,6 @@ export class UtilisateurComponent extends BaseFormComponent<dataModelsInterfaces
       //Selective disable
       switch (this.utilisateurTypeFC.value) {
         case UtilisateurType.Valorplast.toString():
-          this.habilitationModuleCollectiviteFC.disable();
           this.habilitationModuleCentreDeTriFC.disable();
           this.habilitationModulePrestataireFC.disable();
           break;
@@ -847,6 +846,16 @@ export class UtilisateurComponent extends BaseFormComponent<dataModelsInterfaces
     if (this.utilisateurTypeFC.value == UtilisateurType.Valorplast) {
       if (h == HabilitationQualite.Fournisseur
         || h == HabilitationQualite.Client
+      ) { r = true; }
+    }
+    return r;
+  }
+  //-----------------------------------------------------------------------------------
+  //Enable/Disable HabilitationQualite
+  habilitationModuleCollectiviteDisabled(h: string): boolean {
+    let r: boolean = false;
+    if (this.utilisateurTypeFC.value == UtilisateurType.Valorplast) {
+      if (h == HabilitationModuleCollectivite.Utilisateur
       ) { r = true; }
     }
     return r;
