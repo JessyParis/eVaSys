@@ -674,6 +674,42 @@ namespace eVaSys.Utils
         }
         //------------------------------------------------------------------------------------------------------------------
         /// <summary>
+        /// Save values for Contrat
+        /// <param name="dataModel">The dto object to write data to</param>
+        /// <param name="viewModel">The view model to read data from </param>
+        /// <returns>true if data are different (dirty)</returns>
+        /// </summary>
+        public static bool UpdateDataContrat(ref Contrat dataModel, ContratViewModel viewModel, int refUtilisateurCourant)
+        {
+            bool dirty = false;
+            //Mark as dirty if applicable
+            if (dataModel.IdContrat != viewModel.IdContrat
+                || dataModel.RefContratType != viewModel.ContratType?.RefContratType
+                || dataModel.RefEntite != viewModel.RefEntite
+                || dataModel.DDebut != viewModel.DDebut
+                || dataModel.DFin != viewModel.DFin
+                || dataModel.ReconductionTacite != viewModel.ReconductionTacite
+                || dataModel.Avenant != viewModel.Avenant
+                || dataModel.Cmt != viewModel.Cmt
+                )
+            {
+                dirty = true;
+                //Update data
+                dataModel.IdContrat = viewModel.IdContrat;
+                dataModel.RefContratType = viewModel.ContratType?.RefContratType;
+                dataModel.RefEntite = viewModel.RefEntite;
+                dataModel.DDebut = viewModel.DDebut;
+                dataModel.DDebut = viewModel.DDebut;
+                dataModel.DFin = viewModel.DFin;
+                dataModel.ReconductionTacite = viewModel.ReconductionTacite;
+                dataModel.Avenant = viewModel.Avenant;
+                dataModel.Cmt = viewModel.Cmt;
+            }
+            //End
+            return dirty;
+        }
+        //------------------------------------------------------------------------------------------------------------------
+        /// <summary>
         /// Save values for ContratCollectivite
         /// <param name="dataModel">The dto object to write data to</param>
         /// <param name="viewModel">The view model to read data from </param>

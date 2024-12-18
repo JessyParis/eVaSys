@@ -223,6 +223,8 @@ namespace eVaSys.Data
         public ICollection<Contact> ContactModifs { get; set; }
         public ICollection<ContactAdresse> ContactAdresseCreations { get; set; }
         public ICollection<ContactAdresse> ContactAdresseModifs { get; set; }
+        public ICollection<Contrat> ContratCreations { get; set; }
+        public ICollection<Contrat> ContratModifs { get; set; }
         public ICollection<Controle> ControleCreations { get; set; }
         public ICollection<Controle> ControleModifs { get; set; }
         public ICollection<Civilite> CiviliteCreations { get; set; }
@@ -488,6 +490,8 @@ namespace eVaSys.Data
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ContactModifs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ContactAdresseCreations).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ContactAdresseModifs).Query().Count();
+            nbLinkedData += DbContext.Entry(this).Collection(b => b.ContratCreations).Query().Count();
+            nbLinkedData += DbContext.Entry(this).Collection(b => b.ContratModifs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ControleCreations).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ControleModifs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CiviliteCreations).Query().Count();

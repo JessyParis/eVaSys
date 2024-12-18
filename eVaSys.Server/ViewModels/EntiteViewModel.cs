@@ -64,6 +64,7 @@ namespace eVaSys.ViewModels
         public string IdNational { get; set; }
         public ICollection<ActionViewModel> Actions { get; set; }
         public ICollection<EntiteCamionTypeViewModel> EntiteCamionTypes { get; set; }
+        public ICollection<ContratViewModel> Contrats { get; set; }
         public ICollection<ContratIncitationQualiteViewModel> ContratIncitationQualites { get; set; }
         public ICollection<ContratCollectiviteViewModel> ContratCollectivites { get; set; }
         public ICollection<DocumentEntiteViewModel> DocumentEntites { get; set; }

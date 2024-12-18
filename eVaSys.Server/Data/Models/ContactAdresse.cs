@@ -234,7 +234,7 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            if (Email != null && Email?.Length > 200 || Tel != null && Tel?.Length > 20 || TelMobile != null && TelMobile?.Length > 20 || Fax != null && Fax?.Length > 20)
+            if (Email?.Length > 200 || Tel?.Length > 20 || TelMobile?.Length > 20 || Fax?.Length > 20)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
                 if (Email?.Length > 200) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(413); }

@@ -5,29 +5,27 @@
 /// 78570 Andrésy
 /// -----------------------------------------------------------------------------------------------------
 /// Projet : e-Valorplast
-/// Création : 23/07/2019
+/// Création : 13/12/2024
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
     /// <summary>
-    /// Class for CommandeClient
+    /// Class for Contrat
     /// </summary>
-    public class CommandeClient : IMarkModification
+    public class Contrat : IMarkModification
     {
         #region Constructor
-        public CommandeClient()
+        public Contrat()
         {
         }
-        private CommandeClient(ILazyLoader lazyLoader)
+        private Contrat(ILazyLoader lazyLoader)
         {
             LazyLoader = lazyLoader;
         }
@@ -35,41 +33,32 @@ namespace eVaSys.Data
         #endregion
         protected ApplicationDbContext DbContext { get; private set; }
         public CultureInfo currentCulture = new("fr-FR");
-        public int RefCommandeClient { get; set; }
-        public int? RefEntiteFournisseur { get; set; }
-        private Entite _entiteFournisseur;
-        public Entite EntiteFournisseur
+        public int RefContrat { get; set; }
+        public string IdContrat { get; set; }
+        public int? RefContratType { get; set; }
+        private ContratType _contratType;
+        public ContratType ContratType
         {
-            get => LazyLoader.Load(this, ref _entiteFournisseur);
-            set => _entiteFournisseur = value;
+            get => LazyLoader.Load(this, ref _contratType);
+            set => _contratType = value;
         }
-        public int RefEntite { get; set; }
-        private Entite _entite;
-        public Entite Entite
-        {
-            get => LazyLoader.Load(this, ref _entite);
-            set => _entite = value;
-        }
-        public int? RefAdresse { get; set; }
-        private Adresse _adresse;
-        public Adresse Adresse
-        {
-            get => LazyLoader.Load(this, ref _adresse);
-            set => _adresse = value;
-        }
-        public DateTime D { get; set; }
-        public int RefProduit { get; set; }
-        private Produit _produit;
-        public Produit Produit
-        {
-            get => LazyLoader.Load(this, ref _produit);
-            set => _produit = value;
-        }
-        public int Poids { get; set; }
+        public int? RefEntite { get; set; }
+        public Entite Entite;
+        public DateTime? DDebut { get; set; }
+        public DateTime? DFin { get; set; }
+        public bool ReconductionTacite { get; set; }
+        public bool Avenant { get; set; }
         public string Cmt { get; set; }
+        public byte[] Corps { get; set; }
+        public string CorpsBase64
+        {
+            get
+            {
+                return Convert.ToBase64String(Corps);
+            }
+        }
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
-        public ICollection<CommandeClientMensuelle> CommandeClientMensuelles { get; set; }
         [NotMapped]
         public int RefUtilisateurCourant { get; set; }
         public int RefUtilisateurCreation { get; set; }
@@ -127,14 +116,14 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            bool existsInDB = (Utils.Utils.DbScalar("select count(*) from tblCommandeClient where RefCommandeClient=" + RefCommandeClient, DbContext.Database.GetDbConnection()) != "0");
-            //XXXXXXXXXXXXXXXXXXXXXXXXXX
-            int c = DbContext.CommandeClients.Where(q => (q.RefEntite == RefEntite && q.RefProduit == RefProduit && q.RefAdresse == RefAdresse && q.D == D)).Count();
-            if ((!existsInDB && c > 0) || (existsInDB && c > 1))
+            if (!(RefEntite > 0) || !(RefContratType > 0) || DDebut == null || DFin==null || string.IsNullOrWhiteSpace(IdContrat))
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
-                if (r == "") { r += Environment.NewLine; }
-                r += cR.GetTextRessource(410);
+                if (!(RefEntite > 0)) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1541); }
+                if (!(RefContratType > 0)) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1543); }
+                if (DDebut == null) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1174); }
+                if (DFin == null) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1175); }
+                if (string.IsNullOrWhiteSpace(IdContrat)) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1542); }
             }
             return r;
         }
@@ -145,7 +134,14 @@ namespace eVaSys.Data
         public string IsDeletable()
         {
             string r = "";
-            int nbLinkedData = DbContext.Entry(this).Collection(b => b.CommandeClientMensuelles).Query().Count();
+            int nbLinkedData = 0;
+            //If special prices for RepriseIndividuelle
+            //if (RefContratType == (int)Enumerations.ContratType.RepriseIndividuelle)
+            //{
+            //    var e = DbContext.Entites.AsNoTracking().Where(q => q.RefEntite == RefEntite).FirstOrDefault();
+            //    if (e?.RefEntiteType==)
+            //    nbLinkedData = DbContext.PrixSpecifiques.Where(q => q.RefContrat == RefContrat).Count();
+            //}
             if (nbLinkedData != 0)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);

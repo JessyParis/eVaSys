@@ -184,10 +184,12 @@ namespace eVaSys.Data
         public ICollection<ContactAdresse> ContactAdresses { get; set; }
         public ICollection<ClientApplication> ClientApplications { get; set; }
         public ICollection<CommandeClient> CommandeClients { get; set; }
+        public ICollection<CommandeClient> CommandeClientFournisseurs { get; set; }
         public ICollection<CommandeFournisseur> CommandeFournisseurs { get; set; }
         public ICollection<CommandeFournisseur> CommandeFournisseurTransporteurs { get; set; }
         public ICollection<CommandeFournisseur> CommandeFournisseurPrestataires { get; set; }
         public ICollection<ContratIncitationQualite> ContratIncitationQualites { get; set; }
+        public ICollection<Contrat> Contrats { get; set; }
         public ICollection<ContratCollectivite> ContratCollectivites { get; set; }
         public ICollection<DocumentEntite> DocumentEntites { get; set; }
         public ICollection<EntiteCamionType> EntiteCamionTypes { get; set; }
@@ -196,6 +198,7 @@ namespace eVaSys.Data
         public ICollection<EntiteProduit> EntiteProduits { get; set; }
         public ICollection<EntiteStandard> EntiteStandards { get; set; }
         public ICollection<FicheControle> FicheControles { get; set; }
+        public ICollection<PrixReprise> PrixReprises { get; set; }
         public ICollection<Repartition> Repartitions { get; set; }
         public ICollection<RepartitionCollectivite> RepartitionCollectivites { get; set; }
         public ICollection<RepartitionProduit> RepartitionProduits { get; set; }
@@ -364,10 +367,12 @@ namespace eVaSys.Data
             nbLinkedData += DbContext.Entry(this).Collection(b => b.Transports).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ClientApplications).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeClients).Query().Count();
+            nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeClientFournisseurs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurTransporteurs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurPrestataires).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.FicheControles).Query().Count();
+            nbLinkedData += DbContext.Entry(this).Collection(b => b.PrixReprises).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.Repartitions).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.RepartitionCollectivites).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.RepartitionProduits).Query().Count();

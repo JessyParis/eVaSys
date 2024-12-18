@@ -83,8 +83,10 @@ namespace eVaSys.Data
         public virtual DbSet<ContactAdresse> ContactAdresses { get; set; }
         public virtual DbSet<ContactAdresseProcess> ContactAdresseProcesss { get; set; }
         public virtual DbSet<ContactAdresseServiceFonction> ContactAdresseServiceFonctions { get; set; }
+        public virtual DbSet<Contrat> Contrats { get; set; }
         public virtual DbSet<ContratIncitationQualite> ContratIncitationQualites { get; set; }
         public virtual DbSet<ContratCollectivite> ContratCollectivites { get; set; }
+        public virtual DbSet<ContratType> ContratTypes { get; set; }
         public virtual DbSet<Controle> Controles { get; set; }
         public virtual DbSet<ControleDescriptionControle> ControleDescriptionControles { get; set; }
         public virtual DbSet<ControleType> ControleTypes { get; set; }
@@ -708,6 +710,11 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefEntite)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                entity.HasOne(d => d.EntiteFournisseur)
+                    .WithMany(p => p.CommandeClientFournisseurs)
+                    .HasForeignKey(d => d.RefEntite)
+                    .OnDelete(DeleteBehavior.Restrict);
+
                 entity.HasOne(d => d.Adresse)
                     .WithMany(p => p.CommandeClients)
                     .HasForeignKey(d => d.RefAdresse)
@@ -1207,6 +1214,27 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefFonction)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+            modelBuilder.Entity<Contrat>(entity =>
+            {
+                entity.HasKey(e => e.RefContrat);
+
+                entity.ToTable("tblContrat");
+
+                entity.HasOne(d => d.ContratType)
+                    .WithMany(p => p.Contrats)
+                    .HasForeignKey(d => d.RefContratType)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(d => d.UtilisateurCreation)
+                    .WithMany(p => p.ContratCreations)
+                    .HasForeignKey(d => d.RefUtilisateurCreation)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(d => d.UtilisateurModif)
+                    .WithMany(p => p.ContratModifs)
+                    .HasForeignKey(d => d.RefUtilisateurModif)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
             modelBuilder.Entity<ContratIncitationQualite>(entity =>
             {
                 entity.HasKey(e => e.RefContratIncitationQualite);
@@ -1230,6 +1258,12 @@ namespace eVaSys.Data
 
                 entity.Property(e => e.DFin)
                     .HasColumnType("datetime");
+            });
+            modelBuilder.Entity<ContratType>(entity =>
+            {
+                entity.HasKey(e => e.RefContratType);
+
+                entity.ToTable("tbsContratType");
             });
             modelBuilder.Entity<Controle>(entity =>
             {
@@ -2033,6 +2067,11 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefEntite)
                     .OnDelete(DeleteBehavior.ClientCascade);
 
+                entity.HasMany(d => d.Contrats)
+                    .WithOne()
+                    .HasForeignKey(d => d.RefEntite)
+                    .OnDelete(DeleteBehavior.ClientCascade);
+
                 entity.HasMany(d => d.ContratCollectivites)
                     .WithOne()
                     .HasForeignKey(d => d.RefEntite)
@@ -2821,6 +2860,11 @@ namespace eVaSys.Data
                 entity.Property(e => e.PUHTTransport)
                     .HasColumnName("PUHTTransport")
                     .HasColumnType("decimal(10, 2)");
+
+                entity.HasOne(d => d.Entite)
+                    .WithMany(p => p.PrixReprises)
+                    .HasForeignKey(d => d.RefEntite)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.Process)
                     .WithMany(p => p.PrixReprises)

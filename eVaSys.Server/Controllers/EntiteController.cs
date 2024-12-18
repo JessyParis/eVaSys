@@ -70,6 +70,7 @@ namespace eVaSys.Controllers
                 .ThenInclude(r => r.UtilisateurModif)
                 .Include(r => r.EntiteCamionTypes)
                 .ThenInclude(r => r.UtilisateurCreation)
+                .Include(r => r.Contrats)
                 .Include(r => r.ContratIncitationQualites)
                 .Include(r => r.ContratCollectivites)
                 .Include(r => r.EntiteDRs)
@@ -156,6 +157,7 @@ namespace eVaSys.Controllers
                 .Include(r => r.Adresses)
                 .ThenInclude(r => r.UtilisateurModif)
                 .Include(r => r.ContratIncitationQualites)
+                .Include(r => r.Contrats)
                 .Include(r => r.ContratCollectivites)
                 .Include(r => r.EntiteCamionTypes)
                 .ThenInclude(r => r.UtilisateurCreation)
@@ -1222,6 +1224,45 @@ namespace eVaSys.Controllers
                 }
                 //Mark as dirty if applicable and update data
                 if (Utils.DataUtils.UpdateDataContratIncitationQualite(ref cC, cCVM, CurrentContext.RefUtilisateur))
+                {
+                    dirty = true;
+                }
+            }
+            //-----------------------------------------------------------------------------------
+            //Remove related data Contrat is deletable
+            if (dataModel.Contrats != null)
+            {
+                foreach (Contrat cC in dataModel.Contrats)
+                {
+                    if (viewModel.Contrats == null)
+                    {
+                        DbContext.Contrats.Remove(cC);
+                        dirty = true;
+                    }
+                    else if (viewModel.Contrats.Where(el => el.RefContrat == cC.RefContrat).FirstOrDefault() == null)
+                    {
+                        DbContext.Contrats.Remove(cC);
+                        dirty = true;
+                    }
+                }
+            }
+            //Add or update related data Contrats
+            foreach (ContratViewModel cCVM in viewModel.Contrats)
+            {
+                Contrat cC = null;
+                if (dataModel.Contrats != null && cCVM.RefContrat > 0)
+                {
+                    cC = dataModel.Contrats.Where(el => el.RefContrat == cCVM.RefContrat).FirstOrDefault();
+                }
+                if (cC == null)
+                {
+                    cC = new Contrat();
+                    DbContext.Contrats.Add(cC);
+                    if (dataModel.Contrats == null) { dataModel.Contrats = new HashSet<Contrat>(); }
+                    dataModel.Contrats.Add(cC);
+                }
+                //Mark as dirty if applicable and update data
+                if (Utils.DataUtils.UpdateDataContrat(ref cC, cCVM, CurrentContext.RefUtilisateur))
                 {
                     dirty = true;
                 }

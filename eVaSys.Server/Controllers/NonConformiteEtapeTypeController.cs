@@ -12,6 +12,7 @@ using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
 
@@ -64,7 +65,7 @@ namespace eVaSys.Controllers
         public IActionResult GetList()
         {
             //Query
-            System.Linq.IQueryable<eVaSys.Data.NonConformiteEtapeType> req = DbContext.NonConformiteEtapeTypes;
+            System.Linq.IQueryable<eVaSys.Data.NonConformiteEtapeType> req = DbContext.NonConformiteEtapeTypes.AsNoTracking();
             //Get data
             NonConformiteEtapeTypeViewModel[] all;
             if (CurrentContext.CurrentCulture.Name == "fr-FR")

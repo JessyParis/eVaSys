@@ -25,6 +25,7 @@ namespace eVaSys.ViewModels
         #region Properties
         public int? RefPrixReprise { get; set; }
         public DateTime D { get; set; }
+        public EntiteViewModel Entite { get; set; }
         public ProcessViewModel Process { get; set; }
         public ProduitViewModel Produit { get; set; }
         public ProduitViewModel Composant { get; set; }

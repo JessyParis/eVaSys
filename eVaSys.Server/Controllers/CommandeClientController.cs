@@ -137,6 +137,7 @@ namespace eVaSys.Controllers
                             cmd = new CommandeClient
                             {
                                 RefEntite = cmdMF.RefEntite,
+                                RefEntiteFournisseur = cmdMF.RefEntiteFournisseur,
                                 RefAdresse = cmdMF.RefAdresse,
                                 RefProduit = cmdMF.RefProduit,
                                 D = new DateTime(cmdMF.D.Year, 1, 1),

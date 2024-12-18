@@ -5,25 +5,21 @@
 /// 78570 Andrésy
 /// -----------------------------------------------------------------------------------------------------
 /// Projet : e-Valorplast
-/// Création : 3/12/2019
+/// Création : 18/12/2024
 /// ----------------------------------------------------------------------------------------------------- 
-using AutoMapper;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace eVaSys.Controllers
 {
     [Route("evapi/[controller]")]
-    public class ContactAdresseProcessController : BaseApiController
+    public class ContratTypeController : BaseApiController
     {
-        private readonly IMapper _mapper;
         #region Constructor
-        public ContactAdresseProcessController(ApplicationDbContext context, IConfiguration configuration, IMapper mapper)
-            : base(context, configuration)
-        {
-            _mapper = mapper;
-        }
+        public ContratTypeController(ApplicationDbContext context, IConfiguration configuration)
+            : base(context, configuration) { }
         #endregion Constructor
 
         #region RESTful Conventions
@@ -31,7 +27,7 @@ namespace eVaSys.Controllers
 
         #region Attribute-based Routing
         /// <summary>
-        /// GET: api/contactadresseprocess/getlist
+        /// GET: api/contrattype/getlist
         /// ROUTING TYPE: attribute-based
         /// </summary>
         /// <returns>An array of items.</returns>
@@ -39,14 +35,27 @@ namespace eVaSys.Controllers
         public IActionResult GetList()
         {
             //Query
-            System.Linq.IQueryable<eVaSys.Data.ContactAdresseProcess> req = DbContext.ContactAdresseProcesss;
+            System.Linq.IQueryable<eVaSys.Data.ContratType> req = DbContext.ContratTypes.AsNoTracking();
             //Get data
-            var all = req
-                .Where(e=> e.RefContactAdresseProcess != 2 && e.RefContactAdresseProcess != 5 && e.RefContactAdresseProcess != 6 && e.RefContactAdresseProcess != 8)
-                .OrderBy(el => el.Libelle).ToArray();
+            ContratType[] all;
+            if (CurrentContext.CurrentCulture.Name == "fr-FR")
+            {
+                all = req.OrderBy(el => el.LibelleFRFR).Select(p => new ContratType()
+                {
+                    RefContratType = p.RefContratType,
+                    Libelle = p.LibelleFRFR,
+                }).ToArray();
+            }
+            else
+            {
+                all = req.OrderBy(el => el.LibelleENGB).Select(p => new ContratType()
+                {
+                    RefContratType = p.RefContratType,
+                    Libelle = p.LibelleENGB,
+                }).ToArray();
+            }
             //Return Json
-            return new JsonResult(
-                _mapper.Map<ContactAdresseProcess[], ContactAdresseProcessViewModel[]>(all),
+            return new JsonResult(all,
                 JsonSettings);
         }
         #endregion

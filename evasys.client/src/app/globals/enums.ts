@@ -882,3 +882,7 @@ export enum UtilisateurType {
   CentreDeTri = "CentreDeTri",
   Prestataire = "Prestataire"
 }
+//Enumération pour les types de contrats
+export enum ContratType {
+  "RepriseIndividuelle" = 1,
+}

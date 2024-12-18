@@ -1030,5 +1030,10 @@ namespace eVaSys.Utils
             Entite,
             Produit,
         }
+        //Enum for ContratType
+        public enum ContratType
+        {
+            RepriseIndividuelle = 1,
+        }
     }
 }
