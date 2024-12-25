@@ -142,6 +142,7 @@ export class EntiteComponent implements OnInit {
   showAdresses: boolean = false;
   showContactAdresses: boolean = false;
   showContratIncitationQualites: boolean = false;
+  showContrats: boolean = false;
   showContratCollectivites: boolean = false;
   showEntiteEntites1: boolean = false;
   showEntiteEntites2: boolean = false;
@@ -170,6 +171,7 @@ export class EntiteComponent implements OnInit {
     this.entite.RefEntite = 0;
     if (this.entite.Adresses == null) { this.entite.Adresses = []; }
     if (this.entite.ContactAdresses == null) { this.entite.ContactAdresses = []; }
+    if (this.entite.Contrats == null) { this.entite.Contrats = []; }
     if (this.entite.ContratCollectivites == null) { this.entite.ContratCollectivites = []; }
     if (this.entite.ContratIncitationQualites == null) { this.entite.ContratIncitationQualites = []; }
     if (this.entite.EntiteEntites == null) { this.entite.EntiteEntites = []; }
@@ -318,6 +320,8 @@ export class EntiteComponent implements OnInit {
       this.showContactAdresses = (this.entite.ContactAdresses?.length > 0 || this.showAll);
       this.showContratIncitationQualites = (this.entite?.EntiteType?.RefEntiteType == 3
         && (this.entite.ContratIncitationQualites?.length > 0 || this.showAll));
+      this.showContrats = ((this.entite?.EntiteType?.RefEntiteType == 1 || this.entite?.EntiteType?.RefEntiteType == 4)
+        && (this.entite.Contrats?.length > 0 || this.showAll));
       this.showContratCollectivites = (this.entite?.EntiteType?.RefEntiteType == 1
         && (this.entite.ContratCollectivites?.length > 0 || this.showAll));
       this.showEntiteEntites1 = (this.entite?.EntiteType?.RefEntiteType == 3
@@ -410,6 +414,7 @@ export class EntiteComponent implements OnInit {
             this.entite.Actions.sort(function (a, b) { return cmpDesc(a.DAction, b.DAction); });
             this.entite.ContactAdresses.sort(function (a, b) { return cmp(a.Contact?.Nom, b.Contact?.Nom); });
             this.entite.ContratIncitationQualites.sort(function (a, b) { return cmpDesc(a.DDebut, b.DDebut); });
+            this.entite.Contrats.sort(function (a, b) { return cmpDesc(a.DDebut, b.DDebut); });
             this.entite.ContratCollectivites.sort(function (a, b) { return cmpDesc(a.DDebut, b.DDebut); });
             this.entite.EntiteEntites.sort(function (a, b) { return cmp(a.LibelleEntiteRtt, b.LibelleEntiteRtt); });
             this.entite.EntiteCamionTypes.sort(function (a, b) { return cmp(a.CamionType.Libelle, b.CamionType.Libelle); });
@@ -599,6 +604,25 @@ export class EntiteComponent implements OnInit {
             this.saveData();
             //Remove ContratIncitationQualite
             this.entite.ContratIncitationQualites.splice(i, 1);
+            //Update form
+            this.updateForm();
+          }
+        });
+    }
+  }
+  //-----------------------------------------------------------------------------------
+  //Delete a Contrat 
+  onDeleteContrat(refContrat: number) {
+    if (refContrat !== null) {
+      let i: number = this.entite.Contrats.map(e => e.RefContrat).indexOf(refContrat);
+      //Process
+      showConfirmToUser(this.dialog, this.applicationUserContext.getCulturedRessourceText(300), this.applicationUserContext.getCulturedRessourceText(1179), this.applicationUserContext)
+        .subscribe(result => {
+          if (result === "yes") {
+            //Save data
+            this.saveData();
+            //Remove Contrat
+            this.entite.Contrats.splice(i, 1);
             //Update form
             this.updateForm();
           }
@@ -957,6 +981,24 @@ export class EntiteComponent implements OnInit {
           , entite: this.entite, contratIncitationQualite: cIQ
         };
         break;
+      case "Contrat":
+        //Calculate id
+        let minRefContrat: number = -1;
+        this.entite.Contrats?.forEach(item => {
+          if (item.RefContrat <= minRefContrat) minRefContrat = item.RefContrat - 1;
+        });
+        //Get contrat
+        let c = {
+          RefContrat: minRefContrat
+          , RefEntite: this.entite.RefEntite
+          , Avenant: false
+        } as dataModelsInterfaces.Contrat;
+        if (ref != null) { c = this.entite.Contrats.find(x => x.RefContrat === ref) }
+        data = {
+          title: this.applicationUserContext.getCulturedRessourceText(1176), type: type, ref: ref
+          , entite: this.entite, contrat: c
+        };
+        break;
       case "ContratCollectivite":
         //Calculate id
         let minRefContratCollectivite: number = -1;
@@ -1119,6 +1161,19 @@ export class EntiteComponent implements OnInit {
               this.entite.ContratIncitationQualites[ind] = contratIncitationQualite;
             }
             break;
+          case "Contrat":
+            //Add or update Contrat
+            let contrat: dataModelsInterfaces.Contrat = result.ref as dataModelsInterfaces.Contrat;
+            exists = this.entite.Contrats.some(item => item.RefContrat == contrat.RefContrat);
+            if (!exists) {
+              this.entite.Contrats.push(contrat);
+              this.entite.Contrats.sort(function (a, b) { return cmpDesc(a.DDebut, b.DDebut); });
+            }
+            else {
+              let ind: number = this.entite.Contrats.map(e => e.RefContrat).indexOf(contrat.RefContrat);
+              this.entite.Contrats[ind] = contrat;
+            }
+            break;
           case "ContratCollectivite":
             //Add or update ContratCollectivite
             let contratCollectivite: dataModelsInterfaces.ContratCollectivite = result.ref as dataModelsInterfaces.ContratCollectivite;
@@ -1240,6 +1295,20 @@ ${eE.Cmt}`;
     }
   }
   //-----------------------------------------------------------------------------------
+  //Format multiline tooltip text for Contrat creation
+  getContratTooltipText(cC: dataModelsInterfaces.Contrat) {
+    if (!!cC.Avenant && !!cC.Cmt) {
+      return `${this.applicationUserContext.getCulturedRessourceText(1177)}
+${cC.Cmt}`;
+    }
+    else if (!cC.Avenant && !!cC.Cmt) {
+      return `${cC.Cmt}`;
+    }
+    else {
+      return "";
+    }
+  }
+  //-----------------------------------------------------------------------------------
   //Format multiline tooltip text for ContratCollectivite creation
   getcontratCollectiviteTooltipText(cC: dataModelsInterfaces.ContratCollectivite) {
     if (!!cC.Avenant && !!cC.Cmt) {
@@ -1302,6 +1371,13 @@ ${cC.Cmt}`;
   //Create ContratIncitationQualite label
   contratIncitationQualiteLabel(contratIncitationQualite: dataModelsInterfaces.ContratIncitationQualite): string {
     let s = moment(contratIncitationQualite.DDebut).format("L") + ' -> ' + moment(contratIncitationQualite.DFin).format("L");
+    //End
+    return s;
+  }
+  //-----------------------------------------------------------------------------------
+  //Create Contrat label
+  contratLabel(contrat: dataModelsInterfaces.Contrat): string {
+    let s = moment(contrat.DDebut).format("L") + ' -> ' + moment(contrat.DFin).format("L");
     //End
     return s;
   }

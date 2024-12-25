@@ -44,6 +44,13 @@ export class ListService {
     }
   }
   //-----------------------------------------------------------------------------------
+  //Get existing ContratType
+  getListContratType(): Observable<dataModelsInterfaces.ContratType[]> {
+    return this.http.get<dataModelsInterfaces.ContratType[]>(this.baseUrl + "evapi/contrattype/getlist", {
+      responseType: "json"
+    });
+  }
+  //-----------------------------------------------------------------------------------
   //Get existing AdresseType
   getListAdresseType(): Observable<dataModelsInterfaces.AdresseType[]> {
     return this.http.get<dataModelsInterfaces.AdresseType[]>(this.baseUrl + "evapi/adressetype/getlist", {

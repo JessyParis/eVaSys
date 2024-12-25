@@ -37,10 +37,10 @@ namespace eVaSys.Controllers
             //Query
             System.Linq.IQueryable<eVaSys.Data.ContratType> req = DbContext.ContratTypes.AsNoTracking();
             //Get data
-            ContratType[] all;
+            ContratTypeViewModel[] all;
             if (CurrentContext.CurrentCulture.Name == "fr-FR")
             {
-                all = req.OrderBy(el => el.LibelleFRFR).Select(p => new ContratType()
+                all = req.OrderBy(el => el.LibelleFRFR).Select(p => new ContratTypeViewModel()
                 {
                     RefContratType = p.RefContratType,
                     Libelle = p.LibelleFRFR,
@@ -48,7 +48,7 @@ namespace eVaSys.Controllers
             }
             else
             {
-                all = req.OrderBy(el => el.LibelleENGB).Select(p => new ContratType()
+                all = req.OrderBy(el => el.LibelleENGB).Select(p => new ContratTypeViewModel()
                 {
                     RefContratType = p.RefContratType,
                     Libelle = p.LibelleENGB,

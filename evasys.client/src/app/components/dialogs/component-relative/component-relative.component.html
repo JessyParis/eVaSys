@@ -37,6 +37,10 @@
                                 [type]="data.type" [entite]="data.entite"
                                 [contratIncitationQualite]="data.contratIncitationQualite"
                                 (askClose)="closeAsked($event)"></contrat-incitation-qualite>
+    <contrat *ngIf="data.type=='Contrat'"
+                          [type]="data.type" [entite]="data.entite"
+                          [contrat]="data.contrat"
+                          (askClose)="closeAsked($event)"></contrat>
     <contrat-collectivite *ngIf="data.type=='ContratCollectivite'"
                           [type]="data.type" [entite]="data.entite"
                           [contratCollectivite]="data.contratCollectivite"
@@ -67,7 +71,7 @@
     <transport-concurrence *ngIf="data.type=='TransportConcurrence'"
                            [refTransport]="data.ref"></transport-concurrence>
     <profils *ngIf="data.type=='Profils'"
-                           [changeProfil]="data.changeProfil" (askClose)="closeAsked($event)"></profils>
+             [changeProfil]="data.changeProfil" (askClose)="closeAsked($event)"></profils>
     <table *ngIf="data.type==='ImageGallery'" class="table-no-pad-no-space" style="width: 100%; display:block; padding: 0 0 20px 0">
       <tr>
         <td style="width:50%;"></td>

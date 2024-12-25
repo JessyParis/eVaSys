@@ -66,6 +66,7 @@ import { ConfirmComponent } from "./components/dialogs/confirm/confirm.component
 import { ContactAdresseComponent } from "./components/annuaire/contact-adresse/contact-adresse.component";
 import { ContactAdresseServiceFonctionComponent } from "./components/annuaire/contact-adresse-service-fonction/contact-adresse-service-fonction.component";
 import { ContactAdresseSimpleComponent } from "./components/annuaire/contact-adresse-simple/contact-adresse-simple.component";
+import { ContratComponent } from "./components/annuaire/contrat/contrat.component";
 import { ContratCollectiviteComponent } from "./components/annuaire/contrat-collectivite/contrat-collectivite.component";
 import { ContratIncitationQualiteComponent } from "./components/annuaire/contrat-incitation-qualite/contrat-incitation-qualite.component";
 import { ControleComponent } from "./components/qualite/controle/controle.component";
@@ -254,7 +255,7 @@ const modules = [
   ];
 @NgModule({
   imports: [...modules, ServiceWorkerModule.register('ngsw-worker.js', {
-  //enabled: true,
+  //enabled: false,
   enabled: environment.production,
   // Register the ServiceWorker as soon as the application is stable
   // or after 30 seconds (whichever comes first).
@@ -296,6 +297,7 @@ const progressModules = [
     ContactAdresseComponent,
     ContactAdresseServiceFonctionComponent,
     ContactAdresseSimpleComponent,
+    ContratComponent,
     ContratCollectiviteComponent,
     ContratIncitationQualiteComponent,
     ControleComponent,

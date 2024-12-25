@@ -92,6 +92,10 @@ namespace eVaSys.Utils
             rowVals[2] = Enumerations.ObjectName.Couleur.ToString(); rowVals[3] = "CRUD";
             rights.Rows.Add(rowVals);
             rowVals = new object[4];
+            rowVals[0] = ""; rowVals[1] = "";
+            rowVals[2] = Enumerations.ObjectName.ContratType.ToString(); rowVals[3] = "R";
+            rights.Rows.Add(rowVals);
+            rowVals = new object[4];
             rowVals[0] = Enumerations.Module.Administration.ToString(); rowVals[1] = Enumerations.HabilitationAdministration.Administrateur.ToString();
             rowVals[2] = Enumerations.ObjectName.Document.ToString(); rowVals[3] = "CRUD";
             rights.Rows.Add(rowVals);

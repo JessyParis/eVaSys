@@ -232,7 +232,7 @@
             <mat-form-field style="width:60%;" *ngIf="entite?.EntiteType?.CodeTVA">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(788)}}</mat-label>
               <input matInput formControlName="CodeTVA" maxlength="14" [required]="codeTVAFCRequired" [errorStateMatcher]="matcher"
-                     pattern="^[A-Za-z0-9]*$" [matTooltip]="applicationUserContext.getCulturedRessourceText(1466)"/>
+                     pattern="^[A-Za-z0-9]*$" [matTooltip]="applicationUserContext.getCulturedRessourceText(1466)" />
               <button *ngIf="form.get('CodeTVA').value!=null && form.get('CodeTVA').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CodeTVA').setValue(null)" tabindex="-1" type="button">
                 <mat-icon>close</mat-icon>
               </button>
@@ -338,7 +338,7 @@
             <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.IdNational">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(1421)}}</mat-label>
               <input matInput formControlName="IdNational" maxlength="25" pattern="^[A-Za-z0-9]*$" [errorStateMatcher]="matcher"
-                      [matTooltip]="applicationUserContext.getCulturedRessourceText(1467)"/>
+                     [matTooltip]="applicationUserContext.getCulturedRessourceText(1467)" />
               <button *ngIf="form.get('IdNational').value!=null && form.get('IdNational').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('IdNational').setValue(null)" tabindex="-1" type="button">
                 <mat-icon>close</mat-icon>
               </button>
@@ -379,6 +379,45 @@
                   </td>
                   <td style="padding: 0px 5px 0px 5px;">
                     <button mat-icon-button (click)="onDeleteContratCollectivite(contratCollectivite.RefContratCollectivite)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxNormalSize" *ngIf="showContrats" [@fadeInOnEnter]>
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(1545)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers_entiteliees table-no-pad-no-space">
+              <thead class="background-color-accent">
+                <tr>
+                  <th style="padding:5px;">
+                    <button mat-icon-button (click)="showDetails('Contrat', null, null, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                  </th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1545)}}</th>
+                  <th style="padding:5px;"></th>
+                  <th style="padding:5px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let contrat of entite?.Contrats">
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="showDetails('Contrat', contrat.RefContrat, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;" [class]="contrat.Avenant ? 'color-primary' : ''">{{contratLabel(contrat)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="color-grey" [matTooltip]="getContratTooltipText(contrat)">info</mat-icon>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <button mat-icon-button (click)="onDeleteContrat(contrat.RefContrat)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
                   </td>
                 </tr>
               </tbody>

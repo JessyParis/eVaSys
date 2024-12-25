@@ -49,12 +49,12 @@ namespace eVaSys.Data
         public bool ReconductionTacite { get; set; }
         public bool Avenant { get; set; }
         public string Cmt { get; set; }
-        public byte[] Corps { get; set; }
-        public string CorpsBase64
+        public byte[] Fichier { get; set; }
+        public string FichierBase64
         {
             get
             {
-                return Convert.ToBase64String(Corps);
+                return Convert.ToBase64String(Fichier);
             }
         }
         public DateTime DCreation { get; set; }

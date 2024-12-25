@@ -897,6 +897,7 @@ namespace eVaSys.Utils
             CommandeFournisseurStatut,
             ContactAdresse,
             ContactAdresseProcess,
+            ContratType,
             Controle,
             ControleDescriptionControle,
             Couleur,

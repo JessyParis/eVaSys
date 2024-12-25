@@ -350,6 +350,17 @@ export interface ContratIncitationQualite {
   DDebut: string | moment.Moment;
   DFin: string | moment.Moment;
 }
+export interface Contrat {
+  RefContrat: number;
+  IdContrat: string;
+  ContratType: ContratType;
+  RefEntite: number;
+  DDebut: string | moment.Moment;
+  DFin: string | moment.Moment;
+  ReconductionTacite : string
+  Avenant: boolean;
+  Cmt: string;
+}
 export interface ContratCollectivite {
   RefContratCollectivite: number;
   RefEntite: number;
@@ -357,6 +368,11 @@ export interface ContratCollectivite {
   DFin: string | moment.Moment;
   Avenant: boolean;
   Cmt: string;
+}
+export interface ContratType {
+  RefContratType: number;
+  LibelleFRFR: string;
+  LibelleENGB: string;
 }
 export interface Controle {
   RefControle: number;
@@ -616,6 +632,7 @@ export interface Entite {
   Actions: Action[];
   ContactAdresses: ContactAdresse[];
   ContratIncitationQualites: ContratIncitationQualite[];
+  Contrats: Contrat[];
   ContratCollectivites: ContratCollectivite[];
   Adresses: Adresse[];
   EntiteEntites: EntiteEntite[];
