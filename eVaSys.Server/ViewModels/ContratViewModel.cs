@@ -29,8 +29,8 @@ namespace eVaSys.ViewModels
         public ContratTypeViewModel ContratType { get; set; }
         public int? RefEntite { get; set; }
         public Entite Entite { get; set; }
-        public DateTime? DDebut { get; set; }
-        public DateTime? DFin { get; set; }
+        public DateOnly? DDebut { get; set; }
+        public DateOnly? DFin { get; set; }
         public bool ReconductionTacite { get; set; }
         public bool Avenant { get; set; }
         public string Cmt { get; set; }

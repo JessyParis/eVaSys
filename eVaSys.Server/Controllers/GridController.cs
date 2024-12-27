@@ -354,15 +354,18 @@ namespace eVaSys.Controllers
                                 + "     , tblCommandeClientMensuelle.RefCommandeClientMensuelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeClientMensuelle.ToString()].Name + "]"
                                 + "     , tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ClientLibelle.ToString()].Name + "]"
                                 + "     , case when tblAdresse.Adr1 is null then '' else tblAdresse.Adr1 + ' ' end + tblAdresse.CodePostal + ' ' + tblAdresse.Ville + ' (' + tbrAdresseType.Libelle + ')' as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.Adresse.ToString()].Name + "]"
+                                + "     , fournisseur.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CollectiviteLibelle.ToString()].Name + "]"
                                 + "     , tblCommandeClientMensuelle.D as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientMensuelleD.ToString()].Name + "]"
                                 + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                 + "     , tblCommandeClientMensuelle.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientMensuellePoids.ToString()].Name + "]"
                                 + "     , (sum(case when DDechargement is null then PoidsChargement else PoidsDechargement end) / 10) / tblCommandeClientMensuelle.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientPositionne.ToString()].Name + "]"
                                 + "     , tblEntite.RefEntite as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefEntite.ToString()].Name + "]"
+                                + "     , fournisseur.RefEntite as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefEntiteFournisseur.ToString()].Name + "]"
                                 + "     , tblAdresse.RefAdresse as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefAdresse.ToString()].Name + "]"
                                 + " from tblCommandeClient"
                                 + "     left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
                                 + "     left join tblEntite on tblEntite.RefEntite = tblCommandeClient.RefEntite"
+                                + "     left join tblEntite as fournisseur on fournisseur.RefEntite = tblCommandeClient.RefEntiteFournisseur"
                                 + "     left join tblProduit on tblProduit.RefProduit = tblCommandeClient.RefProduit"
                                 + "     left join tblAdresse on tblCommandeClient.RefAdresse = tblAdresse.RefAdresse"
                                 + "     left join tbrAdresseType on tblAdresse.RefAdresseType = tbrAdresseType.RefAdresseType"
@@ -401,9 +404,9 @@ namespace eVaSys.Controllers
                                 sqlStr += ")";
                             }
                             sqlStr += " group by tblCommandeClient.RefCommandeClient, tblCommandeClientMensuelle.RefCommandeClientMensuelle, tblEntite.Libelle, tblCommandeClientMensuelle.D"
-                                + "     ,case when tblAdresse.Adr1 is null then '' else tblAdresse.Adr1 + ' ' end + tblAdresse.CodePostal + ' ' + tblAdresse.Ville + ' (' + tbrAdresseType.Libelle + ')'"
-                                + "     , tblProduit.Libelle, tblCommandeClientMensuelle.Poids"
-                                + "     , tblEntite.RefEntite, tblAdresse.RefAdresse";
+                                + "     , case when tblAdresse.Adr1 is null then '' else tblAdresse.Adr1 + ' ' end + tblAdresse.CodePostal + ' ' + tblAdresse.Ville + ' (' + tbrAdresseType.Libelle + ')'"
+                                + "     , fournisseur.Libelle, tblProduit.Libelle, tblCommandeClientMensuelle.Poids"
+                                + "     , tblEntite.RefEntite, tblAdresse.RefAdresse, fournisseur.RefEntite";
                             break;
                         case "LogistiqueMenuCommandeFournisseur":
                         case "LogistiqueMenuTransportCommande":

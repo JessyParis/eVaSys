@@ -6,7 +6,7 @@ import { ApplicationUserContext } from "../../../globals/globals";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { InformationComponent } from "../../dialogs/information/information.component";
-import { HabilitationLogistique } from "../../../globals/enums";
+import { ContratType, HabilitationLogistique } from "../../../globals/enums";
 import { ListService } from "../../../services/list.service";
 import { DataModelService } from "../../../services/data-model.service";
 import moment from "moment";
@@ -28,10 +28,10 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
 
 
 @Component({
-    selector: "commande-client",
-    templateUrl: "./commande-client.component.html",
-    styleUrls: ["./commande-client.component.scss"],
-    standalone: false
+  selector: "commande-client",
+  templateUrl: "./commande-client.component.html",
+  styleUrls: ["./commande-client.component.scss"],
+  standalone: false
 })
 
 export class CommandeClientComponent implements OnInit {
@@ -43,10 +43,12 @@ export class CommandeClientComponent implements OnInit {
   cmdMs: UntypedFormArray = new UntypedFormArray([]);
   entiteList: dataModelsInterfaces.EntiteList[];
   adresseList: dataModelsInterfaces.Adresse[];
+  entiteFournisseurList: dataModelsInterfaces.EntiteList[];
   yearList: appInterfaces.Year[];
   monthList: appInterfaces.Month[];
   entiteListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   adresseListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
+  entiteFournisseurListFC: UntypedFormControl = new UntypedFormControl(null);
   yearListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   monthListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   //Global lock
@@ -66,6 +68,7 @@ export class CommandeClientComponent implements OnInit {
   createForm() {
     this.form = this.fb.group({
       EntiteList: this.entiteListFC,
+      EntiteFournisseurList: this.entiteFournisseurListFC,
       AdresseList: this.adresseListFC,
       YearList: this.yearListFC,
       MonthList: this.monthListFC,
@@ -79,6 +82,7 @@ export class CommandeClientComponent implements OnInit {
     this.locked = true;
     this.entiteListFC.disable();
     this.adresseListFC.disable();
+    this.entiteFournisseurListFC.disable();
     this.yearListFC.disable();
     this.monthListFC.disable();
     this.cmdMs.disable();
@@ -89,6 +93,7 @@ export class CommandeClientComponent implements OnInit {
     this.locked = false;
     this.entiteListFC.enable();
     this.adresseListFC.enable();
+    this.entiteFournisseurListFC.enable();
     this.yearListFC.enable();
     this.monthListFC.enable();
     this.cmdMs.enable();
@@ -110,11 +115,14 @@ export class CommandeClientComponent implements OnInit {
   ngOnInit() {
     let refEntite = Number.parseInt(this.activatedRoute.snapshot.params["refEntite"], 10);
     let refAdresse = Number.parseInt(this.activatedRoute.snapshot.params["refAdresse"], 10);
+    let refEntiteFournisseur = Number.parseInt(this.activatedRoute.snapshot.params["refEntiteFournisseur"], 10);
+    if (isNaN(refEntiteFournisseur)) { refEntiteFournisseur = null; }
     let d = this.activatedRoute.snapshot.params["d"];
     //Check parameters
     if (moment(d).isValid() && !isNaN(refEntite) && !isNaN(refAdresse)) {
       this.applicationUserContext.commandeClientFormRefEntite = refEntite;
       this.applicationUserContext.commandeClientFormRefAdresse = refAdresse;
+      this.applicationUserContext.commandeClientFormRefEntiteFournisseur = refEntiteFournisseur;
       this.applicationUserContext.commandeClientFormD = moment(d);
       var url = this.baseUrl + "evapi/commandeclient/getcommandeclientmensuelles";
       this.http.get<dataModelsInterfaces.CommandeClientMensuelleForm[]>(url,
@@ -122,6 +130,7 @@ export class CommandeClientComponent implements OnInit {
           headers: new HttpHeaders()
             .set("refEntite", this.applicationUserContext.commandeClientFormRefEntite.toString())
             .set("refAdresse", this.applicationUserContext.commandeClientFormRefAdresse.toString())
+            .set("refEntiteFournisseur", (this.applicationUserContext.commandeClientFormRefEntiteFournisseur ? this.applicationUserContext.commandeClientFormRefEntiteFournisseur.toString() : ""))
             .set("d", this.applicationUserContext.commandeClientFormD.format("YYYY-MM-DD 00:00:00"))
         }).subscribe(result => {
           //Get data
@@ -140,6 +149,13 @@ export class CommandeClientComponent implements OnInit {
             .subscribe(result => {
               this.adresseList = result;
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+          //Get existing EntiteFournisseur
+          this.listService.getListEntiteContrat(this.applicationUserContext.commandeClientFormRefEntiteFournisseur
+            , this.applicationUserContext.commandeClientFormRefEntite
+            , 1, ContratType.RepriseIndividuelle, moment())
+            .subscribe(result => {
+              this.entiteFournisseurList = result;
+            }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
           //Get existing month
           this.listService.getListMonth().subscribe(result => {
             this.monthList = result;
@@ -154,6 +170,7 @@ export class CommandeClientComponent implements OnInit {
       //New CommandeClient
       this.applicationUserContext.commandeClientFormRefEntite = null;
       this.applicationUserContext.commandeClientFormRefAdresse = null;
+      this.applicationUserContext.commandeClientFormRefEntiteFournisseur = null;
       this.applicationUserContext.commandeClientFormD = null;
       this.commandeClientMensuelles = [];
       //Update form
@@ -168,6 +185,8 @@ export class CommandeClientComponent implements OnInit {
         .subscribe(result => {
           this.adresseList = result;
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+      //Get existing EntiteFournisseur
+      this.getEntiteFournisseur();
       //Get existing month
       this.listService.getListMonth().subscribe(result => {
         this.monthList = result;
@@ -194,6 +213,7 @@ export class CommandeClientComponent implements OnInit {
           headers: new HttpHeaders()
             .set("refEntite", this.applicationUserContext.commandeClientFormRefEntite.toString())
             .set("refAdresse", this.applicationUserContext.commandeClientFormRefAdresse.toString())
+            .set("refEntiteFournisseur", (this.applicationUserContext.commandeClientFormRefEntiteFournisseur ? this.applicationUserContext.commandeClientFormRefEntiteFournisseur.toString() : ""))
             .set("d", this.applicationUserContext.commandeClientFormD.format("YYYY-MM-DD 00:00:00"))
         }).subscribe(result => {
           //Get data
@@ -207,6 +227,17 @@ export class CommandeClientComponent implements OnInit {
       //Update form
       this.updateForm();
     }
+  }
+  //-----------------------------------------------------------------------------------
+  //Get existing EntiteFournisseur
+  getEntiteFournisseur() {
+    //Get data
+    this.listService.getListEntiteContrat(this.applicationUserContext.commandeClientFormRefEntiteFournisseur
+      , this.applicationUserContext.commandeClientFormRefEntite
+      , 1, ContratType.RepriseIndividuelle, this.applicationUserContext.commandeClientFormD)
+      .subscribe(result => {
+        this.entiteFournisseurList = result;
+      }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
   //-----------------------------------------------------------------------------------
   //Form creation when data model exists
@@ -314,11 +345,21 @@ export class CommandeClientComponent implements OnInit {
         //Get CommandeClients
         this.getData();
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+    //Get existing EntiteFournisseur
+    this.getEntiteFournisseur();
   }
   //-----------------------------------------------------------------------------------
   //Adresse selected
   onAdresseSelected() {
     this.applicationUserContext.commandeClientFormRefAdresse = this.adresseListFC.value;
+    //Get CommandeClients
+    this.getData();
+  }
+  //-----------------------------------------------------------------------------------
+  //EntiteFournisseur selected
+  onEntiteFournisseurSelected() {
+    this.applicationUserContext.commandeClientFormRefEntiteFournisseur = this.entiteFournisseurListFC.value;
+    //Get CommandeClients
     this.getData();
   }
   //-----------------------------------------------------------------------------------
@@ -330,6 +371,9 @@ export class CommandeClientComponent implements OnInit {
     else {
       this.applicationUserContext.commandeClientFormD = null;
     }
+    //Get existing EntiteFournisseur
+    this.getEntiteFournisseur();
+    //Get CommandeClients
     this.getData();
   }
   //-----------------------------------------------------------------------------------
@@ -341,6 +385,9 @@ export class CommandeClientComponent implements OnInit {
     else {
       this.applicationUserContext.commandeClientFormD = null;
     }
+    //Get existing EntiteFournisseur
+    this.getEntiteFournisseur();
+    //Get CommandeClients
     this.getData();
   }
   //-----------------------------------------------------------------------------------

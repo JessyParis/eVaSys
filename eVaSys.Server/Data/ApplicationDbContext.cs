@@ -2077,12 +2077,6 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefEntite)
                     .OnDelete(DeleteBehavior.ClientCascade);
 
-                //entity.HasMany(d => d.SAGEDocuments)
-                //    .WithOne(p => p.Entite)
-                //    .HasForeignKey(d => d.CodeComptable)
-                //    .HasPrincipalKey(p => p.SAGECodeComptable)
-                //    .IsRequired(false);
-
                 entity.HasOne(d => d.Repreneur)
                     .WithMany(p => p.Entites)
                     .HasForeignKey(d => d.RefRepreneur)

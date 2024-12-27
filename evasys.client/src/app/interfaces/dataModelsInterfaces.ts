@@ -371,8 +371,7 @@ export interface ContratCollectivite {
 }
 export interface ContratType {
   RefContratType: number;
-  LibelleFRFR: string;
-  LibelleENGB: string;
+  Libelle: string;
 }
 export interface Controle {
   RefControle: number;

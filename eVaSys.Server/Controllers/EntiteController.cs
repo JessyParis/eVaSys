@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace eVaSys.Controllers
@@ -315,21 +316,28 @@ namespace eVaSys.Controllers
             string refEntiteRttForbidden = Request.Headers["refEntiteRttForbidden"].ToString();
             bool actif = (Request.Headers["actif"] == "true");
             string refEntite = Request.Headers["refEntite"].ToString();
+            string refEntiteContrat = Request.Headers["refEntiteContrat"].ToString();
             string refProduit = Request.Headers["refProduit"].ToString();
             string d = Request.Headers["d"].ToString();
             bool contratActif = (Request.Headers.ContainsKey("contratActif") ? (Request.Headers["contratActif"] == "true") : false);
             bool lienActif = (Request.Headers.ContainsKey("lienActif") ? (Request.Headers["lienActif"] == "true") : false);
             bool surcoutCarburantHT = (Request.Headers.ContainsKey("surcoutCarburantHT") ? (Request.Headers["surcoutCarburantHT"] == "true" ? true : false) : false);
+            string idContrat = Request.Headers["idContrat"].ToString();
+            bool hasContrat = Request.Headers.ContainsKey("refContratType");
+            string refContratType = Request.Headers["refContratType"].ToString();
             int refP = 0;
             int refE = 0;
+            int refEC = 0;
             int refERtt = 0;
             int refERttF = 0;
+            int refCT = 0;
             DateTime dRef = DateTime.MinValue;
             var req = DbContext.Entites.AsQueryable();
             //RefEntiteType
             if (refEntiteType != null && refEntiteType != 0)
             {
-                if (int.TryParse(refEntite, out refE)) { req = req.Where(el => el.RefEntiteType == refEntiteType || el.RefEntite == refE); }
+                if (int.TryParse(refEntite, out refE))
+                { req = req.Where(el => el.RefEntiteType == refEntiteType || el.RefEntite == refE); }
                 else { req = req.Where(el => el.RefEntiteType == refEntiteType); }
                 if ((refEntiteType == 1 || refEntiteType == 3) && CurrentContext.filterDR)
                 {
@@ -383,7 +391,8 @@ namespace eVaSys.Controllers
                     }
                 }
             }
-            if (refEntiteType == 1)
+            //For EntiteType exept when ask for existing contrat
+            if (refEntiteType == 1 && !hasContrat)
             {
                 if (contratActif)
                 {
@@ -408,13 +417,60 @@ namespace eVaSys.Controllers
                         r => (r.D.Month == dRef.Month && r.D.Year == dRef.Year) && r.Poids > 0)))
                          || el.RefEntite == refE);
             }
+            if (int.TryParse(refProduit, out refP) && DateTime.TryParse(d, out dRef))
+            {
+                req = req.Where(el => (el.CommandeClients.Any(
+                    rel => rel.RefProduit == refP && rel.CommandeClientMensuelles.Any(
+                        r => (r.D.Month == dRef.Month && r.D.Year == dRef.Year) && r.Poids > 0)))
+                         || el.RefEntite == refE);
+            }
+            //Has an active Contrat
+            if (hasContrat)
+            {
+                //Check date for Contrat
+                DateTime dT = DateTime.MinValue;
+                DateTime.TryParse(d, out dT);
+                if (dT == DateTime.MinValue)
+                {
+                    req = req.Where(el => 1 != 1);
+                }
+                else
+                {
+                    //init
+                    DateOnly dContrat = DateOnly.FromDateTime(DateTime.Now);
+                    int.TryParse(refEntiteContrat, out refEC);
+                    int.TryParse(refContratType, out refCT);
+                    if (dT != DateTime.MinValue) { dContrat = DateOnly.FromDateTime(dT); }
+                    //Get idContrats for the Entite
+                    List<string> idContrats = new List<string>();
+                    if (!string.IsNullOrWhiteSpace(idContrat)) { idContrats.Add(idContrat); }
+                    else
+                    {
+                        idContrats = DbContext.Contrats
+                        .Where(e => e.RefContratType == refCT && e.DDebut <= dContrat && e.DFin >= dContrat && e.RefEntite == refEC)
+                        .Select(p => p.IdContrat).ToList();
+                    }
+                    //Process
+                    if (int.TryParse(refEntite, out refE))
+                    {
+                        req = req.Where(el => (el.Contrats.Any(p => idContrats.Contains(p.IdContrat) && p.DDebut <= dContrat && p.DFin >= dContrat && p.RefContratType == refCT)
+                        && el.RefEntiteType == refEntiteType)
+                        || el.RefEntite == refE);
+                    }
+                    else
+                    {
+                        req = req.Where(el => el.Contrats.Any(p => idContrats.Contains(p.IdContrat) && p.DDebut <= dContrat && p.DFin >= dContrat && p.RefContratType == refCT)
+                        && el.RefEntiteType == refEntiteType);
+                    }
+                }
+            }
             if (textFilter != "")
             {
                 req = req.Where(el => EF.Functions.Like(el.Libelle, "%" + textFilter + "%") || el.CodeEE == textFilter);
             }
             if (CurrentContext.ConnectedUtilisateur.HabilitationModulePrestataire == Enumerations.HabilitationModulePrestataire.Fournisseur.ToString())
             {
-                req = req.Where(el => el.EntiteType.RefEntiteType!=3 || !string.IsNullOrWhiteSpace(el.CodeEE));
+                req = req.Where(el => el.EntiteType.RefEntiteType != 3 || !string.IsNullOrWhiteSpace(el.CodeEE));
             }
             //Get formatted data
             var all = req.Select(p => new

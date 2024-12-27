@@ -1275,6 +1275,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
           this.router.navigate(["commande-client", "0", {
             refEntite: item.RefEntite,
             refAdresse: item.RefAdresse,
+            refEntiteFournisseur: item.RefEntiteFournisseur,
             d: item.CommandeClientMensuelleD
           }])
           break;

@@ -787,6 +787,10 @@ export class DataModelService {
       e.DDebut = (e.DDebut == null ? null : moment(e.DDebut));
       e.DFin = (e.DFin == null ? null : moment(e.DFin));
     });
+    obj.Contrats?.forEach(e => {
+      e.DDebut = (e.DDebut == null ? null : moment(e.DDebut));
+      e.DFin = (e.DFin == null ? null : moment(e.DFin));
+    });
     obj.DocumentEntites?.forEach(e => {
       e.DocumentNoFile.DDebut = (e.DocumentNoFile?.DDebut == null ? null : moment(e.DocumentNoFile?.DDebut));
       e.DocumentNoFile.DFin = (e.DocumentNoFile?.DFin == null ? null : moment(e.DocumentNoFile?.DFin));
@@ -869,6 +873,10 @@ export class DataModelService {
     obj.ContratCollectivites?.forEach(e => {
       e.DDebut = (e.DDebut == null ? null : moment(e.DDebut).format("YYYY-MM-DDTHH:mm:ss"));
       e.DFin = (e.DFin == null ? null : moment(e.DFin).format("YYYY-MM-DDTHH:mm:ss"));
+    });
+    obj.Contrats?.forEach(e => {
+      e.DDebut = (e.DDebut == null ? null : moment(e.DDebut).format("YYYY-MM-DD"));
+      e.DFin = (e.DFin == null ? null : moment(e.DFin).format("YYYY-MM-DD"));
     });
     obj.DocumentEntites?.forEach(e => {
       e.DocumentNoFile.DDebut = (e.DocumentNoFile?.DDebut == null ? null : moment(e.DocumentNoFile?.DDebut).format("YYYY-MM-DDTHH:mm:ss"));

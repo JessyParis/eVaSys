@@ -37,6 +37,17 @@
                       <mat-error align="end" *ngIf="(form.get('AdresseList').touched || form.get('AdresseList').dirty) && form.get('AdresseList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
                     </mat-form-field>
                     <mat-form-field style="width:100%;">
+                      <mat-label>{{applicationUserContext.getCulturedRessourceText(1547)}}</mat-label>
+                      <mat-select formControlName="EntiteFournisseurList" (selectionChange)="onEntiteFournisseurSelected()"
+                                  [disabled]="form.get('CmdMs').dirty">
+                        <mat-option *ngFor="let entiteFournisseur of entiteFournisseurList" [value]="entiteFournisseur.RefEntite">{{entiteFournisseur.Libelle}}</mat-option>
+                      </mat-select>
+                      <button *ngIf="form.get('EntiteFournisseurList').value && form.get('EntiteFournisseurList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('EntiteFournisseurList').setValue(null)" tabindex="-1" type="button">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      <mat-error align="end" *ngIf="(form.get('EntiteFournisseurList').touched || form.get('EntiteFournisseurList').dirty) && form.get('EntiteFournisseurList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field style="width:100%;">
                       <mat-label>{{applicationUserContext.getCulturedRessourceText(571)}}</mat-label>
                       <mat-select formControlName="MonthList" (selectionChange)="onMonthSelected()"
                                   required [errorStateMatcher]="matcher" [disabled]="form.get('CmdMs').dirty">

@@ -107,6 +107,7 @@ export class ApplicationUserContext {
   public selectedItem: number[];
   //Session objects
   commandeClientFormRefEntite: number;
+  commandeClientFormRefEntiteFournisseur: number;
   commandeClientFormRefAdresse: number;
   commandeClientFormD: moment.Moment;
   prixRepriseRefProcess: number;

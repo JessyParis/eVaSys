@@ -1021,6 +1021,7 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.RefAdresseType, 0, EnvDataColumnDataType.id, "RefAdresseType", "tbrAdresseType.RefAdresseType");
                 CreateEnvDataColumn(cR, DataColumnName.RefApplication, 0, EnvDataColumnDataType.id, "RefApplication", "tblApplication.RefApplication");
                 CreateEnvDataColumn(cR, DataColumnName.RefApplicationProduitOrigine, 0, EnvDataColumnDataType.id, "RefApplicationProduitOrigine", "tblApplicationProduitOrigine.RefApplicationProduitOrigine");
+                CreateEnvDataColumn(cR, DataColumnName.RefEntiteFournisseur, 0, EnvDataColumnDataType.id, "RefEntiteFournisseur", "tblCommandeClient.RefEntiteFournisseur");
                 CreateEnvDataColumn(cR, DataColumnName.RefEntiteType, 0, EnvDataColumnDataType.id, "RefEntiteType", "tbrEntiteType.RefEntiteType");
                 CreateEnvDataColumn(cR, DataColumnName.RefEcoOrganisme, 0, EnvDataColumnDataType.id, "RefEcoOrganisme", "tbrEcoOrganisme.RefEcoOrganisme");
                 CreateEnvDataColumn(cR, DataColumnName.RefEquivalentCO2, 0, EnvDataColumnDataType.id, "RefEquivalentCO2", "tblEquivalentCO2.RefEquivalentCO2");

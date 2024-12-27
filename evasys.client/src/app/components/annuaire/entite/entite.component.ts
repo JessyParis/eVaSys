@@ -22,6 +22,7 @@ import { DownloadService } from "../../../services/download.service";
 import { StatistiqueService } from "../../../services/statistique.service";
 import { EventEmitterService } from "../../../services/event-emitter.service";
 import { fadeInOnEnterAnimation } from "angular-animations";
+import { environment } from "../../../../environments/environment.dev";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -1377,7 +1378,8 @@ ${cC.Cmt}`;
   //-----------------------------------------------------------------------------------
   //Create Contrat label
   contratLabel(contrat: dataModelsInterfaces.Contrat): string {
-    let s = moment(contrat.DDebut).format("L") + ' -> ' + moment(contrat.DFin).format("L");
+    let s = contrat.ContratType?.Libelle + "\n"
+      + moment(contrat.DDebut).format("L") + ' -> ' + moment(contrat.DFin).format("L");
     //End
     return s;
   }

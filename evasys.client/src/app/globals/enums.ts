@@ -662,6 +662,7 @@ export enum DataColumnName {
   RefDocument = "RefDocument",
   RefEcoOrganisme = "RefEcoOrganisme",
   RefEntite = "RefEntite",
+  RefEntiteFournisseur = "RefEntiteFournisseur",
   RefEntiteType = "RefEntiteType",
   RefEquipementier = "RefEquipementier",
   RefEquivalentCO2 ="RefEquivalentCO2",

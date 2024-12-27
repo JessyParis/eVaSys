@@ -777,6 +777,7 @@ namespace eVaSys.Utils
             RefDescriptionReception,
             RefDocument, 
             RefEntite,
+            RefEntiteFournisseur,
             RefEntiteType,
             RefEquipementier,
             RefEcoOrganisme,

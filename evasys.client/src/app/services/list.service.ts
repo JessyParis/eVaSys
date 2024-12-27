@@ -469,7 +469,8 @@ export class ListService {
   }
   //-----------------------------------------------------------------------------------
   //Get existing Collectivite
-  getListCollectivite(refCollectivite: number, refEntiteRtt: number, lienActif: boolean, contratActif: boolean, d: moment.Moment, textFilter: string, actif: boolean): Observable<dataModelsInterfaces.EntiteList[]> {
+  getListCollectivite(refCollectivite: number, refEntiteRtt: number, lienActif: boolean, contratActif: boolean
+    , d: moment.Moment, textFilter: string, actif: boolean): Observable<dataModelsInterfaces.EntiteList[]> {
     return this.http.get<dataModelsInterfaces.EntiteList[]>(this.baseUrl + "evapi/entite/getlist", {
       params: new HttpParams()
         .set("refEntiteType", "1")
@@ -480,6 +481,20 @@ export class ListService {
         .set("refEntiteRtt", refEntiteRtt == null ? "" : refEntiteRtt.toString())
         .set("lienActif", lienActif == true ? "true" : "false")
         .set("contratActif", contratActif == true ? "true" : "false")
+        .set("d", d == null ? "" : moment(d).format("YYYY-MM-DD 00:00:00.000")),
+      responseType: "json"
+    });
+  }
+  //-----------------------------------------------------------------------------------
+  //Get existing Entite with active contract
+  getListEntiteContrat(refEntite: number, refEntiteContrat: number, refEntiteType: number, refContratType: number, d: moment.Moment): Observable<dataModelsInterfaces.EntiteList[]> {
+    return this.http.get<dataModelsInterfaces.EntiteList[]>(this.baseUrl + "evapi/entite/getlist", {
+      params: new HttpParams()
+        .set("refEntiteType", refEntiteType == null ? "" : refEntiteType.toString()),
+      headers: new HttpHeaders()
+        .set("refEntiteContrat", refEntiteContrat == null ? "" : refEntiteContrat.toString())
+        .set("refEntite", refEntite == null ? "" : refEntite.toString())
+        .set("refContratType", refContratType == null ? "" : refContratType.toString())
         .set("d", d == null ? "" : moment(d).format("YYYY-MM-DD 00:00:00.000")),
       responseType: "json"
     });
