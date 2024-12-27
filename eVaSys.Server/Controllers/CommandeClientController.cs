@@ -148,7 +148,8 @@ namespace eVaSys.Controllers
                     {
                         cmd = DbContext.CommandeClients
                             .Include(r => r.CommandeClientMensuelles)
-                            .Where(i => i.RefEntite == cmdMF.RefEntite && i.RefAdresse == cmdMF.RefAdresse && i.D.Year == cmdMF.D.Year && i.RefProduit == cmdMF.RefProduit)
+                            .Where(i => i.RefEntite == cmdMF.RefEntite && i.RefAdresse == cmdMF.RefAdresse && i.D.Year == cmdMF.D.Year && i.RefProduit == cmdMF.RefProduit
+                                && cmdMF.RefEntiteFournisseur == i.RefEntiteFournisseur)
                             .FirstOrDefault();
                         if (cmd == null)
                         {

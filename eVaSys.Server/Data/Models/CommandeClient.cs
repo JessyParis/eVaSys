@@ -8,6 +8,7 @@
 /// Création : 23/07/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
@@ -127,10 +128,10 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            bool existsInDB = (Utils.Utils.DbScalar("select count(*) from tblCommandeClient where RefCommandeClient=" + RefCommandeClient, DbContext.Database.GetDbConnection()) != "0");
-            //XXXXXXXXXXXXXXXXXXXXXXXXXX
-            int c = DbContext.CommandeClients.Where(q => (q.RefEntite == RefEntite && q.RefProduit == RefProduit && q.RefAdresse == RefAdresse && q.D == D)).Count();
-            if ((!existsInDB && c > 0) || (existsInDB && c > 1))
+            int c = DbContext.CommandeClients.Where(q => q.RefEntite == RefEntite && q.RefProduit == RefProduit 
+                && q.RefAdresse == RefAdresse && q.RefEntiteFournisseur == RefEntiteFournisseur && q.D == D
+                && q.RefCommandeClient != RefCommandeClient).Count();
+            if (c > 0)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
                 if (r == "") { r += Environment.NewLine; }

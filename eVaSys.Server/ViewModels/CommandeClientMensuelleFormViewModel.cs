@@ -21,7 +21,7 @@ namespace eVaSys.ViewModels
         public int? RefCommandeClient { get; set; }
         public int? RefCommandeClientMensuelle { get; set; }
         public int RefEntite{ get; set; }
-        public int RefEntiteFournisseur { get; set; }
+        public int? RefEntiteFournisseur { get; set; }
         public int RefAdresse { get; set; }
         public int RefProduit { get; set; }
         public string LibelleProduit { get; set; }

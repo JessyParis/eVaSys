@@ -244,6 +244,7 @@ export class CommandeClientComponent implements OnInit {
   updateForm() {
     this.entiteListFC.setValue((this.applicationUserContext.commandeClientFormRefEntite ? this.applicationUserContext.commandeClientFormRefEntite : null));
     this.adresseListFC.setValue((this.applicationUserContext.commandeClientFormRefAdresse ? this.applicationUserContext.commandeClientFormRefAdresse : null));
+    this.entiteFournisseurListFC.setValue((this.applicationUserContext.commandeClientFormRefEntiteFournisseur ? this.applicationUserContext.commandeClientFormRefEntiteFournisseur : null));
     if (this.applicationUserContext.commandeClientFormD !== null) {
       this.yearListFC.setValue((this.applicationUserContext.commandeClientFormD ? this.applicationUserContext.commandeClientFormD.year() : null));
       this.monthListFC.setValue((this.applicationUserContext.commandeClientFormD ? moment(new Date(1901, this.applicationUserContext.commandeClientFormD.month(), 1, 0, 0, 0)).format("YYYY-MM-DDT00:00:00") : null));
