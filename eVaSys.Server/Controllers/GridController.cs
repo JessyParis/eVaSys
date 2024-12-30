@@ -889,6 +889,7 @@ namespace eVaSys.Controllers
                                 + "     , tbrProcess.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProcessLibelle.ToString()].Name + "]"
                                 + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                 + "     , composant.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ComposantLibelle.ToString()].Name + "]"
+                                + "     , tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CollectiviteLibelle.ToString()].Name + "]"
                                 + "     , tbrPrixReprise.PUHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHT.ToString()].Name + "]"
                                 + "     , tbrPrixReprise.PUHTSurtri as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHTSurtri.ToString()].Name + "]"
                                 + "     , tbrPrixReprise.PUHTTransport as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHTTransport.ToString()].Name + "]"
@@ -897,6 +898,7 @@ namespace eVaSys.Controllers
                                 + "     left join tbrProcess on tbrPrixReprise.RefProcess=tbrProcess.RefProcess"
                                 + "     left join tblProduit on tbrPrixReprise.RefProduit=tblProduit.RefProduit"
                                 + "     left join tblProduit as composant on composant.RefProduit=tbrPrixReprise.RefComposant"
+                                + "     left join tblEntite on tbrPrixReprise.RefEntite=tblEntite.RefEntite"
                                 + " where 1=1";
                             //General Filters
                             if (!string.IsNullOrEmpty(filterProcesss))

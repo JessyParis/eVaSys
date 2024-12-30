@@ -612,12 +612,13 @@ export class DataModelService {
   }
   //-----------------------------------------------------------------------------------
   //Get existing PrixReprise
-  getPrixReprise(refPrixReprise: number, refProcess: number, refProduit: number, refComposant: number, d: moment.Moment): Observable<dataModelsInterfaces.PrixReprise> {
+  getPrixReprise(refPrixReprise: number, refProcess: number, refProduit: number, refComposant: number, refEntite: number, d: moment.Moment): Observable<dataModelsInterfaces.PrixReprise> {
     return this.http.get<dataModelsInterfaces.PrixReprise>(this.baseUrl + "evapi/prixreprise/" + refPrixReprise.toString(), {
       headers: new HttpHeaders()
         .set("refProcess", !refProcess ? "" : refProcess.toString())
         .set("refProduit", !refProduit ? "" : refProduit.toString())
         .set("refComposant", !refComposant ? "" : refComposant.toString())
+        .set("refEntite", !refEntite ? "" : refEntite.toString())
         .set("d", !d ? "" : moment(d).format("YYYY-MM-DDT00:00:00.000")),
       responseType: "json"
     });

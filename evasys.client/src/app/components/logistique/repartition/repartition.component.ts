@@ -420,6 +420,7 @@ export class RepartitionComponent implements OnInit {
     this.dataModelService.getPrixReprise(0, this.processListFC.value
       , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
       , this.composantListFC.value
+      , null
       , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
     )
       .subscribe(result => {

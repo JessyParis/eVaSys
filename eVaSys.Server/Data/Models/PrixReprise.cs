@@ -34,7 +34,7 @@ namespace eVaSys.Data
         public CultureInfo currentCulture = new("fr-FR");
         public int RefPrixReprise { get; set; }
         public DateTime D { get; set; }
-        public int RefEntite { get; set; }
+        public int? RefEntite { get; set; }
         private Entite _entite;
         public Entite Entite
         {
