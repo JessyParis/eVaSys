@@ -253,19 +253,15 @@ const modules = [
   , MatAutocompleteModule, MatRippleModule, MatSlideToggleModule, MatButtonToggleModule, MatStepperModule, MatChipsModule
   , DragDropModule, NgxMatSelectSearchModule, NgxMaskDirective, NgxMaskPipe, OverlayModule, BackButtonDisableModule
   ];
-@NgModule({
-  imports: [...modules, ServiceWorkerModule.register('ngsw-worker.js', {
-  //enabled: false,
-  enabled: environment.production,
-  // Register the ServiceWorker as soon as the application is stable
-  // or after 30 seconds (whichever comes first).
-  registrationStrategy: 'registerImmediately'
-})],
-  exports: [...modules]
-}) export class MaterialModule { };
 const progressModules = [
   EditorModule, ScrollViewModule, ChartsModule, ScrollingModule
 ];
+
+@NgModule({
+  imports: [...modules],
+  exports: [...modules]
+}) export class MaterialModule { };
+
 @NgModule({
   imports: [...progressModules],
   exports: [...progressModules]
@@ -396,7 +392,7 @@ const progressModules = [
     SafeHtmlPipe,
     BlockCopyPasteDirective,
   ],
-  bootstrap: [AppComponent], imports: [CommonModule,
+  imports: [CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -406,6 +402,14 @@ const progressModules = [
     IntlModule,
     PDFExportModule,
     BackButtonDisableModule.forRoot(),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      //enabled: true,
+      //enabled: false,
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerImmediately'
+    }),
     RouterModule.forRoot([
       { path: "", redirectTo: "home", pathMatch: "full" },
       { path: "accueil-collectivite", component: AccueilCollectiviteComponent, data: { animation: "FadeIn" } },
@@ -486,68 +490,70 @@ const progressModules = [
       { path: "upload-transport", component: UploadTransportComponent, data: { animation: "FadeIn" } },
       { path: "utilisateur/:id", component: UtilisateurComponent, data: { animation: "Item" } },
       { path: "**", redirectTo: "home", data: { animation: "FadeIn" } }
-    ], {})], providers: [
-      AuthService,
-      DataModelService,
-      DownloadService,
-      GridService,
-      GridSimpleService,
-      ListService,
-      OverlayService,
-      PictureService,
-      StatistiqueService,
-      UploadService,
-      UtilsService,
-      ApplicationUserContext,
-      {
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthInterceptor,
-        multi: true
-      },
-      {
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthResponseInterceptor,
-        multi: true
-      },
-      {
-        provide: APP_INITIALIZER, useFactory: configurationParametres, deps: [ApplicationUserContext], multi: true
-      },
-      {
-        provide: APP_INITIALIZER, useFactory: configurationCulturedRessources, deps: [ApplicationUserContext], multi: true
-      },
-      {
-        provide: APP_INITIALIZER, useFactory: configurationResources, deps: [ApplicationUserContext], multi: true
-      },
-      {
-        provide: APP_INITIALIZER, useFactory: configurationEnvModules, deps: [ApplicationUserContext], multi: true
-      },
-      {
-        provide: APP_INITIALIZER, useFactory: configurationEnvComponents, deps: [ApplicationUserContext], multi: true
-      },
-      {
-        provide: APP_INITIALIZER, useFactory: configurationEnvMenus, deps: [ApplicationUserContext], multi: true
-      },
-      {
-        provide: APP_INITIALIZER, useFactory: configurationEnvDataColumns, deps: [ApplicationUserContext], multi: true
-      },
-      {
-        provide: APP_INITIALIZER, useFactory: configurationEnvCommandeFournisseurStatuts, deps: [ApplicationUserContext], multi: true
-      },
-      {
-        provide: APP_INITIALIZER, useFactory: configurationNonConformiteEtapeTypes, deps: [ApplicationUserContext], multi: true
-      },
-      {
-        provide: APP_INITIALIZER, useFactory: configurationInitEnvironment, deps: [ApplicationUserContext], multi: true
-      },
-      { provide: LOCALE_ID, useValue: "fr-FR" },
-      { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
-      { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-      { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-      { provide: "BASE_URL", useValue: environment.baseUrl },
-      provideNgxMask(),
-      provideHttpClient(withInterceptorsFromDi()),
-      provideMomentDateAdapter()
-    ]
+    ], {})],
+  providers: [
+    AuthService,
+    DataModelService,
+    DownloadService,
+    GridService,
+    GridSimpleService,
+    ListService,
+    OverlayService,
+    PictureService,
+    StatistiqueService,
+    UploadService,
+    UtilsService,
+    ApplicationUserContext,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthResponseInterceptor,
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER, useFactory: configurationParametres, deps: [ApplicationUserContext], multi: true
+    },
+    {
+      provide: APP_INITIALIZER, useFactory: configurationCulturedRessources, deps: [ApplicationUserContext], multi: true
+    },
+    {
+      provide: APP_INITIALIZER, useFactory: configurationResources, deps: [ApplicationUserContext], multi: true
+    },
+    {
+      provide: APP_INITIALIZER, useFactory: configurationEnvModules, deps: [ApplicationUserContext], multi: true
+    },
+    {
+      provide: APP_INITIALIZER, useFactory: configurationEnvComponents, deps: [ApplicationUserContext], multi: true
+    },
+    {
+      provide: APP_INITIALIZER, useFactory: configurationEnvMenus, deps: [ApplicationUserContext], multi: true
+    },
+    {
+      provide: APP_INITIALIZER, useFactory: configurationEnvDataColumns, deps: [ApplicationUserContext], multi: true
+    },
+    {
+      provide: APP_INITIALIZER, useFactory: configurationEnvCommandeFournisseurStatuts, deps: [ApplicationUserContext], multi: true
+    },
+    {
+      provide: APP_INITIALIZER, useFactory: configurationNonConformiteEtapeTypes, deps: [ApplicationUserContext], multi: true
+    },
+    {
+      provide: APP_INITIALIZER, useFactory: configurationInitEnvironment, deps: [ApplicationUserContext], multi: true
+    },
+    { provide: LOCALE_ID, useValue: "fr-FR" },
+    { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    { provide: "BASE_URL", useValue: environment.baseUrl },
+    provideNgxMask(),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideMomentDateAdapter()
+  ],
+  bootstrap: [AppComponent]
 }
 )
 export class AppModule {

@@ -11,29 +11,31 @@ import { Injectable } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApplicationUserContext } from "../globals/globals"
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
+//-----------------------------------------------------------------------------------
+//Service worker automatic update
 export class UpdateService {
   constructor(private swUpdate: SwUpdate
     , public applicationUserContext: ApplicationUserContext
     , private snackBar: MatSnackBar) {
+    console.log("UpdateService constructor");
+    console.log("Production : " + environment.production.toString())
+    //If new version available
     this.swUpdate.versionUpdates.subscribe((event) => {
       if (event.type === "VERSION_READY") {
-        this.promptUser();
+        console.log("New version available");
+        //Prompt user
+        const snackBarRef = this.snackBar.open(this.applicationUserContext.getCulturedRessourceText(1540)
+          , undefined, {
+          duration: 6000,
+        });
+        //Update
+        this.swUpdate.activateUpdate().then(() => document.location.reload());
       }
-    });
-  }
-
-  promptUser(): void {
-    const snackBarRef = this.snackBar.open(this.applicationUserContext.getCulturedRessourceText(1540)
-      , this.applicationUserContext.getCulturedRessourceText(1364), {
-      duration: 6000,
-    });
-
-    snackBarRef.onAction().subscribe(() => {
-      this.swUpdate.activateUpdate().then(() => document.location.reload());
     });
   }
 }
