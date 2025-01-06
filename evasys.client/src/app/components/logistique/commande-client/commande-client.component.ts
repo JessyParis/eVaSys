@@ -358,7 +358,10 @@ export class CommandeClientComponent implements OnInit {
   }
   //-----------------------------------------------------------------------------------
   //EntiteFournisseur selected
-  onEntiteFournisseurSelected() {
+  onEntiteFournisseurSelected(raz: boolean) {
+    if (raz) {
+      this.entiteFournisseurListFC.setValue(null);
+    }
     this.applicationUserContext.commandeClientFormRefEntiteFournisseur = this.entiteFournisseurListFC.value;
     //Get CommandeClients
     this.getData();

@@ -335,13 +335,19 @@ namespace eVaSys.Controllers
                              StandardCmt = s.Cmt,
                              ProduitNomCommun = p.NomCommun,
                              pR.PUHT,
-                             p.Collecte
+                             p.Collecte,
+                             pR.RefEntite
                          }
                        );
                 if (filterCollecte == "Collecte") { q = q.Where(w => w.Collecte == true); }
                 else if (filterCollecte == "HorsCollecte") { q = q.Where(w => w.Collecte == false); }
                 else if (filterCollecte != "DansOuHorsCollecte") { q = q.Where(w => 1 != 1); }
                 var res = (q.ToArray());
+                //If one PrixReprise specific for this Entite, then keep only specifics
+                if (res.Where(e => e.RefEntite != null).Count() > 0)
+                {
+                    res = res.Where(e => e.RefEntite != null).ToArray();
+                }
                 //Return Json
                 return new JsonResult(res, JsonSettings);
             }
@@ -383,7 +389,7 @@ namespace eVaSys.Controllers
                 + " 	inner join tbmProduitComposant on tblProduit.refProduit=tbmProduitComposant.RefProduit"
                 + " 	inner join tblProduit as composant on composant.RefProduit=tbmProduitComposant.RefComposant"
                 + " 	left join (select * from tbrPrixReprise where D=@d and RefProcess=@refProcess) as tbrPrixReprise on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant"
-                + " where ((composant.Actif=1 and tblProduit.Actif=1) or tbrPrixReprise.RefPrixReprise is not null)"
+                + " where ((composant.Actif=1 and tblProduit.Actif=1) or tbrPrixReprise.RefPrixReprise is not null) and tbrPrixReprise.RefEntite is null"
                 + " union all"
                 + " select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
                 + "     , tblEntite.RefEntite"

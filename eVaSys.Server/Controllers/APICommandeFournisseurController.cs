@@ -480,7 +480,7 @@ namespace eVaSys.Controllers
                 }
                 //Get produit if applicable
                 int? refProduit = DbContext.Produits.Where(e => e.Libelle == viewModel.ProduitLibelle
-                && e.EntiteProduits.Any(r => r.RefEntite == (refEntite ?? 0))).FirstOrDefault()?.RefProduit;
+                && e.EntiteProduits.Any(r => r.RefEntite == (int)refEntite)).FirstOrDefault()?.RefProduit;
                 dataModel.RefProduit = refProduit ?? 0;
                 dataModel.D = viewModel.DDisponibilite;
                 dataModel.PoidsChargement = viewModel.PoidsChargement;

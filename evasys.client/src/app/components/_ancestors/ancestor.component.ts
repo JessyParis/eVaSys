@@ -365,6 +365,7 @@ export abstract class AncestorComponent<T extends { AllowStandardCRUD: string }>
             this.safeValeurHTML = this.sanitizer.bypassSecurityTrustHtml(this.aide.ValeurHTML);
           }
         }
+        , error: (err) =>   {}
       });
   }
 }

@@ -314,8 +314,21 @@ namespace eVaSys.Controllers
                 cmd.Parameters.Add("@refAdresseFournisseur", SqlDbType.Int).Value = refAF;
                 cmd.Parameters.Add("@refProduit", SqlDbType.Int).Value = refP;
                 cmd.Parameters.Add("@dMoisDechargementPrevu", SqlDbType.DateTime).Value = d;
+                //Vérification d'un contrat RI
+                string sqlStr = "select count(*)"
+                    + " from tbmEntiteEntite"
+                    + " 	inner join tblEntite as collectivite "
+                    + "         on (collectivite.RefEntite=tbmEntiteEntite.RefEntite and tbmEntiteEntite.RefEntiteRtt=@refFournisseur)"
+                    + "             or (collectivite.RefEntite=tbmEntiteEntite.RefEntiteRtt and tbmEntiteEntite.RefEntite=@refFournisseur)"
+                    + " 	inner join tblContrat as contratCollectivite on contratCollectivite.RefEntite=collectivite.RefEntite"
+                    + "     inner join tblContrat as contratClient on contratClient.IdContrat=contratCollectivite.IdContrat"
+                    + "     inner join tblEntite as client on contratClient.RefEntite=client.RefEntite "
+                    + " where client.RefEntiteType=4 and contratCollectivite.DDebut<=@dMoisDechargementPrevu and contratCollectivite.DFin>=@dMoisDechargementPrevu"
+                    + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu";
+                cmd.CommandText = sqlStr;
+                int c = (int)cmd.ExecuteScalar();
                 //Chaine SQL
-                string sqlStr = "select distinct tblTransport.RefTransport, RefAdresseDestination, Client.Libelle as Client, (commandeClient.Poids*1000 - isnull(reliquat.Poids,0))/1000 as [ResteALivrer], (isnull(reliquat.Poids,0)*100)/(commandeClient.Poids*1000) as [Positionne], tblAdresse.Ville, transporteur.RefEntite as RefTransporteur"
+                sqlStr = "select distinct tblTransport.RefTransport, RefAdresseDestination, Client.Libelle as Client, (commandeClient.Poids*1000 - isnull(reliquat.Poids,0))/1000 as [ResteALivrer], (isnull(reliquat.Poids,0)*100)/(commandeClient.Poids*1000) as [Positionne], tblAdresse.Ville, transporteur.RefEntite as RefTransporteur"
                     + "     , transporteur.Libelle as Transporteur, tbrCamionType.Libelle as [CamionType], tblTransport.PUHT, tr.NbTransportIdentique, tblParcours.Km"
                     + " from tblEntite as transporteur"
                     + " 	inner join tblTransport on transporteur.RefEntite=tblTransport.RefTransporteur "
@@ -358,6 +371,20 @@ namespace eVaSys.Controllers
                     + "     and clientProduit.Interdit=0"
                     + "     and transporteur.Actif=1"
                     + "     and tbmEntiteCamionType.RefCamionType is null";
+                //Contrat RI
+                if (c > 0)
+                {
+                    sqlStr += " and client.RefEntite in (select contratClient.RefEntite"
+                        + " from tbmEntiteEntite"
+                        + " 	inner join tblEntite as collectivite "
+                        + "         on (collectivite.RefEntite=tbmEntiteEntite.RefEntite and tbmEntiteEntite.RefEntiteRtt=@refFournisseur)"
+                        + "             or (collectivite.RefEntite=tbmEntiteEntite.RefEntiteRtt and tbmEntiteEntite.RefEntite=@refFournisseur)"
+                        + " 	inner join tblContrat as contratCollectivite on contratCollectivite.RefEntite=collectivite.RefEntite"
+                        + "     inner join tblContrat as contratClient on contratClient.IdContrat=contratCollectivite.IdContrat"
+                        + "     inner join tblEntite as client on contratClient.RefEntite=client.RefEntite "
+                        + " where client.RefEntiteType=4 and contratCollectivite.DDebut<=@dMoisDechargementPrevu and contratCollectivite.DFin>=@dMoisDechargementPrevu"
+                        + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu)";
+                }
                 //Type de camion de la commande
                 if (filterCamionTypes != "")
                 {

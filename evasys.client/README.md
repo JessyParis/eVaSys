@@ -10,12 +10,13 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
-
+## Build produtction
 Run `ng build --base-href /valorplast/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
-Run `ng build --base-href /valorplastdev/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
-Run `ng build --base-href /evasystest/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
 Run `ng build --base-href /evasys/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+## Build dev
+Run `ng build --base-href /valorplastdev/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `ng build --base-href /evasysdev/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Running unit tests
 

@@ -106,6 +106,7 @@ export abstract class BaseFormComponent<T extends { AllowBaseForm: boolean }> {
             this.safeValeurHTML=this.sanitizer.bypassSecurityTrustHtml(this.aide.ValeurHTML);
           }
         }
+        , error: (err) => { }
       });
   }
   //-----------------------------------------------------------------------------------
