@@ -145,6 +145,8 @@ export class ApplicationUserContext {
   }
   set connectedUtilisateur(value: dataModelsInterfaces.Utilisateur) {
     this._connectedUtilisateur = value;
+    //RAZ filters
+    this.razFilters();
     //Setting personnal parameters
     this.setDefaultModule();
     this.initFilters();
@@ -207,6 +209,11 @@ export class ApplicationUserContext {
     }
   }
   public initFilters() {
+    this.filterEnvCommandeFournisseurStatuts = [];
+    this.filterTransporteurs = [];
+    this.filterClients = [];
+    this.filterCentreDeTris = [];
+    this.filterCollectivites = [];
     if (this._connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Utilisateur
       || this._connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur
     ) {

@@ -643,8 +643,10 @@ namespace eVaSys.Controllers
             List<Quarter> docs = new();
             //Recherche des derniers états complets sur les 5 dernières années
             DateTime d = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            //Recalage de la date de référence pour laisser du délai avant la présentation des états
             d = d.AddDays(-19);
-            Quarter t = new Quarter(DateTime.Now, CurrentContext.CurrentCulture);
+            Quarter t = new Quarter(d, CurrentContext.CurrentCulture);
+            d=t.Begin;
             string sqlStr = "";
             //Chargement des documents à télécharger
             for (int i = 1; i < 20; i++)
@@ -710,8 +712,10 @@ namespace eVaSys.Controllers
             List<Month> docs = new();
             //Recherche des derniers états complets sur les 5 dernières années
             DateTime d = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            //Recalage de la date de référence pour laisser du délai avant la présentation des états
             d = d.AddDays(-8);
-            Month m = new Month(DateTime.Now, CurrentContext.CurrentCulture);
+            Month m = new Month(d, CurrentContext.CurrentCulture);
+            d = m.Begin;
             string sqlStr = "";
             //Chargement des documents à télécharger
             for (int i = 1; i < 60; i++)
@@ -723,7 +727,7 @@ namespace eVaSys.Controllers
                     + " from  tblRepartitionProduit"
                     + " 	inner join tblRepartition on tblRepartition.RefRepartition=tblRepartitionProduit.RefRepartition"
                     + " 	left join tblCommandeFournisseur on tblRepartition.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
-                    + " where year(isnull(tblCommandeFournisseur.DDechargement,tblRepartition.D))=" + d.Year.ToString() + " and month(isnull(tblCommandeFournisseur.DDechargement,tblRepartition.D))=" + d.Month.ToString()
+                    + " where year(isnull(tblCommandeFournisseur.DDechargement,tblRepartition.D))=" + m.Year.ToString() + " and month(isnull(tblCommandeFournisseur.DDechargement,tblRepartition.D))=" + m.Nb.ToString()
                     + " 	and tblRepartitionProduit.RefFournisseur=" + refEntite.ToString();
                 if (Utils.Utils.DbScalar(sqlStr, DbContext.Database.GetDbConnection()) != "0")
                 {
@@ -753,8 +757,10 @@ namespace eVaSys.Controllers
             List<Quarter> docs = new();
             //Recherche des derniers états complets sur les 5 dernières années
             DateTime d = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            //Recalage de la date de référence pour laisser du délai avant la présentation des états
             d = d.AddDays(-19);
-            Quarter t = new Quarter(DateTime.Now, CurrentContext.CurrentCulture);
+            Quarter t = new Quarter(d, CurrentContext.CurrentCulture);
+            d = t.Begin;
             string sqlStr = "";
             string s = "";
             int n = 0;
@@ -801,8 +807,10 @@ namespace eVaSys.Controllers
             List<Quarter> docs = new();
             //Recherche des derniers états complets sur les 5 dernières années
             DateTime d = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            //Recalage de la date de référence pour laisser du délai avant la présentation des états
             d = d.AddDays(-19);
-            Quarter t = new Quarter(DateTime.Now, CurrentContext.CurrentCulture);
+            Quarter t = new Quarter(d, CurrentContext.CurrentCulture);
+            d = t.Begin;
             string sqlStr = "";
             string s = "";
             int n = 0;
@@ -848,8 +856,10 @@ namespace eVaSys.Controllers
             List<Month> docs = new();
             //Recherche des derniers états complets sur les 5 dernières années
             DateTime d = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            //Recalage de la date de référence pour laisser du délai avant la présentation des états
             d = d.AddDays(-8);
-            Month m = new Month(DateTime.Now, CurrentContext.CurrentCulture);
+            Month m = new Month(d, CurrentContext.CurrentCulture);
+            d = m.Begin;
             string sqlStr = "";
             //Chargement des documents à télécharger
             for (int i = 1; i < 60; i++)
@@ -862,7 +872,7 @@ namespace eVaSys.Controllers
                     + "     inner join tblAdresse on tblCommandeFournisseur.RefAdresseClient=tblAdresse.RefAdresse"
                     + "     inner join tblEntite as client on client.RefEntite=tblAdresse.RefEntite"
                     + "     inner join tblProduit on tblCommandeFournisseur.RefProduit=tblProduit.refProduit"
-                    + " where DDechargement between convert(datetime,'" + m.Begin.ToString("yyyy-MM-dd hh:mm:ss") + "',120) and convert(datetime,'" + m.End.ToString("yyyy-MM-dd hh:mm:ss") + "',120) and tblCommandeFournisseur.RefEntite=" + refEntite.ToString();
+                    + " where DDechargement between convert(datetime, '" + m.Begin.ToString("dd/MM/yyyy") + "' ,103) and convert(datetime, '" + m.End.ToString("dd/MM/yyyy") + "' ,103) and tblCommandeFournisseur.RefEntite=" + refEntite.ToString();
                 if (Utils.Utils.DbScalar(sqlStr, DbContext.Database.GetDbConnection()) != "0")
                 {
                     docs.Add(m);
