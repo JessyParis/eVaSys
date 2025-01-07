@@ -35,10 +35,11 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration["Data:DefaultConnection:ConnectionString"]
-, sqlOptions =>
-{
-    sqlOptions.UseRelationalNulls(true);
-})
+//, sqlOptions =>
+//{
+//    sqlOptions.UseRelationalNulls(true);
+//}
+)
 );
 
 builder.Services.AddCors(options =>

@@ -37,7 +37,7 @@ namespace eValorplast.BLL
             _year = d.Year;
             _begin = new DateTime((int)_year, (int)_nb, 1, 0, 0, 0); 
             _end = (new DateTime((int)_year, (int)_nb, 1, 23, 59, 59)).AddMonths(1).AddDays(-1); 
-            _end = _end.AddMonths(1).AddDays(-1);
+            //_end = _end.AddMonths(1).AddDays(-1);
             Culture = culture;
             setName();
         }

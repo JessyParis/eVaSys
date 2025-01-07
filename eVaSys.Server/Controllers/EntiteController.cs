@@ -862,7 +862,7 @@ namespace eVaSys.Controllers
                     + "     inner join tblAdresse on tblCommandeFournisseur.RefAdresseClient=tblAdresse.RefAdresse"
                     + "     inner join tblEntite as client on client.RefEntite=tblAdresse.RefEntite"
                     + "     inner join tblProduit on tblCommandeFournisseur.RefProduit=tblProduit.refProduit"
-                    + " where DDechargement between convert(datetime,'" + d.ToString("yyyy.MM.dd") + "',102) and convert(datetime,'" + (d.AddMonths(1).AddDays(-1)).ToString("yyyy-MM-dd") + " 23:59:59:0',121) and tblCommandeFournisseur.RefEntite=" + refEntite.ToString();
+                    + " where DDechargement between convert(datetime,'" + m.Begin.ToString("yyyy-MM-dd hh:mm:ss") + "',120) and convert(datetime,'" + m.End.ToString("yyyy-MM-dd hh:mm:ss") + "',120) and tblCommandeFournisseur.RefEntite=" + refEntite.ToString();
                 if (Utils.Utils.DbScalar(sqlStr, DbContext.Database.GetDbConnection()) != "0")
                 {
                     docs.Add(m);
