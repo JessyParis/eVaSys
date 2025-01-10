@@ -10,6 +10,7 @@
 
 using eVaSys.Data;
 using eVaSys.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -685,7 +686,6 @@ namespace eVaSys.Utils
             //Mark as dirty if applicable
             if (dataModel.IdContrat != viewModel.IdContrat
                 || dataModel.RefContratType != viewModel.ContratType?.RefContratType
-                || dataModel.RefEntite != viewModel.RefEntite
                 || dataModel.DDebut != viewModel.DDebut
                 || dataModel.DFin != viewModel.DFin
                 || dataModel.ReconductionTacite != viewModel.ReconductionTacite
@@ -697,13 +697,67 @@ namespace eVaSys.Utils
                 //Update data
                 dataModel.IdContrat = viewModel.IdContrat;
                 dataModel.RefContratType = viewModel.ContratType?.RefContratType;
-                dataModel.RefEntite = viewModel.RefEntite;
                 dataModel.DDebut = viewModel.DDebut;
                 dataModel.DDebut = viewModel.DDebut;
                 dataModel.DFin = viewModel.DFin;
                 dataModel.ReconductionTacite = viewModel.ReconductionTacite;
                 dataModel.Avenant = viewModel.Avenant;
                 dataModel.Cmt = viewModel.Cmt;
+                //-----------------------------------------------------------------------------------
+                //Remove related data ContratEntite
+                if (dataModel.ContratEntites != null)
+                {
+                    foreach (ContratEntite cE in dataModel.ContratEntites)
+                    {
+                        if (viewModel.ContratEntites == null)
+                        {
+                            dataModel.ContratEntites.Remove(cE);
+                            dirty = true;
+                        }
+                        else if (viewModel.ContratEntites.Where(el => el.RefEntite == cE.RefEntite).FirstOrDefault() == null)
+                        {
+                            dataModel.ContratEntites.Remove(cE);
+                            dirty = true;
+                        }
+                    }
+                }
+                //Add or update related data ContratEntites
+                if (viewModel.ContratEntites != null)
+                {
+                    foreach (ContratEntiteViewModel cEVM in viewModel.ContratEntites)
+                    {
+                        ContratEntite cE = null;
+                        if (dataModel.ContratEntites != null)
+                        {
+                            cE = dataModel.ContratEntites.Where(el => el.RefEntite == cEVM.RefEntite).FirstOrDefault();
+                        }
+                        if (cE == null)
+                        {
+                            //Create entity
+                            cE = new ContratEntite() { RefEntite = cEVM.RefEntite, };
+                            if (dataModel.ContratEntites == null) { dataModel.ContratEntites = new HashSet<ContratEntite>(); }
+                            dataModel.ContratEntites.Add(cE);
+                            dirty = true;
+                        }
+                    }
+                }
+                //Remove duplicates
+                if (dataModel.ContratEntites != null)
+                {
+                    var resultP = dataModel.ContratEntites
+                        .AsEnumerable()
+                        .GroupBy(s => s.RefEntite)
+                        .SelectMany(g => g.Skip(1))
+                        .ToList();
+                    if (resultP.Count > 0)
+                    {
+                        foreach (var e in resultP)
+                        {
+                            dataModel.ContratEntites.Remove(e);
+                        }
+                        dirty = true;
+                    }
+                }
             }
             //End
             return dirty;

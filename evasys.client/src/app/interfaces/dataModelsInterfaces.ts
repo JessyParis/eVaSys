@@ -354,12 +354,18 @@ export interface Contrat {
   RefContrat: number;
   IdContrat: string;
   ContratType: ContratType;
-  RefEntite: number;
   DDebut: string | moment.Moment;
   DFin: string | moment.Moment;
   ReconductionTacite : string
   Avenant: boolean;
   Cmt: string;
+  ContratEntites: ContratEntite[];
+}
+export interface ContratEntite {
+  RefContratEntite?: number;
+  RefContrat: number;
+  RefEntite: number;
+  Entite: EntiteList;
 }
 export interface ContratCollectivite {
   RefContratCollectivite: number;

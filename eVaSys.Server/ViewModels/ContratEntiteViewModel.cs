@@ -5,35 +5,28 @@
 /// 78570 Andrésy
 /// -----------------------------------------------------------------------------------------------------
 /// Projet : e-Valorplast
-/// Création : 18/12/2024
+/// Création : 08/01/2025
 /// ----------------------------------------------------------------------------------------------------- 
-using eVaSys.Data;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Newtonsoft.Json;
+using System;
 
 namespace eVaSys.ViewModels
 {
     [JsonObject(MemberSerialization.OptOut)]
-    public class ContratViewModel
+    public class ContratEntiteViewModel
     {
         #region Constructor
-        public ContratViewModel()
+        public ContratEntiteViewModel()
         {
 
         }
         #endregion Constructor
 
         #region Properties
+        public int RefContratEntite { get; set; }
         public int RefContrat { get; set; }
-        public string IdContrat { get; set; }
-        public ContratTypeViewModel ContratType { get; set; }
-        public DateOnly? DDebut { get; set; }
-        public DateOnly? DFin { get; set; }
-        public bool ReconductionTacite { get; set; }
-        public bool Avenant { get; set; }
-        public string Cmt { get; set; }
-        public string CorpsBase64 { get; set; }
-        public ICollection<ContratEntiteViewModel> ContratEntites { get; set; }
+        public int RefEntite { get; set; }
+        public EntiteListViewModel Entite { get; set; }
         #endregion Properties
     }
 }

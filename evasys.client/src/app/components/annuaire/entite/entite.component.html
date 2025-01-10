@@ -408,7 +408,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let contrat of entite?.Contrats">
+                <tr *ngFor="let contrat of entite?.Contrats" *ngIf="contrat.some(e=>e.RefEntite=entite.RefEntite)">
                   <td style="padding: 0px 5px 0px 5px;">
                     <button mat-icon-button (click)="showDetails('Contrat', contrat.RefContrat, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
                   </td>

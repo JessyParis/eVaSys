@@ -309,72 +309,17 @@ namespace eVaSys.Controllers
             //Check mandatory parameters
             if (int.TryParse(refFournisseur, out refF) && int.TryParse(refAdresseFournisseur, out refAF) && int.TryParse(refProduit, out refP) && DateTime.TryParse(dMoisDechargementPrevu, out d))
             {
-
-                cmd.Parameters.Add("@refFournisseur", SqlDbType.Int).Value = refF;
-                cmd.Parameters.Add("@refAdresseFournisseur", SqlDbType.Int).Value = refAF;
-                cmd.Parameters.Add("@refProduit", SqlDbType.Int).Value = refP;
-                cmd.Parameters.Add("@dMoisDechargementPrevu", SqlDbType.DateTime).Value = d;
-                //Vérification d'un contrat RI
-                string sqlStr = "select count(*)"
-                    + " from tbmEntiteEntite"
-                    + " 	inner join tblEntite as collectivite "
-                    + "         on (collectivite.RefEntite=tbmEntiteEntite.RefEntite and tbmEntiteEntite.RefEntiteRtt=@refFournisseur)"
-                    + "             or (collectivite.RefEntite=tbmEntiteEntite.RefEntiteRtt and tbmEntiteEntite.RefEntite=@refFournisseur)"
-                    + " 	inner join tblContrat as contratCollectivite on contratCollectivite.RefEntite=collectivite.RefEntite"
-                    + "     inner join tblContrat as contratClient on contratClient.IdContrat=contratCollectivite.IdContrat"
-                    + "     inner join tblEntite as client on contratClient.RefEntite=client.RefEntite "
-                    + " where client.RefEntiteType=4 and contratCollectivite.DDebut<=@dMoisDechargementPrevu and contratCollectivite.DFin>=@dMoisDechargementPrevu"
-                    + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu";
-                cmd.CommandText = sqlStr;
-                int c = (int)cmd.ExecuteScalar();
-                //Chaine SQL
-                sqlStr = "select distinct tblTransport.RefTransport, RefAdresseDestination, Client.Libelle as Client, (commandeClient.Poids*1000 - isnull(reliquat.Poids,0))/1000 as [ResteALivrer], (isnull(reliquat.Poids,0)*100)/(commandeClient.Poids*1000) as [Positionne], tblAdresse.Ville, transporteur.RefEntite as RefTransporteur"
-                    + "     , transporteur.Libelle as Transporteur, tbrCamionType.Libelle as [CamionType], tblTransport.PUHT, tr.NbTransportIdentique, tblParcours.Km"
-                    + " from tblEntite as transporteur"
-                    + " 	inner join tblTransport on transporteur.RefEntite=tblTransport.RefTransporteur "
-                    + " 	inner join tblParcours on tblTransport.RefParcours=tblParcours.RefParcours"
-                    + "     inner join tbrCamionType on tblTransport.RefCamionType=tbrCamionType.RefCamionType"
-                    + " 	inner join"
-                    + "         (select distinct tblAdresse.RefAdresse, tblAdresse.RefEntite, Ville"
-                    + "             from tblAdresse"
-                    + "    			inner join tbmContactAdresse on tblAdresse.RefAdresse = tbmContactAdresse.RefAdresse"
-                    + "    			inner join tbmContactAdresseContactAdresseProcess on tbmContactAdresseContactAdresseProcess.RefContactAdresse=tbmContactAdresse.RefContactAdresse "
-                    + "         where RefContactAdresseProcess=1 and tblAdresse.Actif=1) as tblAdresse on tblParcours.RefAdresseDestination=tblAdresse.RefAdresse"
-                    + " 	inner join tblEntite as client on tblAdresse.RefEntite=client.RefEntite"
-                    + " 	inner join tblAdresse as adresseOrigine on tblParcours.RefAdresseOrigine=adresseOrigine.RefAdresse"
-                    + " 	inner join "
-                    + " 		(select RefEntite, RefAdresse, tblCommandeClientMensuelle.Poids  from tblCommandeClient inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient "
-                    + " 		where RefProduit=@refProduit and year(tblCommandeClient.D)=year(@dMoisDechargementPrevu) and month(tblCommandeClientMensuelle.D)=month(@dMoisDechargementPrevu) and tblCommandeClientMensuelle.Poids>0) as commandeClient"
-                    + " 		on client.RefEntite=commandeClient.RefEntite and tblParcours.RefAdresseDestination=CommandeClient.RefAdresse"
-                    + " 	left join "
-                    + " 		(select RefAdresseClient, sum(case when DDechargement is null then PoidsChargement else PoidsDechargement end) as Poids"
-                    + " 		from tblCommandeFournisseur"
-                    + " 		where year(isnull(DDechargement, DMoisDechargementPrevu))=year(@dMoisDechargementPrevu) and month(isnull(DDechargement, DMoisDechargementPrevu))=month(@dMoisDechargementPrevu) and RefProduit=@refProduit and RefusCamion=0"
-                    + " 		group by RefAdresseClient) as reliquat"
-                    + " 		on tblParcours.RefAdresseDestination=reliquat.RefAdresseClient"
-                    + " 	left join (select * from tbmEntiteEntite where Actif=1) as tbmEntiteEntite on "
-                    + " 		(client.RefEntite=tbmEntiteEntite.RefEntite and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntiteRtt)"
-                    + " 		or (client.RefEntite=tbmEntiteEntite.RefEntiteRtt and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntite)"
-                    + " 		or (client.RefEntite=tbmEntiteEntite.RefEntite and transporteur.RefEntite=tbmEntiteEntite.RefEntiteRtt)"
-                    + " 		or (client.RefEntite=tbmEntiteEntite.RefEntiteRtt and transporteur.RefEntite=tbmEntiteEntite.RefEntite)"
-                    + " 		or (transporteur.RefEntite=tbmEntiteEntite.RefEntite and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntiteRtt)"
-                    + " 		or (transporteur.RefEntite=tbmEntiteEntite.RefEntiteRtt and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntite)"
-                    + "     left join (select RefCamionType from tbmEntiteCamionType where RefEntite=@refFournisseur) as tbmEntiteCamionType on tblTransport.RefCamionType=tbmEntiteCamionType.RefCamionType"
-                    + "     inner join tbmEntiteCamionType as transporteurCamionType on tblTransport.RefCamionType=transporteurCamionType.RefCamionType and transporteurCamionType.RefEntite=transporteur.RefEntite"
-                    + "     left join (select RefTransporteur, RefAdresse, RefAdresseClient, RefCamionType, count(*) as NbTransportIdentique from tblCommandeFournisseur where dateadd(day, 180, DDechargement) > getdate() group by RefTransporteur, RefAdresse, RefAdresseClient, RefCamionType) as tr"
-                    + "         on transporteur.RefEntite=tr.RefTransporteur and tblParcours.RefAdresseOrigine=tr.RefAdresse and tblParcours.RefAdresseDestination=tr.RefAdresseClient and tblTransport.RefCamionType=tr.RefCamionType"
-                    + "     inner join (select distinct RefEntite, Interdit from tbmEntiteProduit where RefProduit=@refProduit) as clientProduit on client.RefEntite=clientProduit.RefEntite "
-                    + " where isnull(tblTransport.PUHT,0)!=0 and tblParcours.RefAdresseOrigine=@refAdresseFournisseur"
-                    + "     and (tbmEntiteEntite.RefEntite is null or tbmEntiteEntite.RefEntiteRtt is null)"
-                    + "     and tblTransport.RefTransporteur in (select distinct RefEntite from VueBL)"
-                    + "     and client.Actif=1"
-                    + "     and clientProduit.Interdit=0"
-                    + "     and transporteur.Actif=1"
-                    + "     and tbmEntiteCamionType.RefCamionType is null";
-                //Contrat RI
-                if (c > 0)
+                using (DbConnection sqlConn = DbContext.Database.GetDbConnection())
                 {
-                    sqlStr += " and client.RefEntite in (select contratClient.RefEntite"
+                    sqlConn.Open();
+                    cmd.Connection = (SqlConnection)sqlConn;
+                    //Parameters
+                    cmd.Parameters.Add("@refFournisseur", SqlDbType.Int).Value = refF;
+                    cmd.Parameters.Add("@refAdresseFournisseur", SqlDbType.Int).Value = refAF;
+                    cmd.Parameters.Add("@refProduit", SqlDbType.Int).Value = refP;
+                    cmd.Parameters.Add("@dMoisDechargementPrevu", SqlDbType.DateTime).Value = d;
+                    //Vérification d'un contrat RI
+                    string sqlStr = "select count(*)"
                         + " from tbmEntiteEntite"
                         + " 	inner join tblEntite as collectivite "
                         + "         on (collectivite.RefEntite=tbmEntiteEntite.RefEntite and tbmEntiteEntite.RefEntiteRtt=@refFournisseur)"
@@ -383,47 +328,102 @@ namespace eVaSys.Controllers
                         + "     inner join tblContrat as contratClient on contratClient.IdContrat=contratCollectivite.IdContrat"
                         + "     inner join tblEntite as client on contratClient.RefEntite=client.RefEntite "
                         + " where client.RefEntiteType=4 and contratCollectivite.DDebut<=@dMoisDechargementPrevu and contratCollectivite.DFin>=@dMoisDechargementPrevu"
-                        + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu)";
-                }
-                //Type de camion de la commande
-                if (filterCamionTypes != "")
-                {
-                    sqlStr += " and tblTransport.RefCamionType in (";
-                    sqlStr += Utils.Utils.CreateSQLParametersFromString("refCamionType", filterCamionTypes, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
-                    sqlStr += ")";
-                }
-                //Client de la commande
-                if (int.TryParse(refClient, out refC))
-                {
-                    if (refC != 0)
+                        + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu";
+                    cmd.CommandText = sqlStr;
+                    int c = (int)cmd.ExecuteScalar();
+                    //Chaine SQL
+                    sqlStr = "select distinct tblTransport.RefTransport, RefAdresseDestination, Client.Libelle as Client, (commandeClient.Poids*1000 - isnull(reliquat.Poids,0))/1000 as [ResteALivrer], (isnull(reliquat.Poids,0)*100)/(commandeClient.Poids*1000) as [Positionne], tblAdresse.Ville, transporteur.RefEntite as RefTransporteur"
+                        + "     , transporteur.Libelle as Transporteur, tbrCamionType.Libelle as [CamionType], tblTransport.PUHT, tr.NbTransportIdentique, tblParcours.Km"
+                        + " from tblEntite as transporteur"
+                        + " 	inner join tblTransport on transporteur.RefEntite=tblTransport.RefTransporteur "
+                        + " 	inner join tblParcours on tblTransport.RefParcours=tblParcours.RefParcours"
+                        + "     inner join tbrCamionType on tblTransport.RefCamionType=tbrCamionType.RefCamionType"
+                        + " 	inner join"
+                        + "         (select distinct tblAdresse.RefAdresse, tblAdresse.RefEntite, Ville"
+                        + "             from tblAdresse"
+                        + "    			inner join tbmContactAdresse on tblAdresse.RefAdresse = tbmContactAdresse.RefAdresse"
+                        + "    			inner join tbmContactAdresseContactAdresseProcess on tbmContactAdresseContactAdresseProcess.RefContactAdresse=tbmContactAdresse.RefContactAdresse "
+                        + "         where RefContactAdresseProcess=1 and tblAdresse.Actif=1) as tblAdresse on tblParcours.RefAdresseDestination=tblAdresse.RefAdresse"
+                        + " 	inner join tblEntite as client on tblAdresse.RefEntite=client.RefEntite"
+                        + " 	inner join tblAdresse as adresseOrigine on tblParcours.RefAdresseOrigine=adresseOrigine.RefAdresse"
+                        + " 	inner join "
+                        + " 		(select RefEntite, RefAdresse, tblCommandeClientMensuelle.Poids  from tblCommandeClient inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient "
+                        + " 		where RefProduit=@refProduit and year(tblCommandeClient.D)=year(@dMoisDechargementPrevu) and month(tblCommandeClientMensuelle.D)=month(@dMoisDechargementPrevu) and tblCommandeClientMensuelle.Poids>0) as commandeClient"
+                        + " 		on client.RefEntite=commandeClient.RefEntite and tblParcours.RefAdresseDestination=CommandeClient.RefAdresse"
+                        + " 	left join "
+                        + " 		(select RefAdresseClient, sum(case when DDechargement is null then PoidsChargement else PoidsDechargement end) as Poids"
+                        + " 		from tblCommandeFournisseur"
+                        + " 		where year(isnull(DDechargement, DMoisDechargementPrevu))=year(@dMoisDechargementPrevu) and month(isnull(DDechargement, DMoisDechargementPrevu))=month(@dMoisDechargementPrevu) and RefProduit=@refProduit and RefusCamion=0"
+                        + " 		group by RefAdresseClient) as reliquat"
+                        + " 		on tblParcours.RefAdresseDestination=reliquat.RefAdresseClient"
+                        + " 	left join (select * from tbmEntiteEntite where Actif=1) as tbmEntiteEntite on "
+                        + " 		(client.RefEntite=tbmEntiteEntite.RefEntite and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntiteRtt)"
+                        + " 		or (client.RefEntite=tbmEntiteEntite.RefEntiteRtt and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntite)"
+                        + " 		or (client.RefEntite=tbmEntiteEntite.RefEntite and transporteur.RefEntite=tbmEntiteEntite.RefEntiteRtt)"
+                        + " 		or (client.RefEntite=tbmEntiteEntite.RefEntiteRtt and transporteur.RefEntite=tbmEntiteEntite.RefEntite)"
+                        + " 		or (transporteur.RefEntite=tbmEntiteEntite.RefEntite and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntiteRtt)"
+                        + " 		or (transporteur.RefEntite=tbmEntiteEntite.RefEntiteRtt and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntite)"
+                        + "     left join (select RefCamionType from tbmEntiteCamionType where RefEntite=@refFournisseur) as tbmEntiteCamionType on tblTransport.RefCamionType=tbmEntiteCamionType.RefCamionType"
+                        + "     inner join tbmEntiteCamionType as transporteurCamionType on tblTransport.RefCamionType=transporteurCamionType.RefCamionType and transporteurCamionType.RefEntite=transporteur.RefEntite"
+                        + "     left join (select RefTransporteur, RefAdresse, RefAdresseClient, RefCamionType, count(*) as NbTransportIdentique from tblCommandeFournisseur where dateadd(day, 180, DDechargement) > getdate() group by RefTransporteur, RefAdresse, RefAdresseClient, RefCamionType) as tr"
+                        + "         on transporteur.RefEntite=tr.RefTransporteur and tblParcours.RefAdresseOrigine=tr.RefAdresse and tblParcours.RefAdresseDestination=tr.RefAdresseClient and tblTransport.RefCamionType=tr.RefCamionType"
+                        + "     inner join (select distinct RefEntite, Interdit from tbmEntiteProduit where RefProduit=@refProduit) as clientProduit on client.RefEntite=clientProduit.RefEntite "
+                        + " where isnull(tblTransport.PUHT,0)!=0 and tblParcours.RefAdresseOrigine=@refAdresseFournisseur"
+                        + "     and (tbmEntiteEntite.RefEntite is null or tbmEntiteEntite.RefEntiteRtt is null)"
+                        + "     and tblTransport.RefTransporteur in (select distinct RefEntite from VueBL)"
+                        + "     and client.Actif=1"
+                        + "     and clientProduit.Interdit=0"
+                        + "     and transporteur.Actif=1"
+                        + "     and tbmEntiteCamionType.RefCamionType is null";
+                    //Contrat RI or not
+                    if (c > 0)
                     {
-                        cmd.Parameters.Add("@refClient", SqlDbType.Int).Value = refC;
-                        sqlStr += "   and client.RefEntite=@refClient";
+                        sqlStr += " and client.RefEntite in (select contratClient.RefEntite"
+                            + " from tbmEntiteEntite"
+                            + " 	inner join tblEntite as collectivite "
+                            + "         on (collectivite.RefEntite=tbmEntiteEntite.RefEntite and tbmEntiteEntite.RefEntiteRtt=@refFournisseur)"
+                            + "             or (collectivite.RefEntite=tbmEntiteEntite.RefEntiteRtt and tbmEntiteEntite.RefEntite=@refFournisseur)"
+                            + " 	inner join tblContrat as contratCollectivite on contratCollectivite.RefEntite=collectivite.RefEntite"
+                            + "     inner join tblContrat as contratClient on contratClient.IdContrat=contratCollectivite.IdContrat"
+                            + "     inner join tblEntite as client on contratClient.RefEntite=client.RefEntite "
+                            + " where client.RefEntiteType=4 and contratCollectivite.DDebut<=@dMoisDechargementPrevu and contratCollectivite.DFin>=@dMoisDechargementPrevu"
+                            + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu)";
                     }
-                }
-                //Transporteur de la commande
-                if (int.TryParse(refTransporteur, out refT))
-                {
-                    if (refT != 0)
+                    //Type de camion de la commande
+                    if (filterCamionTypes != "")
                     {
-                        cmd.Parameters.Add("@refTransporteur", SqlDbType.Int).Value = refT;
-                        sqlStr += "   and transporteur.RefEntite=@refTransporteur";
+                        sqlStr += " and tblTransport.RefCamionType in (";
+                        sqlStr += Utils.Utils.CreateSQLParametersFromString("refCamionType", filterCamionTypes, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                        sqlStr += ")";
                     }
-                }
-                if (filterVilleArrivees != "")
-                {
-                    sqlStr += " and tblAdresse.Ville in (";
-                    sqlStr += Utils.Utils.CreateSQLParametersFromString("tblAdresse", filterVilleArrivees, ref cmd, Enumerations.EnvDataColumnDataType.text.ToString());
-                    sqlStr += ")";
-                }
-                sqlStr += " order by tblTransport.PUHT";
-                cmd.CommandText = sqlStr;
-                SqlDataAdapter dA = new(cmd);
-                if (dS.Tables.Count > 0) { dS.Tables.Clear(); }
-                using (DbConnection sqlConn = DbContext.Database.GetDbConnection())
-                {
-                    sqlConn.Open();
-                    cmd.Connection = (SqlConnection)sqlConn;
+                    //Client de la commande
+                    if (int.TryParse(refClient, out refC))
+                    {
+                        if (refC != 0)
+                        {
+                            cmd.Parameters.Add("@refClient", SqlDbType.Int).Value = refC;
+                            sqlStr += "   and client.RefEntite=@refClient";
+                        }
+                    }
+                    //Transporteur de la commande
+                    if (int.TryParse(refTransporteur, out refT))
+                    {
+                        if (refT != 0)
+                        {
+                            cmd.Parameters.Add("@refTransporteur", SqlDbType.Int).Value = refT;
+                            sqlStr += "   and transporteur.RefEntite=@refTransporteur";
+                        }
+                    }
+                    if (filterVilleArrivees != "")
+                    {
+                        sqlStr += " and tblAdresse.Ville in (";
+                        sqlStr += Utils.Utils.CreateSQLParametersFromString("tblAdresse", filterVilleArrivees, ref cmd, Enumerations.EnvDataColumnDataType.text.ToString());
+                        sqlStr += ")";
+                    }
+                    sqlStr += " order by tblTransport.PUHT";
+                    cmd.CommandText = sqlStr;
+                    SqlDataAdapter dA = new(cmd);
+                    if (dS.Tables.Count > 0) { dS.Tables.Clear(); }
                     dA.Fill(dS);
                 }
                 //Return Json

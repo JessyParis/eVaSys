@@ -189,7 +189,7 @@ namespace eVaSys.Data
         public ICollection<CommandeFournisseur> CommandeFournisseurTransporteurs { get; set; }
         public ICollection<CommandeFournisseur> CommandeFournisseurPrestataires { get; set; }
         public ICollection<ContratIncitationQualite> ContratIncitationQualites { get; set; }
-        public ICollection<Contrat> Contrats { get; set; }
+        public ICollection<ContratEntite> ContratEntites { get; set; }
         public ICollection<ContratCollectivite> ContratCollectivites { get; set; }
         public ICollection<DocumentEntite> DocumentEntites { get; set; }
         public ICollection<EntiteCamionType> EntiteCamionTypes { get; set; }
@@ -205,9 +205,9 @@ namespace eVaSys.Data
         public ICollection<SurcoutCarburant> SurcoutCarburantTransporteurs { get; set; }
         public ICollection<EntiteEntite> EntiteEntiteInits { get; set; }
         public ICollection<EntiteEntite> EntiteEntiteRttInits { get; set; }
-        private ICollection<EntiteEntite> _entiteEntites { get; set; }
         [NotMapped]
         public ICollection<SAGEDocument> SAGEDocuments { get; set; }
+        private ICollection<EntiteEntite> _entiteEntites { get; set; }
         [NotMapped]
         public ICollection<EntiteEntite> EntiteEntites
         {
@@ -259,6 +259,23 @@ namespace eVaSys.Data
                 return _entiteEntites;
             }
             set { _entiteEntites = value; }
+        }
+        private ICollection<Contrat> _contrats{ get; set; }
+        [NotMapped]
+        public ICollection<Contrat> Contrats
+        {
+            get
+            {
+                //Load if applicable
+                if (_contrats == null && RefEntite > 0)
+                {
+                    _contrats = DbContext.Contrats
+                        .Where(e => e.ContratEntites.Any(a=> a.RefEntite == RefEntite))
+                        .ToHashSet();
+                }
+                return _contrats;
+            }
+            set { _contrats = value; }
         }
         //Texte de synthèse
         private string _texteEntite = "";
@@ -371,6 +388,7 @@ namespace eVaSys.Data
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurTransporteurs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurPrestataires).Query().Count();
+            nbLinkedData += DbContext.Entry(this).Collection(b => b.ContratEntites).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.FicheControles).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.PrixReprises).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.Repartitions).Query().Count();

@@ -42,8 +42,6 @@ namespace eVaSys.Data
             get => LazyLoader.Load(this, ref _contratType);
             set => _contratType = value;
         }
-        public int? RefEntite { get; set; }
-        public Entite Entite;
         public DateOnly? DDebut { get; set; }
         public DateOnly? DFin { get; set; }
         public bool ReconductionTacite { get; set; }
@@ -57,6 +55,7 @@ namespace eVaSys.Data
                 return Convert.ToBase64String(Fichier);
             }
         }
+        public ICollection<ContratEntite> ContratEntites { get; set; }
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
         [NotMapped]
@@ -116,10 +115,9 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            if (!(RefEntite > 0) || !(RefContratType > 0) || DDebut == null || DFin==null || string.IsNullOrWhiteSpace(IdContrat))
+            if (!(RefContratType > 0) || DDebut == null || DFin==null || string.IsNullOrWhiteSpace(IdContrat))
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
-                if (!(RefEntite > 0)) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1541); }
                 if (!(RefContratType > 0)) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1543); }
                 if (DDebut == null) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1174); }
                 if (DFin == null) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1175); }

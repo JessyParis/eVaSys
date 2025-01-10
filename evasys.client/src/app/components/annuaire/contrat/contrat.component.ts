@@ -6,7 +6,8 @@ import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces"
 import { DataModelService } from "../../../services/data-model.service";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { ListService } from "../../../services/list.service";
-import { showErrorToUser } from "../../../globals/utils";
+import { showConfirmToUser, showErrorToUser } from "../../../globals/utils";
+import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -121,5 +122,77 @@ export class ContratComponent implements OnInit {
         this.askClose.emit({ type: this.type, ref: this.contrat });
         break;
     }
+  }
+  //-----------------------------------------------------------------------------------
+  //Delete a ContactAdresseServiceFonction
+  onDeleteContactAdresseServiceFonction(refContratEntite: number) {
+    this.applyChanges();
+    if (refContratEntite !== null) {
+      let i: number = this.contrat.ContratEntites.map(e => e.RefContratEntite).indexOf(refContratEntite);
+      //Process
+      showConfirmToUser(this.dialog, this.applicationUserContext.getCulturedRessourceText(300), this.applicationUserContext.getCulturedRessourceText(1126), this.applicationUserContext)
+        .subscribe(result => {
+          if (result === "yes") {
+            //Remove ContactAdresseServiceFonction
+            this.contrat.ContratEntites.splice(i, 1);
+            //Update form
+            this.updateForm();
+          }
+        });
+    }
+  }
+  //-----------------------------------------------------------------------------------
+  //Show elements details
+  showDetails(type: string, ref: number, refEntiteType: number, mode: string) {
+    let data: any;
+    let title: string = this.applicationUserContext.getCulturedRessourceText(349);
+    this.applyChanges();
+    //Init
+    switch (type) {
+      case "AnnuaireContratEntite":
+        //Calculate id
+        let minRefContratEntite: number = -1;
+        this.contrat.ContratEntites?.forEach(item => {
+          if (item.RefContratEntite <= minRefContratEntite) minRefContratEntite = item.RefContratEntite - 1;
+        });
+        //Get ContactAdresseServiceFonction
+        let cE = {
+          RefContratEntite: minRefContratEntite
+          , RefContrat: this.contrat.RefContrat
+        } as dataModelsInterfaces.ContratEntite
+        if (ref != null) { cE = this.contrat.ContratEntites.find(x => x.RefContratEntite === ref) }
+        data = {
+          title: this.applicationUserContext.getCulturedRessourceText(1124)
+          , type: type, ref: ref
+          , contrat: this.contrat
+          , cE: cE
+        };
+        break;
+    }
+    //Open dialog
+    const dialogRef = this.dialog.open(ComponentRelativeComponent, {
+      width: "350px",
+      data,
+      autoFocus: false,
+      restoreFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      //If data in the dialog have been saved
+      if (result) {
+        let exists: boolean = false;
+        switch (result.type) {
+          case "AnnuaireContratEntite":
+            //Add or update ContactAdresseServiceFonction
+            let cE: dataModelsInterfaces.ContratEntite = result.ref as dataModelsInterfaces.ContratEntite;
+            exists = this.contrat.ContratEntites?.some(item => item.RefContratEntite == cE.RefContratEntite);
+            if (!exists) { this.contrat.ContratEntites.push(cE); }
+            else {
+              let ind: number = this.contrat.ContratEntites.map(e => e.RefContratEntite).indexOf(cE.RefContratEntite);
+              this.contrat.ContratEntites[ind] = cE;
+            }
+            break;
+        }
+      }
+    });
   }
 }

@@ -402,14 +402,14 @@ const progressModules = [
     IntlModule,
     PDFExportModule,
     BackButtonDisableModule.forRoot(),
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      //enabled: true,
-      //enabled: false,
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerImmediately'
-    }),
+    //ServiceWorkerModule.register('ngsw-worker.js', {
+    //  //enabled: true,
+    //  //enabled: false,
+    //  enabled: environment.production,
+    //  // Register the ServiceWorker as soon as the application is stable
+    //  // or after 30 seconds (whichever comes first).
+    //  registrationStrategy: 'registerImmediately'
+    //}),
     RouterModule.forRoot([
       { path: "", redirectTo: "home", pathMatch: "full" },
       { path: "accueil-collectivite", component: AccueilCollectiviteComponent, data: { animation: "FadeIn" } },

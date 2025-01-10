@@ -71,7 +71,7 @@ namespace eVaSys.Controllers
                 .ThenInclude(r => r.UtilisateurModif)
                 .Include(r => r.EntiteCamionTypes)
                 .ThenInclude(r => r.UtilisateurCreation)
-                .Include(r => r.Contrats)
+                .Include(r => r.ContratEntites)
                 .Include(r => r.ContratIncitationQualites)
                 .Include(r => r.ContratCollectivites)
                 .Include(r => r.EntiteDRs)
@@ -158,7 +158,7 @@ namespace eVaSys.Controllers
                 .Include(r => r.Adresses)
                 .ThenInclude(r => r.UtilisateurModif)
                 .Include(r => r.ContratIncitationQualites)
-                .Include(r => r.Contrats)
+                .Include(r => r.ContratEntites)
                 .Include(r => r.ContratCollectivites)
                 .Include(r => r.EntiteCamionTypes)
                 .ThenInclude(r => r.UtilisateurCreation)
@@ -322,7 +322,7 @@ namespace eVaSys.Controllers
             bool contratActif = (Request.Headers.ContainsKey("contratActif") ? (Request.Headers["contratActif"] == "true") : false);
             bool lienActif = (Request.Headers.ContainsKey("lienActif") ? (Request.Headers["lienActif"] == "true") : false);
             bool surcoutCarburantHT = (Request.Headers.ContainsKey("surcoutCarburantHT") ? (Request.Headers["surcoutCarburantHT"] == "true" ? true : false) : false);
-            string idContrat = Request.Headers["idContrat"].ToString();
+            string refContrat = Request.Headers["refContrat"].ToString();
             bool hasContrat = Request.Headers.ContainsKey("refContratType");
             string refContratType = Request.Headers["refContratType"].ToString();
             int refP = 0;
@@ -331,6 +331,7 @@ namespace eVaSys.Controllers
             int refERtt = 0;
             int refERttF = 0;
             int refCT = 0;
+            int refCt = 0;
             DateTime dRef = DateTime.MinValue;
             var req = DbContext.Entites.AsQueryable();
             //RefEntiteType
@@ -440,26 +441,27 @@ namespace eVaSys.Controllers
                     DateOnly dContrat = DateOnly.FromDateTime(DateTime.Now);
                     int.TryParse(refEntiteContrat, out refEC);
                     int.TryParse(refContratType, out refCT);
+                    int.TryParse(refContrat, out refCt);
                     if (dT != DateTime.MinValue) { dContrat = DateOnly.FromDateTime(dT); }
                     //Get idContrats for the Entite
-                    List<string> idContrats = new List<string>();
-                    if (!string.IsNullOrWhiteSpace(idContrat)) { idContrats.Add(idContrat); }
+                    List<int> refContrats = new List<int>();
+                    if (refCt>0) { refContrats.Add(refCt); }
                     else
                     {
-                        idContrats = DbContext.Contrats
-                        .Where(e => e.RefContratType == refCT && e.DDebut <= dContrat && e.DFin >= dContrat && e.RefEntite == refEC)
-                        .Select(p => p.IdContrat).ToList();
+                        refContrats = DbContext.Contrats
+                        .Where(e => e.RefContratType == refCT && e.DDebut <= dContrat && e.DFin >= dContrat && e.ContratEntites.Any(i=>i.RefEntite == refEC))
+                        .Select(p => p.RefContrat).ToList();
                     }
                     //Process
                     if (int.TryParse(refEntite, out refE))
                     {
-                        req = req.Where(el => (el.Contrats.Any(p => idContrats.Contains(p.IdContrat) && p.DDebut <= dContrat && p.DFin >= dContrat && p.RefContratType == refCT)
+                        req = req.Where(el => (el.ContratEntites.Any(p => refContrats.Contains(p.RefContrat))
                         && el.RefEntiteType == refEntiteType)
                         || el.RefEntite == refE);
                     }
                     else
                     {
-                        req = req.Where(el => el.Contrats.Any(p => idContrats.Contains(p.IdContrat) && p.DDebut <= dContrat && p.DFin >= dContrat && p.RefContratType == refCT)
+                        req = req.Where(el => el.ContratEntites.Any(p => refContrats.Contains(p.RefContrat))
                         && el.RefEntiteType == refEntiteType);
                     }
                 }
@@ -1017,7 +1019,7 @@ namespace eVaSys.Controllers
                 }
                 else
                 {
-                    //Create Message for administrators if desabled and user associated
+                    //Create Message for administrators if disabled and user associated
                     if (cA.Actif == true && cAVM.Actif == false && cA.Utilisateurs?.Count > 0)
                     {
                         //Create message
@@ -1330,6 +1332,12 @@ namespace eVaSys.Controllers
                 //Mark as dirty if applicable and update data
                 if (Utils.DataUtils.UpdateDataContrat(ref cC, cCVM, CurrentContext.RefUtilisateur))
                 {
+                    //Remove Contrat if no more ContratEntites
+                    if (dataModel.ContratEntites.Count == 0)
+                    {
+                        DbContext.Contrats.Remove(cC);
+                    }
+                    //Mark dirty
                     dirty = true;
                 }
             }

@@ -49,6 +49,7 @@ namespace eVaSys.Mappings
             CreateMap<ContactAdresseProcess, ContactAdresseProcessViewModel>().ReverseMap();
             CreateMap<Contact, ContactViewModel>().ReverseMap();
             CreateMap<Contrat, ContratViewModel>().ReverseMap();
+            CreateMap<ContratEntite, ContratEntiteViewModel>().ReverseMap();
             CreateMap<ContratCollectivite, ContratCollectiviteViewModel>().ReverseMap();
             CreateMap<ContratIncitationQualite, ContratIncitationQualiteViewModel>().ReverseMap();
             CreateMap<ContratType, ContratTypeViewModel>().ReverseMap();

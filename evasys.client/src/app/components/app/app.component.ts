@@ -28,7 +28,7 @@ import { fadeInOnEnterAnimation, fadeOutOnLeaveAnimation, flashAnimation, slideI
 import * as dataModelsInterfaces from "../../interfaces/dataModelsInterfaces";
 import { HttpResponse } from "@angular/common/http";
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { UpdateService } from "../../services/update.service";
+//import { UpdateService } from "../../services/update.service";
 
 @Component({
     selector: "app",
@@ -223,7 +223,7 @@ export class AppComponent implements OnInit {
     , private eventEmitterService: EventEmitterService
     , private authService: AuthService
     , private downloadService: DownloadService
-    , private updateService: UpdateService
+    //, private updateService: UpdateService
     , private snackBarQueueService: SnackBarQueueService
     , public dialog: MatDialog) {
     this.activatedRoute.fragment.subscribe(params => {

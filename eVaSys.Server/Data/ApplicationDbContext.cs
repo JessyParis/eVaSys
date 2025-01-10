@@ -84,6 +84,7 @@ namespace eVaSys.Data
         public virtual DbSet<ContactAdresseProcess> ContactAdresseProcesss { get; set; }
         public virtual DbSet<ContactAdresseServiceFonction> ContactAdresseServiceFonctions { get; set; }
         public virtual DbSet<Contrat> Contrats { get; set; }
+        public virtual DbSet<ContratEntite> ContratEntites { get; set; }
         public virtual DbSet<ContratIncitationQualite> ContratIncitationQualites { get; set; }
         public virtual DbSet<ContratCollectivite> ContratCollectivites { get; set; }
         public virtual DbSet<ContratType> ContratTypes { get; set; }
@@ -1235,6 +1236,22 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefUtilisateurModif)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+            modelBuilder.Entity<ContratEntite>(entity =>
+            {
+                entity.HasKey(e => e.RefContratEntite);
+
+                entity.ToTable("tbmContratEntite");
+
+                entity.HasIndex(e => new { e.RefContrat, e.RefEntite })
+                    .HasDatabaseName("IX_tbmContratEntite_Unique")
+                    .IsUnique();
+
+                entity.HasOne(d => d.Entite)
+                    .WithMany(p => p.ContratEntites)
+                    .HasForeignKey(d => d.RefEntite)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+            });
             modelBuilder.Entity<ContratIncitationQualite>(entity =>
             {
                 entity.HasKey(e => e.RefContratIncitationQualite);
@@ -2063,11 +2080,6 @@ namespace eVaSys.Data
                     .OnDelete(DeleteBehavior.ClientCascade);
 
                 entity.HasMany(d => d.ContratIncitationQualites)
-                    .WithOne()
-                    .HasForeignKey(d => d.RefEntite)
-                    .OnDelete(DeleteBehavior.ClientCascade);
-
-                entity.HasMany(d => d.Contrats)
                     .WithOne()
                     .HasForeignKey(d => d.RefEntite)
                     .OnDelete(DeleteBehavior.ClientCascade);

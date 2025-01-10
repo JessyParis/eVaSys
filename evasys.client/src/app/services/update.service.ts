@@ -22,20 +22,20 @@ export class UpdateService {
   constructor(private swUpdate: SwUpdate
     , public applicationUserContext: ApplicationUserContext
     , private snackBar: MatSnackBar) {
-    console.log("UpdateService constructor");
-    console.log("Production : " + environment.production.toString())
-    //If new version available
-    this.swUpdate.versionUpdates.subscribe((event) => {
-      if (event.type === "VERSION_READY") {
-        console.log("New version available");
-        //Prompt user
-        const snackBarRef = this.snackBar.open(this.applicationUserContext.getCulturedRessourceText(1540)
-          , undefined, {
-          duration: 6000,
-        });
-        //Update
-        this.swUpdate.activateUpdate().then(() => document.location.reload());
-      }
-    });
+  //  console.log("UpdateService constructor");
+  //  console.log("Production : " + environment.production.toString())
+  //  //If new version available
+  //  this.swUpdate.versionUpdates.subscribe((event) => {
+  //    if (event.type === "VERSION_READY") {
+  //      console.log("New version available");
+  //      //Prompt user
+  //      const snackBarRef = this.snackBar.open(this.applicationUserContext.getCulturedRessourceText(1540)
+  //        , undefined, {
+  //        duration: 6000,
+  //      });
+  //      //Update
+  //      this.swUpdate.activateUpdate().then(() => document.location.reload());
+  //    }
+  //  });
   }
 }

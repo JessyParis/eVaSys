@@ -622,8 +622,9 @@ export class EntiteComponent implements OnInit {
           if (result === "yes") {
             //Save data
             this.saveData();
-            //Remove Contrat
-            this.entite.Contrats.splice(i, 1);
+            //Remove corresponding ContratEntite
+            let j: number = this.entite.Contrats[i].ContratEntites.map(e => e.RefEntite).indexOf(this.entite.RefEntite);
+            this.entite.Contrats[i].ContratEntites.splice(j, 1);
             //Update form
             this.updateForm();
           }
@@ -991,7 +992,6 @@ export class EntiteComponent implements OnInit {
         //Get contrat
         let c = {
           RefContrat: minRefContrat
-          , RefEntite: this.entite.RefEntite
           , Avenant: false
         } as dataModelsInterfaces.Contrat;
         if (ref != null) { c = this.entite.Contrats.find(x => x.RefContrat === ref) }
