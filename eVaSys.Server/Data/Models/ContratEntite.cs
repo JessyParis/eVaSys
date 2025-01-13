@@ -35,7 +35,7 @@ namespace eVaSys.Data
         public int RefContratEntite { get; set; }
         public int RefContrat { get; set; }
         public int RefEntite { get; set; }
-        //private Entite _entite;
+        public Contrat Contrat { get; set; }
         public Entite Entite { get; set; }
         //--------------------------------------------------------------------------------------------
         /// <summary>

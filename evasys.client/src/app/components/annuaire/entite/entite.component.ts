@@ -135,6 +135,9 @@ export class EntiteComponent implements OnInit {
   filterEntiteDocuments = (dE: dataModelsInterfaces.DocumentEntite, filterGlobalActif: boolean, refEntiteType: number, visibiliteTotale: boolean) => {
     return (dE.DocumentNoFile.VisibiliteTotale == visibiliteTotale);
   }
+  filterContrats = (c: dataModelsInterfaces.Contrat) => {
+    return (c.ContratEntites.some(e => e.RefEntite = this.entite.RefEntite));
+  }
   //Dynamic labels
   centreDeTriLieLabel: string = this.applicationUserContext.getCulturedRessourceText(1150);
   camionTypeLieLabel: string = this.applicationUserContext.getCulturedRessourceText(1169);
@@ -552,7 +555,7 @@ export class EntiteComponent implements OnInit {
     this.saveData();
     this.dataModelService.setTextFromMomentEntite(this.entite);
     //Attach Documents
-    this.entite.DocumentEntites = this.entite.DocumentEntites;
+    //this.entite.DocumentEntites = this.entite.DocumentEntites;
     //Update
     this.dataModelService.postEntite(this.entite)
       .subscribe(result => {
@@ -984,6 +987,8 @@ export class EntiteComponent implements OnInit {
         };
         break;
       case "Contrat":
+        //Set width
+        dialogWidth = 900;
         //Calculate id
         let minRefContrat: number = -1;
         this.entite.Contrats?.forEach(item => {
@@ -994,7 +999,19 @@ export class EntiteComponent implements OnInit {
           RefContrat: minRefContrat
           , Avenant: false
         } as dataModelsInterfaces.Contrat;
-        if (ref != null) { c = this.entite.Contrats.find(x => x.RefContrat === ref) }
+        if (ref != null) {
+          c = this.entite.Contrats.find(x => x.RefContrat === ref);
+        }
+        else {
+          //Add current Entite to ContratEntite
+          let cE = {
+            RefEntite: this.entite.RefEntite
+            , RefContrat: c.RefContrat
+            , Entite: { RefEntite: this.entite.RefEntite, Libelle:this.entite.Libelle, Actif: this.entite.Actif} as dataModelsInterfaces.EntiteList
+          } as dataModelsInterfaces.ContratEntite;
+          if (c.ContratEntites == null) { c.ContratEntites = []; }
+          c.ContratEntites.push(cE);  
+        }
         data = {
           title: this.applicationUserContext.getCulturedRessourceText(1176), type: type, ref: ref
           , entite: this.entite, contrat: c

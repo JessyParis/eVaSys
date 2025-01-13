@@ -8,6 +8,8 @@ import { ErrorStateMatcher } from "@angular/material/core";
 import { ListService } from "../../../services/list.service";
 import { showConfirmToUser, showErrorToUser } from "../../../globals/utils";
 import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
+import { ApplicationComponent } from "../../administration/administration-components";
+import { HabilitationAnnuaire } from "../../../globals/enums";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -22,6 +24,7 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
 @Component({
     selector: "contrat",
     templateUrl: "./contrat.component.html",
+    styleUrls: ["./contrat.component.scss"],
     standalone: false
 })
 
@@ -60,7 +63,7 @@ export class ContratComponent implements OnInit {
       ReconductionTacite: this.reconductionTaciteFC,
       Cmt: this.cmtFC,
     });
-    if (1 != 1) {
+    if (this.applicationUserContext.connectedUtilisateur.HabilitationAnnuaire != HabilitationAnnuaire.Administrateur) {
       this.lockScreen();
     }
     else {
@@ -124,8 +127,8 @@ export class ContratComponent implements OnInit {
     }
   }
   //-----------------------------------------------------------------------------------
-  //Delete a ContactAdresseServiceFonction
-  onDeleteContactAdresseServiceFonction(refContratEntite: number) {
+  //Delete a ContratEntite
+  onDeleteContratEntite(refContratEntite: number) {
     this.applyChanges();
     if (refContratEntite !== null) {
       let i: number = this.contrat.ContratEntites.map(e => e.RefContratEntite).indexOf(refContratEntite);
@@ -143,35 +146,19 @@ export class ContratComponent implements OnInit {
   }
   //-----------------------------------------------------------------------------------
   //Show elements details
-  showDetails(type: string, ref: number, refEntiteType: number, mode: string) {
+  showDetails() {
     let data: any;
-    let title: string = this.applicationUserContext.getCulturedRessourceText(349);
     this.applyChanges();
     //Init
-    switch (type) {
-      case "AnnuaireContratEntite":
-        //Calculate id
-        let minRefContratEntite: number = -1;
-        this.contrat.ContratEntites?.forEach(item => {
-          if (item.RefContratEntite <= minRefContratEntite) minRefContratEntite = item.RefContratEntite - 1;
-        });
-        //Get ContactAdresseServiceFonction
-        let cE = {
-          RefContratEntite: minRefContratEntite
-          , RefContrat: this.contrat.RefContrat
-        } as dataModelsInterfaces.ContratEntite
-        if (ref != null) { cE = this.contrat.ContratEntites.find(x => x.RefContratEntite === ref) }
-        data = {
-          title: this.applicationUserContext.getCulturedRessourceText(1124)
-          , type: type, ref: ref
-          , contrat: this.contrat
-          , cE: cE
-        };
-        break;
-    }
+    data = {
+      title: this.applicationUserContext.getCulturedRessourceText(1124)
+      , type: "EntiteForContrat", ref: null
+      , contrat: this.contrat
+    };
     //Open dialog
     const dialogRef = this.dialog.open(ComponentRelativeComponent, {
-      width: "350px",
+      width: "50%",
+      maxHeight: "80vh",
       data,
       autoFocus: false,
       restoreFocus: false
@@ -180,17 +167,16 @@ export class ContratComponent implements OnInit {
       //If data in the dialog have been saved
       if (result) {
         let exists: boolean = false;
-        switch (result.type) {
-          case "AnnuaireContratEntite":
-            //Add or update ContactAdresseServiceFonction
-            let cE: dataModelsInterfaces.ContratEntite = result.ref as dataModelsInterfaces.ContratEntite;
-            exists = this.contrat.ContratEntites?.some(item => item.RefContratEntite == cE.RefContratEntite);
-            if (!exists) { this.contrat.ContratEntites.push(cE); }
-            else {
-              let ind: number = this.contrat.ContratEntites.map(e => e.RefContratEntite).indexOf(cE.RefContratEntite);
-              this.contrat.ContratEntites[ind] = cE;
-            }
-            break;
+        //Add or update 
+        let cE: dataModelsInterfaces.ContratEntite = {
+          RefContrat: this.contrat.RefContrat,
+          RefEntite: result.ref,
+          Entite: {RefEntite:result.ref, Libelle:result.libelle, Actif:true},
+        };
+        exists = this.contrat.ContratEntites?.some(item => item.RefEntite == cE.RefEntite);
+        if (!exists) {
+          if (this.contrat.ContratEntites == null) this.contrat.ContratEntites = [];
+          this.contrat.ContratEntites.push(cE);
         }
       }
     });

@@ -134,17 +134,16 @@
                 <thead class="background-color-accent">
                   <tr>
                     <th style="padding:5px;">
-                      <button mat-icon-button (click)="showDetails('AnnuaireContactAdresseServiceFonction', null, 1, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                      <button mat-icon-button (click)="showDetails('AnnuaireContactAdresseServiceFonction', null);" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
                     </th>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1146)}}</th>
-                    <th style="padding:5px;"></th>
                     <th style="padding:5px;"></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let cASF of contactAdresse?.ContactAdresseServiceFonctions">
                     <td style="padding: 0px 5px 0px 5px;">
-                      <button mat-icon-button (click)="showDetails('AnnuaireContactAdresseServiceFonction', cASF.RefContactAdresseServiceFonction, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
+                      <button mat-icon-button (click)="showDetails('AnnuaireContactAdresseServiceFonction', cASF.RefContactAdresseServiceFonction, null);" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
                     </td>
                     <td style="padding: 0px 5px 0px 5px;">{{contactAdresseServiceFonctionLabel(cASF)}}</td>
                     <td style="padding: 0px 5px 0px 5px;">

@@ -6,7 +6,7 @@
           <mat-form-field *ngIf="this.type==='Mixte' || this.type==='TransporteurForUtilisateur' || this.type==='CentreDeTriForUtilisateur'
                         || this.type==='CollectiviteForUtilisateur' || this.type==='ClientForUtilisateur' || this.type==='PrestataireForUtilisateur'
                         || this.type==='UtilisateurMaitreForUtilisateur'
-                        || this.type==='EntiteForDocument'" class="ev-control-left">
+                        || this.type==='EntiteForDocument' || this.type==='EntiteForContrat'" class="ev-control-left">
             <mat-label>{{applicationUserContext.getCulturedRessourceText(440)}}</mat-label>
             <input matInput formControlName="FilterText" maxlength="50">
             <button *ngIf="form.get('FilterText').value" matIconSuffix mat-icon-button aria-label="Supprimer"
@@ -31,7 +31,7 @@
           <button mat-icon-button (click)="applyFilter()" matTooltip={{applicationUserContext.getCulturedRessourceText(492)}}
                   *ngIf="this.type==='Mixte' || this.type==='TransporteurForUtilisateur' || this.type==='CentreDeTriForUtilisateur'
                         || this.type==='CollectiviteForUtilisateur' || this.type==='ClientForUtilisateur' || this.type==='PrestataireForUtilisateur'
-                        || this.type==='UtilisateurMaitreForUtilisateur' || this.type==='EntiteForDocument'"
+                        || this.type==='UtilisateurMaitreForUtilisateur' || this.type==='EntiteForDocument' || this.type==='EntiteForContrat'"
                   class="ev-button-right" type="submit" [disabled]="form.invalid">
             <mat-icon aria-label="Filtrer">search</mat-icon>
           </button>

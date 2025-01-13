@@ -14,13 +14,13 @@
   }
 
   td:nth-child(2), th:nth-child(2) {
-    min-width: 100%;
-    max-width: 100%;
-    width: 100%;
+    min-width: 255px;
+    max-width: 255px;
+    width: 255px;
     box-sizing: border-box;
   }
 
-  td:nth-child(4), th:nth-child(4) {
+  td:nth-child(3), th:nth-child(3) {
     min-width: 50px;
     max-width: 50px;
     width: 50px;

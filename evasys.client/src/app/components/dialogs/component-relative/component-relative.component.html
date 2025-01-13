@@ -64,7 +64,8 @@
                  || data.type==='CollectiviteForUtilisateur' || data.type==='ClientForUtilisateur' || data.type==='PrestataireForUtilisateur'
                  || data.type==='UtilisateurMaitreForUtilisateur'
                  || data.type==='EntiteForDocument' || data.type==='AnnuaireAdresseInactive'
-                 || data.type==='AnnuaireContactAdresseInactive'|| data.type==='ContactModificationRequest'"
+                 || data.type==='AnnuaireContactAdresseInactive' || data.type==='ContactModificationRequest'
+                 || data.type==='EntiteForContrat'"
                  [type]="data.type" (askClose)="closeAsked($event)" [dataItems]="data.dataItems" [exclude]="data.exclude"></grid-simple>
     <message-visualisations *ngIf="data.type=='MessageVisualisations'"
                             [refMessage]="data.ref"></message-visualisations>
@@ -83,5 +84,6 @@
       </tr>
     </table>
     <document-entite *ngIf="data.type==='DocumentEntite'" [refEntite]="data.refEntite"></document-entite>
+    <contrat-entite *ngIf="data.type==='ContratEntite'" [refEntite]="data.refContrat"></contrat-entite>
   </div>
 </div>

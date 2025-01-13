@@ -71,7 +71,6 @@ namespace eVaSys.Controllers
                 .ThenInclude(r => r.UtilisateurModif)
                 .Include(r => r.EntiteCamionTypes)
                 .ThenInclude(r => r.UtilisateurCreation)
-                .Include(r => r.ContratEntites)
                 .Include(r => r.ContratIncitationQualites)
                 .Include(r => r.ContratCollectivites)
                 .Include(r => r.EntiteDRs)
@@ -158,7 +157,6 @@ namespace eVaSys.Controllers
                 .Include(r => r.Adresses)
                 .ThenInclude(r => r.UtilisateurModif)
                 .Include(r => r.ContratIncitationQualites)
-                .Include(r => r.ContratEntites)
                 .Include(r => r.ContratCollectivites)
                 .Include(r => r.EntiteCamionTypes)
                 .ThenInclude(r => r.UtilisateurCreation)
@@ -1297,7 +1295,7 @@ namespace eVaSys.Controllers
                 }
             }
             //-----------------------------------------------------------------------------------
-            //Remove related data Contrat is deletable
+            //Remove related data Contrat if deletable
             if (dataModel.Contrats != null)
             {
                 foreach (Contrat cC in dataModel.Contrats)
@@ -1307,7 +1305,7 @@ namespace eVaSys.Controllers
                         DbContext.Contrats.Remove(cC);
                         dirty = true;
                     }
-                    else if (viewModel.Contrats.Where(el => el.RefContrat == cC.RefContrat).FirstOrDefault() == null)
+                    else if (viewModel.Contrats.Where(el => el.RefContrat == cC.RefContrat).Count() == 0)
                     {
                         DbContext.Contrats.Remove(cC);
                         dirty = true;
@@ -1333,7 +1331,7 @@ namespace eVaSys.Controllers
                 if (Utils.DataUtils.UpdateDataContrat(ref cC, cCVM, CurrentContext.RefUtilisateur))
                 {
                     //Remove Contrat if no more ContratEntites
-                    if (dataModel.ContratEntites.Count == 0)
+                    if (cC.ContratEntites.Count == 0)
                     {
                         DbContext.Contrats.Remove(cC);
                     }

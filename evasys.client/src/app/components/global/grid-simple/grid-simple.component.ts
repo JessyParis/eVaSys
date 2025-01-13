@@ -138,6 +138,7 @@ export class GridSimpleComponent implements AfterViewInit, OnInit {
       case "ClientForUtilisateur":
       case "PrestataireForUtilisateur":
       case "EntiteForDocument":
+      case "EntiteForContrat":
         this.sort.active = DataColumnName.EntiteLibelle;
         this.sort.direction = "asc";
         this.loadPage("");
@@ -204,6 +205,10 @@ export class GridSimpleComponent implements AfterViewInit, OnInit {
       case "EntiteForDocument":
         //Emit event for dialog closing
         this.askClose.emit({ type: this.type, ref: item.RefEntite });
+        break;
+      case "EntiteForContrat":
+        //Emit event for dialog closing
+        this.askClose.emit({ type: this.type, ref: item.RefEntite, libelle: item.EntiteLibelle });
         break;
       case "UtilisateurMaitreForUtilisateur":
         //Emit event for dialog closing

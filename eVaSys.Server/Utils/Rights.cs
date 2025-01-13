@@ -1654,6 +1654,10 @@ namespace eVaSys.Utils
             rowVals[1] = Enumerations.HabilitationAdministration.Administrateur.ToString();
             actionRights.Rows.Add(rowVals);
             rowVals = new object[2];
+            rowVals[0] = Enumerations.ActionName.EntiteForContrat.ToString();
+            rowVals[1] = Enumerations.HabilitationAnnuaire.Administrateur.ToString();
+            actionRights.Rows.Add(rowVals);
+            rowVals = new object[2];
             rowVals[0] = Enumerations.ActionName.UtilisateurMaitreForUtilisateur.ToString();
             rowVals[1] = Enumerations.HabilitationAdministration.Administrateur.ToString();
             actionRights.Rows.Add(rowVals);

@@ -270,7 +270,8 @@ namespace eVaSys.Data
                 if (_contrats == null && RefEntite > 0)
                 {
                     _contrats = DbContext.Contrats
-                        .Where(e => e.ContratEntites.Any(a=> a.RefEntite == RefEntite))
+                        .Include(i => i.ContratEntites)
+                        .Where(e => e.ContratEntites.Any(a => a.RefEntite == RefEntite))
                         .ToHashSet();
                 }
                 return _contrats;

@@ -20,6 +20,6 @@ export class ComponentRelativeComponent {
     }
     //Get child ask for close
     closeAsked(e: any): void {
-        this.dialogRef.close({ type: this.data.type, ref: e.ref });
+        this.dialogRef.close({ type: this.data.type, ref: e.ref, libelle: e.libelle });
     }
 }

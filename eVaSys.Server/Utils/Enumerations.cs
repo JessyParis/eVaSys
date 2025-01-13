@@ -311,6 +311,7 @@ namespace eVaSys.Utils
             PrestataireForUtilisateur,
             UtilisateurMaitreForUtilisateur,
             EntiteForDocument,
+            EntiteForContrat,
             Search,
             DeactivateUtilisateur,
             ContactModificationRequest

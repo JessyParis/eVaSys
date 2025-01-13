@@ -59,15 +59,9 @@
                   <mat-error align="end" *ngIf="form.get('DFin').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
                 </button>
               </mat-form-field>
-              <mat-checkbox formControlName="Avenant" style="width:100%;">
-                {{applicationUserContext.getCulturedRessourceText(1177)}}
-              </mat-checkbox>
-              <mat-checkbox formControlName="ReconductionTacite" style="width:100%;">
-                {{applicationUserContext.getCulturedRessourceText(1544)}}
-              </mat-checkbox>
               <mat-form-field style="width:100%;">
                 <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
-                <textarea matInput formControlName="Cmt" maxlength="500" style="height:120px;"></textarea>
+                <textarea matInput formControlName="Cmt" maxlength="500" style="height:300px;"></textarea>
                 <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
                 </button>
@@ -83,25 +77,34 @@
           </tr>
           <tr>
             <td class="cadre_body">
+              <mat-checkbox formControlName="Avenant" style="width:100%;">
+                {{applicationUserContext.getCulturedRessourceText(1177)}}
+              </mat-checkbox>
+              <mat-checkbox formControlName="ReconductionTacite" style="width:100%;">
+                {{applicationUserContext.getCulturedRessourceText(1544)}}
+              </mat-checkbox>
               <table class="contrat-entites table-no-pad-no-space" style="border:1px solid black; margin: 0 0 10px 0;">
                 <thead class="background-color-accent">
-                  <tr>
+                  <tr style="width:100%;">
                     <th style="padding:5px;">
-                      <button mat-icon-button (click)="showDetails('AnnuaireContratEntites', null, 1, '');" type="button"><mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon></button>
+                      <button mat-icon-button *ngIf="!locked"
+                              (click)="showDetails();" type="button">
+                        <mat-icon aria-label="Nouveau" class="ev-button-left">add</mat-icon>
+                      </button>
                     </th>
-                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1146)}}</th>
-                    <th style="padding:5px;"></th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1124)}}</th>
                     <th style="padding:5px;"></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let cE of contrat?.ContratEntites">
+                    <td style="padding: 0px 5px 0px 5px;"></td>
+                    <td style="padding: 0px 5px 0px 5px;">{{cE.Entite.Libelle}}</td>
                     <td style="padding: 0px 5px 0px 5px;">
-                      <button mat-icon-button (click)="showDetails('AnnuaireContratEntites', cE.RefContratEntite, null, '');" type="button"><mat-icon aria-label="Modifier" class="ev-button-left">edit</mat-icon></button>
-                    </td>
-                    <td style="padding: 0px 5px 0px 5px;">{{contactAdresseServiceFonctionLabel(cE)}}</td>
-                    <td style="padding: 0px 5px 0px 5px;">
-                      <button mat-icon-button (click)="onDeleteContratEntite(cE.RefContratEntite)" type="button"><mat-icon aria-label="Delete" color="warn">delete</mat-icon></button>
+                      <button mat-icon-button *ngIf="!locked"
+                              (click)="onDeleteContratEntite(cE.RefContratEntite)" type="button">
+                        <mat-icon aria-label="Delete" color="warn">delete</mat-icon>
+                      </button>
                     </td>
                   </tr>
                 </tbody>

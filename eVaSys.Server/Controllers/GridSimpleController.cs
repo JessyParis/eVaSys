@@ -268,6 +268,7 @@ namespace eVaSys.Controllers
                     }
                     break;
                 case "EntiteForDocument":
+                case "EntiteForContrat":
                     sqlStr = "select tblEntite.RefEntite as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefEntite.ToString()].Name + "]"
                         + "     , tblEntite.CodeEE as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCITEO.ToString()].Name + "]"
                         + "     , tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteLibelle.ToString()].Name + "]"

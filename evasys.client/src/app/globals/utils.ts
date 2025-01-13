@@ -167,7 +167,7 @@ export function showErrorToUser(dialog: MatDialog, error: any, applicationUserCo
     width: "350px",
     data: {
       title: (applicationUserContext.getCulturedRessourceText(319) == "---???---" ? "Error" : applicationUserContext.getCulturedRessourceText(319))
-      , message: error.error.Message ? error.error.Message : applicationUserContext.getCulturedRessourceText(712)
+      , message: error.error?.Message ? error.error.Message : (error.message ? error.message : applicationUserContext.getCulturedRessourceText(712))
     },
     restoreFocus: false
   });

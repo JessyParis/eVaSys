@@ -206,7 +206,7 @@ export class ContactAdresseComponent implements OnInit {
   }
   //-----------------------------------------------------------------------------------
   //Show elements details
-  showDetails(type: string, ref: number, refEntiteType: number, mode: string) {
+  showDetails(type: string, ref: number) {
     let data: any;
     let title: string = this.applicationUserContext.getCulturedRessourceText(349);
     this.applyChanges();

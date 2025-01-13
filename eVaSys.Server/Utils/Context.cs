@@ -447,6 +447,7 @@ namespace eVaSys.Utils
                     [ActionName.PrestataireForUtilisateur.ToString()] = new EnvAction() { Name = ActionName.PrestataireForUtilisateur.ToString(), Module = EnvModules[ModuleName.Administration.ToString()] },
                     [ActionName.UtilisateurMaitreForUtilisateur.ToString()] = new EnvAction() { Name = ActionName.UtilisateurMaitreForUtilisateur.ToString(), Module = EnvModules[ModuleName.Administration.ToString()] },
                     [ActionName.EntiteForDocument.ToString()] = new EnvAction() { Name = ActionName.EntiteForDocument.ToString(), Module = EnvModules[ModuleName.Administration.ToString()] },
+                    [ActionName.EntiteForContrat.ToString()] = new EnvAction() { Name = ActionName.EntiteForContrat.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] },
                     [ActionName.DeactivateUtilisateur.ToString()] = new EnvAction() { Name = ActionName.DeactivateUtilisateur.ToString(), Module = EnvModules[ModuleName.Administration.ToString()] },
                     [ActionName.ContactModificationRequest.ToString()] = new EnvAction() { Name = ActionName.ContactModificationRequest.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] }
                 };
