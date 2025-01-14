@@ -703,60 +703,60 @@ namespace eVaSys.Utils
                 dataModel.ReconductionTacite = viewModel.ReconductionTacite;
                 dataModel.Avenant = viewModel.Avenant;
                 dataModel.Cmt = viewModel.Cmt;
-                //-----------------------------------------------------------------------------------
-                //Remove related data ContratEntite
-                if (dataModel.ContratEntites != null)
+            }
+            //-----------------------------------------------------------------------------------
+            //Remove related data ContratEntite
+            if (dataModel.ContratEntites != null)
+            {
+                foreach (ContratEntite cE in dataModel.ContratEntites)
                 {
-                    foreach (ContratEntite cE in dataModel.ContratEntites)
+                    if (viewModel.ContratEntites == null)
                     {
-                        if (viewModel.ContratEntites == null)
-                        {
-                            dataModel.ContratEntites.Remove(cE);
-                            dirty = true;
-                        }
-                        else if (viewModel.ContratEntites.Where(el => el.RefEntite == cE.RefEntite).FirstOrDefault() == null)
-                        {
-                            dataModel.ContratEntites.Remove(cE);
-                            dirty = true;
-                        }
-                    }
-                }
-                //Add or update related data ContratEntites
-                if (viewModel.ContratEntites != null)
-                {
-                    foreach (ContratEntiteViewModel cEVM in viewModel.ContratEntites)
-                    {
-                        ContratEntite cE = null;
-                        if (dataModel.ContratEntites != null)
-                        {
-                            cE = dataModel.ContratEntites.Where(el => el.RefEntite == cEVM.RefEntite).FirstOrDefault();
-                        }
-                        if (cE == null)
-                        {
-                            //Create entity
-                            cE = new ContratEntite() { RefEntite = cEVM.RefEntite, };
-                            if (dataModel.ContratEntites == null) { dataModel.ContratEntites = new HashSet<ContratEntite>(); }
-                            dataModel.ContratEntites.Add(cE);
-                            dirty = true;
-                        }
-                    }
-                }
-                //Remove duplicates
-                if (dataModel.ContratEntites != null)
-                {
-                    var resultP = dataModel.ContratEntites
-                        .AsEnumerable()
-                        .GroupBy(s => s.RefEntite)
-                        .SelectMany(g => g.Skip(1))
-                        .ToList();
-                    if (resultP.Count > 0)
-                    {
-                        foreach (var e in resultP)
-                        {
-                            dataModel.ContratEntites.Remove(e);
-                        }
+                        dataModel.ContratEntites.Remove(cE);
                         dirty = true;
                     }
+                    else if (viewModel.ContratEntites.Where(el => el.RefEntite == cE.RefEntite).FirstOrDefault() == null)
+                    {
+                        dataModel.ContratEntites.Remove(cE);
+                        dirty = true;
+                    }
+                }
+            }
+            //Add or update related data ContratEntites
+            if (viewModel.ContratEntites != null)
+            {
+                foreach (ContratEntiteViewModel cEVM in viewModel.ContratEntites)
+                {
+                    ContratEntite cE = null;
+                    if (dataModel.ContratEntites != null)
+                    {
+                        cE = dataModel.ContratEntites.Where(el => el.RefEntite == cEVM.RefEntite).FirstOrDefault();
+                    }
+                    if (cE == null)
+                    {
+                        //Create entity
+                        cE = new ContratEntite() { RefEntite = cEVM.RefEntite, };
+                        if (dataModel.ContratEntites == null) { dataModel.ContratEntites = new HashSet<ContratEntite>(); }
+                        dataModel.ContratEntites.Add(cE);
+                        dirty = true;
+                    }
+                }
+            }
+            //Remove duplicates
+            if (dataModel.ContratEntites != null)
+            {
+                var resultP = dataModel.ContratEntites
+                    .AsEnumerable()
+                    .GroupBy(s => s.RefEntite)
+                    .SelectMany(g => g.Skip(1))
+                    .ToList();
+                if (resultP.Count > 0)
+                {
+                    foreach (var e in resultP)
+                    {
+                        dataModel.ContratEntites.Remove(e);
+                    }
+                    dirty = true;
                 }
             }
             //End

@@ -1226,6 +1226,11 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefContratType)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                entity.HasMany(d => d.ContratEntites)
+                    .WithOne()
+                    .HasForeignKey(d => d.RefContrat)
+                    .OnDelete(DeleteBehavior.ClientCascade);
+
                 entity.HasOne(d => d.UtilisateurCreation)
                     .WithMany(p => p.ContratCreations)
                     .HasForeignKey(d => d.RefUtilisateurCreation)
@@ -1245,11 +1250,6 @@ namespace eVaSys.Data
                 entity.HasIndex(e => new { e.RefContrat, e.RefEntite })
                     .HasDatabaseName("IX_tbmContratEntite_Unique")
                     .IsUnique();
-
-                entity.HasOne(d => d.Contrat)
-                    .WithMany(p => p.ContratEntites)
-                    .HasForeignKey(d => d.RefContrat)
-                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.Entite)
                     .WithMany(p => p.ContratEntites)

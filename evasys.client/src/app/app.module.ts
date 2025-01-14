@@ -1,9 +1,9 @@
-import { NgModule, APP_INITIALIZER, LOCALE_ID, isDevMode } from "@angular/core";
+import { NgModule, APP_INITIALIZER, LOCALE_ID, isDevMode, provideAppInitializer, inject } from "@angular/core";
 import { CommonModule, APP_BASE_HREF } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { SwUpdate } from '@angular/service-worker';
+//import { SwUpdate } from '@angular/service-worker';
 import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from "@angular/material/core";
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
@@ -192,7 +192,7 @@ import { BackButtonDisableModule } from 'angular-disable-browser-back-button';
 import "moment/locale/fr";
 import "moment/locale/en-gb";
 import { environment } from "../environments/environment";
-import { ServiceWorkerModule } from '@angular/service-worker';
+//import { ServiceWorkerModule } from '@angular/service-worker';
 registerLocaleData(localeFr);
 
 export function configurationParametres(config: ApplicationUserContext) {
@@ -514,6 +514,16 @@ const progressModules = [
       useClass: AuthResponseInterceptor,
       multi: true
     },
+    //provideAppInitializer(configurationParametres(inject(ApplicationUserContext))),
+    //provideAppInitializer(configurationCulturedRessources(inject(ApplicationUserContext))),
+    //provideAppInitializer(configurationResources(inject(ApplicationUserContext))),
+    //provideAppInitializer(configurationEnvModules(inject(ApplicationUserContext))),
+    //provideAppInitializer(configurationEnvComponents(inject(ApplicationUserContext))),
+    //provideAppInitializer(configurationEnvMenus(inject(ApplicationUserContext))),
+    //provideAppInitializer(configurationEnvDataColumns(inject(ApplicationUserContext))),
+    //provideAppInitializer(configurationEnvCommandeFournisseurStatuts(inject(ApplicationUserContext))),
+    //provideAppInitializer(configurationNonConformiteEtapeTypes(inject(ApplicationUserContext))),
+    //provideAppInitializer(configurationInitEnvironment(inject(ApplicationUserContext))),
     {
       provide: APP_INITIALIZER, useFactory: configurationParametres, deps: [ApplicationUserContext], multi: true
     },

@@ -271,6 +271,7 @@ namespace eVaSys.Data
                 {
                     _contrats = DbContext.Contrats
                         .Include(i => i.ContratEntites)
+                        .ThenInclude(i=>i.Entite)
                         .Where(e => e.ContratEntites.Any(a => a.RefEntite == RefEntite))
                         .ToHashSet();
                 }
