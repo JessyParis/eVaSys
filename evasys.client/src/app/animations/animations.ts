@@ -14,103 +14,103 @@ import { trigger, transition, style, query, animateChild, animate, group, state,
 //------------------------------------------------------------------------------
 //Animations for router actions
 export const slideInAnimation =
-    trigger("routeAnimations", [
-        transition("Item => List", [
-            style({ position: "relative" }),
-            query(":enter, :leave", [
-                style({
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%"
-                })
-            ]),
-            query(":enter", [
-                style({ left: "-100%" })
-            ]),
-            query(":leave", animateChild()),
-            group([
-                query(":leave", [
-                    animate("300ms ease-out", style({ left: "100%" }))
-                ]),
-                query(":enter", [
-                    animate("300ms ease-out", style({ left: "0%" }))
-                ])
-            ]),
-            query(":enter", animateChild()),
+  trigger("routeAnimations", [
+    transition("Item => List", [
+      style({ position: "relative" }),
+      query(":enter, :leave", [
+        style({
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%"
+        })
+      ]),
+      query(":enter", [
+        style({ left: "-100%" })
+      ]),
+      query(":leave", animateChild()),
+      group([
+        query(":leave", [
+          animate("300ms ease-out", style({ left: "100%" }))
         ]),
+        query(":enter", [
+          animate("300ms ease-out", style({ left: "0%" }))
+        ])
+      ]),
+      query(":enter", animateChild()),
+    ]),
 
-        transition("List => Item", [
-            style({ position: "relative" }),
-            query(":enter, :leave", [
-                style({
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%"
-                })
-            ]),
-            query(":enter", [
-                style({ left: "100%" })
-            ]),
-            query(":leave", animateChild()),
-            group([
-                query(":leave", [
-                    animate("300ms ease-out", style({ left: "-100%" }))
-                ]),
-                query(":enter", [
-                    animate("300ms ease-out", style({ left: "0%" }))
-                ])
-            ]),
-            query(":enter", animateChild()),
+    transition("List => Item", [
+      style({ position: "relative" }),
+      query(":enter, :leave", [
+        style({
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%"
+        })
+      ]),
+      query(":enter", [
+        style({ left: "100%" })
+      ]),
+      query(":leave", animateChild()),
+      group([
+        query(":leave", [
+          animate("300ms ease-out", style({ left: "-100%" }))
         ]),
-        transition("* => FadeIn", [
-            style({ position: "relative" }),
-            query(":enter, :leave", [
-                style({
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%"
-                })
-            ], { optional: true }),
-            query(":enter", style({ opacity: 0 })),
-            query(":leave", style({ opacity: 1 }), { optional: true }),
-            query(":leave", animateChild(), { optional: true }),
-            group([
-                query(":leave", [
-                    animate(600, style({ opacity: 0 }))
-                ], { optional: true }),
-                query(":enter", [
-                    animate(600, style({ opacity: 1 }))
-                ])
-            ]),
-            query(":enter", animateChild()),
+        query(":enter", [
+          animate("300ms ease-out", style({ left: "0%" }))
+        ])
+      ]),
+      query(":enter", animateChild()),
+    ]),
+    transition("* => FadeIn", [
+      style({ position: "relative" }),
+      query(":enter, :leave", [
+        style({
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%"
+        })
+      ], { optional: true }),
+      query(":enter", style({ opacity: 0 }), { optional: true }),
+      query(":leave", style({ opacity: 1 }), { optional: true }),
+      query(":leave", animateChild(), { optional: true }),
+      group([
+        query(":leave", [
+          animate(600, style({ opacity: 0 }))
+        ], { optional: true }),
+        query(":enter", [
+          animate(600, style({ opacity: 1 }))
+        ], { optional: true })
+      ]),
+      query(":enter", animateChild(), { optional: true }),
+    ]),
+    transition("FadeIn => *", [
+      style({ position: "relative" }),
+      query(":enter, :leave", [
+        style({
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%"
+        })
+      ]),
+      query(":enter", style({ opacity: 0 })),
+      query(":leave", style({ opacity: 1 })),
+      query(":leave", animateChild()),
+      group([
+        query(":leave", [
+          animate(600, style({ opacity: 0 }))
         ]),
-        transition("FadeIn => *", [
-            style({ position: "relative" }),
-            query(":enter, :leave", [
-                style({
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%"
-                })
-            ]),
-            query(":enter", style({ opacity: 0 })),
-            query(":leave", style({ opacity: 1 })),
-            query(":leave", animateChild()),
-            group([
-                query(":leave", [
-                    animate(600, style({ opacity: 0 }))
-                ]),
-                query(":enter", [
-                    animate(600, style({ opacity: 1 }))
-                ])
-            ]),
-            query(":enter", animateChild()),
-        ]),
-    ]);
+        query(":enter", [
+          animate(600, style({ opacity: 1 }))
+        ])
+      ]),
+      query(":enter", animateChild()),
+    ]),
+  ]);
 //------------------------------------------------------------------------------
 //Animation for dashboard
 export const dashboardAnimation =

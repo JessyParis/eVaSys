@@ -11,7 +11,10 @@ import { ComponentRelativeComponent } from "../../dialogs/component-relative/com
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
-import { showConfirmToUser, showErrorToUser, showInformationToUser, cmp, cmpDesc, getAttachmentFilename, chartSeriesColors, getCreationModificationTooltipText, getContactAdresseServiceFonctions } from "../../../globals/utils";
+import {
+  showConfirmToUser, showErrorToUser, showInformationToUser, cmp, cmpDesc, getAttachmentFilename, chartSeriesColors
+  , getCreationModificationTooltipText, getContactAdresseServiceFonctions, getContratCollectiviteLabel, getContratLabel
+} from "../../../globals/utils";
 import { getAdresseListText, getContactAdresseListText } from "../../../globals/data-model-utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { DataColumnName, HabilitationAnnuaire, HabilitationQualite, MenuName, ModuleName, SearchElementType } from "../../../globals/enums";
@@ -22,7 +25,6 @@ import { DownloadService } from "../../../services/download.service";
 import { StatistiqueService } from "../../../services/statistique.service";
 import { EventEmitterService } from "../../../services/event-emitter.service";
 import { fadeInOnEnterAnimation } from "angular-animations";
-import { environment } from "../../../../environments/environment.dev";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -115,6 +117,8 @@ export class EntiteComponent implements OnInit {
   //Functions
   getAdresseListText = getAdresseListText;
   getContactAdresseServiceFonctions = getContactAdresseServiceFonctions;
+  getContratCollectiviteLabel = getContratCollectiviteLabel;
+  getContratLabel = getContratLabel;
   //Global lock
   locked: boolean = true;
   saveLocked: boolean = false;
@@ -1389,21 +1393,6 @@ ${cC.Cmt}`;
   //Create ContratIncitationQualite label
   contratIncitationQualiteLabel(contratIncitationQualite: dataModelsInterfaces.ContratIncitationQualite): string {
     let s = moment(contratIncitationQualite.DDebut).format("L") + ' -> ' + moment(contratIncitationQualite.DFin).format("L");
-    //End
-    return s;
-  }
-  //-----------------------------------------------------------------------------------
-  //Create Contrat label
-  contratLabel(contrat: dataModelsInterfaces.Contrat): string {
-    let s = contrat.ContratType?.Libelle + "\n"
-      + moment(contrat.DDebut).format("L") + ' -> ' + moment(contrat.DFin).format("L");
-    //End
-    return s;
-  }
-  //-----------------------------------------------------------------------------------
-  //Create ContratCollectivite label
-  contratCollectiviteLabel(contratCollectivite: dataModelsInterfaces.ContratCollectivite): string {
-    let s = moment(contratCollectivite.DDebut).format("L") + ' -> ' + moment(contratCollectivite.DFin).format("L");
     //End
     return s;
   }

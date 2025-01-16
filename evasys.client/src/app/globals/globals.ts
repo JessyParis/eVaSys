@@ -19,6 +19,7 @@ import * as appInterfaces from "../interfaces/appInterfaces";
 import * as appClasses from "../classes/appClasses";
 import { EntiteCamionTypeComponent } from "../components/annuaire/entite-camion-type/entite-camion-type.component";
 import { Aide } from "../interfaces/dataModelsInterfaces";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: "root"
@@ -107,7 +108,7 @@ export class ApplicationUserContext {
   public selectedItem: number[];
   //Session objects
   commandeClientFormRefEntite: number;
-  commandeClientFormRefEntiteFournisseur: number;
+  commandeClientFormRefContrat: number;
   commandeClientFormRefAdresse: number;
   commandeClientFormD: moment.Moment;
   prixRepriseRefProcess: number;
@@ -130,7 +131,9 @@ export class ApplicationUserContext {
   //-----------------------------------------------------------------------------------
   //Constructor
 
-  constructor(private utilsService: UtilsService, private eventEmitterService: EventEmitterService, ) {
+  constructor(private utilsService: UtilsService
+    , private router: Router
+    , private eventEmitterService: EventEmitterService,) {
     if (this.parametres?.length ?? 0 == 0) { this.initParametres(); }
     if (this.culturedRessources?.length ?? 0 == 0) { this.initCulturedRessources(); }
     if (this.resources?.length ?? 0 == 0) { this.initResources(); }
@@ -157,8 +160,8 @@ export class ApplicationUserContext {
   }
   //-----------------------------------------------------------------------------------------------------
   //Autologin
-  devLogin = ""; devPwd = "";
-  //devLogin = "jean-christian.nugues@enviromatic.fr"; devPwd = "evalo1rplast$";
+  //devLogin = ""; devPwd = "";
+  devLogin = "jean-christian.nugues@enviromatic.fr"; devPwd = "evalo1rplast$";
   //devLogin = "j.decamas@valorplast.com"; devPwd = "1Toto$aaaaaa";
   //devLogin = "chantal.guerrero@suez.com"; devPwd = "1Toto$aaaaaa";      //CDT TRIVALOIRE
   //devLogin = "azimmer@schroll.fr"; devPwd = "1Toto$aaaaaa";      //CDT ALTEM
@@ -460,6 +463,7 @@ export class ApplicationUserContext {
   // -----------------------------------------------------------------------------------------------------
   //Disconnect
   public disconnect(): void {
+    console.log("disconnect");
     this.connectedUtilisateur = {} as dataModelsInterfaces.Utilisateur;
     this.currentModule = new appClasses.EnvModule();
     this.currentMenu = new appClasses.EnvMenu();
@@ -467,6 +471,10 @@ export class ApplicationUserContext {
     this.profilSelected = false;
     //Selections
     this.selectedItem = [];
+    //Route to login if necessary
+    if (this.router.url != "/login") {
+      this.router.navigate(["login"]);
+    }
   }
   // -----------------------------------------------------------------------------------------------------
   //RAZ menus/dashboard specific filters

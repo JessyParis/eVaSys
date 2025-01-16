@@ -500,6 +500,16 @@ export class ListService {
     });
   }
   //-----------------------------------------------------------------------------------
+  //Get existing Contrats
+  getListContrats(refEntite: number, d: moment.Moment): Observable<dataModelsInterfaces.Contrat[]> {
+    return this.http.get<dataModelsInterfaces.Contrat[]>(this.baseUrl + "evapi/entite/getcontrats", {
+      headers: new HttpHeaders()
+        .set("refEntite", refEntite == null ? "" : refEntite.toString())
+        .set("d", d == null ? "" : moment(d).format("YYYY-MM-DD")),
+      responseType: "json"
+    });
+  }
+  //-----------------------------------------------------------------------------------
   //Get existing EntiteType
   getListEntiteType(): Observable<dataModelsInterfaces.EntiteType[]> {
     return this.http.get<dataModelsInterfaces.EntiteType[]>(this.baseUrl + "evapi/entitetype/getlist", {

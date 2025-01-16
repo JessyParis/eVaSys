@@ -1,4 +1,4 @@
-import { NgModule, APP_INITIALIZER, LOCALE_ID, isDevMode, provideAppInitializer, inject } from "@angular/core";
+import { NgModule, LOCALE_ID, isDevMode, provideAppInitializer, inject } from "@angular/core";
 import { CommonModule, APP_BASE_HREF } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -195,6 +195,11 @@ import { environment } from "../environments/environment";
 //import { ServiceWorkerModule } from '@angular/service-worker';
 registerLocaleData(localeFr);
 
+export function disonnect(config: ApplicationUserContext) {
+  return () => {
+    return config.disconnect();
+  };
+}
 export function configurationParametres(config: ApplicationUserContext) {
   return (): Promise<any> => {
     return config.initParametres();
@@ -514,46 +519,50 @@ const progressModules = [
       useClass: AuthResponseInterceptor,
       multi: true
     },
-    //provideAppInitializer(configurationParametres(inject(ApplicationUserContext))),
-    //provideAppInitializer(configurationCulturedRessources(inject(ApplicationUserContext))),
-    //provideAppInitializer(configurationResources(inject(ApplicationUserContext))),
-    //provideAppInitializer(configurationEnvModules(inject(ApplicationUserContext))),
-    //provideAppInitializer(configurationEnvComponents(inject(ApplicationUserContext))),
-    //provideAppInitializer(configurationEnvMenus(inject(ApplicationUserContext))),
-    //provideAppInitializer(configurationEnvDataColumns(inject(ApplicationUserContext))),
-    //provideAppInitializer(configurationEnvCommandeFournisseurStatuts(inject(ApplicationUserContext))),
-    //provideAppInitializer(configurationNonConformiteEtapeTypes(inject(ApplicationUserContext))),
-    //provideAppInitializer(configurationInitEnvironment(inject(ApplicationUserContext))),
-    {
-      provide: APP_INITIALIZER, useFactory: configurationParametres, deps: [ApplicationUserContext], multi: true
-    },
-    {
-      provide: APP_INITIALIZER, useFactory: configurationCulturedRessources, deps: [ApplicationUserContext], multi: true
-    },
-    {
-      provide: APP_INITIALIZER, useFactory: configurationResources, deps: [ApplicationUserContext], multi: true
-    },
-    {
-      provide: APP_INITIALIZER, useFactory: configurationEnvModules, deps: [ApplicationUserContext], multi: true
-    },
-    {
-      provide: APP_INITIALIZER, useFactory: configurationEnvComponents, deps: [ApplicationUserContext], multi: true
-    },
-    {
-      provide: APP_INITIALIZER, useFactory: configurationEnvMenus, deps: [ApplicationUserContext], multi: true
-    },
-    {
-      provide: APP_INITIALIZER, useFactory: configurationEnvDataColumns, deps: [ApplicationUserContext], multi: true
-    },
-    {
-      provide: APP_INITIALIZER, useFactory: configurationEnvCommandeFournisseurStatuts, deps: [ApplicationUserContext], multi: true
-    },
-    {
-      provide: APP_INITIALIZER, useFactory: configurationNonConformiteEtapeTypes, deps: [ApplicationUserContext], multi: true
-    },
-    {
-      provide: APP_INITIALIZER, useFactory: configurationInitEnvironment, deps: [ApplicationUserContext], multi: true
-    },
+    provideAppInitializer(() => {
+      const initializerFn = (configurationInitEnvironment)(inject(ApplicationUserContext));
+      return initializerFn();
+    }),
+    provideAppInitializer(() => {
+      const initializerFn = (disonnect)(inject(ApplicationUserContext));
+      return initializerFn();
+    }),
+    provideAppInitializer(() => {
+      const initializerFn = (configurationParametres)(inject(ApplicationUserContext));
+      return initializerFn();
+    }),
+    provideAppInitializer(() => {
+        const initializerFn = (configurationCulturedRessources)(inject(ApplicationUserContext));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (configurationResources)(inject(ApplicationUserContext));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (configurationEnvModules)(inject(ApplicationUserContext));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (configurationEnvComponents)(inject(ApplicationUserContext));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (configurationEnvMenus)(inject(ApplicationUserContext));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (configurationEnvDataColumns)(inject(ApplicationUserContext));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (configurationEnvCommandeFournisseurStatuts)(inject(ApplicationUserContext));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (configurationNonConformiteEtapeTypes)(inject(ApplicationUserContext));
+        return initializerFn();
+      }),
     { provide: LOCALE_ID, useValue: "fr-FR" },
     { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

@@ -291,34 +291,73 @@ namespace eVaSys.Controllers
         }
         #endregion
         #region Services
-        private void SelectCommandeClientMensuelles(int refE, int refA, int? refEF, DateTime dRef, ref DataSet dS)
+        private void SelectCommandeClientMensuelles(int refE, int refA, int? refC, DateTime dRef, ref DataSet dS)
         {
             SqlCommand cmd = new();
             SqlDataAdapter dA = new(cmd);
-            string sqlStr = "select tblProduit.Libelle as LibelleProduit, univers.*"
+            string sqlStr = "";
+            if (refC == null)
+            {
+                sqlStr = "select tblProduit.Libelle as LibelleProduit, univers.*"
                 + " from tblProduit"
                 + "     inner join"
                 + "     (select isnull(entiteP.RefProduit, cmdM.Refproduit) as RefProduit"
-                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse";
-            if (refEF != null) { sqlStr += ", @refEntiteFournisseur as RefEntiteFournisseur"; }
-            else { sqlStr += ", null as RefEntiteFournisseur"; }
-            sqlStr += "     , cmdM.Cmt, cmdM.RefCommandeClient, cmdM.RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
+                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, cmdM.Cmt, cmdM.RefCommandeClient, cmdM.RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
                 + "     from"
-                + "         (select tblCommandeClient.RefEntite, tblCommandeClient.RefAdresse, tblCommandeClient.RefEntiteFournisseur, tblCommandeClient.RefProduit, tblCommandeClient.Cmt, tblCommandeClientMensuelle.*"
+                + "         (select tblCommandeClient.RefEntite, tblCommandeClient.RefAdresse, tblCommandeClient.RefProduit, tblCommandeClient.Cmt, tblCommandeClientMensuelle.*"
                 + "         from tblCommandeClient"
                 + "             left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
-                + "         where tblCommandeClient.RefEntite = @refEntite and tblCommandeClient.RefAdresse = @refAdresse";
-            if (refEF != null) { sqlStr += " and tblCommandeClient.RefEntiteFournisseur = @refEntiteFournisseur"; }
-            else { sqlStr += " and tblCommandeClient.RefEntiteFournisseur is null"; }
-            sqlStr += " and year(tblCommandeClientMensuelle.D) = year(@d) and month(tblCommandeClientMensuelle.D) = month(@d)) as cmdM"
+                + "         where tblCommandeClient.RefEntite = @refEntite and tblCommandeClient.RefAdresse = @refAdresse and year(tblCommandeClientMensuelle.D) = year(@d) and month(tblCommandeClientMensuelle.D) = month(@d)) as cmdM"
                 + "         full outer join"
                 + "         (select * from tbmEntiteProduit where RefEntite = @refEntite) as entiteP on cmdM.RefProduit = entiteP.RefProduit) as univers"
                 + "     on tblProduit.RefProduit = univers.Refproduit"
                 + " order by (case when Poids is null or Poids=0 then 0 else 1 end) desc, Libelle";
+            }
+            else
+            {
+                sqlStr += " select tblProduit.Libelle as LibelleProduit, univers.*"
+                + " from tblProduit"
+                + "     inner join"
+                + "     (select isnull(entiteP.RefProduit, cmdM.Refproduit) as RefProduit"
+                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, RefEntiteFournisseur, cmdM.Cmt, cmdM.RefCommandeClient, cmdM.RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
+                + "     from"
+                + "         (select tblCommandeClient.RefEntite, tblCommandeClient.RefAdresse, tblCommandeClient.RefEntiteFournisseur, tblCommandeClient.RefProduit, tblCommandeClient.Cmt, tblCommandeClientMensuelle.*"
+                + "         from tblCommandeClient"
+                + "             left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
+                + "         where tblCommandeClient.RefEntite = @refEntite and tblCommandeClient.RefAdresse = @refAdresse"
+                + "             and tblCommandeClient.RefEntiteFournisseur in "
+                + "                 ( select RefEntite from tblContrat inner join tbmContratEntite on tblContrat.RefContrat=tbmContratEntite.RefContrat "
+                + " 					where tblContrat.RefContrat=@refContrat and tblContrat.DDebut <= @d and tblContrat.DFin >= @d)"
+                + "             and year(tblCommandeClientMensuelle.D) = year(@d) and month(tblCommandeClientMensuelle.D) = month(@d)) as cmdM"
+                + "         full outer join"
+                + "         (select * from tbmEntiteProduit where RefEntite = @refEntite) as entiteP on cmdM.RefProduit = entiteP.RefProduit) as univers"
+                + "     on tblProduit.RefProduit = univers.Refproduit"
+                + " order by (case when Poids is null or Poids=0 then 0 else 1 end) desc, Libelle";
+                //sqlStr = "select tblProduit.Libelle as LibelleProduit, univers.*"
+                //    + " from tblProduit"
+                //    + "     inner join"
+                //    + "     (select isnull(entiteP.RefProduit, cmdM.Refproduit) as RefProduit"
+                //    + "         , @refEntite as RefEntite, @refAdresse as RefAdresse";
+                //if (refC != null) { sqlStr += ", RefEntiteFournisseur"; }
+                //else { sqlStr += ", null as RefEntiteFournisseur"; }
+                //sqlStr += "     , cmdM.Cmt, cmdM.RefCommandeClient, cmdM.RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
+                //    + "     from"
+                //    + "         (select tblCommandeClient.RefEntite, tblCommandeClient.RefAdresse, tblCommandeClient.RefEntiteFournisseur, tblCommandeClient.RefProduit, tblCommandeClient.Cmt, tblCommandeClientMensuelle.*"
+                //    + "         from tblCommandeClient"
+                //    + "             left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
+                //    + "         where tblCommandeClient.RefEntite = @refEntite and tblCommandeClient.RefAdresse = @refAdresse";
+                //if (refC != null) { sqlStr += " and tblCommandeClient.RefEntiteFournisseur in ( = @refEntiteFournisseur"; }
+                //else { sqlStr += " and tblCommandeClient.RefEntiteFournisseur is null"; }
+                //sqlStr += " and year(tblCommandeClientMensuelle.D) = year(@d) and month(tblCommandeClientMensuelle.D) = month(@d)) as cmdM"
+                //    + "         full outer join"
+                //    + "         (select * from tbmEntiteProduit where RefEntite = @refEntite) as entiteP on cmdM.RefProduit = entiteP.RefProduit) as univers"
+                //    + "     on tblProduit.RefProduit = univers.Refproduit"
+                //    + " order by (case when Poids is null or Poids=0 then 0 else 1 end) desc, Libelle";
+            }
             cmd.CommandText = sqlStr;
             cmd.Parameters.Add("@refEntite", SqlDbType.Int).Value = refE;
             cmd.Parameters.Add("@refAdresse", SqlDbType.Int).Value = refA;
-            if (refEF != null) { cmd.Parameters.Add("@refEntiteFournisseur", SqlDbType.Int).Value = refEF; }
+            if (refC != null) { cmd.Parameters.Add("@refContrat", SqlDbType.Int).Value = refC; }
             cmd.Parameters.Add("@d", SqlDbType.DateTime).Value = dRef;
             cmd.Connection = (SqlConnection)DbContext.Database.GetDbConnection();
             dA.Fill(dS);

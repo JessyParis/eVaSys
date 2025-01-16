@@ -493,6 +493,36 @@ namespace eVaSys.Controllers
         }
 
         /// <summary>
+        /// GET: api/items/getcontrats
+        /// ROUTING TYPE: attribute-based
+        /// </summary>
+        /// <returns>The Entite that contains contrats</returns>
+        [HttpGet("getcontrats")]
+        public IActionResult GetContrats()
+        {
+            string refEntite = Request.Headers["refEntite"].ToString();
+            string d = Request.Headers["d"].ToString();
+            int refE = 0;
+            int.TryParse(refEntite, out refE);
+            DateOnly dRef = DateOnly.MinValue;
+            DateOnly.TryParse(d, out dRef);
+            var req = DbContext.Contrats.AsQueryable();
+            //Process
+            req = req.Include(i => i.ContratEntites)
+                        .ThenInclude(i => i.Entite)
+                        .Where(e => e.ContratEntites.Any(a => a.RefEntite == refE));
+            if(dRef != DateOnly.MinValue)
+            {
+                req = req.Where(e => e.DDebut <= dRef && e.DFin >= dRef);
+            }
+            var contrats = req.ToArray();
+            //End
+            return new JsonResult(
+                _mapper.Map < Contrat[], ContratViewModel[]>(contrats),
+                JsonSettings);
+        }
+
+        /// <summary>
         /// GET: api/items/getcontacts
         /// ROUTING TYPE: attribute-based
         /// </summary>

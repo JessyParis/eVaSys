@@ -13,7 +13,7 @@ import moment from "moment";
 import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
-import { showErrorToUser } from "../../../globals/utils";
+import { getContratLabel, getContratEntitesLabel, showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -43,17 +43,22 @@ export class CommandeClientComponent implements OnInit {
   cmdMs: UntypedFormArray = new UntypedFormArray([]);
   entiteList: dataModelsInterfaces.EntiteList[];
   adresseList: dataModelsInterfaces.Adresse[];
-  entiteFournisseurList: dataModelsInterfaces.EntiteList[];
+  contratList: dataModelsInterfaces.Contrat[];
   yearList: appInterfaces.Year[];
   monthList: appInterfaces.Month[];
   entiteListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   adresseListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
-  entiteFournisseurListFC: UntypedFormControl = new UntypedFormControl(null);
+  contratListFC: UntypedFormControl = new UntypedFormControl(null);
   yearListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   monthListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   //Global lock
   locked: boolean = true;
   saveLocked: boolean = true;
+  //Functions
+  getContratLabel = getContratLabel;
+  getContratEntiteLabel = getContratEntitesLabel;
+  //Misc
+  contratEntitesLabel: string = "";
   //Constructor
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
@@ -68,7 +73,7 @@ export class CommandeClientComponent implements OnInit {
   createForm() {
     this.form = this.fb.group({
       EntiteList: this.entiteListFC,
-      EntiteFournisseurList: this.entiteFournisseurListFC,
+      ContratList: this.contratListFC,
       AdresseList: this.adresseListFC,
       YearList: this.yearListFC,
       MonthList: this.monthListFC,
@@ -82,7 +87,7 @@ export class CommandeClientComponent implements OnInit {
     this.locked = true;
     this.entiteListFC.disable();
     this.adresseListFC.disable();
-    this.entiteFournisseurListFC.disable();
+    this.contratListFC.disable();
     this.yearListFC.disable();
     this.monthListFC.disable();
     this.cmdMs.disable();
@@ -93,7 +98,7 @@ export class CommandeClientComponent implements OnInit {
     this.locked = false;
     this.entiteListFC.enable();
     this.adresseListFC.enable();
-    this.entiteFournisseurListFC.enable();
+    this.contratListFC.enable();
     this.yearListFC.enable();
     this.monthListFC.enable();
     this.cmdMs.enable();
@@ -115,14 +120,14 @@ export class CommandeClientComponent implements OnInit {
   ngOnInit() {
     let refEntite = Number.parseInt(this.activatedRoute.snapshot.params["refEntite"], 10);
     let refAdresse = Number.parseInt(this.activatedRoute.snapshot.params["refAdresse"], 10);
-    let refEntiteFournisseur = Number.parseInt(this.activatedRoute.snapshot.params["refEntiteFournisseur"], 10);
-    if (isNaN(refEntiteFournisseur)) { refEntiteFournisseur = null; }
+    let refContrat = Number.parseInt(this.activatedRoute.snapshot.params["refContrat"], 10);
+    if (isNaN(refContrat)) { refContrat = null; }
     let d = this.activatedRoute.snapshot.params["d"];
     //Check parameters
     if (moment(d).isValid() && !isNaN(refEntite) && !isNaN(refAdresse)) {
       this.applicationUserContext.commandeClientFormRefEntite = refEntite;
       this.applicationUserContext.commandeClientFormRefAdresse = refAdresse;
-      this.applicationUserContext.commandeClientFormRefEntiteFournisseur = refEntiteFournisseur;
+      this.applicationUserContext.commandeClientFormRefContrat = refContrat;
       this.applicationUserContext.commandeClientFormD = moment(d);
       var url = this.baseUrl + "evapi/commandeclient/getcommandeclientmensuelles";
       this.http.get<dataModelsInterfaces.CommandeClientMensuelleForm[]>(url,
@@ -130,7 +135,7 @@ export class CommandeClientComponent implements OnInit {
           headers: new HttpHeaders()
             .set("refEntite", this.applicationUserContext.commandeClientFormRefEntite.toString())
             .set("refAdresse", this.applicationUserContext.commandeClientFormRefAdresse.toString())
-            .set("refEntiteFournisseur", (this.applicationUserContext.commandeClientFormRefEntiteFournisseur ? this.applicationUserContext.commandeClientFormRefEntiteFournisseur.toString() : ""))
+            .set("refContrat", (this.applicationUserContext.commandeClientFormRefContrat ? this.applicationUserContext.commandeClientFormRefContrat.toString() : ""))
             .set("d", this.applicationUserContext.commandeClientFormD.format("YYYY-MM-DD 00:00:00"))
         }).subscribe(result => {
           //Get data
@@ -149,12 +154,10 @@ export class CommandeClientComponent implements OnInit {
             .subscribe(result => {
               this.adresseList = result;
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-          //Get existing EntiteFournisseur
-          this.listService.getListEntiteContrat(this.applicationUserContext.commandeClientFormRefEntiteFournisseur
-            , this.applicationUserContext.commandeClientFormRefEntite
-            , 1, ContratType.RepriseIndividuelle, moment())
+          //Get existing Contrat
+          this.listService.getListContrats(this.applicationUserContext.commandeClientFormRefContrat, moment())
             .subscribe(result => {
-              this.entiteFournisseurList = result;
+              this.contratList = result;
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
           //Get existing month
           this.listService.getListMonth().subscribe(result => {
@@ -170,7 +173,7 @@ export class CommandeClientComponent implements OnInit {
       //New CommandeClient
       this.applicationUserContext.commandeClientFormRefEntite = null;
       this.applicationUserContext.commandeClientFormRefAdresse = null;
-      this.applicationUserContext.commandeClientFormRefEntiteFournisseur = null;
+      this.applicationUserContext.commandeClientFormRefContrat = null;
       this.applicationUserContext.commandeClientFormD = null;
       this.commandeClientMensuelles = [];
       //Update form
@@ -185,8 +188,8 @@ export class CommandeClientComponent implements OnInit {
         .subscribe(result => {
           this.adresseList = result;
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-      //Get existing EntiteFournisseur
-      this.getEntiteFournisseur();
+      //Get existing Contrat
+      this.getContrat();
       //Get existing month
       this.listService.getListMonth().subscribe(result => {
         this.monthList = result;
@@ -213,7 +216,7 @@ export class CommandeClientComponent implements OnInit {
           headers: new HttpHeaders()
             .set("refEntite", this.applicationUserContext.commandeClientFormRefEntite.toString())
             .set("refAdresse", this.applicationUserContext.commandeClientFormRefAdresse.toString())
-            .set("refEntiteFournisseur", (this.applicationUserContext.commandeClientFormRefEntiteFournisseur ? this.applicationUserContext.commandeClientFormRefEntiteFournisseur.toString() : ""))
+            .set("refContrat", (this.applicationUserContext.commandeClientFormRefContrat ? this.applicationUserContext.commandeClientFormRefContrat.toString() : ""))
             .set("d", this.applicationUserContext.commandeClientFormD.format("YYYY-MM-DD 00:00:00"))
         }).subscribe(result => {
           //Get data
@@ -229,14 +232,15 @@ export class CommandeClientComponent implements OnInit {
     }
   }
   //-----------------------------------------------------------------------------------
-  //Get existing EntiteFournisseur
-  getEntiteFournisseur() {
+  //Get existing Contrat
+  getContrat() {
     //Get data
-    this.listService.getListEntiteContrat(this.applicationUserContext.commandeClientFormRefEntiteFournisseur
-      , this.applicationUserContext.commandeClientFormRefEntite
-      , 1, ContratType.RepriseIndividuelle, this.applicationUserContext.commandeClientFormD)
+    this.listService.getListContrats(this.applicationUserContext.commandeClientFormRefEntite
+      , this.applicationUserContext.commandeClientFormD)
       .subscribe(result => {
-        this.entiteFournisseurList = result;
+        this.contratList = result;
+        //Entites
+        this.createContratEntitesLabel();
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
   //-----------------------------------------------------------------------------------
@@ -244,7 +248,7 @@ export class CommandeClientComponent implements OnInit {
   updateForm() {
     this.entiteListFC.setValue((this.applicationUserContext.commandeClientFormRefEntite ? this.applicationUserContext.commandeClientFormRefEntite : null));
     this.adresseListFC.setValue((this.applicationUserContext.commandeClientFormRefAdresse ? this.applicationUserContext.commandeClientFormRefAdresse : null));
-    this.entiteFournisseurListFC.setValue((this.applicationUserContext.commandeClientFormRefEntiteFournisseur ? this.applicationUserContext.commandeClientFormRefEntiteFournisseur : null));
+    this.contratListFC.setValue((this.applicationUserContext.commandeClientFormRefContrat ? this.applicationUserContext.commandeClientFormRefContrat : null));
     if (this.applicationUserContext.commandeClientFormD !== null) {
       this.yearListFC.setValue((this.applicationUserContext.commandeClientFormD ? this.applicationUserContext.commandeClientFormD.year() : null));
       this.monthListFC.setValue((this.applicationUserContext.commandeClientFormD ? moment(new Date(1901, this.applicationUserContext.commandeClientFormD.month(), 1, 0, 0, 0)).format("YYYY-MM-DDT00:00:00") : null));
@@ -258,6 +262,7 @@ export class CommandeClientComponent implements OnInit {
       });
       this.cmdMs.push(grp);
     }
+
     //Manage screen
     this.manageScreen();
   }
@@ -327,7 +332,7 @@ export class CommandeClientComponent implements OnInit {
     });
   }
   //-----------------------------------------------------------------------------------
-  //Fournisseur selected
+  //Client selected
   onEntiteSelected() {
     this.applicationUserContext.commandeClientFormRefEntite = this.entiteListFC.value;
     this.applicationUserContext.commandeClientFormRefAdresse = null;
@@ -346,8 +351,8 @@ export class CommandeClientComponent implements OnInit {
         //Get CommandeClients
         this.getData();
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-    //Get existing EntiteFournisseur
-    this.getEntiteFournisseur();
+    //Get existing Contrat
+    this.getContrat();
   }
   //-----------------------------------------------------------------------------------
   //Adresse selected
@@ -357,14 +362,16 @@ export class CommandeClientComponent implements OnInit {
     this.getData();
   }
   //-----------------------------------------------------------------------------------
-  //EntiteFournisseur selected
-  onEntiteFournisseurSelected(raz: boolean) {
+  //Contrat selected
+  onContratSelected(raz: boolean) {
     if (raz) {
-      this.entiteFournisseurListFC.setValue(null);
+      this.contratListFC.setValue(null);
     }
-    this.applicationUserContext.commandeClientFormRefEntiteFournisseur = this.entiteFournisseurListFC.value;
+    this.applicationUserContext.commandeClientFormRefContrat = this.contratListFC.value;
     //Get CommandeClients
     this.getData();
+    //Show ContratEntites if applicable
+    this.createContratEntitesLabel();
   }
   //-----------------------------------------------------------------------------------
   //Year selected
@@ -375,8 +382,8 @@ export class CommandeClientComponent implements OnInit {
     else {
       this.applicationUserContext.commandeClientFormD = null;
     }
-    //Get existing EntiteFournisseur
-    this.getEntiteFournisseur();
+    //Get existing Contrat
+    this.getContrat();
     //Get CommandeClients
     this.getData();
   }
@@ -389,10 +396,21 @@ export class CommandeClientComponent implements OnInit {
     else {
       this.applicationUserContext.commandeClientFormD = null;
     }
-    //Get existing EntiteFournisseur
-    this.getEntiteFournisseur();
+    //Get existing Contrat
+    this.getContrat();
     //Get CommandeClients
     this.getData();
+  }
+  //-----------------------------------------------------------------------------------
+  //Get label roe ContratEntite
+  createContratEntitesLabel() {
+    this.contratEntitesLabel = "";
+    if (this.contratList.length > 0 && this.applicationUserContext.commandeClientFormRefContrat) {
+      let contrat = this.contratList.find(x => x.RefContrat === this.applicationUserContext.commandeClientFormRefContrat);
+      if (contrat) {
+        this.contratEntitesLabel = getContratEntitesLabel(contrat);
+      }
+    }
   }
   //-----------------------------------------------------------------------------------
   //Back to list

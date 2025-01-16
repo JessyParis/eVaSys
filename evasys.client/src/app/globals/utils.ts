@@ -2,7 +2,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { HttpResponse } from "@angular/common/http";
 import { InformationComponent } from "../components/dialogs/information/information.component";
 import { ApplicationUserContext } from "./globals";
-import { CommandeFournisseur, ContactAdresse, ContactAdresseServiceFonction, ContratCollectivite, EntiteType } from "../interfaces/dataModelsInterfaces";
+import { CommandeFournisseur, ContactAdresse, ContactAdresseServiceFonction, Contrat, ContratCollectivite, EntiteType } from "../interfaces/dataModelsInterfaces";
 import moment from "moment";
 import { EventEmitterService } from "../services/event-emitter.service";
 import { AppLink, MatTableColumn } from '../interfaces/appInterfaces';
@@ -285,6 +285,23 @@ export function getContratCollectiviteLabel(contratCollectivite: ContratCollecti
   return s;
 }
 
+//-----------------------------------------------------------------------------------
+//Create Contrat label
+export function getContratLabel(contrat: Contrat): string {
+  let s = contrat.ContratType?.Libelle + "\n"
+    + moment(contrat.DDebut).format("L") + ' -> ' + moment(contrat.DFin).format("L");
+  //End
+  return s;
+}
+
+//-----------------------------------------------------------------------------------
+//Create ContratEntites label
+export function getContratEntitesLabel(contrat: Contrat): string {
+  let s = contrat.ContratEntites?.sort(function (a, b) { return cmp(a.Entite.Libelle, b.Entite.Libelle); })
+    .map(item => item.Entite.Libelle).join("\n");
+  //End
+  return s;
+}
 //-----------------------------------------------------------------------------------
 //Get Service-Fonctions for ContactAdresse
 export function getContactAdresseServiceFonctions(cA: ContactAdresse): string {

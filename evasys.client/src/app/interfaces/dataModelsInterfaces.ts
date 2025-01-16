@@ -178,6 +178,7 @@ export interface CommandeClientMensuelle {
 export interface CommandeClientMensuelleForm {
   RefCommandeClient: number;
   RefCommandeClientMensuelle: number;
+  RefContrat: number;
   RefEntite: number;
   RefAdresse: number;
   RefProduit: number;
