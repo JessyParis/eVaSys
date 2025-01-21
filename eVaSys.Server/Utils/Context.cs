@@ -1017,6 +1017,7 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.RefAction, 0, EnvDataColumnDataType.id, "RefAction", "tblAction.RefAction");
                 CreateEnvDataColumn(cR, DataColumnName.RefActionType, 0, EnvDataColumnDataType.id, "RefActionType", "tbrActionType.RefActionType");
                 CreateEnvDataColumn(cR, DataColumnName.RefAide, 0, EnvDataColumnDataType.id, "RefAide", "tblAide.RefAide");
+                CreateEnvDataColumn(cR, DataColumnName.RefContrat, 0, EnvDataColumnDataType.id, "RefContrat", "tblContrat.RefContrat");
                 CreateEnvDataColumn(cR, DataColumnName.RefDocument, 0, EnvDataColumnDataType.id, "RefDocument", "tblDocument.RefDocument");
                 CreateEnvDataColumn(cR, DataColumnName.RefStandard, 0, EnvDataColumnDataType.id, "RefStandard", "tbrStandard.RefStandard");
                 CreateEnvDataColumn(cR, DataColumnName.RefAdresseType, 0, EnvDataColumnDataType.id, "RefAdresseType", "tbrAdresseType.RefAdresseType");

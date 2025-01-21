@@ -121,8 +121,8 @@ export class CommandeClientComponent implements OnInit {
     let refEntite = Number.parseInt(this.activatedRoute.snapshot.params["refEntite"], 10);
     let refAdresse = Number.parseInt(this.activatedRoute.snapshot.params["refAdresse"], 10);
     let refContrat = Number.parseInt(this.activatedRoute.snapshot.params["refContrat"], 10);
-    if (isNaN(refContrat)) { refContrat = null; }
     let d = this.activatedRoute.snapshot.params["d"];
+    if (isNaN(refContrat)) { refContrat = null; }
     //Check parameters
     if (moment(d).isValid() && !isNaN(refEntite) && !isNaN(refAdresse)) {
       this.applicationUserContext.commandeClientFormRefEntite = refEntite;
@@ -155,10 +155,7 @@ export class CommandeClientComponent implements OnInit {
               this.adresseList = result;
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
           //Get existing Contrat
-          this.listService.getListContrats(this.applicationUserContext.commandeClientFormRefContrat, moment())
-            .subscribe(result => {
-              this.contratList = result;
-            }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+          this.getContrat();
           //Get existing month
           this.listService.getListMonth().subscribe(result => {
             this.monthList = result;
@@ -275,6 +272,7 @@ export class CommandeClientComponent implements OnInit {
       this.commandeClientMensuelles[i].PrixTonneHT = fG.get("PrixTonneHT").value;
       this.commandeClientMensuelles[i].IdExt = fG.get("IdExt").value;
       this.commandeClientMensuelles[i].Cmt = fG.get("Cmt").value;
+      this.commandeClientMensuelles[i].RefContrat = this.contratListFC.value;
     }
   }
   //-----------------------------------------------------------------------------------

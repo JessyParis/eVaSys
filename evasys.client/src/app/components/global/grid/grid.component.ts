@@ -1276,6 +1276,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
             refEntite: item.RefEntite,
             refAdresse: item.RefAdresse,
             refEntiteFournisseur: item.RefEntiteFournisseur,
+            refContrat: item.RefContrat,
             d: item.CommandeClientMensuelleD
           }])
           break;

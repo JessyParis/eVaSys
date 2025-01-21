@@ -124,71 +124,112 @@ namespace eVaSys.Controllers
             //Init
             string errs = "";
             //For each CommandeClientMensuelle
+            //If Contrat, process all CommandeClientMensuelle for the contrat
             foreach (CommandeClientMensuelleFormViewModel cmdMF in model)
             {
                 CommandeClient cmd = null;
                 CommandeClientMensuelle cmdM = null;
-                //Delete CommandeClientMensuelle if applicable
-                if (cmdMF.RefCommandeClientMensuelle != null && (cmdMF.Poids == 0 || cmdMF.Poids == null))
+                List<int?> refEntiteFournisseurs = new List<int?>() { null };
+                //If contrat, get all EntiteFournisseur for the contrat
+                if (cmdMF.RefContrat != null)
                 {
-                    cmdM = DbContext.CommandeClientMensuelles.Find(cmdMF.RefCommandeClientMensuelle);
-                    if (cmdM != null) { DbContext.Remove(cmdM); }
+                    refEntiteFournisseurs = DbContext.Contrats
+                        .Include(r => r.ContratEntites)
+                        .Where(i => i.RefContrat == cmdMF.RefContrat)
+                        .SelectMany(r => r.ContratEntites)
+                        .Where(e => e.Entite.RefEntiteType == 1)
+                        .Select(r => (int?)r.RefEntite)
+                        .ToList();
                 }
-                else if (cmdMF.Poids != 0 && cmdMF.Poids != null)
+                //Delete CommandeClientMensuelle if applicable
+                if ((cmdMF.RefCommandeClientMensuelle != null || cmdMF.RefContrat != null) && (cmdMF.Poids == 0 || cmdMF.Poids == null))
                 {
-                    //Get the corresponding CommandeClient
-                    if (cmdMF.RefCommandeClient != null)
+                    //Delete single CommandeClientMensuelle, or all CommandeClientMensuelles if Contrat
+                    if (cmdMF.RefContrat == null)
                     {
-                        cmd = DbContext.CommandeClients
-                            .Include(r => r.CommandeClientMensuelles)
-                            .Where(i => i.RefCommandeClient == cmdMF.RefCommandeClient)
-                            .FirstOrDefault();
+                        cmdM = DbContext.CommandeClientMensuelles.Find(cmdMF.RefCommandeClientMensuelle);
+                        if (cmdM != null) { DbContext.Remove(cmdM); }
                     }
                     else
                     {
-                        cmd = DbContext.CommandeClients
-                            .Include(r => r.CommandeClientMensuelles)
-                            .Where(i => i.RefEntite == cmdMF.RefEntite && i.RefAdresse == cmdMF.RefAdresse && i.D.Year == cmdMF.D.Year && i.RefProduit == cmdMF.RefProduit
-                                && cmdMF.RefEntiteFournisseur == i.RefEntiteFournisseur)
-                            .FirstOrDefault();
-                        if (cmd == null)
+                        //Find all CommandeClientMensuelles for the contrat
+                        //Get all relatives CommandeClientMensuelles if Contrat
+                        var query = from commandeClients in DbContext.CommandeClients
+                                    join commandeClientMensuelles in DbContext.CommandeClientMensuelles
+                                        on commandeClients.RefCommandeClient equals commandeClientMensuelles.RefCommandeClient
+                                    where commandeClients.RefEntite == cmdMF.RefEntite && commandeClients.RefAdresse == cmdMF.RefAdresse
+                                        && commandeClients.RefProduit == cmdMF.RefProduit && refEntiteFournisseurs.Contains(commandeClients.RefEntiteFournisseur)
+                                        && commandeClients.D.Year == cmdMF.D.Year && commandeClientMensuelles.D.Month == cmdMF.D.Month
+                                    select (commandeClientMensuelles);
+                        //Delete all CommandeClientMensuelles
+                        foreach (CommandeClientMensuelle cmdMens in query)
                         {
-                            cmd = new CommandeClient
-                            {
-                                RefEntite = cmdMF.RefEntite,
-                                RefAdresse = cmdMF.RefAdresse,
-                                RefEntiteFournisseur = cmdMF.RefEntiteFournisseur,
-                                RefProduit = cmdMF.RefProduit,
-                                D = new DateTime(cmdMF.D.Year, 1, 1),
-                                CommandeClientMensuelles = new HashSet<CommandeClientMensuelle>()
-                            };
-                            DbContext.CommandeClients.Add(cmd);
+                            DbContext.Remove(cmdMens);
                         }
                     }
-                    if (cmd != null)
+                }
+                else if (cmdMF.Poids != 0 && cmdMF.Poids != null)
+                {
+                    foreach (int? refEF in refEntiteFournisseurs)
                     {
-                        cmd.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
-                        //Get the CommandeClientMensuelle
-                        if (cmdMF.RefCommandeClientMensuelle != null)
+                        //Get the corresponding CommandeClient
+                        if (cmdMF.RefCommandeClient != null)
                         {
-                            cmdM = cmd.CommandeClientMensuelles.FirstOrDefault(e => e.RefCommandeClientMensuelle == cmdMF.RefCommandeClientMensuelle);
+                            cmd = DbContext.CommandeClients
+                                .Include(r => r.CommandeClientMensuelles)
+                                .Where(i => i.RefCommandeClient == cmdMF.RefCommandeClient)
+                                .FirstOrDefault();
                         }
                         else
                         {
-                            cmdM = new CommandeClientMensuelle
+                            cmd = DbContext.CommandeClients
+                                .Include(r => r.CommandeClientMensuelles)
+                                .Where(i => i.RefEntite == cmdMF.RefEntite && i.RefAdresse == cmdMF.RefAdresse && i.D.Year == cmdMF.D.Year && i.RefProduit == cmdMF.RefProduit
+                                    && i.RefEntiteFournisseur  == refEF)
+                                .FirstOrDefault();
+                            if (cmd == null)
                             {
-                                D = cmdMF.D
-                            };
-                            DbContext.CommandeClientMensuelles.Add(cmdM);
-                            cmd.CommandeClientMensuelles.Add(cmdM);
+                                cmd = new CommandeClient
+                                {
+                                    RefEntite = cmdMF.RefEntite,
+                                    RefAdresse = cmdMF.RefAdresse,
+                                    RefEntiteFournisseur = refEF,
+                                    RefProduit = cmdMF.RefProduit,
+                                    D = new DateTime(cmdMF.D.Year, 1, 1),
+                                    CommandeClientMensuelles = new HashSet<CommandeClientMensuelle>()
+                                };
+                                DbContext.CommandeClients.Add(cmd);
+                            }
                         }
-                        if (cmdM != null)
+                        if (cmd != null)
                         {
-                            //Update data
-                            cmd.Cmt = cmdMF.Cmt;
-                            cmdM.Poids = (int)cmdMF.Poids;
-                            cmdM.PrixTonneHT = (decimal)(cmdMF.PrixTonneHT == null ? 0 : cmdMF.PrixTonneHT);
-                            cmdM.IdExt = cmdMF.IdExt;
+                            cmd.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
+                            //Get the CommandeClientMensuelle
+                            if (cmdMF.RefCommandeClientMensuelle != null)
+                            {
+                                cmdM = cmd.CommandeClientMensuelles.FirstOrDefault(e => e.RefCommandeClientMensuelle == cmdMF.RefCommandeClientMensuelle);
+                            }
+                            else
+                            {
+                                cmdM = cmd.CommandeClientMensuelles.FirstOrDefault(e => e.D == cmdMF.D);
+                            }
+                            if(cmdM == null)
+                            {
+                                cmdM = new CommandeClientMensuelle
+                                {
+                                    D = cmdMF.D
+                                };
+                                DbContext.CommandeClientMensuelles.Add(cmdM);
+                                cmd.CommandeClientMensuelles.Add(cmdM);
+                            }
+                            if (cmdM != null)
+                            {
+                                //Update data
+                                cmd.Cmt = cmdMF.Cmt;
+                                cmdM.Poids = (int)cmdMF.Poids;
+                                cmdM.PrixTonneHT = (decimal)(cmdMF.PrixTonneHT == null ? 0 : cmdMF.PrixTonneHT);
+                                cmdM.IdExt = cmdMF.IdExt;
+                            }
                         }
                     }
                     string validError = cmd.IsValid() + " " + cmdM.IsValid();
@@ -255,6 +296,39 @@ namespace eVaSys.Controllers
 
         #region Attribute-based Routing
         /// <summary>
+        /// GET: evapi/commandeclient/getcontrat
+        /// Retrieves the CommandeClientMensuelle regarding parameters
+        /// </summary>
+        /// <param name="id">The ID of an existing CommandeClient</param>
+        /// <returns>the CommandeClient with the given {id}</returns>
+        [HttpGet("GetContrat")]
+        public IActionResult GetContrat()
+        {
+            //Init
+            int refContrat=0;
+            //Get headers
+            string refCommandeClientMensuelle = Request.Headers["refCommandeClientMensuelle"].ToString();
+            //Get Contrat
+            if (int.TryParse(refCommandeClientMensuelle, out int refCCM))
+            {
+                var query= from cmdM in DbContext.CommandeClientMensuelles
+                           join cmd in DbContext.CommandeClients on cmdM.RefCommandeClient equals cmd.RefCommandeClient
+                           join cE in DbContext.ContratEntites on cmd.RefEntiteFournisseur equals cE.RefEntite
+                           join contrat in DbContext.Contrats on cE.RefContrat equals contrat.RefContrat
+                           where cmdM.RefCommandeClientMensuelle == refCCM 
+                            && DateOnly.FromDateTime(cmdM.D)>=contrat.DDebut && DateOnly.FromDateTime(cmdM.D) <= contrat.DFin
+                           select contrat.RefContrat;
+            }
+            else
+            {
+                // handle requests asking for non-existing object
+                return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711)));
+            }
+            //End
+            //Return Json
+            return new JsonResult(refContrat, JsonSettings);
+        }
+        /// <summary>
         /// GET: evapi/getcommandeclientmensuelles/{id}
         /// Retrieves the CommandeClientMensuelle regarding parameters
         /// </summary>
@@ -266,15 +340,15 @@ namespace eVaSys.Controllers
             //Get headers
             string refEntite = Request.Headers["refEntite"].ToString();
             string refAdresse = Request.Headers["refAdresse"].ToString();
-            string refEntiteFournisseur = Request.Headers["refEntiteFournisseur"].ToString();
+            string refContrat = Request.Headers["refContrat"].ToString();
             string d = Request.Headers["d"].ToString();
             DateTime dRef = DateTime.MinValue;
             DataSet dS = new();
             //Get CommandeClientMensuelles
             if (int.TryParse(refEntite, out int refE) && int.TryParse(refAdresse, out int refA) && DateTime.TryParse(d, out dRef))
             {
-                int.TryParse(refEntiteFournisseur, out int refEF);
-                SelectCommandeClientMensuelles(refE, refA, refEF == 0 ? null : refEF, dRef, ref dS);
+                int.TryParse(refContrat, out int refC);
+                SelectCommandeClientMensuelles(refE, refA, refC == 0 ? null : refC, dRef, ref dS);
             }
             else
             {
@@ -302,12 +376,13 @@ namespace eVaSys.Controllers
                 + " from tblProduit"
                 + "     inner join"
                 + "     (select isnull(entiteP.RefProduit, cmdM.Refproduit) as RefProduit"
-                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, cmdM.Cmt, cmdM.RefCommandeClient, cmdM.RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
+                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, null as RefContrat, cmdM.Cmt, cmdM.RefCommandeClient, cmdM.RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
                 + "     from"
                 + "         (select tblCommandeClient.RefEntite, tblCommandeClient.RefAdresse, tblCommandeClient.RefProduit, tblCommandeClient.Cmt, tblCommandeClientMensuelle.*"
                 + "         from tblCommandeClient"
                 + "             left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
-                + "         where tblCommandeClient.RefEntite = @refEntite and tblCommandeClient.RefAdresse = @refAdresse and year(tblCommandeClientMensuelle.D) = year(@d) and month(tblCommandeClientMensuelle.D) = month(@d)) as cmdM"
+                + "         where tblCommandeClient.RefEntite = @refEntite and tblCommandeClient.RefAdresse = @refAdresse and year(tblCommandeClientMensuelle.D) = year(@d) and month(tblCommandeClientMensuelle.D) = month(@d)"
+                + "             and tblCommandeClient.RefEntiteFournisseur is null) as cmdM"
                 + "         full outer join"
                 + "         (select * from tbmEntiteProduit where RefEntite = @refEntite) as entiteP on cmdM.RefProduit = entiteP.RefProduit) as univers"
                 + "     on tblProduit.RefProduit = univers.Refproduit"
@@ -315,19 +390,19 @@ namespace eVaSys.Controllers
             }
             else
             {
-                sqlStr += " select tblProduit.Libelle as LibelleProduit, univers.*"
+                sqlStr += " select distinct tblProduit.Libelle as LibelleProduit, univers.*, (case when Poids is null or Poids=0 then 0 else 1 end) as ordre"
                 + " from tblProduit"
                 + "     inner join"
                 + "     (select isnull(entiteP.RefProduit, cmdM.Refproduit) as RefProduit"
-                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, RefEntiteFournisseur, cmdM.Cmt, cmdM.RefCommandeClient, cmdM.RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
+                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, RefContrat, cmdM.Cmt, null as RefCommandeClient, null as RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
                 + "     from"
-                + "         (select tblCommandeClient.RefEntite, tblCommandeClient.RefAdresse, tblCommandeClient.RefEntiteFournisseur, tblCommandeClient.RefProduit, tblCommandeClient.Cmt, tblCommandeClientMensuelle.*"
+                + "         (select tblCommandeClient.RefEntite, tblCommandeClient.RefAdresse, tblCommandeClient.RefEntiteFournisseur, tblCommandeClient.RefProduit, tblCommandeClient.Cmt"
+                + "             , tblCommandeClientMensuelle.*, vueContratCommandeClient.RefContrat"
                 + "         from tblCommandeClient"
                 + "             left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
+                + "             inner join vueContratCommandeClient on tblCommandeClientMensuelle.RefCommandeClientMensuelle = vueContratCommandeClient.RefCommandeClientMensuelle"
                 + "         where tblCommandeClient.RefEntite = @refEntite and tblCommandeClient.RefAdresse = @refAdresse"
-                + "             and tblCommandeClient.RefEntiteFournisseur in "
-                + "                 ( select RefEntite from tblContrat inner join tbmContratEntite on tblContrat.RefContrat=tbmContratEntite.RefContrat "
-                + " 					where tblContrat.RefContrat=@refContrat and tblContrat.DDebut <= @d and tblContrat.DFin >= @d)"
+                + "             and vueContratCommandeClient.RefContrat=@refContrat"
                 + "             and year(tblCommandeClientMensuelle.D) = year(@d) and month(tblCommandeClientMensuelle.D) = month(@d)) as cmdM"
                 + "         full outer join"
                 + "         (select * from tbmEntiteProduit where RefEntite = @refEntite) as entiteP on cmdM.RefProduit = entiteP.RefProduit) as univers"

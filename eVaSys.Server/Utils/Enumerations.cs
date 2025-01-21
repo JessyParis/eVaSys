@@ -773,6 +773,7 @@ namespace eVaSys.Utils
             RefCommandeClientMensuelle,
             RefCommandeFournisseur,
             RefCommandeFournisseurStatut,
+            RefContrat,
             RefDescriptionControle,
             RefDescriptionCVQ,
             RefDescriptionReception,

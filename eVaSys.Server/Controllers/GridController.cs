@@ -358,10 +358,11 @@ namespace eVaSys.Controllers
                                 + "     , tblCommandeClientMensuelle.D as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientMensuelleD.ToString()].Name + "]"
                                 + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                 + "     , tblCommandeClientMensuelle.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientMensuellePoids.ToString()].Name + "]"
-                                + "     , (sum(case when DDechargement is null then PoidsChargement else PoidsDechargement end) / 10) / tblCommandeClientMensuelle.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientPositionne.ToString()].Name + "]"
+                                //+ "     , (sum(case when DDechargement is null then PoidsChargement else PoidsDechargement end) / 10) / tblCommandeClientMensuelle.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientPositionne.ToString()].Name + "]"
                                 + "     , tblEntite.RefEntite as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefEntite.ToString()].Name + "]"
                                 + "     , fournisseur.RefEntite as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefEntiteFournisseur.ToString()].Name + "]"
                                 + "     , tblAdresse.RefAdresse as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefAdresse.ToString()].Name + "]"
+                                + "     , vueContratCommandeClient.RefContrat as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefContrat.ToString()].Name + "]"
                                 + " from tblCommandeClient"
                                 + "     left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
                                 + "     left join tblEntite on tblEntite.RefEntite = tblCommandeClient.RefEntite"
@@ -372,6 +373,7 @@ namespace eVaSys.Controllers
                                 + "     left join tblCommandeFournisseur on tblCommandeFournisseur.RefAdresseClient = tblCommandeClient.RefAdresse"
                                 + "     and year(isnull(DDechargement, DMoisDechargementPrevu)) = year(tblCommandeClientMensuelle.D) and month(isnull(DDechargement, DMoisDechargementPrevu))= month(tblCommandeClientMensuelle.D)"
                                 + "     and tblCommandeFournisseur.RefProduit=tblCommandeClient.refProduit"
+                                + "     left join vueContratCommandeClient on tblCommandeClientMensuelle.RefCommandeClientMensuelle = vueContratCommandeClient.RefCommandeClientMensuelle"
                                 + " where tblCommandeClientMensuelle.Poids!=0";
                             //General Filters
                             if (!string.IsNullOrEmpty(filterText))
@@ -406,7 +408,7 @@ namespace eVaSys.Controllers
                             sqlStr += " group by tblCommandeClient.RefCommandeClient, tblCommandeClientMensuelle.RefCommandeClientMensuelle, tblEntite.Libelle, tblCommandeClientMensuelle.D"
                                 + "     , case when tblAdresse.Adr1 is null then '' else tblAdresse.Adr1 + ' ' end + tblAdresse.CodePostal + ' ' + tblAdresse.Ville + ' (' + tbrAdresseType.Libelle + ')'"
                                 + "     , fournisseur.Libelle, tblProduit.Libelle, tblCommandeClientMensuelle.Poids"
-                                + "     , tblEntite.RefEntite, tblAdresse.RefAdresse, fournisseur.RefEntite";
+                                + "     , tblEntite.RefEntite, tblAdresse.RefAdresse, fournisseur.RefEntite, vueContratCommandeClient.RefContrat";
                             break;
                         case "LogistiqueMenuCommandeFournisseur":
                         case "LogistiqueMenuTransportCommande":

@@ -656,6 +656,7 @@ export enum DataColumnName {
   RefCommandeClientMensuelle = "RefCommandeClientMensuelle",
   RefCommandeFournisseur = "RefCommandeFournisseur",
   RefCommandeFournisseurStatut = "RefCommandeFournisseurStatut",
+  RefContrat = "RefContrat",
   RefDescriptionControle = "RefDescriptionControle",
   RefDescriptionCVQ = "RefDescriptionCVQ",
   RefDescriptionReception = "RefDescriptionReception",
