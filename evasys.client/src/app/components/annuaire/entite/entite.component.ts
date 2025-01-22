@@ -140,7 +140,7 @@ export class EntiteComponent implements OnInit {
     return (dE.DocumentNoFile.VisibiliteTotale == visibiliteTotale);
   }
   filterContrats = (c: dataModelsInterfaces.Contrat) => {
-    return (c.ContratEntites.some(e => e.RefEntite = this.entite.RefEntite));
+    return (c.ContratEntites.some(e => e.RefEntite == this.entite.RefEntite));
   }
   //Dynamic labels
   centreDeTriLieLabel: string = this.applicationUserContext.getCulturedRessourceText(1150);

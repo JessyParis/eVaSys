@@ -346,7 +346,7 @@ namespace eVaSys.Controllers
                 //If one PrixReprise specific for this Entite, then keep only specifics
                 if (res.Where(e => e.RefEntite != null).Count() > 0)
                 {
-                    res = res.Where(e => e.RefEntite != null).ToArray();
+                    res = res.Where(e => e.RefEntite == refE).ToArray();
                 }
                 //Return Json
                 return new JsonResult(res, JsonSettings);

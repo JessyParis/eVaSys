@@ -324,9 +324,11 @@ namespace eVaSys.Controllers
                         + " 	inner join tblEntite as collectivite "
                         + "         on (collectivite.RefEntite=tbmEntiteEntite.RefEntite and tbmEntiteEntite.RefEntiteRtt=@refFournisseur)"
                         + "             or (collectivite.RefEntite=tbmEntiteEntite.RefEntiteRtt and tbmEntiteEntite.RefEntite=@refFournisseur)"
-                        + " 	inner join tblContrat as contratCollectivite on contratCollectivite.RefEntite=collectivite.RefEntite"
-                        + "     inner join tblContrat as contratClient on contratClient.IdContrat=contratCollectivite.IdContrat"
-                        + "     inner join tblEntite as client on contratClient.RefEntite=client.RefEntite "
+                        + " 	inner join tbmContratEntite as contratCollectiviteEntite on contratCollectiviteEntite.RefEntite=collectivite.RefEntite"
+                        + " 	inner join tblContrat as contratCollectivite on contratCollectivite.RefContrat=contratCollectiviteEntite.RefContrat"
+                        + "     inner join tblContrat as contratClient on contratClient.RefContrat=contratCollectivite.RefContrat"
+                        + " 	inner join tbmContratEntite as contratClientEntite on contratClientEntite.RefContrat=contratClient.RefContrat"
+                        + "     inner join tblEntite as client on contratClientEntite.RefEntite=client.RefEntite"
                         + " where client.RefEntiteType=4 and contratCollectivite.DDebut<=@dMoisDechargementPrevu and contratCollectivite.DFin>=@dMoisDechargementPrevu"
                         + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu";
                     cmd.CommandText = sqlStr;
@@ -378,16 +380,18 @@ namespace eVaSys.Controllers
                     //Contrat RI or not
                     if (c > 0)
                     {
-                        sqlStr += " and client.RefEntite in (select contratClient.RefEntite"
-                            + " from tbmEntiteEntite"
-                            + " 	inner join tblEntite as collectivite "
-                            + "         on (collectivite.RefEntite=tbmEntiteEntite.RefEntite and tbmEntiteEntite.RefEntiteRtt=@refFournisseur)"
-                            + "             or (collectivite.RefEntite=tbmEntiteEntite.RefEntiteRtt and tbmEntiteEntite.RefEntite=@refFournisseur)"
-                            + " 	inner join tblContrat as contratCollectivite on contratCollectivite.RefEntite=collectivite.RefEntite"
-                            + "     inner join tblContrat as contratClient on contratClient.IdContrat=contratCollectivite.IdContrat"
-                            + "     inner join tblEntite as client on contratClient.RefEntite=client.RefEntite "
-                            + " where client.RefEntiteType=4 and contratCollectivite.DDebut<=@dMoisDechargementPrevu and contratCollectivite.DFin>=@dMoisDechargementPrevu"
-                            + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu)";
+                        sqlStr += " and client.RefEntite in (select contratClientEntite.RefEntite"
+                        + " from tbmEntiteEntite"
+                        + " 	inner join tblEntite as collectivite "
+                        + "         on (collectivite.RefEntite=tbmEntiteEntite.RefEntite and tbmEntiteEntite.RefEntiteRtt=@refFournisseur)"
+                        + "             or (collectivite.RefEntite=tbmEntiteEntite.RefEntiteRtt and tbmEntiteEntite.RefEntite=@refFournisseur)"
+                        + " 	inner join tbmContratEntite as contratCollectiviteEntite on contratCollectiviteEntite.RefEntite=collectivite.RefEntite"
+                        + " 	inner join tblContrat as contratCollectivite on contratCollectivite.RefContrat=contratCollectiviteEntite.RefContrat"
+                        + "     inner join tblContrat as contratClient on contratClient.RefContrat=contratCollectivite.RefContrat"
+                        + " 	inner join tbmContratEntite as contratClientEntite on contratClientEntite.RefContrat=contratClient.RefContrat"
+                        + "     inner join tblEntite as client on contratClientEntite.RefEntite=client.RefEntite"
+                        + " where client.RefEntiteType=4 and contratCollectivite.DDebut<=@dMoisDechargementPrevu and contratCollectivite.DFin>=@dMoisDechargementPrevu"
+                        + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu)";
                     }
                     //Type de camion de la commande
                     if (filterCamionTypes != "")

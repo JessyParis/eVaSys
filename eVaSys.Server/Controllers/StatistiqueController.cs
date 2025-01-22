@@ -4578,13 +4578,20 @@ namespace eVaSys.Controllers
                             + "         full outer join (select distinct tbrPrixReprise.*, tbmEntiteStandard.RefStandard from tbmEntiteStandard"
                             + "             inner join tbmProduitStandard on tbmEntiteStandard.RefStandard = tbmProduitStandard.RefStandard"
                             + "             inner join tbrPrixReprise on tbmProduitStandard.RefProduit = tbrPrixReprise.RefProduit"
-                            + "             where tbmEntiteStandard.RefEntite in (" + filterCollectivites + ") and D between @begin and @end) as tbrPrixReprise on tbrPrixReprise.RefProcess=u.RefProcess and tbrPrixReprise.RefComposant=u.RefComposant and tbrPrixReprise.RefProduit=u.RefProduit and tbrPrixReprise.D=u.D"
+                            + "             where tbmEntiteStandard.RefEntite in (" + filterCollectivites + ") and D between @begin and @end";
+                        //Contrat RI
+                        if (filterCollectivites.Split(',').Length == 1)
+                        {
+                            sqlStr += " and (dbo.DateDansContratRI(" + filterCollectivites + ", tbrPrixReprise.D)=0 or (dbo.DateDansContratRI(" + filterCollectivites + ", tbrPrixReprise.D)=1 and tbrPrixReprise.RefEntite in(" + filterCollectivites + ")))";
+                        };
+                        sqlStr += "             ) as tbrPrixReprise on tbrPrixReprise.RefProcess=u.RefProcess and tbrPrixReprise.RefComposant=u.RefComposant and tbrPrixReprise.RefProduit=u.RefProduit and tbrPrixReprise.D=u.D"
                             + "      ) as univers"
                             + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"
                             + " 	inner join tblProduit as composant on composant.RefProduit=univers.RefComposant"
                             + " 	inner join tbrProcess on tbrProcess.RefProcess=univers.RefProcess"
                             + "     inner join tbrStandard on univers.RefStandard = tbrStandard.RefStandard"
                             + " where 1=1";
+
                         //Filters
                         if (eSF.FilterCollecte == "Collecte")
                         {
