@@ -290,6 +290,7 @@ namespace eVaSys.Controllers
         [HttpGet("getcible")]
         public IActionResult GetCible()
         {
+            string refCommandeFournisseur = Request.Headers["refCommandeFournisseur"].ToString();
             string refFournisseur = Request.Headers["refFournisseur"].ToString();
             string refTransporteur = Request.Headers["refTransporteur"].ToString();
             string refAdresseFournisseur = Request.Headers["refAdresseFournisseur"].ToString();
@@ -298,41 +299,39 @@ namespace eVaSys.Controllers
             string dMoisDechargementPrevu = Request.Headers["dMoisDechargementPrevu"].ToString();
             string filterCamionTypes = Request.Headers["filterCamionTypes"].ToString();
             string filterVilleArrivees = Request.Headers["filterVilleArrivees"].ToString();
+            int refCF = 0;
             int refF = 0;
             int refAF = 0;
             int refP = 0;
             int refC = 0;
             int refT = 0;
+            int refContrat = 0;
             DateTime d = DateTime.MinValue;
             SqlCommand cmd = new();
             DataSet dS = new();
             //Check mandatory parameters
-            if (int.TryParse(refFournisseur, out refF) && int.TryParse(refAdresseFournisseur, out refAF) && int.TryParse(refProduit, out refP) && DateTime.TryParse(dMoisDechargementPrevu, out d))
+            if (int.TryParse(refFournisseur, out refF) && int.TryParse(refCommandeFournisseur, out refCF)
+                && int.TryParse(refAdresseFournisseur, out refAF) && int.TryParse(refProduit, out refP) && DateTime.TryParse(dMoisDechargementPrevu, out d))
             {
                 using (DbConnection sqlConn = DbContext.Database.GetDbConnection())
                 {
                     sqlConn.Open();
                     cmd.Connection = (SqlConnection)sqlConn;
                     //Parameters
+                    cmd.Parameters.Add("@refCommandeFournisseur", SqlDbType.Int).Value = refCF;
                     cmd.Parameters.Add("@refFournisseur", SqlDbType.Int).Value = refF;
                     cmd.Parameters.Add("@refAdresseFournisseur", SqlDbType.Int).Value = refAF;
                     cmd.Parameters.Add("@refProduit", SqlDbType.Int).Value = refP;
                     cmd.Parameters.Add("@dMoisDechargementPrevu", SqlDbType.DateTime).Value = d;
                     //Vérification d'un contrat RI
-                    string sqlStr = "select count(*)"
-                        + " from tbmEntiteEntite"
-                        + " 	inner join tblEntite as collectivite "
-                        + "         on (collectivite.RefEntite=tbmEntiteEntite.RefEntite and tbmEntiteEntite.RefEntiteRtt=@refFournisseur)"
-                        + "             or (collectivite.RefEntite=tbmEntiteEntite.RefEntiteRtt and tbmEntiteEntite.RefEntite=@refFournisseur)"
-                        + " 	inner join tbmContratEntite as contratCollectiviteEntite on contratCollectiviteEntite.RefEntite=collectivite.RefEntite"
-                        + " 	inner join tblContrat as contratCollectivite on contratCollectivite.RefContrat=contratCollectiviteEntite.RefContrat"
-                        + "     inner join tblContrat as contratClient on contratClient.RefContrat=contratCollectivite.RefContrat"
-                        + " 	inner join tbmContratEntite as contratClientEntite on contratClientEntite.RefContrat=contratClient.RefContrat"
-                        + "     inner join tblEntite as client on contratClientEntite.RefEntite=client.RefEntite"
-                        + " where client.RefEntiteType=4 and contratCollectivite.DDebut<=@dMoisDechargementPrevu and contratCollectivite.DFin>=@dMoisDechargementPrevu"
-                        + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu";
+                    string sqlStr = "select RefContrat from VueContratCommandeFournisseur where RefCommandeFournisseur=@refCommandeFournisseur";
                     cmd.CommandText = sqlStr;
-                    int c = (int)cmd.ExecuteScalar();
+                    var res = cmd.ExecuteScalar();
+                    if(res != null)
+                    {
+                        refContrat = (int)res;
+                        cmd.Parameters.Add("@refContrat", SqlDbType.Int).Value = refContrat;
+                    }
                     //Chaine SQL
                     sqlStr = "select distinct tblTransport.RefTransport, RefAdresseDestination, Client.Libelle as Client, (commandeClient.Poids*1000 - isnull(reliquat.Poids,0))/1000 as [ResteALivrer], (isnull(reliquat.Poids,0)*100)/(commandeClient.Poids*1000) as [Positionne], tblAdresse.Ville, transporteur.RefEntite as RefTransporteur"
                         + "     , transporteur.Libelle as Transporteur, tbrCamionType.Libelle as [CamionType], tblTransport.PUHT, tr.NbTransportIdentique, tblParcours.Km"
@@ -350,7 +349,13 @@ namespace eVaSys.Controllers
                         + " 	inner join tblAdresse as adresseOrigine on tblParcours.RefAdresseOrigine=adresseOrigine.RefAdresse"
                         + " 	inner join "
                         + " 		(select RefEntite, RefAdresse, tblCommandeClientMensuelle.Poids  from tblCommandeClient inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient "
-                        + " 		where RefProduit=@refProduit and year(tblCommandeClient.D)=year(@dMoisDechargementPrevu) and month(tblCommandeClientMensuelle.D)=month(@dMoisDechargementPrevu) and tblCommandeClientMensuelle.Poids>0) as commandeClient"
+                        + " 		where RefProduit=@refProduit and year(tblCommandeClient.D)=year(@dMoisDechargementPrevu) and month(tblCommandeClientMensuelle.D)=month(@dMoisDechargementPrevu) and tblCommandeClientMensuelle.Poids>0";
+                    //Contrat RI or not
+                    if (refContrat > 0)
+                    {
+                        sqlStr += " and tblCommandeClient.RefCommandeClient in (select refCommandeClient from VueContratCommandeClient where RefContrat=@refContrat)";
+                    }
+                    sqlStr+="         ) as commandeClient"
                         + " 		on client.RefEntite=commandeClient.RefEntite and tblParcours.RefAdresseDestination=CommandeClient.RefAdresse"
                         + " 	left join "
                         + " 		(select RefAdresseClient, sum(case when DDechargement is null then PoidsChargement else PoidsDechargement end) as Poids"
@@ -378,20 +383,9 @@ namespace eVaSys.Controllers
                         + "     and transporteur.Actif=1"
                         + "     and tbmEntiteCamionType.RefCamionType is null";
                     //Contrat RI or not
-                    if (c > 0)
+                    if (refContrat > 0)
                     {
-                        sqlStr += " and client.RefEntite in (select contratClientEntite.RefEntite"
-                        + " from tbmEntiteEntite"
-                        + " 	inner join tblEntite as collectivite "
-                        + "         on (collectivite.RefEntite=tbmEntiteEntite.RefEntite and tbmEntiteEntite.RefEntiteRtt=@refFournisseur)"
-                        + "             or (collectivite.RefEntite=tbmEntiteEntite.RefEntiteRtt and tbmEntiteEntite.RefEntite=@refFournisseur)"
-                        + " 	inner join tbmContratEntite as contratCollectiviteEntite on contratCollectiviteEntite.RefEntite=collectivite.RefEntite"
-                        + " 	inner join tblContrat as contratCollectivite on contratCollectivite.RefContrat=contratCollectiviteEntite.RefContrat"
-                        + "     inner join tblContrat as contratClient on contratClient.RefContrat=contratCollectivite.RefContrat"
-                        + " 	inner join tbmContratEntite as contratClientEntite on contratClientEntite.RefContrat=contratClient.RefContrat"
-                        + "     inner join tblEntite as client on contratClientEntite.RefEntite=client.RefEntite"
-                        + " where client.RefEntiteType=4 and contratCollectivite.DDebut<=@dMoisDechargementPrevu and contratCollectivite.DFin>=@dMoisDechargementPrevu"
-                        + " 	and contratClient.DDebut<=@dMoisDechargementPrevu and contratClient.DFin>=@dMoisDechargementPrevu)";
+                        sqlStr += " and client.RefEntite in (select RefEntite from tbmContratEntite where RefContrat=@RefContrat)";
                     }
                     //Type de camion de la commande
                     if (filterCamionTypes != "")

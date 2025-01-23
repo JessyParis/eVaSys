@@ -57,7 +57,7 @@
                       [refAdresseDestination]="data.ref1" [refTransporteur]="data.ref2" [refCamionType]="data.ref3"
                       [type]="data.type" (askClose)="closeAsked($event)"></transport-simple>
     <cible *ngIf="data.type==='Cible'" [type]="data.type" [refTransporteur]="data.refTransporteur"
-           [refFournisseur]="data.refFournisseur" [refAdresseFournisseur]="data.refAdresseFournisseur"
+           [refCommandeFournisseur]="data.refCommandeFournisseur" [refFournisseur]="data.refFournisseur" [refAdresseFournisseur]="data.refAdresseFournisseur"
            [refProduit]="data.refProduit" [refCamionType]="data.refCamionType" [refClient]="data.refClient"
            [dMoisDechargementPrevu]="data.dMoisDechargementPrevu" (askClose)="closeAsked($event)"></cible>
     <grid-simple *ngIf="data.type==='Mixte' || data.type==='TransporteurForUtilisateur' || data.type==='CentreDeTriForUtilisateur'

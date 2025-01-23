@@ -1566,6 +1566,7 @@ export class CommandeFournisseurComponent implements OnInit {
       maxHeight: "80vh",
       data: {
         title: this.applicationUserContext.getCulturedRessourceText(489), type: "Cible"
+        , refCommandeFournisseur: this.commandeFournisseur.RefCommandeFournisseur
         , refFournisseur: this.commandeFournisseur.Entite.RefEntite
         , refAdresseFournisseur: this.commandeFournisseur.Adresse.RefAdresse
         , refTransporteur: (transportOnly ? this.commandeFournisseur.Transporteur.RefEntite : null)
