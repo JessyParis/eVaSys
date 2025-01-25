@@ -184,7 +184,6 @@ namespace eVaSys.Data
         public ICollection<ContactAdresse> ContactAdresses { get; set; }
         public ICollection<ClientApplication> ClientApplications { get; set; }
         public ICollection<CommandeClient> CommandeClients { get; set; }
-        public ICollection<CommandeClient> CommandeClientFournisseurs { get; set; }
         public ICollection<CommandeFournisseur> CommandeFournisseurs { get; set; }
         public ICollection<CommandeFournisseur> CommandeFournisseurTransporteurs { get; set; }
         public ICollection<CommandeFournisseur> CommandeFournisseurPrestataires { get; set; }
@@ -386,7 +385,6 @@ namespace eVaSys.Data
             nbLinkedData += DbContext.Entry(this).Collection(b => b.Transports).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ClientApplications).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeClients).Query().Count();
-            nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeClientFournisseurs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurTransporteurs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurPrestataires).Query().Count();

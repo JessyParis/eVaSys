@@ -2347,7 +2347,9 @@ export class CommandeFournisseurComponent implements OnInit {
       this.dataModelService.getCommandeClient(0, this.commandeFournisseur.AdresseClient?.RefEntite
         , (this.commandeFournisseur.AdresseClient?.RefAdresse ? this.commandeFournisseur.AdresseClient?.RefAdresse : 0)
         , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit?.RefProduit : 0)
-        , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment)
+        , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+        , this.commandeFournisseur.RefCommandeFournisseur
+      )
         .subscribe(result => {
           if (result) {
             let cmd = result.CommandeClientMensuelles.find(i => moment(i.D).format("YYYY-MM") === moment(this.commandeFournisseur.DMoisDechargementPrevu).format("YYYY-MM"));
@@ -2536,7 +2538,9 @@ export class CommandeFournisseurComponent implements OnInit {
       this.dataModelService.getCommandeClient(0, this.commandeFournisseur.AdresseClient.RefEntite
         , (this.commandeFournisseur.AdresseClient.RefAdresse ? this.commandeFournisseur.AdresseClient.RefAdresse : 0)
         , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
-        , (this.commandeFournisseur.DDechargement == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DDechargement) as moment.Moment)
+        , (this.commandeFournisseur.DDechargement == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DDechargement) as moment.Moment
+        , this.commandeFournisseur.RefCommandeFournisseur 
+      )
         .subscribe(result => {
           if (result) {
             let cmd = result.CommandeClientMensuelles.find(i => moment(i.D).format("YYYY-MM") === moment(this.commandeFournisseur.DDechargement).format("YYYY-MM"));

@@ -37,12 +37,12 @@ namespace eVaSys.Data
         protected ApplicationDbContext DbContext { get; private set; }
         public CultureInfo currentCulture = new("fr-FR");
         public int RefCommandeClient { get; set; }
-        public int? RefEntiteFournisseur { get; set; }
-        private Entite _entiteFournisseur;
-        public Entite EntiteFournisseur
+        public int? RefContrat { get; set; }
+        private Contrat _contrat;
+        public Contrat Contrat
         {
-            get => LazyLoader.Load(this, ref _entiteFournisseur);
-            set => _entiteFournisseur = value;
+            get => LazyLoader.Load(this, ref _contrat);
+            set => _contrat = value;
         }
         public int RefEntite { get; set; }
         private Entite _entite;
@@ -129,7 +129,7 @@ namespace eVaSys.Data
         {
             string r = "";
             int c = DbContext.CommandeClients.Where(q => q.RefEntite == RefEntite && q.RefProduit == RefProduit 
-                && q.RefAdresse == RefAdresse && q.RefEntiteFournisseur == RefEntiteFournisseur && q.D == D
+                && q.RefAdresse == RefAdresse && q.RefContrat == RefContrat && q.D == D
                 && q.RefCommandeClient != RefCommandeClient).Count();
             if (c > 0)
             {

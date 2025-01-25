@@ -111,9 +111,10 @@ export class DataModelService {
   }
   //-----------------------------------------------------------------------------------
   //Get existing CommandeClient
-  getCommandeClient(refCommandeClient: number, refClient: number, refAdresse: number, refProduit: number, d: moment.Moment): Observable<dataModelsInterfaces.CommandeClient> {
+  getCommandeClient(refCommandeClient: number, refClient: number, refAdresse: number, refProduit: number, d: moment.Moment, refCommandeFournisseur: number): Observable<dataModelsInterfaces.CommandeClient> {
     return this.http.get<dataModelsInterfaces.CommandeClient>(this.baseUrl + "evapi/commandeclient/" + refCommandeClient.toString(), {
       headers: new HttpHeaders()
+        .set("refCommandeFournisseur", !refCommandeFournisseur ? "" : refCommandeFournisseur.toString())
         .set("refEntite", !refClient ? "" : refClient.toString())
         .set("refAdresse", !refAdresse ? "" : refAdresse.toString())
         .set("refProduit", !refProduit ? "" : refProduit.toString())

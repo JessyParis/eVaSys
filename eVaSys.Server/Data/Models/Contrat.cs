@@ -56,6 +56,7 @@ namespace eVaSys.Data
             }
         }
         public ICollection<ContratEntite> ContratEntites { get; set; }
+        public ICollection<CommandeClient> CommandeClientFournisseurs { get; set; }
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
         [NotMapped]

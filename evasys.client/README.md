@@ -12,11 +12,11 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build produtction
 Run `ng build --base-href /valorplast/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
-Run `ng build --base-href /evasys/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Run `ng build --base-href /evasys/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Build dev
 Run `ng build --base-href /valorplastdev/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
-Run `ng build --base-href /evasysdev/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Run `ng build --base-href /evasysdev/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Running unit tests
 

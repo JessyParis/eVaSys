@@ -711,9 +711,9 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefEntite)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(d => d.EntiteFournisseur)
+                entity.HasOne(d => d.Contrat)
                     .WithMany(p => p.CommandeClientFournisseurs)
-                    .HasForeignKey(d => d.RefEntiteFournisseur)
+                    .HasForeignKey(d => d.RefContrat)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.Adresse)

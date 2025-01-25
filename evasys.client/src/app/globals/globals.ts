@@ -20,6 +20,7 @@ import * as appClasses from "../classes/appClasses";
 import { EntiteCamionTypeComponent } from "../components/annuaire/entite-camion-type/entite-camion-type.component";
 import { Aide } from "../interfaces/dataModelsInterfaces";
 import { Router } from "@angular/router";
+import { environment } from "../../environments/environment";
 
 @Injectable({
   providedIn: "root"
@@ -456,8 +457,12 @@ export class ApplicationUserContext {
   //Get environment type
   getEnvironment(): Promise<void> {
     return this.utilsService.getEnvironment().toPromise().then(result => {
-      //CommandeFournisseur statuts
+      //Set Server environment
       this.environment = result;
+      //Add client environment
+      if (environment.baseUrl == "https://dev.e-valorplast.com/evasysapidev/") {
+        this.environment = "API dév. " + this.environment;
+      }
     });
   }
   // -----------------------------------------------------------------------------------------------------

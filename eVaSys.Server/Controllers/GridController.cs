@@ -354,26 +354,24 @@ namespace eVaSys.Controllers
                                 + "     , tblCommandeClientMensuelle.RefCommandeClientMensuelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeClientMensuelle.ToString()].Name + "]"
                                 + "     , tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ClientLibelle.ToString()].Name + "]"
                                 + "     , case when tblAdresse.Adr1 is null then '' else tblAdresse.Adr1 + ' ' end + tblAdresse.CodePostal + ' ' + tblAdresse.Ville + ' (' + tbrAdresseType.Libelle + ')' as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.Adresse.ToString()].Name + "]"
-                                + "     , fournisseur.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CollectiviteLibelle.ToString()].Name + "]"
+                                + "     , tblContrat.IdContrat as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContratLibelle.ToString()].Name + "]"
                                 + "     , tblCommandeClientMensuelle.D as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientMensuelleD.ToString()].Name + "]"
                                 + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                 + "     , tblCommandeClientMensuelle.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientMensuellePoids.ToString()].Name + "]"
                                 //+ "     , (sum(case when DDechargement is null then PoidsChargement else PoidsDechargement end) / 10) / tblCommandeClientMensuelle.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientPositionne.ToString()].Name + "]"
                                 + "     , tblEntite.RefEntite as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefEntite.ToString()].Name + "]"
-                                + "     , fournisseur.RefEntite as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefEntiteFournisseur.ToString()].Name + "]"
+                                + "     , tblContrat.RefContrat as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefContrat.ToString()].Name + "]"
                                 + "     , tblAdresse.RefAdresse as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefAdresse.ToString()].Name + "]"
-                                + "     , vueContratCommandeClient.RefContrat as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefContrat.ToString()].Name + "]"
                                 + " from tblCommandeClient"
                                 + "     left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
                                 + "     left join tblEntite on tblEntite.RefEntite = tblCommandeClient.RefEntite"
-                                + "     left join tblEntite as fournisseur on fournisseur.RefEntite = tblCommandeClient.RefEntiteFournisseur"
+                                + "     left join tblContrat on tblContrat.RefContrat = tblCommandeClient.RefContrat"
                                 + "     left join tblProduit on tblProduit.RefProduit = tblCommandeClient.RefProduit"
                                 + "     left join tblAdresse on tblCommandeClient.RefAdresse = tblAdresse.RefAdresse"
                                 + "     left join tbrAdresseType on tblAdresse.RefAdresseType = tbrAdresseType.RefAdresseType"
                                 + "     left join tblCommandeFournisseur on tblCommandeFournisseur.RefAdresseClient = tblCommandeClient.RefAdresse"
                                 + "     and year(isnull(DDechargement, DMoisDechargementPrevu)) = year(tblCommandeClientMensuelle.D) and month(isnull(DDechargement, DMoisDechargementPrevu))= month(tblCommandeClientMensuelle.D)"
                                 + "     and tblCommandeFournisseur.RefProduit=tblCommandeClient.refProduit"
-                                + "     left join vueContratCommandeClient on tblCommandeClientMensuelle.RefCommandeClientMensuelle = vueContratCommandeClient.RefCommandeClientMensuelle"
                                 + " where tblCommandeClientMensuelle.Poids!=0";
                             //General Filters
                             if (!string.IsNullOrEmpty(filterText))
@@ -407,8 +405,8 @@ namespace eVaSys.Controllers
                             }
                             sqlStr += " group by tblCommandeClient.RefCommandeClient, tblCommandeClientMensuelle.RefCommandeClientMensuelle, tblEntite.Libelle, tblCommandeClientMensuelle.D"
                                 + "     , case when tblAdresse.Adr1 is null then '' else tblAdresse.Adr1 + ' ' end + tblAdresse.CodePostal + ' ' + tblAdresse.Ville + ' (' + tbrAdresseType.Libelle + ')'"
-                                + "     , fournisseur.Libelle, tblProduit.Libelle, tblCommandeClientMensuelle.Poids"
-                                + "     , tblEntite.RefEntite, tblAdresse.RefAdresse, fournisseur.RefEntite, vueContratCommandeClient.RefContrat";
+                                + "     , tblContrat.IdContrat, tblProduit.Libelle, tblCommandeClientMensuelle.Poids"
+                                + "     , tblEntite.RefEntite, tblContrat.RefContrat, tblAdresse.RefAdresse";
                             break;
                         case "LogistiqueMenuCommandeFournisseur":
                         case "LogistiqueMenuTransportCommande":

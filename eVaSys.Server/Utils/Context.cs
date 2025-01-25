@@ -908,6 +908,7 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.ContratCollectiviteFin, 1208, EnvDataColumnDataType.date, "DFin", "tblContratCollectivite.DFin");
                 CreateEnvDataColumn(cR, DataColumnName.ContratIncitationQualiteDebut, 1210, EnvDataColumnDataType.date, "DDebut", "tblContratIncitationQualite.DDebut");
                 CreateEnvDataColumn(cR, DataColumnName.ContratIncitationQualiteFin, 1211, EnvDataColumnDataType.date, "DFin", "tblContratIncitationQualite.DFin");
+                CreateEnvDataColumn(cR, DataColumnName.ContratLibelle, 1546, EnvDataColumnDataType.text, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.DocumentActif, 651, EnvDataColumnDataType.bit, "Actif", "tblDocument.Actif");
                 CreateEnvDataColumn(cR, DataColumnName.DocumentDescription, 825, EnvDataColumnDataType.text, "Description", "tblDocument.Description");
                 CreateEnvDataColumn(cR, DataColumnName.DocumentLibelle, 474, EnvDataColumnDataType.text, "Libelle", "tblDocument.Libelle");
@@ -1023,7 +1024,6 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.RefAdresseType, 0, EnvDataColumnDataType.id, "RefAdresseType", "tbrAdresseType.RefAdresseType");
                 CreateEnvDataColumn(cR, DataColumnName.RefApplication, 0, EnvDataColumnDataType.id, "RefApplication", "tblApplication.RefApplication");
                 CreateEnvDataColumn(cR, DataColumnName.RefApplicationProduitOrigine, 0, EnvDataColumnDataType.id, "RefApplicationProduitOrigine", "tblApplicationProduitOrigine.RefApplicationProduitOrigine");
-                CreateEnvDataColumn(cR, DataColumnName.RefEntiteFournisseur, 0, EnvDataColumnDataType.id, "RefEntiteFournisseur", "tblCommandeClient.RefEntiteFournisseur");
                 CreateEnvDataColumn(cR, DataColumnName.RefEntiteType, 0, EnvDataColumnDataType.id, "RefEntiteType", "tbrEntiteType.RefEntiteType");
                 CreateEnvDataColumn(cR, DataColumnName.RefEcoOrganisme, 0, EnvDataColumnDataType.id, "RefEcoOrganisme", "tbrEcoOrganisme.RefEcoOrganisme");
                 CreateEnvDataColumn(cR, DataColumnName.RefEquivalentCO2, 0, EnvDataColumnDataType.id, "RefEquivalentCO2", "tblEquivalentCO2.RefEquivalentCO2");

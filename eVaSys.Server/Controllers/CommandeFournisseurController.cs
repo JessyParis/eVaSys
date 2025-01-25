@@ -355,13 +355,26 @@ namespace eVaSys.Controllers
                     {
                         sqlStr += " and tblCommandeClient.RefCommandeClient in (select refCommandeClient from VueContratCommandeClient where RefContrat=@refContrat)";
                     }
-                    sqlStr+="         ) as commandeClient"
+                    else
+                    {
+                        sqlStr += " and tblCommandeClient.RefCommandeClient not in (select refCommandeClient from VueContratCommandeClient)";
+                    }
+                    sqlStr += "         ) as commandeClient"
                         + " 		on client.RefEntite=commandeClient.RefEntite and tblParcours.RefAdresseDestination=CommandeClient.RefAdresse"
                         + " 	left join "
                         + " 		(select RefAdresseClient, sum(case when DDechargement is null then PoidsChargement else PoidsDechargement end) as Poids"
                         + " 		from tblCommandeFournisseur"
-                        + " 		where year(isnull(DDechargement, DMoisDechargementPrevu))=year(@dMoisDechargementPrevu) and month(isnull(DDechargement, DMoisDechargementPrevu))=month(@dMoisDechargementPrevu) and RefProduit=@refProduit and RefusCamion=0"
-                        + " 		group by RefAdresseClient) as reliquat"
+                        + " 		where year(isnull(DDechargement, DMoisDechargementPrevu))=year(@dMoisDechargementPrevu) and month(isnull(DDechargement, DMoisDechargementPrevu))=month(@dMoisDechargementPrevu) and RefProduit=@refProduit and RefusCamion=0";
+                    //Contrat RI or not
+                    if (refContrat > 0)
+                    {
+                        sqlStr += " and RefCommandeFournisseur in (select RefCommandeFournisseur from VueContratCommandeFournisseur where RefContrat=@refContrat)";
+                    }
+                    else
+                    {
+                        sqlStr += " and RefCommandeFournisseur not in (select RefCommandeFournisseur from VueContratCommandeFournisseur)";
+                    }
+                    sqlStr += " 		group by RefAdresseClient) as reliquat"
                         + " 		on tblParcours.RefAdresseDestination=reliquat.RefAdresseClient"
                         + " 	left join (select * from tbmEntiteEntite where Actif=1) as tbmEntiteEntite on "
                         + " 		(client.RefEntite=tbmEntiteEntite.RefEntite and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntiteRtt)"
