@@ -459,10 +459,6 @@ export class ApplicationUserContext {
     return this.utilsService.getEnvironment().toPromise().then(result => {
       //Set Server environment
       this.environment = result;
-      //Add client environment
-      if (environment.baseUrl == "https://dev.e-valorplast.com/evasysapidev/") {
-        this.environment = "API dév. " + this.environment;
-      }
     });
   }
   // -----------------------------------------------------------------------------------------------------

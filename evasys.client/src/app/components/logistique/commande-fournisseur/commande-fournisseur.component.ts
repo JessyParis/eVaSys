@@ -2344,7 +2344,7 @@ export class CommandeFournisseurComponent implements OnInit {
     this.manageScreen();
     if (this.commandeFournisseur.DMoisDechargementPrevu != null && this.commandeFournisseur.AdresseClient) {
       //Check CommandeClient, inform user if no exists
-      this.dataModelService.getCommandeClient(0, this.commandeFournisseur.AdresseClient?.RefEntite
+      this.dataModelService.getCommandeClient(0, this.commandeFournisseur.Entite?.RefEntite
         , (this.commandeFournisseur.AdresseClient?.RefAdresse ? this.commandeFournisseur.AdresseClient?.RefAdresse : 0)
         , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit?.RefProduit : 0)
         , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
@@ -2535,7 +2535,7 @@ export class CommandeFournisseurComponent implements OnInit {
     }
     else {
       //Get CommandeClient, set price, inform user 
-      this.dataModelService.getCommandeClient(0, this.commandeFournisseur.AdresseClient.RefEntite
+      this.dataModelService.getCommandeClient(0, this.commandeFournisseur.Entite?.RefEntite
         , (this.commandeFournisseur.AdresseClient.RefAdresse ? this.commandeFournisseur.AdresseClient.RefAdresse : 0)
         , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
         , (this.commandeFournisseur.DDechargement == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DDechargement) as moment.Moment

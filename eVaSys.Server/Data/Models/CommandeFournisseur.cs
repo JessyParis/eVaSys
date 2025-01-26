@@ -283,6 +283,7 @@ namespace eVaSys.Data
             get => LazyLoader.Load(this, ref _prestataire);
             set => _prestataire = value;
         }
+        public CommandeFournisseurContrat CommandeFournisseurContrat { get; set; }
         [NotMapped]
         public bool Mixte
         {

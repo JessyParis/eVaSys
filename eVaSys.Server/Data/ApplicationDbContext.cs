@@ -77,6 +77,7 @@ namespace eVaSys.Data
         public virtual DbSet<CommandeClient> CommandeClients { get; set; }
         public virtual DbSet<CommandeClientMensuelle> CommandeClientMensuelles { get; set; }
         public virtual DbSet<CommandeFournisseur> CommandeFournisseurs { get; set; }
+        public virtual DbSet<CommandeFournisseurContrat> CommandeFournisseurContrats { get; set; }
         public virtual DbSet<CommandeFournisseurFichier> CommandeFournisseurFichiers { get; set; }
         public virtual DbSet<CommandeFournisseurStatut> CommandeFournisseurStatuts { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
@@ -191,6 +192,13 @@ namespace eVaSys.Data
         public virtual DbSet<Transport> Transports { get; set; }
         public virtual DbSet<Utilisateur> Utilisateurs { get; set; }
         public virtual DbSet<Verrouillage> Verrouillages { get; set; }
+
+        //Scalar functions
+        [DbFunction("GetRefContratType1", "dbo")]
+        public static int GetRefContratType1(int refEntiteFournisseur, int refEntiteClient, DateOnly d)
+        {
+            throw new NotImplementedException();
+        }
 
         #region Constructor
 
@@ -712,7 +720,7 @@ namespace eVaSys.Data
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.Contrat)
-                    .WithMany(p => p.CommandeClientFournisseurs)
+                    .WithMany(p => p.CommandeClients)
                     .HasForeignKey(d => d.RefContrat)
                     .OnDelete(DeleteBehavior.Restrict);
 
@@ -942,6 +950,11 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefCamionType)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                entity.HasOne(d => d.CommandeFournisseurContrat)
+                    .WithMany(p => p.CommandeFournisseurs)
+                    .HasForeignKey(d => d.RefCamionType)
+                    .OnDelete(DeleteBehavior.Restrict);
+
                 entity.HasOne(d => d.AdresseClient)
                     .WithMany(p => p.CommandeFournisseurAdresseClients)
                     .HasForeignKey(d => d.RefAdresseClient)
@@ -1000,6 +1013,17 @@ namespace eVaSys.Data
                 entity.HasOne(d => d.Prestataire)
                     .WithMany(p => p.CommandeFournisseurPrestataires)
                     .HasForeignKey(d => d.RefPrestataire)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+            modelBuilder.Entity<CommandeFournisseurContrat>(entity =>
+            {
+                entity.HasKey(e => e.RefCommandeFournisseurContrat);
+
+                entity.ToTable("VueCommandeFournisseurContrat");
+
+                entity.HasOne(d => d.Contrat)
+                    .WithMany(p => p.CommandeFournisseurContrats)
+                    .HasForeignKey(d => d.RefContrat)
                     .OnDelete(DeleteBehavior.Restrict);
             });
             modelBuilder.Entity<CommandeFournisseurFichier>(entity =>

@@ -38,6 +38,7 @@ namespace eVaSys.Mappings
             CreateMap<CommandeClient, CommandeClientViewModel>().ReverseMap();
             CreateMap<CommandeClientMensuelle, CommandeClientMensuelleViewModel>().ReverseMap();
             CreateMap<CommandeFournisseur, CommandeFournisseurViewModel>().ReverseMap();
+            CreateMap<CommandeFournisseurContrat, CommandeFournisseurContratViewModel>().ReverseMap();
             CreateMap<CommandeFournisseurFichier, CommandeFournisseurFichierLightViewModel>().ReverseMap();
             CreateMap<CommandeFournisseurFichier, CommandeFournisseurFichierMediumViewModel>().ReverseMap();
             CreateMap<CommandeFournisseurFichier, CommandeFournisseurFichierFullViewModel>().ReverseMap();

@@ -324,7 +324,7 @@ namespace eVaSys.Controllers
                     cmd.Parameters.Add("@refProduit", SqlDbType.Int).Value = refP;
                     cmd.Parameters.Add("@dMoisDechargementPrevu", SqlDbType.DateTime).Value = d;
                     //Vérification d'un contrat RI
-                    string sqlStr = "select RefContrat from VueContratCommandeFournisseur where RefCommandeFournisseur=@refCommandeFournisseur";
+                    string sqlStr = "select RefContrat from VueCommandeFournisseurContrat where RefCommandeFournisseur=@refCommandeFournisseur";
                     cmd.CommandText = sqlStr;
                     var res = cmd.ExecuteScalar();
                     if(res != null)
@@ -353,11 +353,11 @@ namespace eVaSys.Controllers
                     //Contrat RI or not
                     if (refContrat > 0)
                     {
-                        sqlStr += " and tblCommandeClient.RefCommandeClient in (select refCommandeClient from VueContratCommandeClient where RefContrat=@refContrat)";
+                        sqlStr += " and tblCommandeClient.RefContrat=@refContrat";
                     }
                     else
                     {
-                        sqlStr += " and tblCommandeClient.RefCommandeClient not in (select refCommandeClient from VueContratCommandeClient)";
+                        sqlStr += " and tblCommandeClient.RefContrat is null";
                     }
                     sqlStr += "         ) as commandeClient"
                         + " 		on client.RefEntite=commandeClient.RefEntite and tblParcours.RefAdresseDestination=CommandeClient.RefAdresse"
@@ -368,11 +368,11 @@ namespace eVaSys.Controllers
                     //Contrat RI or not
                     if (refContrat > 0)
                     {
-                        sqlStr += " and RefCommandeFournisseur in (select RefCommandeFournisseur from VueContratCommandeFournisseur where RefContrat=@refContrat)";
+                        sqlStr += " and RefCommandeFournisseur in (select RefCommandeFournisseur from VueCommandeFournisseurContrat where RefContrat=@refContrat)";
                     }
                     else
                     {
-                        sqlStr += " and RefCommandeFournisseur not in (select RefCommandeFournisseur from VueContratCommandeFournisseur)";
+                        sqlStr += " and RefCommandeFournisseur not in (select RefCommandeFournisseur from VueCommandeFournisseurContrat)";
                     }
                     sqlStr += " 		group by RefAdresseClient) as reliquat"
                         + " 		on tblParcours.RefAdresseDestination=reliquat.RefAdresseClient"

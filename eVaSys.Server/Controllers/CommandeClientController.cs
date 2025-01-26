@@ -50,27 +50,31 @@ namespace eVaSys.Controllers
             string refAdresse = Request.Headers["refAdresse"].ToString();
             string refProduit = Request.Headers["refProduit"].ToString();
             string d = Request.Headers["d"].ToString();
-            string refContrat = Request.Headers["refContrat"].ToString();
             int refP = 0;
             int refE = 0;
             int refA = 0;
-            int refC = 0;
-            DateTime dRef = DateTime.MinValue;
+            DateOnly dRef = DateOnly.MinValue;
             //Get or create commandeClient
             if (id == 0)
             {
                 if (int.TryParse(refEntite, out refE)
                     && int.TryParse(refAdresse, out refA)
                     && int.TryParse(refProduit, out refP)
-                    && DateTime.TryParse(d, out dRef))
+                    && DateOnly.TryParse(d, out dRef))
                 {
-                    if (int.TryParse(refContrat, out refC))
+                    //Search for Contrat
+                    int refClient = DbContext.Adresses.Where(i => i.RefAdresse == refA)
+                        .Select(r => r.RefEntite)
+                        .FirstOrDefault();
+                    int refC = DbContext.CommandeFournisseurStatuts.Select(r=> new { refCt= ApplicationDbContext.GetRefContratType1(refE, refClient, dRef) }).FirstOrDefault().refCt;
+                    //If contrat, take the CommandeClient with the Contrat
+                    if (refC>0)
                     {
                         commandeClient = DbContext.CommandeClients
                         .Include(r => r.CommandeClientMensuelles)
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
-                        .Where(el => (el.RefEntite == refE && el.RefAdresse == refA && el.RefProduit == refP
+                        .Where(el => (el.RefAdresse == refA && el.RefProduit == refP
                             && el.RefContrat == refC
                             && el.CommandeClientMensuelles.Any(r => (r.D.Month == dRef.Month && r.D.Year == dRef.Year))))
                         .FirstOrDefault();
@@ -81,7 +85,7 @@ namespace eVaSys.Controllers
                         .Include(r => r.CommandeClientMensuelles)
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
-                        .Where(el => (el.RefEntite == refE && el.RefAdresse == refA && el.RefProduit == refP && el.RefContrat == null
+                        .Where(el => (el.RefAdresse == refA && el.RefProduit == refP && el.RefContrat == null
                             && el.CommandeClientMensuelles.Any(r => (r.D.Month == dRef.Month && r.D.Year == dRef.Year))))
                         .FirstOrDefault();
                     }
@@ -467,7 +471,7 @@ namespace eVaSys.Controllers
                 + " from tblProduit"
                 + "     inner join"
                 + "     (select isnull(entiteP.RefProduit, cmdM.Refproduit) as RefProduit"
-                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, RefContrat, cmdM.Cmt, null as RefCommandeClient, null as RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
+                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, RefContrat, cmdM.Cmt, RefCommandeClient, RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
                 + "     from"
                 + "         (select tblCommandeClient.RefEntite, tblCommandeClient.RefAdresse, tblCommandeClient.RefContrat, tblCommandeClient.RefProduit, tblCommandeClient.Cmt"
                 + "             , tblCommandeClientMensuelle.*"
