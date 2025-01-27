@@ -13,7 +13,7 @@ import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import {
   showConfirmToUser, showErrorToUser, showInformationToUser, cmp, cmpDesc, getAttachmentFilename, chartSeriesColors
-  , getCreationModificationTooltipText, getContactAdresseServiceFonctions, getContratCollectiviteLabel, getContratLabel
+  , getCreationModificationTooltipText, getContactAdresseServiceFonctions, getContratCollectiviteLabel, getContratLabelMultiLine
 } from "../../../globals/utils";
 import { getAdresseListText, getContactAdresseListText } from "../../../globals/data-model-utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
@@ -118,7 +118,7 @@ export class EntiteComponent implements OnInit {
   getAdresseListText = getAdresseListText;
   getContactAdresseServiceFonctions = getContactAdresseServiceFonctions;
   getContratCollectiviteLabel = getContratCollectiviteLabel;
-  getContratLabel = getContratLabel;
+  getContratLabelMultiLine = getContratLabelMultiLine;
   //Global lock
   locked: boolean = true;
   saveLocked: boolean = false;

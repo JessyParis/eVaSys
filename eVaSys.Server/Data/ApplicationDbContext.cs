@@ -2896,9 +2896,9 @@ namespace eVaSys.Data
                     .HasColumnName("PUHTTransport")
                     .HasColumnType("decimal(10, 2)");
 
-                entity.HasOne(d => d.Entite)
+                entity.HasOne(d => d.Contrat)
                     .WithMany(p => p.PrixReprises)
-                    .HasForeignKey(d => d.RefEntite)
+                    .HasForeignKey(d => d.RefContrat)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.Process)

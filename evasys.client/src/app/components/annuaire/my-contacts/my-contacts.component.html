@@ -30,6 +30,7 @@
                     <li *ngIf="entite?.AssujettiTVA">{{applicationUserContext.getCulturedRessourceText(788)}}&nbsp;-&nbsp;{{entite?.CodeTVA}}</li>
                     <li *ngIf="entite?.PopulationContratN">{{applicationUserContext.getCulturedRessourceText(1356)}}&nbsp;-&nbsp;{{entite?.PopulationContratN.toString()}}</li>
                     <li *ngIf="entite?.ContratCollectivites?.length>0">{{lastContratCollectivites}}</li>
+                    <li *ngIf="lastContratType1">{{lastContratType1}}</li>
                     <li *ngIf="entite?.EcoOrganisme">{{applicationUserContext.getCulturedRessourceText(1416)}}&nbsp;-&nbsp;{{entite?.EcoOrganisme?.Libelle}}</li>
                     <li *ngIf="entite?.IdNational">{{applicationUserContext.getCulturedRessourceText(1421)}}&nbsp;-&nbsp;{{entite?.IdNational}}</li>
                   </ul>

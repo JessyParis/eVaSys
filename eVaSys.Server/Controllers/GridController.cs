@@ -358,7 +358,7 @@ namespace eVaSys.Controllers
                                 + "     , tblCommandeClientMensuelle.D as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientMensuelleD.ToString()].Name + "]"
                                 + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                 + "     , tblCommandeClientMensuelle.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientMensuellePoids.ToString()].Name + "]"
-                                //+ "     , (sum(case when DDechargement is null then PoidsChargement else PoidsDechargement end) / 10) / tblCommandeClientMensuelle.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientPositionne.ToString()].Name + "]"
+                                + "     , (sum(case when DDechargement is null then PoidsChargement else PoidsDechargement end) / 10) / tblCommandeClientMensuelle.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeClientPositionne.ToString()].Name + "]"
                                 + "     , tblEntite.RefEntite as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefEntite.ToString()].Name + "]"
                                 + "     , tblContrat.RefContrat as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefContrat.ToString()].Name + "]"
                                 + "     , tblAdresse.RefAdresse as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefAdresse.ToString()].Name + "]"
@@ -369,9 +369,13 @@ namespace eVaSys.Controllers
                                 + "     left join tblProduit on tblProduit.RefProduit = tblCommandeClient.RefProduit"
                                 + "     left join tblAdresse on tblCommandeClient.RefAdresse = tblAdresse.RefAdresse"
                                 + "     left join tbrAdresseType on tblAdresse.RefAdresseType = tbrAdresseType.RefAdresseType"
-                                + "     left join tblCommandeFournisseur on tblCommandeFournisseur.RefAdresseClient = tblCommandeClient.RefAdresse"
-                                + "     and year(isnull(DDechargement, DMoisDechargementPrevu)) = year(tblCommandeClientMensuelle.D) and month(isnull(DDechargement, DMoisDechargementPrevu))= month(tblCommandeClientMensuelle.D)"
-                                + "     and tblCommandeFournisseur.RefProduit=tblCommandeClient.refProduit"
+                                + "     left join (select tblCommandeFournisseur.RefCommandeFournisseur, DDechargement, PoidsChargement, PoidsDechargement, RefAdresseClient, DMoisDechargementPrevu, RefProduit, RefContrat"
+                                + " 		from tblCommandeFournisseur"
+                                + " 		left join VueCommandeFournisseurContrat on VueCommandeFournisseurContrat.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
+                                + " 		) as tblCommandeFournisseur on tblCommandeFournisseur.RefAdresseClient = tblCommandeClient.RefAdresse"
+                                + " 		and year(isnull(DDechargement, DMoisDechargementPrevu)) = year(tblCommandeClientMensuelle.D) and month(isnull(DDechargement, DMoisDechargementPrevu))= month(tblCommandeClientMensuelle.D)"
+                                + " 		and tblCommandeFournisseur.RefProduit=tblCommandeClient.refProduit"
+                                + " 		and isnull(tblCommandeClient.RefContrat,0)=isnull(tblCommandeFournisseur.RefContrat,0)"
                                 + " where tblCommandeClientMensuelle.Poids!=0";
                             //General Filters
                             if (!string.IsNullOrEmpty(filterText))
@@ -889,7 +893,7 @@ namespace eVaSys.Controllers
                                 + "     , tbrProcess.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProcessLibelle.ToString()].Name + "]"
                                 + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                 + "     , composant.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ComposantLibelle.ToString()].Name + "]"
-                                + "     , tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CollectiviteLibelle.ToString()].Name + "]"
+                                + "     , tblContrat.IdContrat as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContratLibelle.ToString()].Name + "]"
                                 + "     , tbrPrixReprise.PUHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHT.ToString()].Name + "]"
                                 + "     , tbrPrixReprise.PUHTSurtri as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHTSurtri.ToString()].Name + "]"
                                 + "     , tbrPrixReprise.PUHTTransport as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHTTransport.ToString()].Name + "]"
@@ -898,7 +902,7 @@ namespace eVaSys.Controllers
                                 + "     left join tbrProcess on tbrPrixReprise.RefProcess=tbrProcess.RefProcess"
                                 + "     left join tblProduit on tbrPrixReprise.RefProduit=tblProduit.RefProduit"
                                 + "     left join tblProduit as composant on composant.RefProduit=tbrPrixReprise.RefComposant"
-                                + "     left join tblEntite on tbrPrixReprise.RefEntite=tblEntite.RefEntite"
+                                + "     left join tblContrat on tbrPrixReprise.RefContrat=tblContrat.RefContrat"
                                 + " where 1=1";
                             //General Filters
                             if (!string.IsNullOrEmpty(filterProcesss))

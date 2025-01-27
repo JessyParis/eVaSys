@@ -4582,8 +4582,12 @@ namespace eVaSys.Controllers
                         //Contrat RI
                         if (filterCollectivites.Split(',').Length == 1)
                         {
-                            sqlStr += " and (dbo.DateDansContratRI(" + filterCollectivites + ", tbrPrixReprise.D)=0 or (dbo.DateDansContratRI(" + filterCollectivites + ", tbrPrixReprise.D)=1 and tbrPrixReprise.RefEntite in(" + filterCollectivites + ")))";
-                        };
+                            int fC = System.Convert.ToInt32(eSF.FilterCollectivites.Split(',')[0]);
+                            if (_dbContext.ContratEntites.Where(e => e.RefEntite == fC).Count() > 0)
+                            {
+                                sqlStr += " and tbrPrixReprise.RefContrat is not null";
+                            };
+                        }
                         sqlStr += "             ) as tbrPrixReprise on tbrPrixReprise.RefProcess=u.RefProcess and tbrPrixReprise.RefComposant=u.RefComposant and tbrPrixReprise.RefProduit=u.RefProduit and tbrPrixReprise.D=u.D"
                             + "      ) as univers"
                             + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"

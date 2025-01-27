@@ -55,7 +55,7 @@
                             <thead class="background-color-accent">
                               <tr>
                                 <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(19)}}<br />{{applicationUserContext.getCulturedRessourceText(595)}}</th>
-                                <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(594)}}</th>
+                                <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1548)}}</th>
                                 <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
                                 <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(613)}}</th>
                                 <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(614)}}</th>
@@ -65,7 +65,7 @@
                             <tbody formArrayName="PrxReps">
                               <tr [formGroupName]="i" *ngFor="let group of getFormData.controls; let i=index">
                                 <td style="padding: 0px 5px 0px 5px;">{{prixReprises[i].Produit.Libelle}}<br />{{prixReprises[i].Composant.Libelle}}</td>
-                                <td style="padding: 0px 5px 0px 5px;">{{prixReprises[i].Entite?.Libelle}}</td>
+                                <td style="padding: 0px 5px 0px 5px;">{{prixReprises[i].Contrat?.IdContrat}}</td>
                                 <td style="padding: 0px 5px 0px 5px;">
                                   <mat-form-field style="width:100%; text-align: right">
                                     <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [errorStateMatcher]="matcher" />

@@ -1,147 +1,147 @@
 <div class="ev-main-container">
-    <header>
-        <div class="ev-taskbar-container">
-            <div class="ev-taskbar-left-container">
-                <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
-                <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onSave()" form="MyForm" [disabled]="form.invalid" *ngIf="!locked">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+  <header>
+    <div class="ev-taskbar-container">
+      <div class="ev-taskbar-left-container">
+        <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onSave()" form="MyForm" [disabled]="form.invalid" *ngIf="!locked">{{applicationUserContext.getCulturedRessourceText(6)}}</button>
+      </div>
+    </div>
+  </header>
+  <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
+    <div class="boxNormalSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(580)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(16)}}</mat-label>
+              <mat-select formControlName="EntiteList" (selectionChange)="onEntiteSelected()"
+                          required [errorStateMatcher]="matcher" [disabled]="form.get('CmdMs').dirty">
+                <mat-option *ngFor="let entite of entiteList" [value]="entite.RefEntite">{{entite.Libelle}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(form.get('EntiteList').touched || form.get('EntiteList').dirty) && form.get('EntiteList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(476)}}</mat-label>
+              <mat-select formControlName="AdresseList" (selectionChange)="onAdresseSelected()"
+                          required [errorStateMatcher]="matcher" [disabled]="form.get('CmdMs').dirty">
+                <mat-option *ngFor="let adresse of adresseList" [value]="adresse.RefAdresse">{{adresse.TexteAdresseList}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('AdresseList').value" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeClientAdresse', form.get('AdresseList').value);" tabindex="-1" type="button">
+                <mat-icon>details</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('AdresseList').touched || form.get('AdresseList').dirty) && form.get('AdresseList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(571)}}</mat-label>
+              <mat-select formControlName="MonthList" (selectionChange)="onMonthSelected()"
+                          required [errorStateMatcher]="matcher" [disabled]="form.get('CmdMs').dirty">
+                <mat-option *ngFor="let month of monthList" [value]="month.d">{{month.name}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(form.get('MonthList').touched || form.get('MonthList').dirty) && form.get('MonthList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(569)}}</mat-label>
+              <mat-select formControlName="YearList" (selectionChange)="onYearSelected()"
+                          required [errorStateMatcher]="matcher" [disabled]="form.get('CmdMs').dirty">
+                <mat-option *ngFor="let year of yearList" [value]="year.y">{{year.y}}</mat-option>
+              </mat-select>
+              <mat-error align="end" *ngIf="(form.get('YearList').touched || form.get('YearList').dirty) && form.get('YearList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1545)}}</mat-label>
+              <mat-select formControlName="ContratList" (selectionChange)="onContratSelected(false)"
+                          [disabled]="form.get('CmdMs').dirty">
+                <mat-option *ngFor="let contrat of contratList" [value]="contrat.RefContrat">{{getContratLabelMultiLine(contrat)}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('ContratList').value && form.get('ContratList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="onContratSelected(true)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="(form.get('ContratList').touched || form.get('ContratList').dirty) && form.get('ContratList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <div style="margin: 0 0 10px 0;" *ngIf="form.get('ContratList').value">
+              <mat-card appearance="outlined" style="white-space: pre-wrap;">
+                <mat-card-content [style.overflow]="'auto'" [style.height.px]="'240'">
+                  <p>{{contratEntitesLabel}}</p>
+                </mat-card-content>
+              </mat-card>
             </div>
-        </div>
-    </header>
-    <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
-        <div class="boxNormalSize">
-            <table class="cadre_primary">
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="boxTripleSize">
+      <table class="cadre_primary">
+        <tr>
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(317)}}
+          </td>
+        </tr>
+        <tr>
+          <td class="cadre_body">
+            <table class="fixed_headers table-no-pad-no-space">
+              <thead class="background-color-accent">
                 <tr>
-                    <td class="cadre_header_primary">
-                        {{applicationUserContext.getCulturedRessourceText(580)}}
-                    </td>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(19)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(570)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(14)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(585)}}</th>
                 </tr>
-                <tr>
-                  <td class="cadre_body">
+              </thead>
+              <tbody formArrayName="CmdMs">
+                <tr [formGroupName]="i" *ngFor="let group of getFormData.controls; let i=index">
+                  <td style="padding: 0px 5px 0px 5px;">{{commandeClientMensuelles[i].LibelleProduit}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">
                     <mat-form-field style="width:100%;">
-                      <mat-label>{{applicationUserContext.getCulturedRessourceText(16)}}</mat-label>
-                      <mat-select formControlName="EntiteList" (selectionChange)="onEntiteSelected()"
-                                  required [errorStateMatcher]="matcher" [disabled]="form.get('CmdMs').dirty">
-                        <mat-option *ngFor="let entite of entiteList" [value]="entite.RefEntite">{{entite.Libelle}}</mat-option>
-                      </mat-select>
-                      <mat-error align="end" *ngIf="(form.get('EntiteList').touched || form.get('EntiteList').dirty) && form.get('EntiteList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field style="width:100%;">
-                      <mat-label>{{applicationUserContext.getCulturedRessourceText(476)}}</mat-label>
-                      <mat-select formControlName="AdresseList" (selectionChange)="onAdresseSelected()"
-                                  required [errorStateMatcher]="matcher" [disabled]="form.get('CmdMs').dirty">
-                        <mat-option *ngFor="let adresse of adresseList" [value]="adresse.RefAdresse">{{adresse.TexteAdresseList}}</mat-option>
-                      </mat-select>
-                      <button *ngIf="form.get('AdresseList').value" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeClientAdresse', form.get('AdresseList').value);" tabindex="-1" type="button">
-                        <mat-icon>details</mat-icon>
-                      </button>
-                      <mat-error align="end" *ngIf="(form.get('AdresseList').touched || form.get('AdresseList').dirty) && form.get('AdresseList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field style="width:100%;">
-                      <mat-label>{{applicationUserContext.getCulturedRessourceText(571)}}</mat-label>
-                      <mat-select formControlName="MonthList" (selectionChange)="onMonthSelected()"
-                                  required [errorStateMatcher]="matcher" [disabled]="form.get('CmdMs').dirty">
-                        <mat-option *ngFor="let month of monthList" [value]="month.d">{{month.name}}</mat-option>
-                      </mat-select>
-                      <mat-error align="end" *ngIf="(form.get('MonthList').touched || form.get('MonthList').dirty) && form.get('MonthList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field style="width:100%;">
-                      <mat-label>{{applicationUserContext.getCulturedRessourceText(569)}}</mat-label>
-                      <mat-select formControlName="YearList" (selectionChange)="onYearSelected()"
-                                  required [errorStateMatcher]="matcher" [disabled]="form.get('CmdMs').dirty">
-                        <mat-option *ngFor="let year of yearList" [value]="year.y">{{year.y}}</mat-option>
-                      </mat-select>
-                      <mat-error align="end" *ngIf="(form.get('YearList').touched || form.get('YearList').dirty) && form.get('YearList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field style="width:100%;">
-                      <mat-label>{{applicationUserContext.getCulturedRessourceText(1545)}}</mat-label>
-                      <mat-select formControlName="ContratList" (selectionChange)="onContratSelected(false)"
-                                  [disabled]="form.get('CmdMs').dirty">
-                        <mat-option *ngFor="let contrat of contratList" [value]="contrat.RefContrat">{{getContratLabel(contrat)}}</mat-option>
-                      </mat-select>
-                      <button *ngIf="form.get('ContratList').value && form.get('ContratList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="onContratSelected(true)" tabindex="-1" type="button">
+                      <input matInput formControlName="Poids" mask="separator" [errorStateMatcher]="matcher" />
+                      <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(584)}}</span>
+                      <button *ngIf="group.get('Poids').value!=null && group.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Poids').setValue(null)" tabindex="-1" type="button">
                         <mat-icon>close</mat-icon>
                       </button>
-                      <mat-error align="end" *ngIf="(form.get('ContratList').touched || form.get('ContratList').dirty) && form.get('ContratList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                      <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.max">{{applicationUserContext.getCulturedRessourceText(573) + (group.get('Poids').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
                     </mat-form-field>
-                    <div style="margin: 0 0 10px 0;" *ngIf="form.get('ContratList').value">
-                      <mat-card appearance="outlined" style="white-space: pre-wrap;">
-                        <mat-card-content [style.overflow]="'auto'" [style.height.px]="'240'">
-                          <p>{{contratEntitesLabel}}</p>
-                        </mat-card-content>
-                      </mat-card>
-                    </div>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-form-field style="width:100%">
+                      <input matInput formControlName="PrixTonneHT" mask="separator.2" [errorStateMatcher]="matcher" />
+                      <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
+                      <button *ngIf="group.get('PrixTonneHT').value!=null && group.get('PrixTonneHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PrixTonneHT').setValue(null)" tabindex="-1" type="button">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      <mat-error align="end" *ngIf="(group.get('PrixTonneHT').touched || group.get('PrixTonneHT').dirty) && group.get('PrixTonneHT').errors?.max">{{applicationUserContext.getCulturedRessourceText(573) + (group.get('PrixTonneHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-form-field style="width:100%;">
+                      <input matInput formControlName="IdExt" maxlength="50" />
+                      <button *ngIf="group.get('IdExt').value && group.get('IdExt').enabled"
+                              matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('IdExt').setValue(null)" tabindex="-1" type="button">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </mat-form-field>
+                  </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-form-field style="width:100%;">
+                      <textarea matInput formControlName="Cmt" maxlength="500" style="height:45px;"></textarea>
+                      <button *ngIf="group.get('Cmt').value && group.get('Cmt').enabled"
+                              matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Cmt').setValue(null)" tabindex="-1" type="button">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </mat-form-field>
                   </td>
                 </tr>
+              </tbody>
             </table>
-        </div>
-        <div class="boxTripleSize">
-            <table class="cadre_primary">
-                <tr>
-                    <td class="cadre_header_primary">
-                        {{applicationUserContext.getCulturedRessourceText(317)}}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="cadre_body">
-                        <table class="fixed_headers table-no-pad-no-space">
-                            <thead class="background-color-accent">
-                                <tr>
-                                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(19)}}</th>
-                                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(570)}}</th>
-                                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
-                                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(14)}}</th>
-                                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(585)}}</th>
-                                </tr>
-                            </thead>
-                            <tbody formArrayName="CmdMs">
-                                <tr [formGroupName]="i" *ngFor="let group of getFormData.controls; let i=index">
-                                    <td style="padding: 0px 5px 0px 5px;">{{commandeClientMensuelles[i].LibelleProduit}}</td>
-                                    <td style="padding: 0px 5px 0px 5px;">
-                                        <mat-form-field style="width:100%;">
-                                            <input matInput formControlName="Poids" mask="separator" [errorStateMatcher]="matcher" />
-                                            <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(584)}}</span>
-                                            <button *ngIf="group.get('Poids').value!=null && group.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Poids').setValue(null)" tabindex="-1" type="button">
-                                                <mat-icon>close</mat-icon>
-                                            </button>
-                                            <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.max">{{applicationUserContext.getCulturedRessourceText(573) + (group.get('Poids').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
-                                        </mat-form-field>
-                                    </td>
-                                    <td style="padding: 0px 5px 0px 5px;">
-                                        <mat-form-field style="width:100%">
-                                            <input matInput formControlName="PrixTonneHT" mask="separator.2" [errorStateMatcher]="matcher" />
-                                            <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
-                                            <button *ngIf="group.get('PrixTonneHT').value!=null && group.get('PrixTonneHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PrixTonneHT').setValue(null)" tabindex="-1" type="button">
-                                                <mat-icon>close</mat-icon>
-                                            </button>
-                                            <mat-error align="end" *ngIf="(group.get('PrixTonneHT').touched || group.get('PrixTonneHT').dirty) && group.get('PrixTonneHT').errors?.max">{{applicationUserContext.getCulturedRessourceText(573) + (group.get('PrixTonneHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}</mat-error>
-                                        </mat-form-field>
-                                    </td>
-                                    <td style="padding: 0px 5px 0px 5px;">
-                                        <mat-form-field style="width:100%;">
-                                            <input matInput formControlName="IdExt" maxlength="50" />
-                                            <button *ngIf="group.get('IdExt').value && group.get('IdExt').enabled"
-                                                    matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('IdExt').setValue(null)" tabindex="-1" type="button">
-                                                <mat-icon>close</mat-icon>
-                                            </button>
-                                        </mat-form-field>
-                                    </td>
-                                    <td style="padding: 0px 5px 0px 5px;">
-                                        <mat-form-field style="width:100%;">
-                                            <textarea matInput formControlName="Cmt" maxlength="500" style="height:45px;"></textarea>
-                                            <button *ngIf="group.get('Cmt').value && group.get('Cmt').enabled"
-                                                    matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Cmt').setValue(null)" tabindex="-1" type="button">
-                                                <mat-icon>close</mat-icon>
-                                            </button>
-                                        </mat-form-field>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </form>
-    <footer class="ev-footer"></footer>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <footer class="ev-footer"></footer>
 </div>
 

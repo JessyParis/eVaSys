@@ -286,8 +286,17 @@ export function getContratCollectiviteLabel(contratCollectivite: ContratCollecti
 }
 
 //-----------------------------------------------------------------------------------
-//Create Contrat label
-export function getContratLabel(contrat: Contrat): string {
+//Create Contrat label (single line)
+export function getContratLabelSingleLine(contrat: Contrat): string {
+  let s = contrat.ContratType?.Libelle + " - "
+    + moment(contrat.DDebut).format("L") + ' -> ' + moment(contrat.DFin).format("L");
+  //End
+  return s;
+}
+
+//-----------------------------------------------------------------------------------
+//Create Contrat label (multi-line)
+export function getContratLabelMultiLine(contrat: Contrat): string {
   let s = contrat.ContratType?.Libelle + "\n"
     + moment(contrat.DDebut).format("L") + ' -> ' + moment(contrat.DFin).format("L");
   //End

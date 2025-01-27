@@ -13,7 +13,7 @@ import moment from "moment";
 import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
-import { getContratLabel, getContratEntitesLabel, showErrorToUser } from "../../../globals/utils";
+import { getContratLabelMultiLine, getContratEntitesLabel, showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -55,7 +55,7 @@ export class CommandeClientComponent implements OnInit {
   locked: boolean = true;
   saveLocked: boolean = true;
   //Functions
-  getContratLabel = getContratLabel;
+  getContratLabelMultiLine = getContratLabelMultiLine;
   getContratEntiteLabel = getContratEntitesLabel;
   //Misc
   contratEntitesLabel: string = "";

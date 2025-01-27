@@ -57,6 +57,7 @@ namespace eVaSys.Data
         }
         public ICollection<ContratEntite> ContratEntites { get; set; }
         public ICollection<CommandeClient> CommandeClients { get; set; }
+        public ICollection<PrixReprise> PrixReprises { get; set; }
         public ICollection<CommandeFournisseurContrat> CommandeFournisseurContrats { get; set; }
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }

@@ -34,12 +34,12 @@ namespace eVaSys.Data
         public CultureInfo currentCulture = new("fr-FR");
         public int RefPrixReprise { get; set; }
         public DateTime D { get; set; }
-        public int? RefEntite { get; set; }
-        private Entite _entite;
-        public Entite Entite
+        public int? RefContrat { get; set; }
+        private Contrat _contrat;
+        public Contrat Contrat
         {
-            get => LazyLoader.Load(this, ref _entite);
-            set => _entite = value;
+            get => LazyLoader.Load(this, ref _contrat);
+            set => _contrat = value;
         }
         public int RefProcess { get; set; }
         private Process _process;

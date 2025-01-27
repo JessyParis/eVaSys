@@ -8,7 +8,7 @@ import { EventEmitterService } from "../../../services/event-emitter.service";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import * as appClasses from "../../../classes/appClasses";
-import { cmp, getContratCollectiviteLabel, showErrorToUser } from "../../../globals/utils";
+import { cmp, getContratCollectiviteLabel, getContratLabelSingleLine, showErrorToUser } from "../../../globals/utils";
 import { HabilitationLogistique, HabilitationModuleCollectivite } from "../../../globals/enums";
 import moment from "moment";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
@@ -42,6 +42,7 @@ export class MyContactsComponent implements OnInit {
   modifying: boolean = false;
   entite: dataModelsInterfaces.Entite;
   lastContratCollectivites: string;
+  lastContratType1: string;
   centreDeTriAssocies: dataModelsInterfaces.EntiteEntite[] = [];
   collectiviteAssociees: dataModelsInterfaces.EntiteEntite[] = [];
   produitAssocies: dataModelsInterfaces.EntiteProduit[] = [];
@@ -121,6 +122,15 @@ export class MyContactsComponent implements OnInit {
         })
         this.lastContratCollectivites = this.applicationUserContext.getCulturedRessourceText(1357) + " - "
           + getContratCollectiviteLabel(max);
+      }
+      //Process Contrat RI, keep last
+      if (this.entite.Contrats?.length > 0) {
+        const max = this.entite.Contrats
+          .filter(f => f.ContratType.RefContratType == 1)
+          .reduce(function (prev, current) {
+          return (prev.DFin > current.DFin) ? prev : current
+        })
+        this.lastContratType1 = getContratLabelSingleLine(max);
       }
       //Process EntiteEntite
       this.entite.EntiteEntites.sort(function (a, b) { return cmp(a.LibelleEntiteRtt, b.LibelleEntiteRtt); });

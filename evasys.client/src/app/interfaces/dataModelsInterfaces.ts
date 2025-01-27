@@ -1133,6 +1133,7 @@ export interface PrixReprise {
   Process: Process;
   Produit: Produit;
   Composant: Produit;
+  Contrat: Contrat;
   D: Date;
   PUHT: number;
   PUHTSurtri: number;

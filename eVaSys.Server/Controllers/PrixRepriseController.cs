@@ -88,24 +88,24 @@ namespace eVaSys.Controllers
             string refProcess = Request.Headers["refProcess"].ToString();
             string refProduit = Request.Headers["refProduit"].ToString();
             string refComposant = Request.Headers["refComposant"].ToString();
-            string refEntite = Request.Headers["refEntite"].ToString();
+            string refContrat = Request.Headers["refContrat"].ToString();
             int refPs = 0;
             int refPt = 0;
             int refC = 0;
-            int refE = 0;
+            int refCt = 0;
             DateTime dRef = DateTime.MinValue;
             //Get or create prixReprise
             if (id == 0)
             {
                 if (int.TryParse(refProcess, out refPs) && int.TryParse(refProduit, out refPt) && int.TryParse(refComposant, out refC) && DateTime.TryParse(d, out dRef))
                 {
-                    if (int.TryParse(refEntite, out refE))
+                    if (int.TryParse(refContrat, out refCt))
                     {
                         prixReprise = DbContext.PrixReprises
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
                         .Where(el => (el.RefProcess == refPs && el.RefProduit == refPt && el.RefComposant == refC
-                            && el.RefEntite == refE
+                            && el.RefContrat == refCt
                             && el.D.Month == dRef.Month && el.D.Year == dRef.Year))
                         .FirstOrDefault();
                     }
@@ -179,7 +179,7 @@ namespace eVaSys.Controllers
                         prx.RefProcess = prxR.Process.RefProcess;
                         prx.RefProduit = prxR.Produit.RefProduit;
                         prx.RefComposant = prxR.Composant.RefProduit;
-                        prx.RefEntite = prxR.Entite?.RefEntite;
+                        prx.RefContrat = prxR.Contrat?.RefContrat;
                         prx.D = prxR.D;
                         DbContext.PrixReprises.Add(prx);
                     }
@@ -336,17 +336,17 @@ namespace eVaSys.Controllers
                              ProduitNomCommun = p.NomCommun,
                              pR.PUHT,
                              p.Collecte,
-                             pR.RefEntite
+                             pR.RefContrat
                          }
                        );
                 if (filterCollecte == "Collecte") { q = q.Where(w => w.Collecte == true); }
                 else if (filterCollecte == "HorsCollecte") { q = q.Where(w => w.Collecte == false); }
                 else if (filterCollecte != "DansOuHorsCollecte") { q = q.Where(w => 1 != 1); }
                 var res = (q.ToArray());
-                //If one PrixReprise specific for this Entite, then keep only specifics
-                if (res.Where(e => e.RefEntite != null).Count() > 0)
+                //If one PrixReprise specific for a Contrat, then keep only specifics
+                if (res.Where(e => e.RefContrat != null).Count() > 0)
                 {
-                    res = res.Where(e => e.RefEntite == refE).ToArray();
+                    res = res.Where(e => e.RefContrat != null).ToArray();
                 }
                 //Return Json
                 return new JsonResult(res, JsonSettings);
@@ -366,7 +366,7 @@ namespace eVaSys.Controllers
             dataModel.RefProcess = viewModel.Process.RefProcess;
             dataModel.RefProduit = viewModel.Produit.RefProduit;
             dataModel.RefComposant = viewModel.Composant.RefProduit;
-            dataModel.RefEntite = viewModel.Entite?.RefEntite;
+            dataModel.RefContrat = viewModel.Contrat?.RefContrat;
             dataModel.D = viewModel.D;
             dataModel.PUHT = viewModel.PUHT ?? 0;
             dataModel.PUHTSurtri = viewModel.PUHTSurtri ?? 0;
@@ -383,27 +383,49 @@ namespace eVaSys.Controllers
             SqlDataAdapter dA = new(cmd);
             DataSet dS = new();
             string sqlStr = "select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
-                + "     , tbrPrixReprise.RefEntite"
+                + "     , tbrPrixReprise.RefContrat"
                 + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
                 + " from tblProduit"
                 + " 	inner join tbmProduitComposant on tblProduit.refProduit=tbmProduitComposant.RefProduit"
                 + " 	inner join tblProduit as composant on composant.RefProduit=tbmProduitComposant.RefComposant"
                 + " 	left join (select * from tbrPrixReprise where D=@d and RefProcess=@refProcess) as tbrPrixReprise on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant"
-                + " where ((composant.Actif=1 and tblProduit.Actif=1) or tbrPrixReprise.RefPrixReprise is not null) and tbrPrixReprise.RefEntite is null"
+                + " where ((composant.Actif=1 and tblProduit.Actif=1) or tbrPrixReprise.RefPrixReprise is not null) and tbrPrixReprise.RefContrat is null"
                 + " union all"
                 + " select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
-                + "     , tblEntite.RefEntite"
+                + " 	, tblContrat.RefContrat"
                 + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
                 + " from tblCommandeClient"
-                + "     inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient = tblCommandeClientMensuelle.RefCommandeClient"
-                + "     inner join tblProduit on tblCommandeClient.RefProduit = tblProduit.RefProduit"
-                + "     inner join tbmProduitComposant on tblProduit.refProduit = tbmProduitComposant.RefProduit"
-                + "     inner join tblProduit as composant on composant.RefProduit = tbmProduitComposant.RefComposant"
-                + "     inner join tblEntite on tblCommandeClient.RefEntiteFournisseur = tblEntite.RefEntite"
-                + "     left join(select* from tbrPrixReprise where D= @d and RefProcess = @refProcess) as tbrPrixReprise"
-                + "         on tbrPrixReprise.RefProduit = tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant = tbmProduitComposant.RefComposant and tbrPrixReprise.RefEntite = tblCommandeClient.RefEntiteFournisseur"
-                + " where RefEntiteFournisseur is not null and tblCommandeClientMensuelle.D = @d"
+                + " 	inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient"
+                + " 	inner join tblProduit on tblCommandeClient.RefProduit = tblProduit.RefProduit"
+                + " 	inner join tbmProduitComposant on tblProduit.refProduit=tbmProduitComposant.RefProduit"
+                + " 	inner join tblProduit as composant on composant.RefProduit=tbmProduitComposant.RefComposant	"
+                + " 	inner join tblContrat on tblCommandeClient.RefContrat=tblContrat.RefContrat"
+                + " 	left join (select * from tbrPrixReprise where D=@d and RefProcess=@refProcess) as tbrPrixReprise "
+                + " 		on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant and tbrPrixReprise.RefContrat=tblCommandeClient.RefContrat"
+                + " where tblCommandeClient.RefContrat is not null and tblCommandeClientMensuelle.D=@d"
                 ;
+            //string sqlStr = "select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
+            //    + "     , tbrPrixReprise.RefContrat"
+            //    + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
+            //    + " from tblProduit"
+            //    + " 	inner join tbmProduitComposant on tblProduit.refProduit=tbmProduitComposant.RefProduit"
+            //    + " 	inner join tblProduit as composant on composant.RefProduit=tbmProduitComposant.RefComposant"
+            //    + " 	left join (select * from tbrPrixReprise where D=@d and RefProcess=@refProcess) as tbrPrixReprise on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant"
+            //    + " where ((composant.Actif=1 and tblProduit.Actif=1) or tbrPrixReprise.RefPrixReprise is not null) and tbrPrixReprise.RefEntite is null"
+            //    + " union all"
+            //    + " select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
+            //    + "     , tblEntite.RefEntite"
+            //    + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
+            //    + " from tblCommandeClient"
+            //    + "     inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient = tblCommandeClientMensuelle.RefCommandeClient"
+            //    + "     inner join tblProduit on tblCommandeClient.RefProduit = tblProduit.RefProduit"
+            //    + "     inner join tbmProduitComposant on tblProduit.refProduit = tbmProduitComposant.RefProduit"
+            //    + "     inner join tblProduit as composant on composant.RefProduit = tbmProduitComposant.RefComposant"
+            //    + "     inner join tblEntite on tblCommandeClient.RefEntiteFournisseur = tblEntite.RefEntite"
+            //    + "     left join(select* from tbrPrixReprise where D= @d and RefProcess = @refProcess) as tbrPrixReprise"
+            //    + "         on tbrPrixReprise.RefProduit = tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant = tbmProduitComposant.RefComposant and tbrPrixReprise.RefEntite = tblCommandeClient.RefEntiteFournisseur"
+            //    + " where RefEntiteFournisseur is not null and tblCommandeClientMensuelle.D = @d"
+            //    ;
             cmd.Parameters.Add("@refProcess", SqlDbType.Int).Value = refP;
             cmd.Parameters.Add("@d", SqlDbType.DateTime).Value = dRef;
             if (filterProduits != "")
@@ -450,9 +472,9 @@ namespace eVaSys.Controllers
                             }
                         }
                     }
-                    if (dRow["RefEntite"] != DBNull.Value)
+                    if (dRow["RefContrat"] != DBNull.Value)
                     {
-                        prx.Entite = DbContext.Entites.FirstOrDefault(el => el.RefEntite == (int)dRow["RefEntite"]);
+                        prx.Contrat = DbContext.Contrats.FirstOrDefault(el => el.RefContrat == (int)dRow["RefContrat"]);
                     }
                 }
             }

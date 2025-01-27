@@ -359,6 +359,7 @@ namespace eVaSys.Controllers
                     {
                         sqlStr += " and tblCommandeClient.RefContrat is null";
                     }
+
                     sqlStr += "         ) as commandeClient"
                         + " 		on client.RefEntite=commandeClient.RefEntite and tblParcours.RefAdresseDestination=CommandeClient.RefAdresse"
                         + " 	left join "
