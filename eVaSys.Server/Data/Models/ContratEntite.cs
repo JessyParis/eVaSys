@@ -34,6 +34,7 @@ namespace eVaSys.Data
         public CultureInfo currentCulture = new("fr-FR");
         public int RefContratEntite { get; set; }
         public int RefContrat { get; set; }
+        public Contrat Contrat { get; set; }
         public int RefEntite { get; set; }
         public Entite Entite { get; set; }
         //--------------------------------------------------------------------------------------------

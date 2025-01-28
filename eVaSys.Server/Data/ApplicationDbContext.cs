@@ -1275,6 +1275,11 @@ namespace eVaSys.Data
                     .HasDatabaseName("IX_tbmContratEntite_Unique")
                     .IsUnique();
 
+                entity.HasOne(d => d.Contrat)
+                    .WithMany(p => p.ContratEntites)
+                    .HasForeignKey(d => d.RefContrat)
+                    .OnDelete(DeleteBehavior.Restrict);
+
                 entity.HasOne(d => d.Entite)
                     .WithMany(p => p.ContratEntites)
                     .HasForeignKey(d => d.RefEntite)

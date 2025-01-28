@@ -88,41 +88,40 @@ namespace eVaSys.Controllers
             string refProcess = Request.Headers["refProcess"].ToString();
             string refProduit = Request.Headers["refProduit"].ToString();
             string refComposant = Request.Headers["refComposant"].ToString();
-            string refContrat = Request.Headers["refContrat"].ToString();
+            string refEntite = Request.Headers["refEntite"].ToString();
             int refPs = 0;
             int refPt = 0;
             int refC = 0;
-            int refCt = 0;
+            int refE = 0;
             DateTime dRef = DateTime.MinValue;
             //Get or create prixReprise
             if (id == 0)
             {
                 if (int.TryParse(refProcess, out refPs) && int.TryParse(refProduit, out refPt) && int.TryParse(refComposant, out refC) && DateTime.TryParse(d, out dRef))
                 {
-                    if (int.TryParse(refContrat, out refCt))
+                    //If Entite, try to find a PrixReprise with Contrat
+                    if (int.TryParse(refEntite, out refE))
                     {
                         prixReprise = DbContext.PrixReprises
-                        .Include(r => r.UtilisateurCreation)
-                        .Include(r => r.UtilisateurModif)
-                        .Where(el => (el.RefProcess == refPs && el.RefProduit == refPt && el.RefComposant == refC
-                            && el.RefContrat == refCt
-                            && el.D.Month == dRef.Month && el.D.Year == dRef.Year))
-                        .FirstOrDefault();
+                            .Include(r => r.UtilisateurCreation)
+                            .Include(r => r.UtilisateurModif)
+                            .Where(el => (el.RefProcess == refPs && el.RefProduit == refPt && el.RefComposant == refC
+                                && el.Contrat.ContratEntites.Any(e => e.RefEntite == refE)
+                                && el.D.Month == dRef.Month && el.D.Year == dRef.Year))
+                            .FirstOrDefault();
                     }
-                    else
+                    if (prixReprise == null)
                     {
-                        prixReprise = DbContext.PrixReprises
-                        .Include(r => r.UtilisateurCreation)
-                        .Include(r => r.UtilisateurModif)
-                        .Where(el => (el.RefProcess == refPs && el.RefProduit == refPt && el.RefComposant == refC
-                            && el.D.Month == dRef.Month && el.D.Year == dRef.Year))
-                        .FirstOrDefault();
+                        {
+                            prixReprise = DbContext.PrixReprises
+                                .Include(r => r.UtilisateurCreation)
+                                .Include(r => r.UtilisateurModif)
+                                .Where(el => el.RefProcess == refPs && el.RefProduit == refPt && el.RefComposant == refC
+                                    && el.D.Month == dRef.Month && el.D.Year == dRef.Year
+                                    && el.RefContrat == null)
+                                .FirstOrDefault();
+                        }
                     }
-                }
-                else
-                {
-                    prixReprise = new PrixReprise();
-                    DbContext.PrixReprises.Add(prixReprise);
                 }
             }
             else
