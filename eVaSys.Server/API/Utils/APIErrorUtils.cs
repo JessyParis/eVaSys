@@ -41,7 +41,7 @@ namespace eVaSys.APIUtils
         public string CultureName { get; private set; }
     }
     /// <summary>
-    /// API error class for not found
+    /// API error class for bad request
     /// </summary>
     public class BadRequestError : ApiError
     {
@@ -55,7 +55,7 @@ namespace eVaSys.APIUtils
         }
     }
     /// <summary>
-    /// API error class for not found
+    /// API error class for conflict
     /// </summary>
     public class ConflictError : ApiError
     {
@@ -101,7 +101,7 @@ namespace eVaSys.APIUtils
         }
     }
     /// <summary>
-    /// API error class for not unauthorized
+    /// API error class for unauthorized
     /// </summary>
     public class UnauthorizedError : ApiError
     {
@@ -115,7 +115,7 @@ namespace eVaSys.APIUtils
         }
     }
     /// <summary>
-    /// API error class for not forbidden
+    /// API error class for forbidden
     /// </summary>
     public class ForbiddenError : ApiError
     {

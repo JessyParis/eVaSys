@@ -191,6 +191,7 @@ namespace eVaSys.Data
         public virtual DbSet<Titre> Titres { get; set; }
         public virtual DbSet<Transport> Transports { get; set; }
         public virtual DbSet<Utilisateur> Utilisateurs { get; set; }
+        public virtual DbSet<UtilisateurAPI> UtilisateurAPIs { get; set; }
         public virtual DbSet<Verrouillage> Verrouillages { get; set; }
 
         //Scalar functions
@@ -4196,6 +4197,11 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefPrestataire)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                entity.HasMany(d => d.UtilisateurAPIs)
+                    .WithOne()
+                    .HasForeignKey(d => d.RefUtilisateur)
+                    .OnDelete(DeleteBehavior.ClientCascade);
+
                 entity.HasOne(d => d.Pays)
                     .WithMany(p => p.Utilisateurs)
                     .HasForeignKey(d => d.RefPays)
@@ -4225,6 +4231,13 @@ namespace eVaSys.Data
                     .WithMany(p => p.UtilisateurModifs)
                     .HasForeignKey(d => d.RefUtilisateurModif)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+            modelBuilder.Entity<UtilisateurAPI>(entity =>
+            {
+                entity.HasKey(e => e.RefUtilisateurAPI);
+
+                entity.ToTable("tbmUtilisateurAPI");
+
             });
             modelBuilder.Entity<Verrouillage>(entity =>
             {

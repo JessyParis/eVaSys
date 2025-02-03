@@ -767,6 +767,10 @@ namespace eVaSys.Utils
             rowVals[0] = Enumerations.Module.ModulePrestataire.ToString(); rowVals[1] = Enumerations.HabilitationQualite.Fournisseur.ToString();
             rowVals[2] = Enumerations.ObjectName.APICommandeFournisseur.ToString(); rowVals[3] = "U";
             rights.Rows.Add(rowVals);
+            rowVals = new object[4];
+            rowVals[0] = Enumerations.Module.ModuleAPI.ToString(); rowVals[1] = Enumerations.HabilitationModuleAPI.Utilisateur.ToString();
+            rowVals[2] = Enumerations.ObjectName.APITransport.ToString(); rowVals[3] = "U";
+            rights.Rows.Add(rowVals);
             #endregion
             #region MenuRights
             //---------------------------------------------------------------------------------------

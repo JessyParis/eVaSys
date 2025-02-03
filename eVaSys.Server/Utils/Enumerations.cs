@@ -81,7 +81,7 @@ namespace eVaSys.Utils
         //Enumération pour les modules
         public enum Module
         {
-            Administration, Annuaire, Logistique, Statistique, Messagerie, Qualite, ModuleCollectivite, ModulePrestataire
+            Administration, Annuaire, Logistique, Statistique, Messagerie, Qualite, ModuleCollectivite, ModulePrestataire, ModuleAPI
         }
         //Enumération pour les habilitations Module administration
         public enum HabilitationAdministration
@@ -96,7 +96,7 @@ namespace eVaSys.Utils
         //Enumération pour les habilitations Module logistique
         public enum HabilitationLogistique
         {
-            Administrateur, Transporteur, Client, Utilisateur, CentreDeTri
+            Administrateur, Transporteur, Client, Utilisateur, CentreDeTri, API
         }
         //Enumération pour les habilitations module collectivité
         public enum HabilitationModuleCollectivite
@@ -123,6 +123,11 @@ namespace eVaSys.Utils
         {
             Administrateur, Transporteur, Client, Fournisseur
         }
+        //Enumération pour les habilitations Module API
+        public enum HabilitationModuleAPI
+        {
+            Administrateur, Utilisateur
+        }
         //Enumération pour les noms de modules
         public enum ModuleName
         {
@@ -134,7 +139,8 @@ namespace eVaSys.Utils
             Qualite,
             ModuleCollectivite,
             ModuleCentreDeTri,
-            ModulePrestataire
+            ModulePrestataire,
+            ModuleAPI
         }
         //Enumération pour les noms de menus
         public enum MenuName
@@ -890,6 +896,7 @@ namespace eVaSys.Utils
             Adresse,
             AdresseType,
             APICommandeFournisseur,
+            APITransport,
             Application,
             ClientApplication,
             ApplicationProduitOrigine,

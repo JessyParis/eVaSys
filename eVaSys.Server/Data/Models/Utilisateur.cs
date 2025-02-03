@@ -107,6 +107,7 @@ namespace eVaSys.Data
             get => LazyLoader.Load(this, ref _prestataire);
             set => _prestataire = value;
         }
+        public string HabilitationModuleAPI { get; set; }
         public int? RefPays { get; set; }
         private Pays _pays;
         public Pays Pays
@@ -127,6 +128,7 @@ namespace eVaSys.Data
             get => LazyLoader.Load(this, ref _contactAdresse);
             set => _contactAdresse = value;
         }
+        public ICollection<UtilisateurAPI> UtilisateurAPIs { get; set; }
         [NotMapped]
         public string UtilisateurType
         {
