@@ -103,7 +103,7 @@ namespace eVaSys.Controllers
                 v.ProduitLibelle = c.Produit.Libelle;
                 v.ProduitCmtTransporteur = c.Produit.CmtTransporteur;
                 v.D = c.D;
-                v.DMoisDechargementPrevu = c.DMoisDechargementPrevu;
+                v.DMoisDechargementPrevu = (c.DMoisDechargementPrevu == null ? null : ((DateTime)c.DMoisDechargementPrevu).Month);
                 v.DChargementPrevue = c.DChargementPrevue;
                 v.HoraireChargementPrevu = c.HoraireChargementPrevu;
                 v.DChargement = c.DChargement;
@@ -134,6 +134,7 @@ namespace eVaSys.Controllers
                 v.DestinationAdresseCodePostal = c.AdresseClient.CodePostal;
                 v.DestinationAdresseVille = c.AdresseClient.Ville;
                 v.DestinationAdressePaysLibelle = c.AdresseClient.Pays.Libelle;
+                v.DestinationHoraires = c.AdresseClient.Horaires;
                 v.DestinationContactPrenom = ctc?.Contact.Prenom;
                 v.DestinationContactNom = ctc?.Contact.Nom;
                 v.DestinationContactTel = ctc?.Tel;

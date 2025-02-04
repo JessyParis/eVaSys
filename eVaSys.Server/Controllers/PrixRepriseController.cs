@@ -342,10 +342,15 @@ namespace eVaSys.Controllers
                 else if (filterCollecte == "HorsCollecte") { q = q.Where(w => w.Collecte == false); }
                 else if (filterCollecte != "DansOuHorsCollecte") { q = q.Where(w => 1 != 1); }
                 var res = (q.ToArray());
-                //If one PrixReprise specific for a Contrat, then keep only specifics
-                if (res.Where(e => e.RefContrat != null).Count() > 0)
+                //If Entite has on Contract RI the show only price in Contract
+                var ct = DbContext.Contrats.Where(e => e.RefContratType == 1 && e.ContratEntites.Any(a => a.RefEntite == refE)).Count();
+                if (ct > 0)
                 {
                     res = res.Where(e => e.RefContrat != null).ToArray();
+                }
+                else
+                {
+                    res = res.Where(e => e.RefContrat == null).ToArray();
                 }
                 //Return Json
                 return new JsonResult(res, JsonSettings);

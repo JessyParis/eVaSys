@@ -46,7 +46,7 @@ namespace eVaSys.ViewModels
         public string ProduitLibelle { get; set; }
         public string ProduitCmtTransporteur { get; set; }
         public DateTime? D { get; set; }
-        public DateTime? DMoisDechargementPrevu { get; set; }
+        public int? DMoisDechargementPrevu { get; set; }
         public DateTime? DChargementPrevue { get; set; }
         public string HoraireChargementPrevu { get; set; }
         public DateTime? DChargement { get; set; }
@@ -77,6 +77,7 @@ namespace eVaSys.ViewModels
         public string DestinationAdresseCodePostal { get; set; }
         public string DestinationAdresseVille { get; set; }
         public string DestinationAdressePaysLibelle { get; set; }
+        public string DestinationHoraires { get; set; }
         public string DestinationContactPrenom { get; set; }
         public string DestinationContactNom { get; set; }
         public string DestinationContactTel { get; set; }
