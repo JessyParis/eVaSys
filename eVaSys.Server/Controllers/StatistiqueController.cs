@@ -580,7 +580,7 @@ namespace eVaSys.Controllers
                 }
                 sqlStr = "select tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ClientLibelle.ToString()].Name + "]"
                     + "     , tblAdresse.Ville as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AdresseDestinationVille.ToString()].Name + "]"
-                    + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
+                    + "     , tblProduit.Libelle + case when reliquat.RefContrat is null then '' else ' ('+reliquat.IdContrat+')' end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                     + "     , commandeClient.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsCommande.ToString()].Name + "]"
                     + "     , isnull(reliquat.Poids,0)/1000 as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsChargementAttribue.ToString()].Name + "]"
                     + "     , (isnull(reliquat.Poids,0))/(commandeClient.Poids*10) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsAttribuePourcentage.ToString()].Name + "]"
@@ -591,19 +591,22 @@ namespace eVaSys.Controllers
                     + "     , (isnull(reliquat.PoidsDecharge,0))/(commandeClient.Poids*10) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsDechargementReceptionnePourcentage.ToString()].Name + "]"
                     + " from tblEntite"
                     + " inner join "
-                    + " 	(select RefEntite, RefAdresse, RefProduit, sum(tblCommandeClientMensuelle.Poids) as Poids  from tblCommandeClient inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient "
+                    + " 	(select RefEntite, RefAdresse, RefProduit, RefContrat, sum(tblCommandeClientMensuelle.Poids) as Poids"
+                    + "         from tblCommandeClient inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient"
                     + " 	where tblCommandeClientMensuelle.D between @begin and @end and tblCommandeClientMensuelle.Poids>0"
-                    + "     group by RefEntite, RefAdresse, RefProduit) as commandeClient"
-                    + " 	on tblEntite.RefEntite=commandeClient.RefEntite"
+                    + "     group by RefEntite, RefAdresse, RefProduit, RefContrat"
+                    + "     ) as commandeClient on tblEntite.RefEntite=commandeClient.RefEntite"
                     + " inner join tblProduit on commandeClient.RefProduit=tblProduit.RefProduit"
                     + " inner join tblAdresse on commandeClient.RefAdresse=tblAdresse.RefAdresse"
                     + " left join "
                     + " 	("
-                    + " 	select tblAdresse.RefEntite, tblAdresse.RefAdresse, tblCommandeFournisseur.RefProduit, sum(PoidsChargement) as Poids, sum(case when DDechargementPrevue is not null then PoidsChargement else 0 end) as PoidsDate"
-                    + "         , sum (PoidsDechargement) as PoidsDecharge"
+                    + " 	select tblAdresse.RefEntite, tblAdresse.RefAdresse, tblCommandeFournisseur.RefProduit, VueCommandeFournisseurContrat.RefContrat, tblContrat.IdContrat"
+                    + "         , sum(PoidsChargement) as Poids, sum(case when DDechargementPrevue is not null then PoidsChargement else 0 end) as PoidsDate, sum (PoidsDechargement) as PoidsDecharge"
                     + " 	from tblCommandeFournisseur"
-                    + " 	inner join tblAdresse on tblAdresse.RefAdresse=tblCommandeFournisseur.RefAdresseClient"
-                    + "     inner join tblProduit on tblCommandeFournisseur.RefProduit=tblProduit.RefProduit"
+                    + "         left join VueCommandeFournisseurContrat on tblCommandeFournisseur.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
+                    + "         left join tblContrat on tblContrat.RefContrat=VueCommandeFournisseurContrat.RefContrat"
+                    + " 	    inner join tblAdresse on tblAdresse.RefAdresse=tblCommandeFournisseur.RefAdresseClient"
+                    + "         inner join tblProduit on tblCommandeFournisseur.RefProduit=tblProduit.RefProduit"
                     + " 	where RefusCamion=0 and DMoisDechargementPrevu between @begin and @end";
                 if (eSF.FilterVilleArrivees != "") { sqlStr += " and tblAdresse.Ville COLLATE Latin1_general_CI_AI in (" + filterVilleDestination + ")"; }
                 if (eSF.FilterClients != "") { sqlStr += " and tblAdresse.RefEntite in (" + filterClients + ")"; }
@@ -616,9 +619,9 @@ namespace eVaSys.Controllers
                 {
                     sqlStr += " and isnull(tblProduit.Collecte,0)=0";
                 }
-                sqlStr += " 	group by tblAdresse.RefEntite, tblAdresse.RefAdresse, tblCommandeFournisseur.RefProduit"
+                sqlStr += " 	group by tblAdresse.RefEntite, tblAdresse.RefAdresse, tblCommandeFournisseur.RefProduit, VueCommandeFournisseurContrat.RefContrat, tblContrat.IdContrat"
                     + " 	) as reliquat"
-                    + " 	on tblEntite.RefEntite=reliquat.RefEntite and commandeClient.RefProduit=reliquat.RefProduit and commandeClient.RefAdresse=reliquat.RefAdresse"
+                    + " 	on tblEntite.RefEntite=reliquat.RefEntite and commandeClient.RefProduit=reliquat.RefProduit and commandeClient.RefAdresse=reliquat.RefAdresse and isnull(commandeClient.RefContrat,0)=isnull(reliquat.RefContrat,0)"
                     + " where 1=1";
                 if (eSF.FilterVilleArrivees != "") { sqlStr += " and tblAdresse.Ville COLLATE Latin1_general_CI_AI in (" + filterVilleDestination + ")"; }
                 if (eSF.FilterClients != "") { sqlStr += " and tblEntite.RefEntite in (" + filterClients + ")"; }
@@ -658,7 +661,7 @@ namespace eVaSys.Controllers
                 {
                     filterCollecte += " and isnull(tblProduit.Collecte,0)=0";
                 }
-                sqlStr = "select isnull(tblProduit.Libelle,produitFournisseur.Libelle) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
+                sqlStr = "select isnull(tblProduit.Libelle,produitFournisseur.Libelle) + case when reliquat.RefContrat is null then '' else ' ('+reliquat.IdContrat+')' end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                     + "     , isnull(commandeClient.Poids,0) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsCommande.ToString()].Name + "]"
                     + "     , isnull(reliquat.Poids,0)/1000 as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsStockCentreDeTri.ToString()].Name + "]"
                     + "     , 100-((commandeClient.Poids-isnull(reliquat.Poids,0)/1000)*100/commandeClient.Poids) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsStockCentreDeTriPourcentage.ToString()].Name + "]"
@@ -666,22 +669,25 @@ namespace eVaSys.Controllers
                     + "     , isnull(reliquat.PoidsDecharge,0)/1000 as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsDechargementReceptionne.ToString()].Name + "]"
                     + "     , isnull(PoidsM,0)/1000 as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsDontDispoMoisPrecedent.ToString()].Name + "]"
                     + " from "
-                    + " 	(select RefProduit, sum(tblCommandeClientMensuelle.Poids) as Poids  from tblCommandeClient inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient "
+                    + " 	(select RefProduit, RefContrat, sum(tblCommandeClientMensuelle.Poids) as Poids  from tblCommandeClient inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient "
                     + "     where year(tblCommandeClient.D)=year(@begin) and month(tblCommandeClientMensuelle.D)=month(@begin) and tblCommandeClientMensuelle.Poids>0"
-                    + "     group by RefProduit) as commandeClient"
+                    + "     group by RefProduit, RefContrat) as commandeClient"
                     + "     left join tblProduit on commandeClient.RefProduit=tblProduit.RefProduit"
                     + "     full outer join "
                     + "         ("
-                    + "         select tblCommandeFournisseur.RefProduit, sum(PoidsChargement) as Poids, sum(case when year(D)!=year(@begin) or month(D)!=month(@begin) then PoidsChargement else 0 end) as PoidsM"
+                    + "         select tblCommandeFournisseur.RefProduit, VueCommandeFournisseurContrat.RefContrat, tblContrat.IdContrat"
+                    + "             , sum(PoidsChargement) as Poids, sum(case when year(D)!=year(@begin) or month(D)!=month(@begin) then PoidsChargement else 0 end) as PoidsM"
                     + "             , sum(case when DDechargementPrevue is not null then PoidsChargement else 0 end) as PoidsDate, sum (PoidsDechargement) as PoidsDecharge"
                     + "     	from tblCommandeFournisseur"
+                    + "             left join VueCommandeFournisseurContrat on tblCommandeFournisseur.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
+                    + "             left join tblContrat on tblContrat.RefContrat=VueCommandeFournisseurContrat.RefContrat"
                     + "             left join tblProduit on tblCommandeFournisseur.RefProduit=tblProduit.RefProduit"
                     + "     	where RefusCamion=0 and year(isnull(DMoisDechargementPrevu,D))=year(@begin) and month(isnull(DMoisDechargementPrevu,D))=month(@begin)";
                 if (eSF.FilterProduits != "") { sqlStr += " and tblCommandeFournisseur.RefProduit in (" + filterProduits + ")"; }
                 if (filterCollecte != "") { sqlStr += filterCollecte; }
-                sqlStr += "     	group by tblCommandeFournisseur.RefProduit"
+                sqlStr += "     	group by tblCommandeFournisseur.RefProduit, VueCommandeFournisseurContrat.RefContrat, tblContrat.IdContrat"
                     + "     	) as reliquat"
-                    + "     	on commandeClient.RefProduit=reliquat.RefProduit"
+                    + "     	on commandeClient.RefProduit=reliquat.RefProduit and isnull(commandeClient.RefContrat,0)=isnull(reliquat.RefContrat,0)"
                     + "     left join tblProduit as produitFournisseur on reliquat.RefProduit=produitFournisseur.RefProduit"
                     + " where 1=1";
                 if (eSF.FilterProduits != "") { sqlStr += " and commandeClient.RefProduit in (" + filterProduits + ")"; }
@@ -1527,44 +1533,31 @@ namespace eVaSys.Controllers
                     + "          , PUHT as PUHTNet, PUHT * sum(Poids) as [PU]"
                     + "          from"
                     + "         ("
-                    + "         select rep.RefProduit, tblRepartitionCollectivite.RefProcess, tblRepartitionCollectivite.RefProduit as RefComposant, Poids"
-                    + "              , tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
-                    + "              , tblRepartitionCollectivite.PUHT as PUHTNet, tblRepartitionCollectivite.PUHT"
+                    + "         select VueRepartitionUnitaireDetail.RefProduit, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant, Poids"
+                    + "              , tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport, VueRepartitionUnitaireDetail.PUHT as PUHTNet, VueRepartitionUnitaireDetail.PUHT"
+                    + "              , VueCommandeFournisseurContrat.RefContrat"
                     + "         from"
-                    + "              ("
-                    + "                  select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D"
-                    + "                  from tblRepartition"
-                    + "                      inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur = tblRepartition.RefCommandeFournisseur"
-                    + "                  where tblCommandeFournisseur.DDechargement between @begin and @end"
-                    + "                  union all"
-                    + "                  select RefRepartition, RefFournisseur, RefProduit, D"
-                    + "                  from tblRepartition"
-                    + "                  where RefCommandeFournisseur is null and D between @begin and @end) as rep"
-                    + "              inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition = rep.RefRepartition"
-                    + "              inner join tbrPrixReprise on tbrPrixReprise.RefProcess = tblRepartitionCollectivite.RefProcess and tbrPrixReprise.RefComposant = tblRepartitionCollectivite.RefProduit and tbrPrixReprise.RefProduit = rep.RefProduit"
-                    + "                      and month(rep.D) = month(tbrPrixReprise.D) and year(rep.D) = year(tbrPrixReprise.D)";
+                    + "             VueRepartitionUnitaireDetail"
+                    + "         	left join VueCommandeFournisseurContrat on VueRepartitionUnitaireDetail.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
+                    + "         	inner join tbrPrixReprise on tbrPrixReprise.RefProcess=VueRepartitionUnitaireDetail.RefProcess and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit "
+                    + "         		and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit"
+                    + "         		and month(VueRepartitionUnitaireDetail.D)=month(tbrPrixReprise.D) and year(VueRepartitionUnitaireDetail.D)=year(tbrPrixReprise.D)"
+                    + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
+                    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=1";
                 if (eSF.FilterCollecte == "HorsCollecte")
                 {
-                    sqlStr += " where 1!=1";
+                    sqlStr += " and 1!=1";
                 }
                 sqlStr += "         union all"
-                    + "         select rep.RefProduit, tblRepartitionProduit.RefProcess, tblRepartitionProduit.RefProduit as RefComposant, Poids"
-                    + "              , 0 as PUHTSurtri, 0 as PUHTTransport"
-                    + "              , tblRepartitionProduit.PUHT as PUHTNet, tblRepartitionProduit.PUHT"
+                    + "         select VueRepartitionUnitaireDetail.RefProduit, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant, Poids"
+                    + "              , 0 as PUHTSurtri, 0 as PUHTTransport, VueRepartitionUnitaireDetail.PUHT as PUHTNet, VueRepartitionUnitaireDetail.PUHT"
+                    + "              , null as RefContrat"
                     + "         from"
-                    + "              ("
-                    + "                  select RefRepartition, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D"
-                    + "                  from tblRepartition"
-                    + "                      inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur = tblRepartition.RefCommandeFournisseur"
-                    + "                  where tblCommandeFournisseur.DDechargement between @begin and @end"
-                    + "                  union all"
-                    + "                  select RefRepartition, RefProduit, D"
-                    + "                  from tblRepartition"
-                    + "                  where RefCommandeFournisseur is null and D between @begin and @end) as rep"
-                    + "              inner join tblRepartitionProduit on tblRepartitionProduit.RefRepartition = rep.RefRepartition";
+                    + "             VueRepartitionUnitaireDetail"
+                    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=0";
                 if (eSF.FilterCollecte == "Collecte")
                 {
-                    sqlStr += " where 1!=1";
+                    sqlStr += " and 1!=1";
                 }
                 sqlStr += "         ) as u"
                     + "          group by RefProduit, RefProcess, RefComposant, PUHT + PUHTSurtri + PUHTTransport, PUHTSurtri, PUHTTransport, PUHT"
@@ -1573,6 +1566,57 @@ namespace eVaSys.Controllers
                     + "      inner join tblProduit as composant on composant.RefProduit = univers.RefComposant"
                     + "      inner join tbrProcess on tbrProcess.RefProcess = univers.RefProcess"
                     + "     where 1=1";
+                //Détail par collectivité
+                //sqlStr = "select tbrProcess.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProcessLibelle.ToString()].Name + "]"
+                //    + "     , tblProduit.NomCommun as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
+                //    + "     , composant.NomCommun as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ComposantLibelle.ToString()].Name + "]"
+                //    + "     , cast(Poids as decimal(15,3))/1000 as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsTonne.ToString()].Name + "]"
+                //    + "     , PUHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixEuroHTTonne.ToString()].Name + "]"
+                //    + "     , univers.PUHTSurtri as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHTSurtri.ToString()].Name + "]"
+                //    + "     , univers.PUHTTransport as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHTTransport.ToString()].Name + "]"
+                //    + " 	, univers.PUHTNet as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixNetEuroHTTonne.ToString()].Name + "]"
+                //    + "     , cast(univers.PU/1000 as decimal(10,2)) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.MontantEuroHT.ToString()].Name + "]"
+                //    + "     , tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CollectiviteLibelle.ToString()].Name + "]"
+                //    + "  from"
+                //    + "      (select RefProduit, RefProcess, RefComposant, sum(Poids) as Poids"
+                //    + "          , PUHT + PUHTSurtri + PUHTTransport as PUHT, PUHTSurtri, PUHTTransport"
+                //    + "          , PUHT as PUHTNet, PUHT * sum(Poids) as [PU], RefFournisseur"
+                //    + "          from"
+                //    + "         ("
+                //    + "         select VueRepartitionUnitaireDetail.RefProduit, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant, Poids"
+                //    + "              , tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport, VueRepartitionUnitaireDetail.PUHT as PUHTNet, VueRepartitionUnitaireDetail.PUHT"
+                //    + "              , VueCommandeFournisseurContrat.RefContrat, VueRepartitionUnitaireDetail.RefFournisseur"
+                //    + "         from"
+                //    + "             VueRepartitionUnitaireDetail"
+                //    + "         	left join VueCommandeFournisseurContrat on VueRepartitionUnitaireDetail.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
+                //    + "         	inner join tbrPrixReprise on tbrPrixReprise.RefProcess=VueRepartitionUnitaireDetail.RefProcess and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit "
+                //    + "         		and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit"
+                //    + "         		and month(VueRepartitionUnitaireDetail.D)=month(tbrPrixReprise.D) and year(VueRepartitionUnitaireDetail.D)=year(tbrPrixReprise.D)"
+                //    + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
+                //    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=1";
+                //if (eSF.FilterCollecte == "HorsCollecte")
+                //{
+                //    sqlStr += " and 1!=1";
+                //}
+                //sqlStr += "         union all"
+                //    + "         select VueRepartitionUnitaireDetail.RefProduit, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant, Poids"
+                //    + "              , 0 as PUHTSurtri, 0 as PUHTTransport, VueRepartitionUnitaireDetail.PUHT as PUHTNet, VueRepartitionUnitaireDetail.PUHT"
+                //    + "              , null as RefContrat, VueRepartitionUnitaireDetail.RefFournisseur"
+                //    + "         from"
+                //    + "             VueRepartitionUnitaireDetail"
+                //    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=0";
+                //if (eSF.FilterCollecte == "Collecte")
+                //{
+                //    sqlStr += " and 1!=1";
+                //}
+                //sqlStr += "         ) as u"
+                //    + "          group by RefProduit, RefProcess, RefComposant, PUHT + PUHTSurtri + PUHTTransport, PUHTSurtri, PUHTTransport, PUHT, RefFournisseur"
+                //    + "           ) as univers"
+                //    + "      inner join tblProduit on univers.RefProduit = tblProduit.refProduit"
+                //    + "      inner join tblProduit as composant on composant.RefProduit = univers.RefComposant"
+                //    + "      inner join tbrProcess on tbrProcess.RefProcess = univers.RefProcess"
+                //    + "      inner join tblEntite on tblEntite.RefEntite = univers.RefFournisseur"
+                //    + "     where 1=1";
                 //Filters
                 if (eSF.FilterBegin != "" && eSF.FilterEnd != "")
                 {
@@ -3197,42 +3241,36 @@ namespace eVaSys.Controllers
             if (menu == Enumerations.MenuName.LogistiqueMenuEtatReceptionEmballagePlastique.ToString())
             {
                 //Base SQL statement
-                sqlStr = "select year(rep.D) as [Année], 'T'+cast(datepart(quarter,rep.D) as nvarchar(1)) as [Trimestre], collectivite.CodeEE as [Code CITEO], tbrProcess.Libelle as [Process]"
+                sqlStr = "select year(VueRepartitionUnitaireDetail.D) as [Année], 'T'+cast(datepart(quarter,VueRepartitionUnitaireDetail.D) as nvarchar(1)) as [Trimestre], collectivite.CodeEE as [Code CITEO], tbrProcess.Libelle as [Process]"
                     + " 	, cast(cast(sum(Poids) as decimal(10,3))/1000 as decimal(10,3)) as [Poids total déclaré (tonne)]"
-                    + " 	, cast(cast(sum(case when tblRepartitionCollectivite.RefProduit=114 then Poids else 0 end) as decimal(10,3))/1000 as decimal(10,3)) as [Poids EP (tonne)]"
-                    + " 	, cast(cast(sum(case when tblRepartitionCollectivite.RefProduit=64 then Poids else 0 end) as decimal(10,3))/1000 as decimal(10,3)) as [Poids BF (tonne)]"
+                    + " 	, cast(cast(sum(case when VueRepartitionUnitaireDetail.RefProduit=114 then Poids else 0 end) as decimal(10,3))/1000 as decimal(10,3)) as [Poids EP (tonne)]"
+                    + " 	, cast(cast(sum(case when VueRepartitionUnitaireDetail.RefProduit=64 then Poids else 0 end) as decimal(10,3))/1000 as decimal(10,3)) as [Poids BF (tonne)]"
                     + " 	, isnull(tbrRegionEE.Libelle, 'NR') as [Région CITEO]"
-                    + "     , cast(year(rep.D) as nvarchar(4)) + 'T' + cast(datepart(quarter,rep.D) as nvarchar(1)) + '-' + collectivite.CodeEE + '-' + fournisseur.CodeEE + '-' + cast(month(rep.D) as nvarchar) + '_' + dbo.ToCiteoStandard(tblProduit.NomCommun) as [Numéro du transport]"
+                    + "     , cast(year(VueRepartitionUnitaireDetail.D) as nvarchar(4)) + 'T' + cast(datepart(quarter,VueRepartitionUnitaireDetail.D) as nvarchar(1)) + '-' + collectivite.CodeEE + '-' + fournisseur.CodeEE + '-' + cast(month(VueRepartitionUnitaireDetail.D) as nvarchar) + '_' + dbo.ToCiteoStandard(tblProduit.NomCommun) as [Numéro du transport]"
                     + "     , fournisseur.CodeEE as [Code CITEO centre de tri]"
                     + "     , fournisseur.Libelle as [Centre de tri], dbo.ToCiteoStandard(tblProduit.NomCommun) as [Produit]"
-                    + "     , tblRepartitionCollectivite.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport as [Prix €HT/t], '' as [Sous-catégorie 1]"
+                    + "     , VueRepartitionUnitaireDetail.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport as [Prix €HT/t], '' as [Sous-catégorie 1]"
                     + "     , tbrPrixReprise.PUHTTransport as [Coût de transport -€HT/t]"
-                    + "     , month(rep.D) as [Mois], 1 as [Type d'enregistrement], isnull(tblProduit.CodeEE,'ND') as [Matériau], isnull(tblProduit.CodeEE,'ND') as [Standard], 'REP-3310' as [Repreneur]"
-                    + "     , convert(nvarchar(10),DATEADD(day,-day(rep.D)+1,rep.D),103) as [Date d'enlèvement]"
-                    + "     , convert(nvarchar(10),DATEADD(day,-day(rep.D)+1,rep.D),103) as [Date de livraison]"
+                    + "     , month(VueRepartitionUnitaireDetail.D) as [Mois], 1 as [Type d'enregistrement], isnull(tblProduit.CodeEE,'ND') as [Matériau], isnull(tblProduit.CodeEE,'ND') as [Standard], 'REP-3310' as [Repreneur]"
+                    + "     , convert(nvarchar(10),DATEADD(day,-day(VueRepartitionUnitaireDetail.D)+1,VueRepartitionUnitaireDetail.D),103) as [Date d'enlèvement]"
+                    + "     , convert(nvarchar(10),DATEADD(day,-day(VueRepartitionUnitaireDetail.D)+1,VueRepartitionUnitaireDetail.D),103) as [Date de livraison]"
                     + "     , 'ROUTIER' as [Mode de transport]"
                     + "     , 'RDC' as [Destination]"
-                    + " from"
-                    + " 	("
-                    + " 		select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D "
-                    + " 		from tblRepartition "
-                    + " 			inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                    + " 		union all"
-                    + " 		select RefRepartition, RefFournisseur, RefProduit, D "
-                    + " 		from tblRepartition"
-                    + " 		where RefCommandeFournisseur is null"
-                    + " 	) as rep"
-                    + " 	inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition"
-                    + " 	inner join tbrPrixReprise on tbrPrixReprise.RefProcess=tblRepartitionCollectivite.RefProcess and tbrPrixReprise.RefComposant=tblRepartitionCollectivite.RefProduit and tbrPrixReprise.RefProduit=rep.RefProduit"
-                    + " 		and month(rep.D)=month(tbrPrixReprise.D) and year(rep.D)=year(tbrPrixReprise.D)"
-                    + " 	inner join tbrProcess on tblRepartitionCollectivite.RefProcess=tbrProcess.RefProcess"
-                    + " 	inner join tblEntite as collectivite on tblRepartitionCollectivite.RefCollectivite=collectivite.RefEntite"
-                    + " 	inner join tblEntite as fournisseur on rep.RefFournisseur=fournisseur.RefEntite"
+                    + " from VueRepartitionUnitaireDetail"
+                    + "     left join tblCommandeFournisseur on VueRepartitionUnitaireDetail.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
+                    + "     left join VueCommandeFournisseurContrat on VueRepartitionUnitaireDetail.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
+                    + "     inner join tbrPrixReprise on tbrPrixReprise.RefProcess=VueRepartitionUnitaireDetail.RefProcess and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit "
+                    + "     	and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit"
+                    + "     	and month(VueRepartitionUnitaireDetail.D)=month(tbrPrixReprise.D) and year(VueRepartitionUnitaireDetail.D)=year(tbrPrixReprise.D)"
+                    + "     	and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
+                    + " 	inner join tbrProcess on VueRepartitionUnitaireDetail.RefProcess=tbrProcess.RefProcess"
+                    + " 	inner join tblEntite as collectivite on VueRepartitionUnitaireDetail.RefFournisseur=collectivite.RefEntite"
+                    + " 	inner join tblEntite as fournisseur on tblCommandeFournisseur.RefEntite=fournisseur.RefEntite"
                     + " 	inner join (select RefEntite, max(CodePostal) as CodePostal from tblAdresse where RefAdresseType=1 group by RefEntite) as adr on collectivite.RefEntite=adr.RefEntite"
-                    + " 	inner join tblProduit on rep.RefProduit=tblProduit.refProduit"
+                    + " 	inner join tblProduit on VueRepartitionUnitaireDetail.RefProduit=tblProduit.refProduit"
                     + " 	left join tbmRegionEEDpt on substring(adr.CodePostal,1,2)=tbmRegionEEDpt.RefDpt"
                     + " 	left join tbrRegionEE on tbmRegionEEDpt.RefRegionEE=tbrRegionEE.RefRegionEE"
-                    + " where rep.D between @begin and @end and collectivite.RefEcoOrganisme in(1,2)";
+                    + " where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=1 and collectivite.RefEcoOrganisme in(1,2)";
                 //Filters
                 if (eSF.FilterBegin != "" && eSF.FilterEnd != "")
                 {
@@ -3257,9 +3295,9 @@ namespace eVaSys.Controllers
                     sqlStr += ")";
                 }
                 //Group by
-                sqlStr += " group by year(rep.D), 'T'+cast(datepart(quarter,rep.D) as nvarchar(1)), month(rep.D), isnull(tbrRegionEE.Libelle, 'NR'), collectivite.CodeEE, tbrProcess.Libelle, fournisseur.CodeEE, fournisseur.Libelle, dbo.ToCiteoStandard(tblProduit.NomCommun), isnull(tblProduit.CodeEE,'ND'), tblRepartitionCollectivite.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
-                    + " , cast(year(rep.D) as nvarchar(4)) + 'T' + cast(datepart(quarter,rep.D) as nvarchar(1)) + '-' + collectivite.CodeEE + '-' + fournisseur.CodeEE + '-' + cast(month(rep.D) as nvarchar) + '_' + dbo.ToCiteoStandard(tblProduit.NomCommun)"
-                    + " , convert(nvarchar(10),DATEADD(day,-day(rep.D)+1,rep.D),103)";
+                sqlStr += " group by year(VueRepartitionUnitaireDetail.D), 'T'+cast(datepart(quarter,VueRepartitionUnitaireDetail.D) as nvarchar(1)), month(VueRepartitionUnitaireDetail.D), isnull(tbrRegionEE.Libelle, 'NR'), collectivite.CodeEE, tbrProcess.Libelle, fournisseur.CodeEE, fournisseur.Libelle, dbo.ToCiteoStandard(tblProduit.NomCommun), isnull(tblProduit.CodeEE,'ND'), VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
+                    + " , cast(year(VueRepartitionUnitaireDetail.D) as nvarchar(4)) + 'T' + cast(datepart(quarter,VueRepartitionUnitaireDetail.D) as nvarchar(1)) + '-' + collectivite.CodeEE + '-' + fournisseur.CodeEE + '-' + cast(month(VueRepartitionUnitaireDetail.D) as nvarchar) + '_' + dbo.ToCiteoStandard(tblProduit.NomCommun)"
+                    + " , convert(nvarchar(10),DATEADD(day,-day(VueRepartitionUnitaireDetail.D)+1,VueRepartitionUnitaireDetail.D),103)";
                 //Count
                 sqlStrCount = sqlStr;
             }
@@ -4454,40 +4492,17 @@ namespace eVaSys.Controllers
                             + " 	, univers.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurPoidsReparti.ToString()].Name + "]"
                             + "     , univers.PUHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHT.ToString()].Name + "]"
                             + " from"
-                            + " 	( select u.RefCommandeFournisseur, u.RefProcess, PUHT, u.PUHTSurtri, u.PUHTTransport, sum(u.Poids) as Poids"
-                            + " 		from"
-                            + " 		("
-                            + " 	        ( select rep.RefCommandeFournisseur, rep.RefProduit, tblRepartitionCollectivite.RefProcess, rep.D, Poids"
-                            + " 		    , tblRepartitionCollectivite.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport as PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
-                            + " 		    from"
-                            + " 	            ("
-                            + " 		            select RefRepartition, tblCommandeFournisseur.RefCommandeFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D "
-                            + " 		            from tblRepartition "
-                            + " 			            inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                            + " 	            ) as rep"
-                            + " 	            inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition"
-                            + " 	            inner join tbrPrixReprise on tbrPrixReprise.RefProcess=tblRepartitionCollectivite.RefProcess and tbrPrixReprise.RefComposant=tblRepartitionCollectivite.RefProduit and tbrPrixReprise.RefProduit=rep.RefProduit"
-                            + " 		            and month(rep.D)=month(tbrPrixReprise.D) and year(rep.D)=year(tbrPrixReprise.D)"
-                            + "             where rep.D between @begin and @end"
-                            + "                 and tblRepartitionCollectivite.RefCollectivite in (" + filterCollectivites + ")"
-                            + " 		        )"
-                            + " 		    union all"
-                            + " 	        ( select rep.RefCommandeFournisseur, rep.RefProduit, tblRepartitionProduit.RefProcess, rep.D, Poids"
-                            + " 		    , tblRepartitionProduit.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport as PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
-                            + " 		    from"
-                            + " 	            ("
-                            + " 		            select RefRepartition, tblCommandeFournisseur.RefCommandeFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D "
-                            + " 		            from tblRepartition "
-                            + " 			            inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                            + " 	            ) as rep"
-                            + " 	            inner join tblRepartitionProduit on tblRepartitionProduit.RefRepartition=rep.RefRepartition"
-                            + " 	            inner join tbrPrixReprise on tbrPrixReprise.RefProcess=tblRepartitionProduit.RefProcess and tbrPrixReprise.RefComposant=tblRepartitionProduit.RefProduit and tbrPrixReprise.RefProduit=rep.RefProduit"
-                            + " 		            and month(rep.D)=month(tbrPrixReprise.D) and year(rep.D)=year(tbrPrixReprise.D)"
-                            + "             where rep.D between @begin and @end"
-                            + "                 and tblRepartitionProduit.RefFournisseur in (" + filterCollectivites + ")"
-                            + " 		    )"
-                            + "         ) as u"
-                            + "         group by u.RefCommandeFournisseur, u.RefProcess, PUHT, u.PUHTSurtri, u.PUHTTransport"
+                            + " 	( select VueRepartitionUnitaireDetail.RefCommandeFournisseur, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport, sum(VueRepartitionUnitaireDetail.Poids) as Poids"
+                            + "         from tblCommandeFournisseur"
+                            + "             inner join VueRepartitionUnitaireDetail on tblCommandeFournisseur.RefCommandeFournisseur=VueRepartitionUnitaireDetail.RefCommandeFournisseur"
+                            + "         	left join VueCommandeFournisseurContrat on VueRepartitionUnitaireDetail.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
+                            + "         	inner join tbrPrixReprise on tbrPrixReprise.RefProcess=VueRepartitionUnitaireDetail.RefProcess and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit "
+                            + "         		and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit"
+                            + "         		and month(VueRepartitionUnitaireDetail.D)=month(tbrPrixReprise.D) and year(VueRepartitionUnitaireDetail.D)=year(tbrPrixReprise.D)"
+                            + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
+                            + "             where VueRepartitionUnitaireDetail.D between @begin and @end"
+                            + "                 and VueRepartitionUnitaireDetail.RefFournisseur in (" + filterCollectivites + ")"
+                            + "         group by VueRepartitionUnitaireDetail.RefCommandeFournisseur, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
                             + "      )"
                             + " 	 as univers"
                             + "         inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=univers.RefCommandeFournisseur"
@@ -4498,6 +4513,67 @@ namespace eVaSys.Controllers
                             + " 	    inner join tbrCamionType on tblCommandeFournisseur.RefCamionType=tbrCamionType.refCamionType"
                             + " 	    inner join tblProduit on tblCommandeFournisseur.RefProduit=tblProduit.refProduit"
                             + " 	    inner join tbrProcess on univers.RefProcess=tbrProcess.RefProcess";
+                        //sqlStr = "select year(tblCommandeFournisseur.DDechargement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AnneeNb.ToString()].Name + "]"
+                        //    + "     , month(tblCommandeFournisseur.DDechargement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.MoisNb.ToString()].Name + "]"
+                        //    + "     , fournisseur.CodeEE as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCITEO.ToString()].Name + "]"
+                        //    + "     , fournisseur.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriLibelle.ToString()].Name + "]"
+                        //    + "     , tblCommandeFournisseur.Ville as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AdresseVille.ToString()].Name + "]"
+                        //    + "     , tblProduit.NomCommun as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
+                        //    + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
+                        //    + "     , NumeroAffretement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement.ToString()].Name + "]"
+                        //    + "     , tblCommandeFournisseur.D as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDDisponibilite.ToString()].Name + "]"
+                        //    + "     , tbrCamionType.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CamionTypeLibelle.ToString()].Name + "]"
+                        //    + "     , tblCommandeFournisseur.DChargement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDChargement.ToString()].Name + "]"
+                        //    + "     , tblCommandeFournisseur.DDechargement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDDechargement.ToString()].Name + "]"
+                        //    + "     , client.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ClientLibelle.ToString()].Name + "]"
+                        //    + "     , tbrPays.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PaysLibelle.ToString()].Name + "]"
+                        //    + " 	, univers.Poids as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurPoidsReparti.ToString()].Name + "]"
+                        //    + "     , univers.PUHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHT.ToString()].Name + "]"
+                        //    + " from"
+                        //    + " 	( select u.RefCommandeFournisseur, u.RefProcess, PUHT, u.PUHTSurtri, u.PUHTTransport, sum(u.Poids) as Poids"
+                        //    + " 		from"
+                        //    + " 		("
+                        //    + " 	        ( select rep.RefCommandeFournisseur, rep.RefProduit, tblRepartitionCollectivite.RefProcess, rep.D, Poids"
+                        //    + " 		    , tblRepartitionCollectivite.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport as PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
+                        //    + " 		    from"
+                        //    + " 	            ("
+                        //    + " 		            select RefRepartition, tblCommandeFournisseur.RefCommandeFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D "
+                        //    + " 		            from tblRepartition "
+                        //    + " 			            inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
+                        //    + " 	            ) as rep"
+                        //    + " 	            inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition"
+                        //    + " 	            inner join tbrPrixReprise on tbrPrixReprise.RefProcess=tblRepartitionCollectivite.RefProcess and tbrPrixReprise.RefComposant=tblRepartitionCollectivite.RefProduit and tbrPrixReprise.RefProduit=rep.RefProduit"
+                        //    + " 		            and month(rep.D)=month(tbrPrixReprise.D) and year(rep.D)=year(tbrPrixReprise.D)"
+                        //    + "             where rep.D between @begin and @end"
+                        //    + "                 and tblRepartitionCollectivite.RefCollectivite in (" + filterCollectivites + ")"
+                        //    + " 		        )"
+                        //    + " 		    union all"
+                        //    + " 	        ( select rep.RefCommandeFournisseur, rep.RefProduit, tblRepartitionProduit.RefProcess, rep.D, Poids"
+                        //    + " 		    , tblRepartitionProduit.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport as PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
+                        //    + " 		    from"
+                        //    + " 	            ("
+                        //    + " 		            select RefRepartition, tblCommandeFournisseur.RefCommandeFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D "
+                        //    + " 		            from tblRepartition "
+                        //    + " 			            inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
+                        //    + " 	            ) as rep"
+                        //    + " 	            inner join tblRepartitionProduit on tblRepartitionProduit.RefRepartition=rep.RefRepartition"
+                        //    + " 	            inner join tbrPrixReprise on tbrPrixReprise.RefProcess=tblRepartitionProduit.RefProcess and tbrPrixReprise.RefComposant=tblRepartitionProduit.RefProduit and tbrPrixReprise.RefProduit=rep.RefProduit"
+                        //    + " 		            and month(rep.D)=month(tbrPrixReprise.D) and year(rep.D)=year(tbrPrixReprise.D)"
+                        //    + "             where rep.D between @begin and @end"
+                        //    + "                 and tblRepartitionProduit.RefFournisseur in (" + filterCollectivites + ")"
+                        //    + " 		    )"
+                        //    + "         ) as u"
+                        //    + "         group by u.RefCommandeFournisseur, u.RefProcess, PUHT, u.PUHTSurtri, u.PUHTTransport"
+                        //    + "      )"
+                        //    + " 	 as univers"
+                        //    + "         inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=univers.RefCommandeFournisseur"
+                        //    + " 	    inner join tblEntite as fournisseur on fournisseur.RefEntite=tblCommandeFournisseur.RefEntite"
+                        //    + " 	    inner join tblAdresse on tblAdresse.RefAdresse=tblCommandeFournisseur.RefAdresseClient"
+                        //    + " 	    inner join tbrPays on tblAdresse.RefPays=tbrPays.RefPays"
+                        //    + " 	    inner join tblEntite as client on client.RefEntite=tblAdresse.RefEntite"
+                        //    + " 	    inner join tbrCamionType on tblCommandeFournisseur.RefCamionType=tbrCamionType.refCamionType"
+                        //    + " 	    inner join tblProduit on tblCommandeFournisseur.RefProduit=tblProduit.refProduit"
+                        //    + " 	    inner join tbrProcess on univers.RefProcess=tbrProcess.RefProcess";
                         //Filters
                         if (eSF.FilterCollecte == "Collecte")
                         {
@@ -4586,7 +4662,11 @@ namespace eVaSys.Controllers
                             if (_dbContext.ContratEntites.Where(e => e.RefEntite == fC).Count() > 0)
                             {
                                 sqlStr += " and tbrPrixReprise.RefContrat is not null";
-                            };
+                            }
+                            else
+                            {
+                                sqlStr += " and tbrPrixReprise.RefContrat is null";
+                            }
                         }
                         sqlStr += "             ) as tbrPrixReprise on tbrPrixReprise.RefProcess=u.RefProcess and tbrPrixReprise.RefComposant=u.RefComposant and tbrPrixReprise.RefProduit=u.RefProduit and tbrPrixReprise.D=u.D"
                             + "      ) as univers"
@@ -4988,7 +5068,7 @@ namespace eVaSys.Controllers
                     }
                     if (menu == Enumerations.MenuName.LogistiqueMenuEtatReceptionEmballagePlastique.ToString())
                     {
-                        sqlStrFinal += " ORDER BY year(rep.D), 'T'+cast(datepart(quarter,rep.D) as nvarchar(1)), month(rep.D), collectivite.CodeEE";
+                        sqlStrFinal += " ORDER BY year(VueRepartitionUnitaireDetail.D), 'T'+cast(datepart(quarter,VueRepartitionUnitaireDetail.D) as nvarchar(1)), month(VueRepartitionUnitaireDetail.D), collectivite.CodeEE";
                     }
                     if (menu == Enumerations.MenuName.LogistiqueMenuEtatVenteAnnuelleProduitClient.ToString())
                     {

@@ -35,7 +35,7 @@ namespace eVaSys.Controllers
         /// <summary>
         /// GET: api/exportsage/setachatventefilter
         /// ROUTING TYPE: attribute-based
-        /// create text file for SAGE : achats/ventes
+        /// Set filters value
         /// </summary>
         /// <returns>Text file</returns>
         [HttpGet("setachatventefilter")]

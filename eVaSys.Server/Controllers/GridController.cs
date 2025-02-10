@@ -2184,8 +2184,8 @@ namespace eVaSys.Controllers
                             int r = DbContext.PrixReprises.Where(el => el.D.Year == yTo && el.D.Month == mTo).Count();
                             if (r == 0)
                             {
-                                sqlStrCopy = "insert into tbrPrixReprise (D,RefProcess,RefProduit,RefComposant,PUHT, PUHTSurtri, PUHTTransport,RefUtilisateurCreation)"
-                                    + " select convert(datetime,'" + "01/" + mTo.ToString() + "/" + yTo.ToString() + "',103),RefProcess,RefProduit,RefComposant,PUHT, PUHTSurtri, PUHTTransport," + CurrentContext.RefUtilisateur.ToString()
+                                sqlStrCopy = "insert into tbrPrixReprise (D,RefProcess,RefProduit,RefComposant, RefContrat,PUHT, PUHTSurtri, PUHTTransport,RefUtilisateurCreation)"
+                                    + " select convert(datetime,'" + "01/" + mTo.ToString() + "/" + yTo.ToString() + "',103),RefProcess,RefProduit,RefComposant,RefContrat,PUHT, PUHTSurtri, PUHTTransport," + CurrentContext.RefUtilisateur.ToString()
                                     + " from tbrPrixReprise"
                                     + " where MONTH(D)=" + mFrom.ToString() + " and YEAR(D)=" + yFrom.ToString();
                                 i = Utils.Utils.DbExecute(sqlStrCopy, (SqlConnection)DbContext.Database.GetDbConnection());

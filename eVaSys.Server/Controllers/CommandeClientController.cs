@@ -37,7 +37,7 @@ namespace eVaSys.Controllers
         #region RESTful Conventions
         /// <summary>
         /// GET: evapi/commandeclient/{id}
-        /// Retrieves the CommandeClient with the given {id}
+        /// Retrieves the CommandeClient with the given {id} or that correspond to header parameters
         /// </summary>
         /// <param name="id">The ID of an existing CommandeClient</param>
         /// <returns>the CommandeClient with the given {id}</returns>
@@ -85,7 +85,8 @@ namespace eVaSys.Controllers
                         .Include(r => r.CommandeClientMensuelles)
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
-                        .Where(el => (el.RefAdresse == refA && el.RefProduit == refP && el.RefContrat == null
+                        .Where(el => (el.RefAdresse == refA && el.RefProduit == refP 
+                            && el.RefContrat == null
                             && el.CommandeClientMensuelles.Any(r => (r.D.Month == dRef.Month && r.D.Year == dRef.Year))))
                         .FirstOrDefault();
                     }

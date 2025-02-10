@@ -194,7 +194,7 @@ namespace eVaSys.Data
         public virtual DbSet<UtilisateurAPI> UtilisateurAPIs { get; set; }
         public virtual DbSet<Verrouillage> Verrouillages { get; set; }
 
-        //Scalar functions
+        //Scalar functions declarations as sendin exception, to be sure they are not used this way, but correctly in a query
         [DbFunction("GetRefContratType1", "dbo")]
         public static int GetRefContratType1(int refEntiteFournisseur, int refEntiteClient, DateOnly d)
         {

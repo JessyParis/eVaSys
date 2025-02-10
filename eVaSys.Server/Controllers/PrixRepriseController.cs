@@ -75,7 +75,7 @@ namespace eVaSys.Controllers
         }
         /// <summary>
         /// GET: evapi/prixreprise/{id}
-        /// Retrieves the PrixReprise with the given {id}
+        /// Retrieves the PrixReprise with the given {id}, or that corresponds to parameters in header
         /// </summary>
         /// <param name="id">The ID of an existing PrixReprise</param>
         /// <returns>the PrixReprise with the given {id}</returns>
