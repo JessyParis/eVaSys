@@ -1519,7 +1519,7 @@ namespace eVaSys.Controllers
             {
                 //Base SQL statement
                 sqlStr = "select tbrProcess.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProcessLibelle.ToString()].Name + "]"
-                    + "     , tblProduit.NomCommun as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
+                    + "     , tblProduit.NomCommun + case when univers.RefContrat is null then '' else ' ('+tblContrat.IdContrat+')' end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                     + "     , composant.NomCommun as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ComposantLibelle.ToString()].Name + "]"
                     + "     , cast(Poids as decimal(15,3))/1000 as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsTonne.ToString()].Name + "]"
                     + "     , PUHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixEuroHTTonne.ToString()].Name + "]"
@@ -1531,6 +1531,7 @@ namespace eVaSys.Controllers
                     + "      (select RefProduit, RefProcess, RefComposant, sum(Poids) as Poids"
                     + "          , PUHT + PUHTSurtri + PUHTTransport as PUHT, PUHTSurtri, PUHTTransport"
                     + "          , PUHT as PUHTNet, PUHT * sum(Poids) as [PU]"
+                    + "          , RefContrat"
                     + "          from"
                     + "         ("
                     + "         select VueRepartitionUnitaireDetail.RefProduit, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant, Poids"
@@ -1560,11 +1561,12 @@ namespace eVaSys.Controllers
                     sqlStr += " and 1!=1";
                 }
                 sqlStr += "         ) as u"
-                    + "          group by RefProduit, RefProcess, RefComposant, PUHT + PUHTSurtri + PUHTTransport, PUHTSurtri, PUHTTransport, PUHT"
+                    + "          group by RefProduit, RefProcess, RefComposant, PUHT + PUHTSurtri + PUHTTransport, PUHTSurtri, PUHTTransport, PUHT, RefContrat"
                     + "           ) as univers"
                     + "      inner join tblProduit on univers.RefProduit = tblProduit.refProduit"
                     + "      inner join tblProduit as composant on composant.RefProduit = univers.RefComposant"
                     + "      inner join tbrProcess on tbrProcess.RefProcess = univers.RefProcess"
+                    + "      left join tblContrat on tblContrat.RefContrat=univers.RefContrat"
                     + "     where 1=1";
                 //Détail par collectivité
                 //sqlStr = "select tbrProcess.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProcessLibelle.ToString()].Name + "]"

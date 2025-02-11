@@ -173,20 +173,6 @@ namespace eVaSys.Data
         public string IsDeletable()
         {
             string r = "";
-            //bool noLinkedData = (
-            //    Utils.Utils.DbScalar("select count(*) from tbmDescriptionControleProduit where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tbmGroupeDescriptionControleProduit where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tblFicheControle where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tbmDescriptionCVQProduit where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tbmProduitComposant where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tblCleRepartition where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tblCommandeClient where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tblCommandeFournisseur where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tbrPrixReprise where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tblRepartitionCollectivite where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tblRepartitionProduit where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    && Utils.Utils.DbScalar("select count(*) from tblRepartition where RefProduit=" + RefProduit, DbContext.Database.GetDbConnection()) == "0"
-            //    );
             int nbLinkedData = DbContext.Entry(this).Collection(b => b.CommandeFournisseurs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.EntiteProduits).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeClients).Query().Count();
