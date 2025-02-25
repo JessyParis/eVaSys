@@ -408,28 +408,6 @@ namespace eVaSys.Controllers
                 + " 		on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant and tbrPrixReprise.RefContrat=tblCommandeClient.RefContrat"
                 + " where tblCommandeClient.RefContrat is not null and tblCommandeClientMensuelle.D=@d"
                 ;
-            //string sqlStr = "select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
-            //    + "     , tbrPrixReprise.RefContrat"
-            //    + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
-            //    + " from tblProduit"
-            //    + " 	inner join tbmProduitComposant on tblProduit.refProduit=tbmProduitComposant.RefProduit"
-            //    + " 	inner join tblProduit as composant on composant.RefProduit=tbmProduitComposant.RefComposant"
-            //    + " 	left join (select * from tbrPrixReprise where D=@d and RefProcess=@refProcess) as tbrPrixReprise on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant"
-            //    + " where ((composant.Actif=1 and tblProduit.Actif=1) or tbrPrixReprise.RefPrixReprise is not null) and tbrPrixReprise.RefEntite is null"
-            //    + " union all"
-            //    + " select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
-            //    + "     , tblEntite.RefEntite"
-            //    + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
-            //    + " from tblCommandeClient"
-            //    + "     inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient = tblCommandeClientMensuelle.RefCommandeClient"
-            //    + "     inner join tblProduit on tblCommandeClient.RefProduit = tblProduit.RefProduit"
-            //    + "     inner join tbmProduitComposant on tblProduit.refProduit = tbmProduitComposant.RefProduit"
-            //    + "     inner join tblProduit as composant on composant.RefProduit = tbmProduitComposant.RefComposant"
-            //    + "     inner join tblEntite on tblCommandeClient.RefEntiteFournisseur = tblEntite.RefEntite"
-            //    + "     left join(select* from tbrPrixReprise where D= @d and RefProcess = @refProcess) as tbrPrixReprise"
-            //    + "         on tbrPrixReprise.RefProduit = tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant = tbmProduitComposant.RefComposant and tbrPrixReprise.RefEntite = tblCommandeClient.RefEntiteFournisseur"
-            //    + " where RefEntiteFournisseur is not null and tblCommandeClientMensuelle.D = @d"
-            //    ;
             cmd.Parameters.Add("@refProcess", SqlDbType.Int).Value = refP;
             cmd.Parameters.Add("@d", SqlDbType.DateTime).Value = dRef;
             if (filterProduits != "")

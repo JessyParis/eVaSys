@@ -35,10 +35,6 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration["Data:DefaultConnection:ConnectionString"]
-//, sqlOptions =>
-//{
-//    sqlOptions.UseRelationalNulls(true);
-//}
 )
 );
 
@@ -96,10 +92,10 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseDeveloperExceptionPage();
-    //app.UseExceptionHandler("/Error");
-    //app.MapGet("/Error", () => Results.Problem());
-    //app.UseHsts();
+    //app.UseDeveloperExceptionPage();
+    app.UseExceptionHandler("/Error");
+    app.MapGet("/Error", () => Results.Problem());
+    app.UseHsts();
 }
 
 

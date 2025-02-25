@@ -24,7 +24,7 @@ import { BaseFormComponent } from "../../_ancestors/base-form.component";
 export class AideComponent extends BaseFormComponent<dataModelsInterfaces.Aide> {
   //Form
   form: UntypedFormGroup;
-  aide: dataModelsInterfaces.Aide = {} as dataModelsInterfaces.Aide;
+  aideObj: dataModelsInterfaces.Aide = {} as dataModelsInterfaces.Aide;
   envComponents: EnvComponent[] = [];
   envComponentListFC: UntypedFormControl = new UntypedFormControl(null);
   valeurHTMLFC: UntypedFormControl = new UntypedFormControl(null);
@@ -64,8 +64,7 @@ export class AideComponent extends BaseFormComponent<dataModelsInterfaces.Aide> 
       if (id != 0) {
         this.dataModelService.getDataModel<dataModelsInterfaces.Aide>(id, this.componentName).subscribe(result => {
           //Get data
-          this.aide = result;
-          this.sourceObj = result;
+          this.aideObj = result;
           //Update form
           this.updateForm();
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -83,25 +82,25 @@ export class AideComponent extends BaseFormComponent<dataModelsInterfaces.Aide> 
   //-----------------------------------------------------------------------------------
   //Form creation when data model exists
   updateForm() {
-    this.envComponentListFC.setValue(this.aide.Composant);
-    this.valeurHTMLFC.setValue(this.aide.ValeurHTML);
+    this.envComponentListFC.setValue(this.aideObj.Composant);
+    this.valeurHTMLFC.setValue(this.aideObj.ValeurHTML);
     //Manage screen
     this.manageScreen();
   }
   //-----------------------------------------------------------------------------------
   //Update the data model
   saveData() {
-    this.aide.Composant = this.envComponentListFC.value;
-    this.aide.ValeurHTML = this.valeurHTMLFC.value;
-    let cmp = this.applicationUserContext.envComponents.find(e => e.name == this.aide.Composant);
-    this.aide.RefRessource = cmp.ressLibel;
+    this.aideObj.Composant = this.envComponentListFC.value;
+    this.aideObj.ValeurHTML = this.valeurHTMLFC.value;
+    let cmp = this.applicationUserContext.envComponents.find(e => e.name == this.aideObj.Composant);
+    this.aideObj.RefRessource = cmp.ressLibel;
   }
   //-----------------------------------------------------------------------------------
   //Saves the data model in DB
   onSave() {
     this.saveData();
     //Update
-    this.dataModelService.postDataModel<dataModelsInterfaces.Aide>(this.aide, this.componentName)
+    this.dataModelService.postDataModel<dataModelsInterfaces.Aide>(this.aideObj, this.componentName)
       .subscribe(result => {
         //Inform user
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
