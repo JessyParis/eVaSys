@@ -10,16 +10,10 @@
 using eVaSys.Data;
 using eVaSys.Utils;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using eVaSys.APIUtils;
-using Microsoft.AspNetCore.Hosting;
-using System.Linq;
-using GemBox.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace eVaSys.Controllers
 {
@@ -3359,6 +3353,76 @@ namespace eVaSys.Controllers
                     sqlStr += Utils.Utils.CreateSQLParametersFromString("refClient", eSF.FilterClients, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
                     sqlStr += ")";
                 }
+                //Count
+                sqlStrCount = sqlStr;
+            }
+            if (menu == Enumerations.MenuName.LogistiqueMenuExtractionOscar.ToString())
+            {
+                //Base SQL statement
+                sqlStr = "select year(VueRepartitionUnitaireDetail.D) as [Année]"
+                    + "     , month(VueRepartitionUnitaireDetail.D) as [Mois d'affectation]"
+                    + "     , cast(year(VueRepartitionUnitaireDetail.D) as varchar(4))"
+                    + "         + '-' + cast(month(VueRepartitionUnitaireDetail.D) as varchar(2))"
+                    + "         + '-' + cast(collectivite.RefEntite as varchar(20))"
+                    + "         + '-' + cast(fournisseur.RefEntite as varchar(20))"
+                    + "         + '-' + cast(client.RefEntite as varchar(20))"
+                    + "         + '-' + cast(tblProduit.RefProduit as varchar(20))"
+                    + "         + '-' + isnull(cast(tbrModeTransportEE.RefModeTransportEE as varchar(20)),'NR') as [Numéro Référence]"
+                    + "     , dbo.ToCiteoStandard(tblProduit.NomCommun) as [Standard]"
+                    + "     , fournisseur.CodeEE as [Point d'enlèvement]"
+                    + "     , collectivite.CodeEE as [Collectivité]"
+                    + " 	, cast(cast(sum(Poids) as decimal(10,3))/1000 as decimal(10,3)) as [Tonnage réparti par CL (en tonnes)]"
+                    + "     , 'recycleur_final' as [Déclarant Confidentiel ou Recycleur Final ou Centre de sutri]"
+                    + "     , client.CodeEE as [Nom Destination]"
+                    + "     , tbrModeTransportEE.Libelle as [Mode de transport]"
+                    + "     , '' as [Intermédiaire 1]"
+                    + "     , '' as [Intermédiaire 2]"
+                    + "     , '' as [Intermédiaire 3]"
+                    + "     , '' as [Intermédiaire 4]"
+                    + "     , '' as [Intermédiaire 5]"
+                    + "     , '' as [Intermédiaire 6]"
+                    + "     , '' as [Intermédiaire 7]"
+                    + "     , '' as [Intermédiaire 8]"
+                    + "     , '' as [Intermédiaire 9]"
+                    + "     , '' as [Intermédiaire 10]"
+                    + " from VueRepartitionUnitaireDetail"
+                    + "     left join tblCommandeFournisseur on VueRepartitionUnitaireDetail.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
+                    + "     left join VueCommandeFournisseurContrat on VueRepartitionUnitaireDetail.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
+                    + " 	inner join tblEntite as collectivite on VueRepartitionUnitaireDetail.RefFournisseur=collectivite.RefEntite"
+                    + " 	inner join tblEntite as fournisseur on tblCommandeFournisseur.RefEntite=fournisseur.RefEntite"
+                    + " 	inner join tblAdresse on tblCommandeFournisseur.RefAdresseClient=tblAdresse.RefAdresse"
+                    + " 	inner join tblEntite as client on tblAdresse.RefEntite=client.RefEntite"
+                    + " 	inner join tblProduit on VueRepartitionUnitaireDetail.RefProduit=tblProduit.refProduit"
+                    + " 	left join tbrCamionType on tblCommandeFournisseur.RefCamionType=tbrCamionType.RefCamionType"
+                    + " 	left join tbrModeTransportEE on tbrCamionType.RefModeTransportEE=tbrModeTransportEE.RefModeTransportEE"
+                    + " where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=1 and collectivite.RefEcoOrganisme in(1,2)";
+                //Filters
+                if (eSF.FilterBegin != "" && eSF.FilterEnd != "")
+                {
+                    DateTime begin = DateTime.MinValue;
+                    DateTime end = DateTime.MinValue;
+                    if (DateTime.TryParse(eSF.FilterBegin, out begin) && DateTime.TryParse(eSF.FilterEnd, out end))
+                    {
+                        cmd.Parameters.Add("@begin", SqlDbType.DateTime).Value = begin;
+                        cmd.Parameters.Add("@end", SqlDbType.DateTime).Value = end;
+                    }
+                }
+                if (eSF.FilterCentreDeTris != "")
+                {
+                    sqlStr += " and fournisseur.RefEntite in (";
+                    sqlStr += Utils.Utils.CreateSQLParametersFromString("refCentreDeTri", eSF.FilterCentreDeTris, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                    sqlStr += ")";
+                }
+                if (eSF.FilterProduits != "")
+                {
+                    sqlStr += " and tblProduit.RefProduit in (";
+                    sqlStr += Utils.Utils.CreateSQLParametersFromString("refProduit", eSF.FilterProduits, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                    sqlStr += ")";
+                }
+                //Group by
+                sqlStr += " group by year(VueRepartitionUnitaireDetail.D), month(VueRepartitionUnitaireDetail.D), fournisseur.CodeEE, collectivite.CodeEE, dbo.ToCiteoStandard(tblProduit.NomCommun)"
+                    + "     , client.CodeEE, tbrModeTransportEE.Libelle"
+                    + "     , collectivite.RefEntite, fournisseur.RefEntite, client.RefEntite, tblProduit.RefProduit, tbrModeTransportEE.RefModeTransportEE";
                 //Count
                 sqlStrCount = sqlStr;
             }

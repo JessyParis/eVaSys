@@ -975,6 +975,11 @@
                 <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
                       && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
                       || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuExtractionOscar')" [class]="logistiqueMenuExtractionOscarStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuExtractionOscar')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
                   <td (click)="onMenu('LogistiqueMenuExtractionLeko')" [class]="logistiqueMenuExtractionLekoStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuExtractionLeko')}}</td>
                 </tr>
                 <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'

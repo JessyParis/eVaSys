@@ -380,10 +380,9 @@ namespace eVaSys.Utils
                 menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatDesEnlevements, 1426, ModuleName.Logistique, "");
                 menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuPoidsMoyenChargementProduit, 1427, ModuleName.Logistique, "");
                 menu = CreateEnvMenu(cR, MenuName.MenuDocuments, 1336, ModuleName.Logistique, "");
-
                 menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExtractionLeko, 1434, ModuleName.Logistique, "");
-
                 menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatDesFluxDevLeko, 1438, ModuleName.Logistique, "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExtractionOscar, 1549, ModuleName.Logistique, "");
 
                 //ModuleCollectivite
                 menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuAccueil, 31, ModuleName.ModuleCollectivite, "");

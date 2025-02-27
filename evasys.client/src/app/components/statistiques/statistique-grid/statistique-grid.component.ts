@@ -407,6 +407,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       case MenuName.LogistiqueMenuDelaiCommandeEnlevement:
       case MenuName.LogistiqueMenuEtatReceptionEmballagePlastique:
       case MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur:
+      case MenuName.LogistiqueMenuExtractionOscar:
       case MenuName.LogistiqueMenuEtatKmMoyen:
       case MenuName.LogistiqueMenuEtatReceptionFournisseurChargement:
       case MenuName.LogistiqueMenuEtatReception:
@@ -738,6 +739,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       || this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuEtatIncitationQualite
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatReceptionEmballagePlastique
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur
+      || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuExtractionOscar
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatDesFluxDev
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatDesFluxDevLeko
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatReceptionProduit
@@ -1114,6 +1116,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
         this.visibleFilterTransporteurList = true;
         break;
       case MenuName.LogistiqueMenuEtatReceptionEmballagePlastique:
+      case MenuName.LogistiqueMenuExtractionOscar:
         this.visibleFilterDBegin = true;
         this.form.get("DBegin").enable();
         this.visibleFilterDEnd = true;

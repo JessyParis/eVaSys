@@ -160,6 +160,7 @@ export class AppComponent implements OnInit {
   logistiqueMenuEtatReceptionEmballagePlastiqueStyle: string = "ev-menu";
   logistiqueMenuEtatSuiviTonnageRecycleurStyle: string = "ev-menu";
   logistiqueMenuEtatDesFluxDevStyle: string = "ev-menu";
+  logistiqueMenuExtractionOscarStyle: string = "ev-menu";
   logistiqueMenuEtatDesFluxDevLekoStyle: string = "ev-menu";
   menuVisualisationAnnuaireStyle: string = "ev-menu";
   menuDocumentsStyle: string = "ev-menu";
@@ -630,6 +631,7 @@ export class AppComponent implements OnInit {
     this.logistiqueMenuEtatReceptionEmballagePlastiqueStyle = "ev-menu";
     this.logistiqueMenuEtatSuiviTonnageRecycleurStyle = "ev-menu";
     this.logistiqueMenuEtatDesFluxDevStyle = "ev-menu";
+    this.logistiqueMenuExtractionOscarStyle = "ev-menu";
     this.logistiqueMenuEtatDesFluxDevLekoStyle = "ev-menu";
     this.menuVisualisationAnnuaireStyle = "ev-menu";
     this.menuDocumentsStyle = "ev-menu";
@@ -1104,6 +1106,10 @@ export class AppComponent implements OnInit {
         this.logistiqueMenuEtatDesFluxDevStyle = "ev-menu-selected";
         this.panelStatistiqueCITEOExpanded = true;
         break;
+      case "LogistiqueMenuExtractionOscar":
+        this.logistiqueMenuExtractionOscarStyle = "ev-menu-selected";
+        this.panelStatistiqueCITEOExpanded = true;
+        break;
       case "LogistiqueMenuEtatDesFluxDevLeko":
         this.logistiqueMenuEtatDesFluxDevLekoStyle = "ev-menu-selected";
         this.panelStatistiqueCITEOExpanded = true;
@@ -1453,6 +1459,7 @@ export class AppComponent implements OnInit {
         case MenuName.LogistiqueMenuEtatReceptionEmballagePlastique:
         case MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur:
         case MenuName.LogistiqueMenuEtatDesFluxDev:
+        case MenuName.LogistiqueMenuExtractionOscar:
         case MenuName.LogistiqueMenuEtatDesFluxDevLeko:
         case MenuName.AnnuaireMenuEvolutionTonnage:
           this.router.navigate(["statistique-grid"]);

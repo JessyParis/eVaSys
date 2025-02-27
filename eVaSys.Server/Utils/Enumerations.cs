@@ -213,6 +213,7 @@ namespace eVaSys.Utils
             LogistiqueMenuEtatCoutTransport,
             LogistiqueMenuExportSAGE,
             LogistiqueMenuExtractionTransport,
+            LogistiqueMenuExtractionOscar,
             LogistiqueMenuImporterTransport,
             LogistiqueMenuImpression,
             LogistiqueMenuLotDisponible,

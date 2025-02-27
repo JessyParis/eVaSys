@@ -1351,6 +1351,14 @@ namespace eVaSys.Utils
             rowVals[1] = Enumerations.HabilitationLogistique.Utilisateur.ToString();
             menuRights.Rows.Add(rowVals);
             rowVals = new object[2];
+            rowVals[0] = Enumerations.MenuName.LogistiqueMenuExtractionOscar.ToString();
+            rowVals[1] = Enumerations.HabilitationLogistique.Administrateur.ToString();
+            menuRights.Rows.Add(rowVals);
+            rowVals = new object[2];
+            rowVals[0] = Enumerations.MenuName.LogistiqueMenuExtractionOscar.ToString();
+            rowVals[1] = Enumerations.HabilitationLogistique.Utilisateur.ToString();
+            menuRights.Rows.Add(rowVals);
+            rowVals = new object[2];
             rowVals[0] = Enumerations.MenuName.LogistiqueMenuEtatDesFluxDevLeko.ToString();
             rowVals[1] = Enumerations.HabilitationLogistique.Administrateur.ToString();
             menuRights.Rows.Add(rowVals);

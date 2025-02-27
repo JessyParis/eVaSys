@@ -9,14 +9,10 @@
 /// ----------------------------------------------------------------------------------------------------- 
 
 using System.Data;
-using System.IO;
 using System.Text;
-using System;
 using eVaSys.Data;
-using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using GemBox.Spreadsheet;
 using eValorplast.BLL;
 using GemBox.Spreadsheet.Charts;
@@ -1689,270 +1685,6 @@ namespace eVaSys.Utils
                 return ms;
             }
         }
-        //------------------------------------------------------------------------------------------------------------------
-        /// <summary>
-        /// Create Certificat de recyclage HCS
-        /// </summary>
-        //public static MemoryStream CreateCertificatRecyclageHCS_old(Quarter t, string filterCollectivites, string fileType, ApplicationDbContext dbContext, string rootPath)
-        //{
-        //    MemoryStream ms = new();
-        //    int i = 0; //Compteur de lignes
-        //    int l = 0;      //Compteur de lignes
-        //    int f = 0;  //compteur de feuilles
-        //    string sqlStr = "";
-        //    SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
-        //    var excelFile = ExcelFile.Load(rootPath + @"\Assets\Templates\EtatTrimestrielCollectivite.xlsx");            //Création de la feuille
-        //    GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
-        //    //Initialisations
-        //    //Préparation au chargement des collectivités
-        //    SqlCommand cmdCollectivite = new(); //commande Sql courante
-        //    cmdCollectivite.Parameters.Add("@debut", SqlDbType.DateTime).Value = t.Begin;
-        //    cmdCollectivite.Parameters.Add("@fin", SqlDbType.DateTime).Value = t.End;
-        //    //Préparation à l'impression en masse
-        //    //Création de la source de données pour les collectivités
-        //    sqlStr = "select distinct tblRepartitionCollectivite.RefCollectivite, tblEntite.CodeEE, tblEntite.Libelle, c.Adr1, c.adr2"
-        //        + "     , c.CodePostal, c.Ville, c.Libelle, c.Nom"
-        //        + " from"
-        //        + "     ("
-        //        + "         select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D "
-        //        + "         from tblRepartition "
-        //        + " 	        inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-        //        + "         union all"
-        //        + "         select RefRepartition, RefFournisseur, RefProduit, D "
-        //        + "         from tblRepartition"
-        //        + "         where RefCommandeFournisseur is null"
-        //        + "     ) as rep"
-        //        + "     inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition"
-        //        + "     inner join tblEntite on tblRepartitionCollectivite.RefCollectivite=tblEntite.RefEntite"
-        //        + "     left join(select tblAdresse.RefEntite, tblAdresse.Adr1, tblAdresse.adr2, tblAdresse.CodePostal, tblAdresse.Ville, tbrCivilite.Libelle, tblContact.Nom"
-        //        + "         from tblAdresse "
-        //        + "             inner join tbmContactAdresse on tbmContactAdresse.RefAdresse=tblAdresse.RefAdresse"
-        //        + "             inner join tbmContactAdresseContactAdresseProcess on tbmContactAdresseContactAdresseProcess.RefContactAdresse=tbmContactAdresse.RefContactAdresse"
-        //        + "             left join tblContact on tblContact.RefContact=tbmContactAdresse.RefContact"
-        //        + "             left join tbrCivilite on tblContact.RefCivilite=tbrCivilite.RefCivilite"
-        //        + "         where RefContactAdresseProcess=3"
-        //        + "         ) as c on tblEntite.RefEntite=c.RefEntite";
-        //    if (!string.IsNullOrEmpty(filterCollectivites))
-        //    {
-        //        sqlStr += " where tblEntite.RefEntite in (";
-        //        sqlStr += Utils.CreateSQLParametersFromString("refEntite", filterCollectivites, ref cmdCollectivite, Enumerations.EnvDataColumnDataType.intNumber.ToString());
-        //        sqlStr += ")"
-        //            + " order by tblEntite.CodeEE";
-        //    }
-        //    else
-        //    {
-        //        sqlStr += " where rep.D between @debut and @fin"
-        //            + " order by tblEntite.CodeEE";
-        //    }
-        //    //Chargement des données
-        //    using (SqlConnection sqlConn = (SqlConnection)dbContext.Database.GetDbConnection())
-        //    {
-        //        sqlConn.Open();
-        //        cmdCollectivite.Connection = sqlConn;
-        //        cmdCollectivite.CommandText = sqlStr;
-        //        DataSet ds = new();
-        //        SqlDataAdapter adapter = new();
-        //        adapter.SelectCommand = cmdCollectivite;
-        //        adapter.Fill(ds);
-        //        foreach (DataRow dRow in ds.Tables[0].Rows)
-        //        {
-        //            //Initialisations
-        //            string refEntite = dRow[0].ToString();
-        //            string codeEE = dRow[1].ToString();
-        //            string libelle = dRow[2].ToString();
-        //            string adr1 = dRow[3].ToString();
-        //            string adr2 = dRow[4].ToString();
-        //            string codePostal = dRow[5].ToString();
-        //            string ville = dRow[6].ToString();
-        //            string civilite = dRow[7].ToString();
-        //            string nom = dRow[8].ToString();
-        //            //Copie des feuilles
-        //            ws = excelFile.Worksheets[f];
-        //            ws.Name = ws.Name + refEntite;
-        //            excelFile.Worksheets.AddCopy("Etat", ws);
-        //            //Traitement de la feuille état
-        //            //Gestion image
-        //            if (t.Begin <= new DateTime(2014, 3, 31))
-        //            {
-        //                ws.Pictures.Add(@"\\images\\SignatureDelorme.jpg", ws.Pictures[1].Position.From, ws.Pictures[1].Position.To).Position.Mode = ws.Pictures[1].Position.Mode;
-        //            }
-        //            //Texte
-        //            ws = excelFile.Worksheets[f];
-        //            ws.Cells[5, 6].Value += t.Name;
-        //            ws.Cells[8, 6].Value = libelle;
-        //            ws.Cells[9, 6].Value = adr1;
-        //            l = 10;
-        //            if (adr2 != "")
-        //            {
-        //                ws.Cells[l, 6].Value = adr2;
-        //                l++;
-        //            }
-        //            ws.Cells[l, 6].Value = codePostal + " " + ville;
-        //            l += 3;
-        //            ws.Cells[14, 6].Value += civilite + " " + nom;
-        //            ws.Cells[15, 6].Value += DateTime.Now.ToString("dd/MM/yyyy");
-        //            ws.Cells[17, 0].Value += codeEE;
-        //            //Gestion des produits
-        //            //Création de la source de données
-        //            sqlStr = "select tblProduit.NomCommun, fournisseur.Libelle, tbrProcess.Libelle, composant.NomCommun, Poids, PUHT, univers.PUHTSurtri, univers.PUHTTransport"
-        //                + " from"
-        //                + " 	( select rep.RefProduit, rep.RefFournisseur, tblRepartitionCollectivite.RefProcess, tblRepartitionCollectivite.RefProduit as RefComposant, sum(Poids) as Poids"
-        //                + " 		, tblRepartitionCollectivite.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport as PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
-        //                + " 		from"
-        //                + " 			("
-        //                + " 				select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D"
-        //                + " 				from tblRepartition"
-        //                + " 					inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-        //                + " 				where tblCommandeFournisseur.DDechargement >= convert(datetime,'" + t.Begin.ToString("yyyy-MM-dd 00:00:00") + "',120) and DDechargement < convert(datetime,'" + (t.End.AddDays(1)).ToString("yyyy-MM-dd 00:00:00") + "',120)"
-        //                + " 				union all"
-        //                + " 				select RefRepartition, RefFournisseur, RefProduit, D"
-        //                + " 				from tblRepartition"
-        //                + " 				where RefCommandeFournisseur is null and D >= convert(datetime,'" + t.Begin.ToString("yyyy-MM-dd 00:00:00") + "',120) and D < convert(datetime,'" + (t.End.AddDays(1)).ToString("yyyy-MM-dd 00:00:00") + "',120)) as rep"
-        //                + " 			inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition"
-        //                + " 			inner join tbrPrixReprise on tbrPrixReprise.RefProcess=tblRepartitionCollectivite.RefProcess and tbrPrixReprise.RefComposant=tblRepartitionCollectivite.RefProduit and tbrPrixReprise.RefProduit=rep.RefProduit"
-        //                + " 					and month(rep.D)=month(tbrPrixReprise.D) and year(rep.D)=year(tbrPrixReprise.D)"
-        //                + " 		where tblRepartitionCollectivite.RefCollectivite=" + refEntite
-        //                + " 		group by rep.RefProduit, rep.RefFournisseur, tblRepartitionCollectivite.RefProcess, tblRepartitionCollectivite.RefProduit, tblRepartitionCollectivite.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
-        //                + " 		 ) as univers"
-        //                + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"
-        //                + " 	inner join tblProduit as composant on composant.RefProduit=univers.RefComposant"
-        //                + " 	inner join tbrProcess on tbrProcess.RefProcess=univers.RefProcess"
-        //                + " 	inner join tblEntite as fournisseur on univers.RefFournisseur=fournisseur.RefEntite"
-        //                + " order by tblProduit.NomCommun, fournisseur.Libelle, tbrProcess.Libelle, composant.NomCommun";
-        //            //Chargement des données
-        //            SqlCommand cmd = new(); //commande Sql courante
-        //            cmd.Connection = sqlConn;
-        //            cmd.Parameters.Add("@debut", SqlDbType.DateTime).Value = t.Begin;
-        //            cmd.Parameters.Add("@fin", SqlDbType.DateTime).Value = t.End;
-        //            cmd.CommandText = sqlStr;
-        //            {
-        //                string produit = "";
-        //                int poids = 0;
-        //                int total = 0;
-        //                SqlDataReader dr = cmd.ExecuteReader();
-        //                l = 0;
-        //                while (dr.Read())
-        //                {
-        //                    if (l > 0)  //On ne traite pas le changement de produit pour la première ligne
-        //                    {
-        //                        if (produit != dr.GetValue(0).ToString())
-        //                        {
-        //                            //Changement de produit
-        //                            ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 9).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-        //                            ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 9).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
-        //                            ws.Cells[l + 21, 5].Style.Font.Weight = 700;
-        //                            ws.Cells[l + 21, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                            ws.Cells[l + 21, 5].Style.Font.Size = 220;
-        //                            ws.Cells[l + 21, 5].Value = "Total " + produit;
-        //                            ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                            ws.Cells[l + 21, 6].Style.Font.Weight = 700;
-        //                            ws.Cells[l + 21, 6].Style.Font.Size = 220;
-        //                            ws.Cells[l + 21, 6].Value = poids;
-        //                            produit = dr.GetValue(0).ToString();
-        //                            total += poids;
-        //                            poids = 0;
-        //                            l++;
-        //                        }
-        //                        ws.Cells[l + 21, 0].Value = dr.GetValue(0).ToString();
-        //                        ws.Cells[l + 21, 2].Value = dr.GetValue(1).ToString();
-        //                        ws.Cells[l + 21, 4].Value = dr.GetValue(2).ToString();
-        //                        ws.Cells[l + 21, 5].Value = dr.GetValue(3).ToString();
-        //                        ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                        ws.Cells[l + 21, 6].Value = dr.GetValue(4);
-        //                        ws.Cells[l + 21, 7].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                        ws.Cells[l + 21, 7].Value = dr.GetValue(5);
-        //                        ws.Cells[l + 21, 8].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                        ws.Cells[l + 21, 8].Value = dr.GetValue(6);
-        //                        ws.Cells[l + 21, 9].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                        ws.Cells[l + 21, 9].Value = dr.GetValue(7);
-        //                        poids += (int)dr.GetSqlInt32(4);
-        //                        l++;
-        //                    }
-        //                    else
-        //                    {
-        //                        ws.Cells[l + 21, 0].Value = dr.GetValue(0).ToString();
-        //                        ws.Cells[l + 21, 2].Value = dr.GetValue(1).ToString();
-        //                        ws.Cells[l + 21, 4].Value = dr.GetValue(2).ToString();
-        //                        ws.Cells[l + 21, 5].Value = dr.GetValue(3).ToString();
-        //                        ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                        ws.Cells[l + 21, 6].Value = dr.GetValue(4);
-        //                        ws.Cells[l + 21, 7].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                        ws.Cells[l + 21, 7].Value = dr.GetValue(5);
-        //                        ws.Cells[l + 21, 8].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                        ws.Cells[l + 21, 8].Value = dr.GetValue(6);
-        //                        ws.Cells[l + 21, 9].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                        ws.Cells[l + 21, 9].Value = dr.GetValue(7);
-        //                        produit = dr.GetValue(0).ToString();
-        //                        poids = (int)dr.GetSqlInt32(4);
-        //                        l++;
-        //                    }
-        //                }
-        //                //Dernier sou-total
-        //                ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 9).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-        //                ws.Cells[l + 21, 5].Style.Font.Weight = 700;
-        //                ws.Cells[l + 21, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                ws.Cells[l + 21, 5].Style.Font.Size = 220;
-        //                ws.Cells[l + 21, 5].Value = "Total " + produit;
-        //                ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                ws.Cells[l + 21, 6].Style.Font.Weight = 700;
-        //                ws.Cells[l + 21, 6].Style.Font.Size = 220;
-        //                ws.Cells[l + 21, 6].Value = poids;
-        //                total += poids;
-        //                //Total général
-        //                l++;
-        //                ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 9).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-        //                ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 9).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
-        //                ws.Cells[l + 21, 2].Style.Font.Weight = 700;
-        //                ws.Cells[l + 21, 2].Style.HorizontalAlignment = HorizontalAlignmentStyle.Center;
-        //                ws.Cells[l + 21, 2].Style.Font.Size = 220;
-        //                ws.Cells[l + 21, 2].Value = ">>>>>>> FIN DU DOCUMENT <<<<<<<";
-        //                ws.Cells[l + 21, 5].Style.Font.Weight = 700;
-        //                ws.Cells[l + 21, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                ws.Cells[l + 21, 5].Style.Font.Size = 220;
-        //                ws.Cells[l + 21, 5].Value = "Total";
-        //                ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-        //                ws.Cells[l + 21, 6].Style.Font.Weight = 700;
-        //                ws.Cells[l + 21, 6].Style.Font.Size = 220;
-        //                ws.Cells[l + 21, 6].Value = total;
-        //                //Fermeture de la source de données
-        //                dr.Close();
-        //                //Suppression des lignes en trop
-        //                for (i = 0; i < 100; i++)
-        //                {
-        //                    ws.Rows.Remove(l + 22);
-        //                }
-        //                //Impression
-        //                ws.PrintOptions.FitWorksheetHeightToPages = 0;
-        //                ws.PrintOptions.FitWorksheetWidthToPages = 1;
-        //                //                                    ws.PrintOptions.BottomMargin = 0.4;
-        //                //                                    ws.PrintOptions.TopMargin = 0.4;
-        //                //                                    ws.PrintOptions.LeftMargin = 0.4;
-        //                //                                    ws.PrintOptions.RightMargin = 0.4;
-        //                ws.PrintOptions.FitToPage = true;
-        //            }
-
-        //            //Feuille suivante
-        //            f++;
-        //        }
-        //        //Suppression des dernières feuilles
-        //        excelFile.Worksheets.Remove(f);
-        //        //Sauvegarde du fichier
-        //        if (fileType == "xlsx")
-        //        {
-        //            excelFile.Save(ms, SaveOptions.XlsxDefault);
-        //        }
-        //        else
-        //        {
-        //            PdfConformanceLevel conformanceLevel = PdfConformanceLevel.PdfA2a;
-        //            excelFile.Save(ms, new PdfSaveOptions()
-        //            {
-        //                SelectionType = SelectionType.EntireFile,
-        //                ConformanceLevel = conformanceLevel
-        //            });
-        //        }
-        //        return ms;
-        //    }
-        //}
         //------------------------------------------------------------------------------------------------------------------
         /// <summary>
         /// Create Etat mensuel réception
@@ -3823,7 +3555,8 @@ namespace eVaSys.Utils
                         EnvDataColumn envDC = null;
                         if (name != Enumerations.MenuName.LogistiqueMenuEtatReceptionEmballagePlastique.ToString()
                             && name != Enumerations.MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur.ToString()
-                            && name != Enumerations.MenuName.LogistiqueMenuEtatDesFluxDev.ToString())
+                            && name != Enumerations.MenuName.LogistiqueMenuEtatDesFluxDev.ToString()
+                            && name != Enumerations.MenuName.LogistiqueMenuExtractionOscar.ToString())
                         {
                             if (currentContext.EnvDataColumns.ContainsKey(dT.Columns[j].ColumnName))
                             {
@@ -3936,6 +3669,7 @@ namespace eVaSys.Utils
             //Titre et critères
             if (name != Enumerations.MenuName.LogistiqueMenuEtatReceptionEmballagePlastique.ToString()
                 && name != Enumerations.MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur.ToString()
+                && name != Enumerations.MenuName.LogistiqueMenuExtractionOscar.ToString()
                 )
             {
                 //Titre du tableau
@@ -4482,6 +4216,7 @@ namespace eVaSys.Utils
                         || name == Enumerations.MenuName.LogistiqueMenuEtatReceptionFournisseurChargement.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatReception.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatReceptionEmballagePlastique.ToString()
+                        || name == Enumerations.MenuName.LogistiqueMenuExtractionOscar.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatDesFluxDev.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatDesFluxDevLeko.ToString()

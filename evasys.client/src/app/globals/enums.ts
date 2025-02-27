@@ -90,6 +90,7 @@ export enum MenuName {
   LogistiqueMenuEtatCoutTransport = "LogistiqueMenuEtatCoutTransport",
   LogistiqueMenuExportSAGE = "LogistiqueMenuExportSAGE",
   LogistiqueMenuExtractionTransport = "LogistiqueMenuExtractionTransport",
+  LogistiqueMenuExtractionOscar = "LogistiqueMenuExtractionOscar",
   LogistiqueMenuImporterTransport = "LogistiqueMenuImporterTransport",
   LogistiqueMenuImpression = "LogistiqueMenuImpression",
   LogistiqueMenuLotDisponible = "LogistiqueMenuLotDisponible",
