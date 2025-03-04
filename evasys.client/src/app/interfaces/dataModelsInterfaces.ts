@@ -651,6 +651,7 @@ export interface Entite {
   SAGEDocuments: SAGEDocument[];
   DimensionBalle: string;
   IdNational: string;
+  LibelleCode: string
   CreationText: string;
   ModificationText: string;
 }
@@ -686,6 +687,7 @@ export interface EntiteList {
   RefEntite: number;
   Libelle: string;
   Actif: boolean;
+  LibelleCode: string
 }
 export interface EntiteProcess {
   RefEntiteProcess: number;

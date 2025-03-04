@@ -307,7 +307,7 @@ export function getContratLabelMultiLine(contrat: Contrat): string {
 //Create ContratEntites label
 export function getContratEntitesLabel(contrat: Contrat): string {
   let s = contrat.ContratEntites?.sort(function (a, b) { return cmp(a.Entite.Libelle, b.Entite.Libelle); })
-    .map(item => item.Entite.Libelle).join("\n");
+    .map(item => item.Entite.LibelleCode).join("\n");
   //End
   return s;
 }

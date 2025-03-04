@@ -1677,6 +1677,10 @@ namespace eVaSys.Utils
             rowVals[0] = Enumerations.ActionName.ContactModificationRequest.ToString();
             rowVals[1] = Enumerations.HabilitationAnnuaire.Administrateur.ToString();
             actionRights.Rows.Add(rowVals);
+            rowVals = new object[2];
+            rowVals[0] = Enumerations.ActionName.ContactModificationRequest.ToString();
+            rowVals[1] = Enumerations.HabilitationAnnuaire.Utilisateur.ToString();
+            actionRights.Rows.Add(rowVals);
             #endregion
         }
         //--------------------------------------------------------------------------------------------

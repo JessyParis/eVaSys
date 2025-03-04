@@ -1660,8 +1660,8 @@ namespace eVaSys.Controllers
                                 + "     left join tbrMessageType on tblMessage.RefMessageType=tbrMessageType.RefMessageType"
                                 + " where 1=1";
                             //General Filters
-                            sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, filterText
-                                , new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.MessageLibelle }
+                            sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, Utils.Utils.FormatNumeroCommande(filterText)
+                                , new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.MessageLibelle, Enumerations.DataColumnName.MessageCorps, Enumerations.DataColumnName.MessageCorpsHTML }
                                 );
                             if (!string.IsNullOrEmpty(filterMessageTypes))
                             {

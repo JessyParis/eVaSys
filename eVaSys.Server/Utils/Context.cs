@@ -959,6 +959,8 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.FormeContactLibelle, 10062, EnvDataColumnDataType.text, "Libelle", "tbrFormeContact.Libelle");
                 CreateEnvDataColumn(cR, DataColumnName.ProduitCo2KgParT, 1388, EnvDataColumnDataType.intNumber, "Co2KgParT", "tblProduit.Co2KgParT");
                 CreateEnvDataColumn(cR, DataColumnName.ProduitGroupeReportingCouleur, 1284, EnvDataColumnDataType.text, "Couleur", "tbrProduitGroupeReporting.Couleur");
+                CreateEnvDataColumn(cR, DataColumnName.MessageCorps, 654, EnvDataColumnDataType.text, "Corps", "tblMessage.Corps");
+                CreateEnvDataColumn(cR, DataColumnName.MessageCorpsHTML, 1410, EnvDataColumnDataType.text, "CorpsHTML", "tblMessage.CorpsHTML");
                 CreateEnvDataColumn(cR, DataColumnName.ModeTransportEELibelle, 10058, EnvDataColumnDataType.text, "Libelle", "tbrModeTransportEE.Libelle");
                 CreateEnvDataColumn(cR, DataColumnName.MotifAnomalieChargementLibelle, 503, EnvDataColumnDataType.text, "Libelle", "tbrMotifAnomalieChargement.Libelle");
                 CreateEnvDataColumn(cR, DataColumnName.MotifAnomalieClientLibelle, 504, EnvDataColumnDataType.text, "Libelle", "tbrMotifAnomalieClient.Libelle");

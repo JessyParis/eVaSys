@@ -429,6 +429,8 @@ export enum DataColumnName {
   JourFerie = "JourFerie",
   ListeDR = "ListeDR",
   MessageLibelle = "MessageLibelle",
+  MessageCorps = "MessageCorps",
+  MessageCorpsHTML = "MessageCorpsHTML",
   MessageDDebut = "MessageDDebut",
   MessageDFin = "MessageDFin",
   MessageTitre = "MessageTitre",

@@ -25,6 +25,7 @@ namespace eVaSys.ViewModels
         public int RefEntite { get; set; }
         public string Libelle { get; set; }
         public bool? Actif { get; set; }
+        public string LibelleCode { get; set; }
         #endregion
     }
 }

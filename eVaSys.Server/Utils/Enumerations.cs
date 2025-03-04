@@ -551,6 +551,8 @@ namespace eVaSys.Utils
             JourFerie,
             ListeDR,
             MessageLibelle,
+            MessageCorps,
+            MessageCorpsHTML,
             MessageDDebut,
             MessageDFin,
             MessageTitre,

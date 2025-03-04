@@ -835,14 +835,16 @@ namespace eVaSys.Utils
         }
         //------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Format NumeroCommande as 0000 00 000
+        /// Format NumeroCommande as 0000 00 0000 if parameter composed of 10 digits
         /// </summary>
         public static string FormatNumeroCommande(string n)
         {
             string r = n;
             if (!string.IsNullOrEmpty(n))
             {
-                if (n.Length == 10)
+                //Remove spaces
+                n = n.Replace(" ", "");
+                if (n.Length == 10 && int.TryParse(n, out _))
                 {
                     r = n.Substring(0, 4) + " " + n.Substring(4, 2) + " " + n.Substring(6, 4);
                 }

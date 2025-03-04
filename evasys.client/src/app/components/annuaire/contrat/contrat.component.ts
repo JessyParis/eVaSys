@@ -171,7 +171,7 @@ export class ContratComponent implements OnInit {
         let cE: dataModelsInterfaces.ContratEntite = {
           RefContrat: this.contrat.RefContrat,
           RefEntite: result.ref,
-          Entite: {RefEntite:result.ref, Libelle:result.libelle, Actif:true},
+          Entite: { RefEntite: result.ref, Libelle: result.libelle, Actif: true, LibelleCode:result.libelle},
         };
         exists = this.contrat.ContratEntites?.some(item => item.RefEntite == cE.RefEntite);
         if (!exists) {

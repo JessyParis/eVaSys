@@ -278,21 +278,20 @@ namespace eVaSys.Data
             set { _contrats = value; }
         }
         //Texte de synthèse
-        private string _texteEntite = "";
-        public string TexteEntite
+        public string LibelleCode
         {
             get
             {
                 //Texte de synthèse des donnée sprincipales de l'adresse
                 string s = Libelle;
-                if (EntiteType.CodeEE == true)
+                if (EntiteType?.CodeEE == true && !string.IsNullOrWhiteSpace(CodeEE))
                 {
-                    _texteEntite += " - Code CITEO : " + (string.IsNullOrEmpty(CodeEE) ? "(NR)" : CodeEE);
+                    s += " (" + CodeEE + ")";
                 }
-                if (EntiteType.Adelphe)
-                {
-                    _texteEntite += " - Région Adelphe : " + (Adelphe ? "oui" : "non");
-                }
+                //if (EntiteType?.Adelphe == true)
+                //{
+                //    s += " - Région Adelphe : " + (Adelphe ? "oui" : "non");
+                //}
                 return s;
             }
         }

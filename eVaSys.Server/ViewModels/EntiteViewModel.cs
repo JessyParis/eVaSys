@@ -76,7 +76,7 @@ namespace eVaSys.ViewModels
         public ICollection<AdresseViewModel> Adresses { get; set; }
         public ICollection<EntiteEntiteViewModel> EntiteEntites { get; set; }
         public ICollection<SAGEDocument> SAGEDocuments { get; set; }
-        public string TexteEntite { get; set; }
+        public string LibelleCode { get; set; }
         public string CreationText { get; set;}
         public string ModificationText { get; set; }
         #endregion Properties

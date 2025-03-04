@@ -99,7 +99,7 @@
                 <tbody>
                   <tr *ngFor="let cE of contrat?.ContratEntites">
                     <td style="padding: 0px 5px 0px 5px;"></td>
-                    <td style="padding: 0px 5px 0px 5px;">{{cE.Entite?.Libelle}}</td>
+                    <td style="padding: 0px 5px 0px 5px;">{{cE.Entite?.LibelleCode}}</td>
                     <td style="padding: 0px 5px 0px 5px;">
                       <button mat-icon-button *ngIf="!locked"
                               (click)="onDeleteContratEntite(cE.RefContratEntite)" type="button">
