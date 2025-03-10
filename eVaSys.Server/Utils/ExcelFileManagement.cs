@@ -1217,7 +1217,7 @@ namespace eVaSys.Utils
                     sqlStr = "select tblProduit.NomCommun, fournisseur.Libelle + case when fournisseur.CodeEE is not null then ' (' + fournisseur.CodeEE + ')' else '' end"
                         + "     , tbrProcess.Libelle, composant.NomCommun, Poids, PUHT, univers.PUHTSurtri, univers.PUHTTransport"
                         + " from"
-                        + " 	( select VueRepartitionUnitaireDetail.RefProduit, VueRepartitionUnitaireDetail.RefFournisseur, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant, sum(VueRepartitionUnitaireDetail.Poids) as Poids"
+                        + " 	( select VueRepartitionUnitaireDetail.RefProduit, tblCommandeFournisseur.RefEntite as RefFournisseur, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant, sum(VueRepartitionUnitaireDetail.Poids) as Poids"
                         + "         , VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
                         + "         from tblCommandeFournisseur"
                         + "             inner join VueRepartitionUnitaireDetail on tblCommandeFournisseur.RefCommandeFournisseur=VueRepartitionUnitaireDetail.RefCommandeFournisseur"
@@ -1228,7 +1228,7 @@ namespace eVaSys.Utils
                         + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
                         + "             where VueRepartitionUnitaireDetail.Collecte=0 and VueRepartitionUnitaireDetail.D between @debut and @fin"
                         + "                 and VueRepartitionUnitaireDetail.RefFournisseur=" + refEntite
-                        + "         group by VueRepartitionUnitaireDetail.RefProduit, VueRepartitionUnitaireDetail.RefFournisseur, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant"
+                        + "         group by VueRepartitionUnitaireDetail.RefProduit, tblCommandeFournisseur.RefEntite, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant"
                         + "             , VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
                         + " 		 ) as univers"
                         + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"
