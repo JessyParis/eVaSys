@@ -453,7 +453,7 @@ export class ListService {
   }
   //-----------------------------------------------------------------------------------
   //Get existing Client
-  getListClient(refClient: number, refProduit: number, d: moment.Moment, refEntiteRttForbidden: number, actif: boolean): Observable<dataModelsInterfaces.EntiteList[]> {
+  getListClient(refClient: number, refProduit: number, d: moment.Moment, refEntiteFournisseur: number, refEntiteRttForbidden: number, actif: boolean): Observable<dataModelsInterfaces.EntiteList[]> {
     var url = this.baseUrl + "evapi/entite/getlist";
     return this.http.get<dataModelsInterfaces.EntiteList[]>(this.baseUrl + "evapi/entite/getlist", {
       params: new HttpParams()
@@ -461,6 +461,7 @@ export class ListService {
       headers: new HttpHeaders()
         .set("actif", actif == false ? "false" : "true")
         .set("refEntite", refClient == null ? "" : refClient.toString())
+        .set("refEntiteFournisseur", refEntiteFournisseur == null ? "" : refEntiteFournisseur.toString())
         .set("refEntiteRttForbidden", refEntiteRttForbidden == null ? "" : refEntiteRttForbidden.toString())
         .set("refProduit", refProduit == null ? "" : refProduit.toString())
         .set("d", d == null ? "" : moment(d).format("YYYY-MM-DD 00:00:00.000")),

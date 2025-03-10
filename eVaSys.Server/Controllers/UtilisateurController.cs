@@ -191,6 +191,12 @@ namespace eVaSys.Controllers
             string del = Utilisateur.IsDeletable();
             if (del == "")
             {
+                //Remove link to slaves if applicable
+                foreach (var u in DbContext.Utilisateurs.Where(e => e.RefUtilisateurMaitre == Utilisateur.RefUtilisateur).ToList())
+                {
+                    u.RefUtilisateurMaitre = null;
+                }
+                //Remove Utilisateur
                 DbContext.Utilisateurs.Remove(Utilisateur);
                 // persist the changes into the Database.
                 DbContext.SaveChanges();
@@ -577,28 +583,39 @@ namespace eVaSys.Controllers
         /// </summary>
         private void UpdateData(ref Utilisateur dataModel, UtilisateurViewModel viewModel, ref bool assignmentMaitre)
         {
-            //Deactivate related contactAdresse if applicable
-            if (dataModel.ContactAdresse != null && viewModel.Actif == false && dataModel.Actif)
+            int refUtilisateur = dataModel.RefUtilisateur;
+            //Manage relations to UtilisateurMaitre
+            //On deactivation
+            if (viewModel.Actif == false && dataModel.Actif)
             {
-                dataModel.ContactAdresse.Actif = false;
-                dataModel.ContactAdresse.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
+                //Deactivate related contactAdresse if applicable
+                if (dataModel.ContactAdresse != null)
+                {
+                    dataModel.ContactAdresse.Actif = false;
+                    dataModel.ContactAdresse.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
+                }
+                //Remove link to UtilisateurMaitre if applicable
+                if (dataModel.RefUtilisateurMaitre != null) { dataModel.RefUtilisateurMaitre = null; }
+                //Remove link to slaves if applicable
+                foreach (var u in DbContext.Utilisateurs.Where(e => e.RefUtilisateurMaitre == refUtilisateur).ToList())
+                {
+                    u.RefUtilisateurMaitre = null;
+                }
             }
             //If new Maitre, record who changed it
-            if (viewModel.RefUtilisateurMaitre == null)
+            else if (viewModel.RefUtilisateurMaitre != dataModel.RefUtilisateurMaitre
+                && viewModel.RefUtilisateurMaitre != dataModel.RefUtilisateur
+                && viewModel.RefUtilisateurMaitre != null)
             {
-                //dataModel.RefUtilisateurAffectationMaitre = null;
-                //dataModel.DAffectationMaitre = null;
-            }
-            else if (viewModel.RefUtilisateurMaitre != dataModel.RefUtilisateurMaitre 
-                && viewModel.RefUtilisateurMaitre != dataModel.RefUtilisateur)
-            {
+                dataModel.RefUtilisateurMaitre = viewModel.RefUtilisateurMaitre;
                 dataModel.RefUtilisateurAffectationMaitre = CurrentContext.RefUtilisateur;
                 dataModel.DAffectationMaitre = DateTime.Now;
-                assignmentMaitre= true;
+                assignmentMaitre = true;
             }
+            //Remove maitre if applicable
+            if (viewModel.RefUtilisateurMaitre == null) { dataModel.RefUtilisateurMaitre = null; }
             //Update principal data
             dataModel.Actif = viewModel.Actif ?? false;
-            dataModel.RefUtilisateurMaitre = viewModel.RefUtilisateurMaitre;
             dataModel.Nom = Utils.Utils.SetEmptyStringToNull(viewModel.Nom);
             dataModel.Login = (string.IsNullOrWhiteSpace(viewModel.EMail) ? Utils.Utils.SetEmptyStringToNull(viewModel.Login) : null);
             dataModel.EMail = Utils.Utils.SetEmptyStringToNull(viewModel.EMail);

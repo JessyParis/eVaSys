@@ -224,7 +224,7 @@
             <mat-form-field class="ev-date-picker" style="width:100%;">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(435)}}</mat-label>
               <input matInput [matDatepicker]="pickerD" formControlName="D" required [errorStateMatcher]="matcher"
-                     (dateChange)="onDDateChange($event.value)" (dateInput)="onDDateChange($event.value)" [min]="dMin">
+                     (dateChange)="onDDateChange($event.value)" [min]="dMin">
               <mat-datepicker-toggle matIconPrefix [for]="pickerD"></mat-datepicker-toggle>
               <mat-datepicker #pickerD></mat-datepicker>
               <button *ngIf="form.get('D').value && form.get('D').enabled

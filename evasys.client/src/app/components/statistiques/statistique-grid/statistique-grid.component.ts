@@ -261,7 +261,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
     //Get existing centre de tri
     this.getListCentreDeTri();
     //Get existing Client
-    listService.getListClient(null, null, null, null, false).subscribe(result => {
+    listService.getListClient(null, null, null, null, null, false).subscribe(result => {
       this.clientList = result;
       this.filteredClientList.next(this.clientList.slice());
     }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));

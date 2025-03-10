@@ -1019,6 +1019,7 @@ export class CommandeFournisseurComponent implements OnInit {
             this.listService.getListClient(this.commandeFournisseur.AdresseClient?.RefEntite
               , this.commandeFournisseur.Produit?.RefProduit
               , (this.commandeFournisseur.DMoisDechargementPrevu == null ? moment(new Date(1, 1, 1, 0, 0, 0)) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+              , this.commandeFournisseur.Entite?.RefEntite
               , this.commandeFournisseur.Entite?.RefEntite, true
             )
               .subscribe(result => {
@@ -1662,6 +1663,7 @@ export class CommandeFournisseurComponent implements OnInit {
                     this.listService.getListClient(this.commandeFournisseur.AdresseClient?.RefEntite
                       , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
                       , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+                      , this.commandeFournisseur.Entite?.RefEntite
                       , this.commandeFournisseur.Entite?.RefEntite, true)
                       .subscribe(result => {
                         this.clientList = result;
@@ -1783,6 +1785,7 @@ export class CommandeFournisseurComponent implements OnInit {
             this.listService.getListClient(refClient
               , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
               , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+              , this.commandeFournisseur.Entite?.RefEntite
               , this.commandeFournisseur.Entite?.RefEntite, true)
               .subscribe(result => {
                 this.clientList = result;
@@ -1795,6 +1798,7 @@ export class CommandeFournisseurComponent implements OnInit {
       this.listService.getListClient(null
         , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
         , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+        , this.commandeFournisseur.Entite?.RefEntite
         , this.commandeFournisseur.Entite?.RefEntite, true)
         .subscribe(result => {
           this.clientList = result;
@@ -2031,6 +2035,7 @@ export class CommandeFournisseurComponent implements OnInit {
                     this.listService.getListClient(null
                       , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
                       , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+                      , this.commandeFournisseur.Entite?.RefEntite
                       , this.commandeFournisseur.Entite?.RefEntite, true)
                       .subscribe(result => {
                         this.clientList = result;
@@ -2240,6 +2245,7 @@ export class CommandeFournisseurComponent implements OnInit {
               this.listService.getListClient(null
                 , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
                 , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+                , this.commandeFournisseur.Entite?.RefEntite
                 , this.commandeFournisseur.Entite?.RefEntite, true)
                 .subscribe(result => {
                   this.clientList = result;
@@ -2358,6 +2364,7 @@ export class CommandeFournisseurComponent implements OnInit {
               this.listService.getListClient(this.commandeFournisseur.AdresseClient?.RefEntite
                 , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
                 , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+                , this.commandeFournisseur.Entite?.RefEntite
                 , this.commandeFournisseur.Entite?.RefEntite, true)
                 .subscribe(result => {
                   this.clientList = result;
@@ -2485,10 +2492,12 @@ export class CommandeFournisseurComponent implements OnInit {
         this.dMoisDechargementPrevuList = result;
         //Set month
         this.dMoisDechargementPrevuFC.setValue(moment(this.commandeFournisseur.D).format("YYYY-MM-01T00:00:00"));
+        this.commandeFournisseur.DMoisDechargementPrevu = (this.dMoisDechargementPrevuFC.value == null ? null : moment(this.dMoisDechargementPrevuFC.value));
         //Get existing Client if applicable
         this.listService.getListClient(this.commandeFournisseur.AdresseClient?.RefEntite
           , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
           , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+          , this.commandeFournisseur.Entite?.RefEntite
           , this.commandeFournisseur.Entite?.RefEntite, true)
           .subscribe(result => {
             this.clientList = result;
@@ -2501,6 +2510,7 @@ export class CommandeFournisseurComponent implements OnInit {
       this.listService.getListClient(this.commandeFournisseur.AdresseClient?.RefEntite
         , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
         , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+        , this.commandeFournisseur.Entite?.RefEntite
         , this.commandeFournisseur.Entite?.RefEntite, true)
         .subscribe(result => {
           this.clientList = result;
@@ -2556,10 +2566,12 @@ export class CommandeFournisseurComponent implements OnInit {
                     this.dMoisDechargementPrevuList = result;
                     //Set month
                     this.dMoisDechargementPrevuFC.setValue(moment(this.commandeFournisseur.DDechargement).format("YYYY-MM-01T00:00:00"));
+                    this.commandeFournisseur.DMoisDechargementPrevu = (this.dMoisDechargementPrevuFC.value == null ? null : moment(this.dMoisDechargementPrevuFC.value));
                     //Get existing Client if applicable
                     this.listService.getListClient(this.commandeFournisseur.AdresseClient?.RefEntite
                       , (this.commandeFournisseur.Produit ? this.commandeFournisseur.Produit.RefProduit : 0)
                       , (this.commandeFournisseur.DMoisDechargementPrevu == null ? new Date(1, 1, 1, 0, 0, 0) : this.commandeFournisseur.DMoisDechargementPrevu) as moment.Moment
+                      , this.commandeFournisseur.Entite?.RefEntite
                       , this.commandeFournisseur.Entite?.RefEntite, true)
                       .subscribe(result => {
                         this.clientList = result;

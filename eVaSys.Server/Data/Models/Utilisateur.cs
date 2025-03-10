@@ -187,7 +187,7 @@ namespace eVaSys.Data
             get
             {
                 var r = DbContext.Utilisateurs
-                    .Where(e => e.RefUtilisateur!=RefUtilisateur && e.RefUtilisateurMaitre == RefUtilisateur && Actif)
+                    .Where(e => e.RefUtilisateur!=RefUtilisateur && e.RefUtilisateurMaitre == RefUtilisateur && e.Actif)
                     .Count() > 0;
                 return r;
             }

@@ -8,7 +8,6 @@
 /// Création : 10/10/2018
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
-using Azure.Core;
 using eValorplast.BLL;
 using eVaSys.APIUtils;
 using eVaSys.Data;
@@ -17,11 +16,6 @@ using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -310,6 +304,7 @@ namespace eVaSys.Controllers
         {
             int? refEntiteType = (Request.Query.ContainsKey("refEntiteType") ? (int?)System.Convert.ToInt32(Request.Query["refEntiteType"]) : null);
             string textFilter = (Request.Query.ContainsKey("textFilter") ? Request.Query["textFilter"].ToString() : "");
+            string refEntiteFournisseur = Request.Headers["refEntiteFournisseur"].ToString();
             string refEntiteRtt = Request.Headers["refEntiteRtt"].ToString();
             string refEntiteRttForbidden = Request.Headers["refEntiteRttForbidden"].ToString();
             bool actif = (Request.Headers["actif"] == "true");
@@ -326,6 +321,7 @@ namespace eVaSys.Controllers
             int refP = 0;
             int refE = 0;
             int refEC = 0;
+            int refEF = 0;
             int refERtt = 0;
             int refERttF = 0;
             int refCT = 0;
@@ -369,6 +365,7 @@ namespace eVaSys.Controllers
                     req = req.Where(el => refEntiteRtts.ToArray().Contains(el.RefEntite));
                 }
             }
+            //Exclude forbidden linked Entites
             if (refEntiteRttForbidden != "")
             {
                 if (int.TryParse(refEntiteRttForbidden, out refERttF))
@@ -390,7 +387,7 @@ namespace eVaSys.Controllers
                     }
                 }
             }
-            //For EntiteType exept when ask for existing contrat
+            //For EntiteType exept when ask for existing contrat collectivite
             if (refEntiteType == 1 && !hasContrat)
             {
                 if (contratActif)
@@ -409,19 +406,39 @@ namespace eVaSys.Controllers
                     req = req.Where(el => el.ContratCollectivites.Count == 0);
                 }
             }
+            //Check CommandeClient
             if (int.TryParse(refProduit, out refP) && DateTime.TryParse(d, out dRef))
             {
-                req = req.Where(el => (el.CommandeClients.Any(
+                int? refContratRI = null;
+                int.TryParse(refEntiteFournisseur, out refEF);
+                if (refEF != 0)
+                {
+                    //Get Collectivite linked to the Fournisseur
+                    List<int> refEntiteRtts = DbContext.EntiteEntites
+                        .Where(e => e.RefEntite == refEF && e.EntiteRtt.Actif == true  && e.Actif == true && e.EntiteRtt.RefEntiteType == 1).Select(p => p.RefEntiteRtt).ToList();
+                    refEntiteRtts.AddRange(DbContext.EntiteEntites
+                        .Where(e => e.RefEntiteRtt == refEF && e.Entite.Actif == true && e.Actif == true && e.Entite.RefEntiteType == 1).Select(p => p.RefEntite).ToList());
+                    //Search for Contrat RI
+                    refContratRI = DbContext.Contrats
+                        .Where(e => e.RefContratType == 1 && e.DDebut <= DateOnly.FromDateTime(dRef) && e.DFin >= DateOnly.FromDateTime(dRef.AddMonths(1).AddDays(-1))
+                         && e.ContratEntites.Any(i => refEntiteRtts.Contains(i.RefEntite)))
+                        .Select(p => p.RefContrat).FirstOrDefault();
+                }
+                if (refContratRI != null)
+                {
+                    //Check contrat RI if applicable
+                    req = req.Where(el => (el.CommandeClients.Any(
+                    rel => rel.RefProduit == refP && rel.RefContrat == refContratRI && rel.CommandeClientMensuelles.Any(
+                        r => (r.D.Month == dRef.Month && r.D.Year == dRef.Year) && r.Poids > 0)))
+                         || el.RefEntite == refE);
+                }
+                else
+                {
+                    req = req.Where(el => (el.CommandeClients.Any(
                     rel => rel.RefProduit == refP && rel.CommandeClientMensuelles.Any(
                         r => (r.D.Month == dRef.Month && r.D.Year == dRef.Year) && r.Poids > 0)))
                          || el.RefEntite == refE);
-            }
-            if (int.TryParse(refProduit, out refP) && DateTime.TryParse(d, out dRef))
-            {
-                req = req.Where(el => (el.CommandeClients.Any(
-                    rel => rel.RefProduit == refP && rel.CommandeClientMensuelles.Any(
-                        r => (r.D.Month == dRef.Month && r.D.Year == dRef.Year) && r.Poids > 0)))
-                         || el.RefEntite == refE);
+                }
             }
             //Has an active Contrat
             if (hasContrat)

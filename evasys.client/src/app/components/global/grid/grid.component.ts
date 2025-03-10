@@ -279,7 +279,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       MonthListTo: new UntypedFormControl(null, Validators.required)
     });
     //Get existing client
-    listService.getListClient(null, null, null, null, false).subscribe(result => {
+    listService.getListClient(null, null, null, null, null, false).subscribe(result => {
       this.clientList = result;
       this.filteredClientList.next(this.clientList.slice());
     }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));

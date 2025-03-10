@@ -3373,7 +3373,7 @@ namespace eVaSys.Controllers
                     + "     , collectivite.CodeEE as [Collectivité]"
                     + " 	, cast(cast(sum(Poids) as decimal(10,3))/1000 as decimal(10,3)) as [Tonnage réparti par CL (en tonnes)]"
                     + "     , 'recycleur_final' as [Déclarant Confidentiel ou Recycleur Final ou Centre de sutri]"
-                    + "     , client.CodeEE as [Nom Destination]"
+                    + "     , cast(client.RefEntite as varchar(20)) as [Nom Destination]"
                     + "     , tbrModeTransportEE.Libelle as [Mode de transport]"
                     + "     , '' as [Intermédiaire 1]"
                     + "     , '' as [Intermédiaire 2]"

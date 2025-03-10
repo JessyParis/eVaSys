@@ -135,7 +135,7 @@ export class ClientApplicationComponent extends BaseFormComponent<dataModelsInte
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
     //Load initial data
     //Get Entite
-    this.listService.getListClient(null, null, null, null, true)
+    this.listService.getListClient(null, null, null, null, null, true)
       .subscribe(result => {
         this.entiteList = result;
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));

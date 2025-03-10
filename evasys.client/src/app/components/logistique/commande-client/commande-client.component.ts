@@ -144,7 +144,7 @@ export class CommandeClientComponent implements OnInit {
           this.updateForm();
           //Get existing Entite
           this.listService.getListClient(this.applicationUserContext.commandeClientFormRefEntite
-            , null, null, null, true)
+            , null, null, null, null, true)
             .subscribe(result => {
               this.entiteList = result;
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -176,7 +176,7 @@ export class CommandeClientComponent implements OnInit {
       //Update form
       this.updateForm();
       //Get existing Entite
-      this.listService.getListClient(null, null, null, null, true)
+      this.listService.getListClient(null, null, null, null, null, true)
         .subscribe(result => {
           this.entiteList = result;
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
