@@ -424,7 +424,7 @@ namespace eVaSys.Controllers
                          && e.ContratEntites.Any(i => refEntiteRtts.Contains(i.RefEntite)))
                         .Select(p => p.RefContrat).FirstOrDefault();
                 }
-                if (refContratRI != null)
+                if (refContratRI > 0)
                 {
                     //Check contrat RI if applicable
                     req = req.Where(el => (el.CommandeClients.Any(
