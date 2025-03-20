@@ -23,6 +23,6 @@ namespace eVaSys.ViewModels
         public EntiteViewModel Fournisseur { get; set; }
         public ProduitViewModel Produit { get; set; }
         public int Poids { get; set; }
-        public decimal PUHT { get; set; }
+        public decimal? PUHT { get; set; }
     }
 }

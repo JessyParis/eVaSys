@@ -98,10 +98,19 @@
     <None Update="Assets\Templates\CommandeAffretement.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Templates\EtatMensuelCollectiviteHCS_old.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Templates\EtatMensuelCollectiviteHCS.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Templates\EtatMensuelReception_old.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Templates\EtatMensuelReception.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Templates\EtatTrimestrielCollectiviteCS_old.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Templates\EtatTrimestrielCollectiviteCS.xlsx">

@@ -222,7 +222,7 @@ namespace eVaSys.Controllers
             }
             if (refProduitARepartir != null)
             {
-                int[] refProduits = new[] { 0 };
+                int?[] refProduits = new int?[] { 0 };
                 if (dRepartition != null && refProcess != null)
                 {
                     refProduits = DbContext.PrixReprises

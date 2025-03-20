@@ -88,7 +88,7 @@ export class PrixRepriseComponent implements OnInit {
   //Unlock all controls
   unlockScreen() {
     this.locked = false;
-    this.processListFC.enable();
+    //this.processListFC.enable();
     this.yearListFC.enable();
     this.monthListFC.enable();
     this.prxReps.enable();
@@ -111,7 +111,7 @@ export class PrixRepriseComponent implements OnInit {
     let refProcess = Number.parseInt(this.activatedRoute.snapshot.params["refProcess"], 10);
     let d = this.activatedRoute.snapshot.params["d"];
     //Check parameters
-    if (moment(d).isValid() && !isNaN(refProcess)) {
+    if (d && moment(d).isValid()/* && !isNaN(refProcess)*/) {
       this.applicationUserContext.prixRepriseRefProcess = refProcess;
       this.applicationUserContext.prixRepriseD = moment(d);
       var url = this.baseUrl + "evapi/prixreprise/getprixreprises";
@@ -178,6 +178,9 @@ export class PrixRepriseComponent implements OnInit {
       this.listService.getListYear().subscribe(result => {
         this.yearList = result;
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+      //Get data
+      this.getData();
+      this.updateForm();
     }
   }
   //-----------------------------------------------------------------------------------
@@ -187,13 +190,13 @@ export class PrixRepriseComponent implements OnInit {
     this.prxReps.clear();
     //Process
     if (moment(this.applicationUserContext.prixRepriseD).isValid()
-      && !isNaN(this.applicationUserContext.prixRepriseRefProcess)
+      /*&& !isNaN(this.applicationUserContext.prixRepriseRefProcess)*/
     ) {
       var url = this.baseUrl + "evapi/prixreprise/getprixreprises";
       this.http.get<dataModelsInterfaces.PrixReprise[]>(url,
         {
           headers: new HttpHeaders()
-            .set("refProcess", this.applicationUserContext.prixRepriseRefProcess.toString())
+            .set("refProcess", "")
             .set("d", this.applicationUserContext.prixRepriseD.format("YYYY-MM-DD 00:00:00"))
             .set("filterProduits", this.filterProduits)
             .set("filterComposants", this.filterComposants)

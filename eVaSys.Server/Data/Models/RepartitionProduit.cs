@@ -35,7 +35,7 @@ namespace eVaSys.Data
         public CultureInfo currentCulture = new("fr-FR");
         public int RefRepartitionProduit { get; set; }
         public int RefRepartition { get; set; }
-        public int RefProcess { get; set; }
+        public int? RefProcess { get; set; }
         private Process _process;
         public Process Process
         {
@@ -49,7 +49,7 @@ namespace eVaSys.Data
             get => LazyLoader.Load(this, ref _fournisseur);
             set => _fournisseur = value;
         }
-        public int RefProduit { get; set; }
+        public int? RefProduit { get; set; }
         private Produit _produit;
         public Produit Produit
         {
@@ -57,7 +57,7 @@ namespace eVaSys.Data
             set => _produit = value;
         }
         public int Poids { get; set; }
-        public decimal PUHT { get; set; }
+        public decimal? PUHT { get; set; }
         //--------------------------------------------------------------------------------------------
         /// <summary>
         /// Checked if model is valid

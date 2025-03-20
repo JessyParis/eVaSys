@@ -55,10 +55,10 @@ class MyValidators {
 }
 
 @Component({
-    selector: "repartition",
-    templateUrl: "./repartition.component.html",
-    styleUrls: ["./repartition.component.scss"],
-    standalone: false
+  selector: "repartition",
+  templateUrl: "./repartition.component.html",
+  styleUrls: ["./repartition.component.scss"],
+  standalone: false
 })
 
 export class RepartitionComponent implements OnInit {
@@ -73,8 +73,6 @@ export class RepartitionComponent implements OnInit {
   infoTextFC: UntypedFormControl = new UntypedFormControl(null);
   collectiviteListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   collectiviteNAListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
-  processListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
-  composantListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   poidsFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, Validators.max(400000)]);
   pUHTFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, Validators.max(2500), Validators.min(-1500)]);
   repartitionCollectivite: UntypedFormArray = new UntypedFormArray([]);
@@ -88,8 +86,6 @@ export class RepartitionComponent implements OnInit {
   collectiviteList: dataModelsInterfaces.EntiteList[];
   collectiviteNAList: Observable<dataModelsInterfaces.EntiteList[]>;
   refCollectiviteSelected: number = null;
-  processList: dataModelsInterfaces.Process[];
-  composantList: dataModelsInterfaces.ProduitList[];
   //Global lock
   locked: boolean = true;
   saveLocked: boolean = true;
@@ -116,8 +112,6 @@ export class RepartitionComponent implements OnInit {
       InfoText: this.infoTextFC,
       CollectiviteList: this.collectiviteListFC,
       CollectiviteNAList: this.collectiviteNAListFC,
-      ProcessList: this.processListFC,
-      ComposantList: this.composantListFC,
       Poids: this.poidsFC,
       PUHT: this.pUHTFC
     });
@@ -171,8 +165,6 @@ export class RepartitionComponent implements OnInit {
               if (this.collectiviteList.length === 1) {
                 this.collectiviteListFC.setValue(this.collectiviteList[0].RefEntite);
                 this.refCollectiviteSelected = this.collectiviteList[0].RefEntite;
-                //Get existing process  -> Composant
-                this.getProcesss();
               }
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
         }
@@ -183,8 +175,6 @@ export class RepartitionComponent implements OnInit {
             .subscribe(result => {
               this.collectiviteList = result;
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-          //Get existing process  -> Composant
-          this.getProcesss();
         }
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     }
@@ -219,8 +209,6 @@ export class RepartitionComponent implements OnInit {
                 if (this.collectiviteList.length === 1) {
                   this.collectiviteListFC.setValue(this.collectiviteList[0].RefEntite);
                   this.refCollectiviteSelected = this.collectiviteList[0].RefEntite;
-                  //Get existing process  -> Composant
-                  this.getProcesss();
                 }
               }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
           }
@@ -231,8 +219,6 @@ export class RepartitionComponent implements OnInit {
               .subscribe(result => {
                 this.collectiviteList = result;
               }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-            //Get existing process  -> Composant
-            this.getProcesss();
           }
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     }
@@ -266,8 +252,6 @@ export class RepartitionComponent implements OnInit {
     this.locked = true;
     this.collectiviteListFC.disable();
     this.collectiviteNAListFC.disable();
-    this.processListFC.disable();
-    this.composantListFC.disable();
     this.poidsFC.disable();
     this.pUHTFC.disable();
     this.formRepartitionCollectivite.disable();
@@ -279,8 +263,6 @@ export class RepartitionComponent implements OnInit {
     this.locked = false;
     this.collectiviteListFC.enable();
     this.collectiviteNAListFC.enable();
-    this.processListFC.enable();
-    this.composantListFC.enable();
     this.poidsFC.enable();
     this.pUHTFC.enable();
     this.formRepartitionCollectivite.enable();
@@ -378,48 +360,13 @@ export class RepartitionComponent implements OnInit {
       return of(r);
     }
   }
-  //Get Processs
-  getProcesss() {
-    //Get existing process  
-    this.listService.getListProcess(null, this.refCollectiviteSelected)
-      .subscribe(result => {
-        this.processList = result;
-        //Auto select
-        if (this.processList.length === 1) {
-          this.processListFC.setValue(this.processList[0].RefProcess);
-          //Get existing Composant
-          this.getComposants();
-        }
-        else {
-          this.composantList = [];
-        }
-      }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-  }
-  //-----------------------------------------------------------------------------------
-  //Get Composants
-  getComposants() {
-    //Get existing Composant
-    this.listService.getListProduit(null, null
-      , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
-      , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
-      , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
-      , this.processListFC.value, null, false, true)
-      .subscribe(result => {
-        this.composantList = result;
-        //Auto select
-        if (this.composantList.length === 1) {
-          this.composantListFC.setValue(this.composantList[0].RefProduit);
-          this.getPrixReprise();
-        }
-      }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-  }
   //-----------------------------------------------------------------------------------
   //Get PrixReprise
   getPrixReprise() {
     //Get existing PrixReprise
-    this.dataModelService.getPrixReprise(0, this.processListFC.value
+    this.dataModelService.getPrixReprise(0, null
       , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
-      , this.composantListFC.value
+      , null
       , this.collectiviteListFC.value ? this.collectiviteListFC.value : this.collectiviteNAListFC.value
       , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
     )
@@ -436,29 +383,14 @@ export class RepartitionComponent implements OnInit {
       this.collectiviteListFC.setValue(null);
       this.collectiviteNAListFC.setValue(null);
       this.refCollectiviteSelected = null;
-      if (this.enterTypeFC.value === "Collectivite") {
-        this.processListFC.setValue(null);
-        this.processList = [];
-        this.composantListFC.setValue(null);
-        this.composantList = [];
-        this.getProcesss();
-      }
-      else {
-        //Focus Poids if RepartitionProduit
-        const element = this.renderer.selectRootElement("#inputPoids");
-        setTimeout(() => element.focus(), 0);
-      }
     }
     else {
       this.refCollectiviteSelected = selectedRefEntite;
-      if (this.enterTypeFC.value === "Collectivite") {
-        this.getProcesss();
-      }
-      else {
-        //Focus Poids if RepartitionProduit
-        const element = this.renderer.selectRootElement("#inputPoids");
-        setTimeout(() => element.focus(), 0);
-      }
+      //Get PrixReprise
+      this.getPrixReprise();
+      //Focus Poids if RepartitionProduit
+      const element = this.renderer.selectRootElement("#inputPoids");
+      setTimeout(() => element.focus(), 0);
     }
     this.manageScreen();
   }
@@ -472,18 +404,6 @@ export class RepartitionComponent implements OnInit {
   onEnterTypeChange() {
     this.rAZEnterForm();
     this.manageScreen();
-  }
-  //-----------------------------------------------------------------------------------
-  //Process selected
-  onProcessSelected() {
-    //Get Composant
-    this.getComposants();
-  }
-  //-----------------------------------------------------------------------------------
-  //Composant selected
-  onComposantSelected() {
-    //Get price
-    this.getPrixReprise();
   }
   //-----------------------------------------------------------------------------------
   //Update the data model
@@ -502,8 +422,7 @@ export class RepartitionComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Add a new RepartitionCollectivite
   addRepartitionCollectivite() {
-    if (this.refCollectiviteSelected
-      && this.processListFC.value && this.composantListFC.value && this.poidsFC.value && this.pUHTFC.value !== null) {
+    if (this.refCollectiviteSelected && this.poidsFC.value && this.pUHTFC.value !== null) {
       //Save data
       this.saveData();
       //Process
@@ -514,23 +433,13 @@ export class RepartitionComponent implements OnInit {
       this.dataModelService.getEntite(this.refCollectiviteSelected, null, null)
         .subscribe(result => {
           rC.Collectivite = result;
-          //Get composant
-          this.dataModelService.getProduit(this.composantListFC.value)
-            .subscribe(result => {
-              rC.Produit = result;
-              //Get Process
-              this.dataModelService.getProcess(this.processListFC.value)
-                .subscribe(result => {
-                  rC.Process = result;
-                  rC.Poids = this.poidsFC.value;
-                  rC.PUHT = this.pUHTFC.value;
-                  this.repartition.RepartitionCollectivites.push(rC);
-                  //Update form
-                  this.updateForm();
-                  //RAZ enter form
-                  this.rAZEnterForm();
-                }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-            }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+          rC.Poids = this.poidsFC.value;
+          rC.PUHT = this.pUHTFC.value;
+          this.repartition.RepartitionCollectivites.push(rC);
+          //Update form
+          this.updateForm();
+          //RAZ enter form
+          this.rAZEnterForm();
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     }
   }
@@ -549,46 +458,36 @@ export class RepartitionComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Add a new RepartitionProduit
   addRepartitionProduit() {
-    if (this.processListFC.value && this.composantListFC.value && this.poidsFC.value && this.pUHTFC.value !== null) {
+    if (this.poidsFC.value && this.pUHTFC.value !== null) {
       //Save data
       this.saveData();
       //Process
       let rC = {} as dataModelsInterfaces.RepartitionProduit;
       rC.RefRepartitionProduit = 0;
       rC.RefRepartition = this.repartition.RefRepartition;
-      //Get composant
-      this.dataModelService.getProduit(this.composantListFC.value)
-        .subscribe(result => {
-          rC.Produit = result;
-          //Get Process
-          this.dataModelService.getProcess(this.processListFC.value)
-            .subscribe(result => {
-              rC.Process = result;
-              //Get collectivite
-              if (this.refCollectiviteSelected) {
-                this.dataModelService.getEntite(this.refCollectiviteSelected, null, null)
-                  .subscribe(result => {
-                    rC.Fournisseur = result;
-                    rC.Poids = this.poidsFC.value;
-                    rC.PUHT = this.pUHTFC.value;
-                    this.repartition.RepartitionProduits.push(rC);
-                    //Update form
-                    this.updateForm();
-                    //RAZ enter form
-                    this.rAZEnterForm();
-                  }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-              }
-              else {
-                rC.Poids = this.poidsFC.value;
-                rC.PUHT = this.pUHTFC.value;
-                this.repartition.RepartitionProduits.push(rC);
-                //Update form
-                this.updateForm();
-                //RAZ enter form
-                this.rAZEnterForm();
-              }
-            }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-        }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+      //Get collectivite
+      if (this.refCollectiviteSelected) {
+        this.dataModelService.getEntite(this.refCollectiviteSelected, null, null)
+          .subscribe(result => {
+            rC.Fournisseur = result;
+            rC.Poids = this.poidsFC.value;
+            rC.PUHT = this.pUHTFC.value;
+            this.repartition.RepartitionProduits.push(rC);
+            //Update form
+            this.updateForm();
+            //RAZ enter form
+            this.rAZEnterForm();
+          }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+      }
+      else {
+        rC.Poids = this.poidsFC.value;
+        rC.PUHT = this.pUHTFC.value;
+        this.repartition.RepartitionProduits.push(rC);
+        //Update form
+        this.updateForm();
+        //RAZ enter form
+        this.rAZEnterForm();
+      }
     }
   }
   //-----------------------------------------------------------------------------------
@@ -609,15 +508,6 @@ export class RepartitionComponent implements OnInit {
     this.collectiviteListFC.setValue(null);
     this.collectiviteNAListFC.setValue(null);
     this.refCollectiviteSelected = null;
-    this.processListFC.setValue(null);
-    this.processList = [];
-    this.getProcesss();
-    if (this.enterTypeFC.value === "Produit") {
-      this.processListFC.setValue(5);
-      this.getComposants();
-    }
-    this.composantListFC.setValue(null);
-    this.composantList = [];
     this.poidsFC.setValue(null);
     this.pUHTFC.setValue(null);
     this.manageScreen();
@@ -661,7 +551,7 @@ export class RepartitionComponent implements OnInit {
     //Add new RepartitionCollectivite
     if (this.enterTypeFC.value === "Collectivite") {
       ok = (this.repartition.RepartitionCollectivites.filter(e =>
-        e.Collectivite.RefEntite === this.refCollectiviteSelected && e.Process.RefProcess === this.processListFC.value && e.Produit.RefProduit === this.composantListFC.value).length === 0);
+        e.Collectivite.RefEntite === this.refCollectiviteSelected).length === 0);
       if (ok) {
         this.addRepartitionCollectivite();
       }
@@ -676,12 +566,10 @@ export class RepartitionComponent implements OnInit {
     else {
       //Add new RepartitionProduit
       if (this.refCollectiviteSelected == null) {
-        ok = (this.repartition.RepartitionProduits.filter(e =>
-          e.Fournisseur == null && e.Process.RefProcess === this.processListFC.value && e.Produit.RefProduit === this.composantListFC.value).length === 0);
+        ok = (this.repartition.RepartitionProduits.filter(e => e.Fournisseur == null).length === 0);
       }
       else {
-        ok = (this.repartition.RepartitionProduits.filter(e =>
-          (e.Fournisseur ? e.Fournisseur.RefEntite : null) === this.refCollectiviteSelected && e.Process.RefProcess === this.processListFC.value && e.Produit.RefProduit === this.composantListFC.value).length === 0);
+        ok = (this.repartition.RepartitionProduits.filter(e => (e.Fournisseur ? e.Fournisseur.RefEntite : null) === this.refCollectiviteSelected).length === 0);
       }
       if (ok) {
         this.addRepartitionProduit();

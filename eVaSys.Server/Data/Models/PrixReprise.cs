@@ -41,7 +41,7 @@ namespace eVaSys.Data
             get => LazyLoader.Load(this, ref _contrat);
             set => _contrat = value;
         }
-        public int RefProcess { get; set; }
+        public int? RefProcess { get; set; }
         private Process _process;
         public Process Process
         {
@@ -55,7 +55,7 @@ namespace eVaSys.Data
             get => LazyLoader.Load(this, ref _produit);
             set => _produit = value;
         }
-        public int RefComposant { get; set; }
+        public int? RefComposant { get; set; }
         private Produit _composant;
         public Produit Composant
         {

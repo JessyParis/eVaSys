@@ -945,9 +945,9 @@ namespace eVaSys.Utils
                     //Gestion des produits
                     //Création de la source de données
                     sqlStr = "select tblProduit.NomCommun, fournisseur.Libelle + case when fournisseur.CodeEE is not null then ' (' + fournisseur.CodeEE + ')' else '' end"
-                        + "     , tbrProcess.Libelle, composant.NomCommun, Poids, PUHT, univers.PUHTSurtri, univers.PUHTTransport"
+                        + "     , RefProcess, RefComposant, Poids, PUHT, univers.PUHTSurtri, univers.PUHTTransport"
                         + " from"
-                        + " 	( select rep.RefProduit, rep.RefFournisseur, tblRepartitionCollectivite.RefProcess, tblRepartitionCollectivite.RefProduit as RefComposant, sum(Poids) as Poids"
+                        + " 	( select rep.RefProduit, rep.RefFournisseur, null as RefProcess, null as RefComposant, sum(Poids) as Poids"
                         + " 		, tblRepartitionCollectivite.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport as PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
                         + " 		from"
                         + " 			("
@@ -963,13 +963,11 @@ namespace eVaSys.Utils
                         + " 			inner join tbrPrixReprise on tbrPrixReprise.RefProcess=tblRepartitionCollectivite.RefProcess and tbrPrixReprise.RefComposant=tblRepartitionCollectivite.RefProduit and tbrPrixReprise.RefProduit=rep.RefProduit"
                         + " 					and month(rep.D)=month(tbrPrixReprise.D) and year(rep.D)=year(tbrPrixReprise.D)"
                         + " 		where tblRepartitionCollectivite.RefCollectivite=" + refEntite
-                        + " 		group by rep.RefProduit, rep.RefFournisseur, tblRepartitionCollectivite.RefProcess, tblRepartitionCollectivite.RefProduit, tblRepartitionCollectivite.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
+                        + " 		group by rep.RefProduit, rep.RefFournisseur, tblRepartitionCollectivite.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
                         + " 		 ) as univers"
                         + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"
-                        + " 	inner join tblProduit as composant on composant.RefProduit=univers.RefComposant"
-                        + " 	inner join tbrProcess on tbrProcess.RefProcess=univers.RefProcess"
                         + " 	inner join tblEntite as fournisseur on univers.RefFournisseur=fournisseur.RefEntite"
-                        + " order by tblProduit.NomCommun, fournisseur.Libelle, tbrProcess.Libelle, composant.NomCommun";
+                        + " order by tblProduit.NomCommun, fournisseur.Libelle";
                     //Chargement des données
                     SqlCommand cmd = new(); //commande Sql courante
                     cmd.Connection = sqlConn;
@@ -984,93 +982,32 @@ namespace eVaSys.Utils
                         l = 0;
                         while (dr.Read())
                         {
-                            if (l > 0)  //On ne traite pas le changement de produit pour la première ligne
-                            {
-                                if (produit != dr.GetValue(0).ToString())
-                                {
-                                    //Changement de produit
-                                    ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 9).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-                                    ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 9).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
-                                    ws.Cells[l + 21, 5].Style.Font.Weight = 700;
-                                    ws.Cells[l + 21, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                    ws.Cells[l + 21, 5].Style.Font.Size = 220;
-                                    ws.Cells[l + 21, 5].Value = "Total " + produit;
-                                    ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                    ws.Cells[l + 21, 6].Style.Font.Weight = 700;
-                                    ws.Cells[l + 21, 6].Style.Font.Size = 220;
-                                    ws.Cells[l + 21, 6].Value = poids;
-                                    ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                                    produit = dr.GetValue(0).ToString();
-                                    total += poids;
-                                    poids = 0;
-                                    l++;
-                                }
-                                ws.Cells[l + 21, 0].Value = dr.GetValue(0).ToString();
-                                ws.Cells[l + 21, 2].Value = dr.GetValue(1).ToString();
-                                ws.Cells[l + 21, 4].Value = dr.GetValue(2).ToString();
-                                ws.Cells[l + 21, 5].Value = dr.GetValue(3).ToString();
-                                ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 6].Value = dr.GetValue(4);
-                                ws.Cells[l + 21, 7].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 7].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 7].Value = dr.GetValue(5);
-                                ws.Cells[l + 21, 8].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 8].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 8].Value = dr.GetValue(6);
-                                ws.Cells[l + 21, 9].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 9].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 9].Value = dr.GetValue(7);
-                                poids += (int)dr.GetSqlInt32(4);
-                                l++;
-                            }
-                            else
-                            {
-                                ws.Cells[l + 21, 0].Value = dr.GetValue(0).ToString();
-                                ws.Cells[l + 21, 2].Value = dr.GetValue(1).ToString();
-                                ws.Cells[l + 21, 4].Value = dr.GetValue(2).ToString();
-                                ws.Cells[l + 21, 5].Value = dr.GetValue(3).ToString();
-                                ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 6].Value = dr.GetValue(4);
-                                ws.Cells[l + 21, 7].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 7].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 7].Value = dr.GetValue(5);
-                                ws.Cells[l + 21, 8].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 8].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 8].Value = dr.GetValue(6);
-                                ws.Cells[l + 21, 9].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 9].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 9].Value = dr.GetValue(7);
-                                produit = dr.GetValue(0).ToString();
-                                poids = (int)dr.GetSqlInt32(4);
-                                l++;
-                            }
+                            ws.Cells[l + 21, 0].Value = dr.GetValue(0).ToString();
+                            ws.Cells[l + 21, 3].Value = dr.GetValue(1).ToString();
+                            ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                            ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
+                            ws.Cells[l + 21, 6].Value = dr.GetValue(4);
+                            ws.Cells[l + 21, 7].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                            ws.Cells[l + 21, 7].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
+                            ws.Cells[l + 21, 7].Value = dr.GetValue(5);
+                            ws.Cells[l + 21, 8].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                            ws.Cells[l + 21, 8].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
+                            ws.Cells[l + 21, 8].Value = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * ((decimal)dr.GetValue(5) - (decimal)dr.GetValue(6) - (decimal)dr.GetValue(7)), 2, MidpointRounding.AwayFromZero);
+                            total += (int)dr.GetSqlInt32(4);
+                            l++;
                         }
-                        //Dernier sou-total
-                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 9).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-                        ws.Cells[l + 21, 5].Style.Font.Weight = 700;
-                        ws.Cells[l + 21, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 21, 5].Style.Font.Size = 220;
-                        ws.Cells[l + 21, 5].Value = "Total " + produit;
-                        ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 21, 6].Style.Font.Weight = 700;
-                        ws.Cells[l + 21, 6].Style.Font.Size = 220;
-                        ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                        ws.Cells[l + 21, 6].Value = poids;
-                        total += poids;
                         //Total général
                         l++;
                         ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 9).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
                         ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 9).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
-                        ws.Cells[l + 21, 2].Style.Font.Weight = 700;
-                        ws.Cells[l + 21, 2].Style.HorizontalAlignment = HorizontalAlignmentStyle.Center;
-                        ws.Cells[l + 21, 2].Style.Font.Size = 220;
-                        ws.Cells[l + 21, 2].Value = ">>>>>>> FIN DU DOCUMENT <<<<<<<";
-                        ws.Cells[l + 21, 5].Style.Font.Weight = 700;
-                        ws.Cells[l + 21, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 21, 5].Style.Font.Size = 220;
-                        ws.Cells[l + 21, 5].Value = "Total";
+                        ws.Cells[l + 21, 0].Style.Font.Weight = 700;
+                        ws.Cells[l + 21, 0].Style.HorizontalAlignment = HorizontalAlignmentStyle.Center;
+                        ws.Cells[l + 21, 0].Style.Font.Size = 220;
+                        ws.Cells[l + 21, 0].Value = ">>>>>>> FIN DU DOCUMENT <<<<<<<";
+                        ws.Cells[l + 21, 3].Style.Font.Weight = 700;
+                        ws.Cells[l + 21, 3].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                        ws.Cells[l + 21, 3].Style.Font.Size = 220;
+                        ws.Cells[l + 21, 3].Value = "Total";
                         ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
                         ws.Cells[l + 21, 6].Style.Font.Weight = 700;
                         ws.Cells[l + 21, 6].Style.Font.Size = 220;
@@ -1215,9 +1152,9 @@ namespace eVaSys.Utils
                     //Gestion des produits
                     //Création de la source de données
                     sqlStr = "select tblProduit.NomCommun, fournisseur.Libelle + case when fournisseur.CodeEE is not null then ' (' + fournisseur.CodeEE + ')' else '' end"
-                        + "     , tbrProcess.Libelle, composant.NomCommun, Poids, PUHT, univers.PUHTSurtri, univers.PUHTTransport"
+                        + "     , RefProcess, RefComposant, Poids, PUHT, univers.PUHTSurtri, univers.PUHTTransport"
                         + " from"
-                        + " 	( select VueRepartitionUnitaireDetail.RefProduit, tblCommandeFournisseur.RefEntite as RefFournisseur, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant, sum(VueRepartitionUnitaireDetail.Poids) as Poids"
+                        + " 	( select VueRepartitionUnitaireDetail.RefProduit, tblCommandeFournisseur.RefEntite as RefFournisseur, null as RefProcess, null as RefComposant, sum(VueRepartitionUnitaireDetail.Poids) as Poids"
                         + "         , VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
                         + "         from tblCommandeFournisseur"
                         + "             inner join VueRepartitionUnitaireDetail on tblCommandeFournisseur.RefCommandeFournisseur=VueRepartitionUnitaireDetail.RefCommandeFournisseur"
@@ -1228,40 +1165,12 @@ namespace eVaSys.Utils
                         + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
                         + "             where VueRepartitionUnitaireDetail.Collecte=0 and VueRepartitionUnitaireDetail.D between @debut and @fin"
                         + "                 and VueRepartitionUnitaireDetail.RefFournisseur=" + refEntite
-                        + "         group by VueRepartitionUnitaireDetail.RefProduit, tblCommandeFournisseur.RefEntite, VueRepartitionUnitaireDetail.RefProcess, VueRepartitionUnitaireDetail.RefComposant"
+                        + "         group by VueRepartitionUnitaireDetail.RefProduit, tblCommandeFournisseur.RefEntite"
                         + "             , VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
                         + " 		 ) as univers"
                         + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"
-                        + " 	inner join tblProduit as composant on composant.RefProduit=univers.RefComposant"
-                        + " 	inner join tbrProcess on tbrProcess.RefProcess=univers.RefProcess"
                         + " 	inner join tblEntite as fournisseur on univers.RefFournisseur=fournisseur.RefEntite"
-                        + " order by tblProduit.NomCommun, fournisseur.Libelle, tbrProcess.Libelle, composant.NomCommun";
-                    //sqlStr = "select tblProduit.NomCommun, fournisseur.Libelle + case when fournisseur.CodeEE is not null then ' (' + fournisseur.CodeEE + ')' else '' end"
-                    //    + "     , tbrProcess.Libelle, composant.NomCommun, Poids, PUHT, univers.PUHTSurtri, univers.PUHTTransport"
-                    //    + " from"
-                    //    + " 	( select rep.RefProduit, rep.RefFournisseur, tblRepartitionProduit.RefProcess, tblRepartitionProduit.RefProduit as RefComposant, sum(Poids) as Poids"
-                    //    + " 		, tblRepartitionProduit.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport as PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
-                    //    + " 		from"
-                    //    + " 			("
-                    //    + " 				select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D"
-                    //    + " 				from tblRepartition"
-                    //    + " 					inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                    //    + " 				where tblCommandeFournisseur.DDechargement between @debut and @fin"
-                    //    + " 				union all"
-                    //    + " 				select RefRepartition, RefFournisseur, RefProduit, D"
-                    //    + " 				from tblRepartition"
-                    //    + " 				where RefCommandeFournisseur is null and D between @debut and @fin) as rep"
-                    //    + " 			inner join tblRepartitionProduit on tblRepartitionProduit.RefRepartition=rep.RefRepartition"
-                    //    + " 			inner join tbrPrixReprise on tbrPrixReprise.RefProcess=tblRepartitionProduit.RefProcess and tbrPrixReprise.RefComposant=tblRepartitionProduit.RefProduit and tbrPrixReprise.RefProduit=rep.RefProduit"
-                    //    + " 					and month(rep.D)=month(tbrPrixReprise.D) and year(rep.D)=year(tbrPrixReprise.D)"
-                    //    + " 		where tblRepartitionProduit.RefFournisseur=" + refEntite
-                    //    + " 		group by rep.RefProduit, rep.RefFournisseur, tblRepartitionProduit.RefProcess, tblRepartitionProduit.RefProduit, tblRepartitionProduit.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
-                    //    + " 		 ) as univers"
-                    //    + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"
-                    //    + " 	inner join tblProduit as composant on composant.RefProduit=univers.RefComposant"
-                    //    + " 	inner join tbrProcess on tbrProcess.RefProcess=univers.RefProcess"
-                    //    + " 	inner join tblEntite as fournisseur on univers.RefFournisseur=fournisseur.RefEntite"
-                    //    + " order by tblProduit.NomCommun, fournisseur.Libelle, tbrProcess.Libelle, composant.NomCommun";
+                        + " order by tblProduit.NomCommun, fournisseur.Libelle";
                     //Chargement des données
                     SqlCommand cmd = new(); //commande Sql courante
                     cmd.Connection = sqlConn;
@@ -1276,110 +1185,29 @@ namespace eVaSys.Utils
                         l = 0;
                         while (dr.Read())
                         {
-                            if (l > 0)  //On ne traite pas le changement de produit pour la première ligne
-                            {
-                                if (produit != dr.GetValue(0).ToString())
-                                {
-                                    //Changement de produit
-                                    ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 10).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-                                    ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 10).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
-                                    ws.Cells[l + 21, 5].Style.Font.Weight = 700;
-                                    ws.Cells[l + 21, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                    ws.Cells[l + 21, 5].Style.Font.Size = 220;
-                                    ws.Cells[l + 21, 5].Value = "Total " + produit;
-                                    ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                    ws.Cells[l + 21, 6].Style.Font.Weight = 700;
-                                    ws.Cells[l + 21, 6].Style.Font.Size = 220;
-                                    ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                                    ws.Cells[l + 21, 6].Value = poids;
-                                    ws.Cells[l + 21, 10].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                    ws.Cells[l + 21, 10].Style.Font.Weight = 700;
-                                    ws.Cells[l + 21, 10].Style.Font.Size = 220;
-                                    ws.Cells[l + 21, 10].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                    ws.Cells[l + 21, 10].Value = prix;
-                                    produit = dr.GetValue(0).ToString();
-                                    poidsTotal += poids;
-                                    prixTotal += prix;
-                                    poids = 0;
-                                    prix = 0;
-                                    l++;
-                                }
-                                ws.Cells[l + 21, 0].Value = dr.GetValue(0).ToString();
-                                ws.Cells[l + 21, 2].Value = dr.GetValue(1).ToString();
-                                ws.Cells[l + 21, 4].Value = dr.GetValue(2).ToString();
-                                ws.Cells[l + 21, 5].Value = dr.GetValue(3).ToString();
-                                ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 6].Value = dr.GetValue(4);
-                                ws.Cells[l + 21, 7].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 7].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 7].Value = dr.GetValue(5);
-                                ws.Cells[l + 21, 8].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 8].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 8].Value = dr.GetValue(6);
-                                ws.Cells[l + 21, 9].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 9].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 9].Value = dr.GetValue(7);
-                                ws.Cells[l + 21, 10].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 10].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 10].Value = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * ((decimal)dr.GetValue(5) - (decimal)dr.GetValue(6) - (decimal)dr.GetValue(7)), 2, MidpointRounding.AwayFromZero);
-                                poids += (int)dr.GetSqlInt32(4);
-                                prix += Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * ((decimal)dr.GetValue(5) - (decimal)dr.GetValue(6) - (decimal)dr.GetValue(7)), 2, MidpointRounding.AwayFromZero);
-                                l++;
-                            }
-                            else
-                            {
-                                ws.Cells[l + 21, 0].Value = dr.GetValue(0).ToString();
-                                ws.Cells[l + 21, 2].Value = dr.GetValue(1).ToString();
-                                ws.Cells[l + 21, 4].Value = dr.GetValue(2).ToString();
-                                ws.Cells[l + 21, 5].Value = dr.GetValue(3).ToString();
-                                ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 6].Value = dr.GetValue(4);
-                                ws.Cells[l + 21, 7].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 7].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 7].Value = dr.GetValue(5);
-                                ws.Cells[l + 21, 8].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 8].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 8].Value = dr.GetValue(6);
-                                ws.Cells[l + 21, 9].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 9].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 9].Value = dr.GetValue(7);
-                                ws.Cells[l + 21, 10].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 21, 10].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                                ws.Cells[l + 21, 10].Value = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * ((decimal)dr.GetValue(5) - (decimal)dr.GetValue(6) - (decimal)dr.GetValue(7)), 2, MidpointRounding.AwayFromZero);
-                                produit = dr.GetValue(0).ToString();
-                                poids = (int)dr.GetSqlInt32(4);
-                                prix = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * ((decimal)dr.GetValue(5) - (decimal)dr.GetValue(6) - (decimal)dr.GetValue(7)), 2, MidpointRounding.AwayFromZero);
-                                l++;
-                            }
+                            ws.Cells[l + 21, 0].Value = dr.GetValue(0).ToString();
+                            ws.Cells[l + 21, 3].Value = dr.GetValue(1).ToString();
+                            ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                            ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
+                            ws.Cells[l + 21, 6].Value = dr.GetValue(4);
+                            ws.Cells[l + 21, 7].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                            ws.Cells[l + 21, 7].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
+                            ws.Cells[l + 21, 7].Value = dr.GetValue(5);
+                            ws.Cells[l + 21, 8].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                            ws.Cells[l + 21, 8].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
+                            ws.Cells[l + 21, 8].Value = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * ((decimal)dr.GetValue(5) - (decimal)dr.GetValue(6) - (decimal)dr.GetValue(7)), 2, MidpointRounding.AwayFromZero);
+                            poidsTotal += (int)dr.GetSqlInt32(4);
+                            prixTotal += Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * ((decimal)dr.GetValue(5) - (decimal)dr.GetValue(6) - (decimal)dr.GetValue(7)), 2, MidpointRounding.AwayFromZero);
+                            l++;
                         }
-                        //Dernier sou-total
-                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 10).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-                        ws.Cells[l + 21, 5].Style.Font.Weight = 700;
-                        ws.Cells[l + 21, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 21, 5].Style.Font.Size = 220;
-                        ws.Cells[l + 21, 5].Value = "Total " + produit;
-                        ws.Cells[l + 21, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 21, 6].Style.Font.Weight = 700;
-                        ws.Cells[l + 21, 6].Style.Font.Size = 220;
-                        ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                        ws.Cells[l + 21, 6].Value = poids;
-                        ws.Cells[l + 21, 10].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 21, 10].Style.Font.Weight = 700;
-                        ws.Cells[l + 21, 10].Style.Font.Size = 220;
-                        ws.Cells[l + 21, 10].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                        ws.Cells[l + 21, 10].Value = prix;
-                        poidsTotal += poids;
-                        prixTotal += prix;
                         //Total général
                         l++;
-                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 10).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 10).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
-                        ws.Cells[l + 21, 2].Style.Font.Weight = 700;
-                        ws.Cells[l + 21, 2].Style.HorizontalAlignment = HorizontalAlignmentStyle.Center;
-                        ws.Cells[l + 21, 2].Style.Font.Size = 220;
-                        ws.Cells[l + 21, 2].Value = ">>>>>>> FIN DU DOCUMENT <<<<<<<";
+                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 8).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
+                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 8).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
+                        ws.Cells[l + 21, 3].Style.Font.Weight = 700;
+                        ws.Cells[l + 21, 3].Style.HorizontalAlignment = HorizontalAlignmentStyle.Center;
+                        ws.Cells[l + 21, 3].Style.Font.Size = 220;
+                        ws.Cells[l + 21, 3].Value = ">>>>>>> FIN DU DOCUMENT <<<<<<<";
                         ws.Cells[l + 21, 5].Style.Font.Weight = 700;
                         ws.Cells[l + 21, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
                         ws.Cells[l + 21, 5].Style.Font.Size = 220;
@@ -1389,12 +1217,12 @@ namespace eVaSys.Utils
                         ws.Cells[l + 21, 6].Style.Font.Size = 220;
                         ws.Cells[l + 21, 6].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
                         ws.Cells[l + 21, 6].Value = poidsTotal;
-                        ws.Cells[l + 21, 10].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 21, 10].Style.Font.Weight = 700;
-                        ws.Cells[l + 21, 10].Style.Font.Size = 220;
-                        ws.Cells[l + 21, 10].Style.NumberFormat = "#,##0.00";
-                        ws.Cells[l + 21, 10].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
-                        ws.Cells[l + 21, 10].Value = prixTotal;
+                        ws.Cells[l + 21, 8].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                        ws.Cells[l + 21, 8].Style.Font.Weight = 700;
+                        ws.Cells[l + 21, 8].Style.Font.Size = 220;
+                        ws.Cells[l + 21, 8].Style.NumberFormat = "#,##0.00";
+                        ws.Cells[l + 21, 8].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
+                        ws.Cells[l + 21, 8].Value = prixTotal;
                         //Fermeture de la source de données
                         dr.Close();
                         //Inscription du bon texte facture
@@ -1409,7 +1237,6 @@ namespace eVaSys.Utils
                         ws.PrintOptions.FitWorksheetWidthToPages = 1;
                         ws.PrintOptions.FitToPage = true;
                     }
-
                     //Feuille suivante
                     f++;
                 }
@@ -1896,53 +1723,28 @@ namespace eVaSys.Utils
                     else
                     {
                         ws = excelFile.Worksheets[f];
-                        ws.Cells[6, 4].Value += dDebut.ToString("MMMM yyyy");
-                        ws.Cells[8, 4].Value = cDT.Libelle;
+                        ws.Cells[6, 3].Value += dDebut.ToString("MMMM yyyy");
+                        ws.Cells[8, 3].Value = cDT.Libelle;
                         ws.Rows[8].AutoFit();
-                        ws.Cells[9, 4].Value = adr.Adr1;
+                        ws.Cells[9, 3].Value = adr.Adr1;
                         l = 10;
                         if (adr.Adr2 != "")
                         {
-                            ws.Cells[l, 4].Value = adr.Adr2;
+                            ws.Cells[l, 3].Value = adr.Adr2;
                             l++;
                         }
-                        ws.Cells[l, 4].Value = adr.CodePostal + " " + adr.Ville;
+                        ws.Cells[l, 3].Value = adr.CodePostal + " " + adr.Ville;
                         l += 3;
-                        ws.Cells[14, 4].Value += ca.Contact.Civilite.Libelle + " " + ca.Contact.Nom;
+                        ws.Cells[14, 3].Value += ca.Contact.Civilite.Libelle + " " + ca.Contact.Nom;
                         ws.Rows[14].AutoFit();
-                        ws.Cells[15, 4].Value += DateTime.Now.ToString("dd/MM/yyyy");
+                        ws.Cells[15, 3].Value += DateTime.Now.ToString("dd/MM/yyyy");
                         ws.Cells[17, 0].Value += cDT.CodeEE;
                         ws.Cells[18, 0].Value = "Contact : " + Utils.GetParametre(3, dbContext).ValeurTexte
                         + " - tél. : " + Utils.GetParametre(4, dbContext).ValeurTexte;
                         //Gestion des produits
                         //Création de la source de données
-                        //Récupération des composants
-                        int nbComposant = 0;
-                        sqlStr = "select distinct tblRepartitionCollectivite.RefProduit, tblProduit.NomCommun"
-                            + " from "
-                            + " 	("
-                            + " 		select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D"
-                            + " 		from tblRepartition"
-                            + " 			inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                            + " 		union all"
-                            + " 		select RefRepartition, RefFournisseur, RefProduit, D"
-                            + " 		from tblRepartition"
-                            + " 		where RefCommandeFournisseur is null) as rep	   "
-                            + " 	inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition "
-                            + " 	inner join tblProduit on tblProduit.RefProduit=tblRepartitionCollectivite.RefProduit "
-                            + " where RefFournisseur=" + cDT.RefEntite + " and D between  @debut and @fin";
-                        string composants = "";
-                        cmd.CommandText = sqlStr;
-                        SqlDataReader drComposant = cmd.ExecuteReader();
-                        while (drComposant.Read())
-                        {
-                            composants += ",sum(case when composant.RefProduit=" + drComposant.GetSqlInt32(0).ToString() + " then Poids else 0 end) as [" + drComposant.GetSqlString(1).ToString() + "]";
-                            nbComposant++;
-                        }
-                        drComposant.Close();
                         //Chaine SQL de récupération des données
-                        sqlStr = "select '('+isnull(collectivite.CodeEE,'NR')+') '+collectivite.Libelle, tblProduit.NomCommun as Produit, tbrProcess.Libelle"
-                            + composants
+                        sqlStr = "select '('+isnull(collectivite.CodeEE,'NR')+') '+collectivite.Libelle, tblProduit.NomCommun as Produit, sum(Poids) as Poids"
                             + " from tblProduit 	"
                             + "     inner join"
                             + "  		("
@@ -1955,103 +1757,38 @@ namespace eVaSys.Utils
                             + "  		where RefCommandeFournisseur is null 		) as rep on rep.RefProduit=tblProduit.RefProduit 	   "
                             + "     inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition 	"
                             + "     inner join tblEntite as collectivite on tblRepartitionCollectivite.RefCollectivite=collectivite.RefEntite "
-                            + "     inner join tblProduit as composant on composant.RefProduit=tblRepartitionCollectivite.RefProduit"
-                            + "     inner join tbrProcess on tbrProcess.RefProcess=tblRepartitionCollectivite.RefProcess"
                             + " where RefFournisseur=" + cDT.RefEntite + " and D between  @debut and @fin"
-                            + " group by '('+isnull(collectivite.CodeEE,'NR')+') '+collectivite.Libelle, tblProduit.NomCommun, tbrProcess.Libelle"
-                            + " order by '('+isnull(collectivite.CodeEE,'NR')+') '+collectivite.Libelle, tblProduit.NomCommun, tbrProcess.Libelle";
+                            + " group by '('+isnull(collectivite.CodeEE,'NR')+') '+collectivite.Libelle, tblProduit.NomCommun"
+                            + " order by '('+isnull(collectivite.CodeEE,'NR')+') '+collectivite.Libelle, tblProduit.NomCommun";
                         //Chargement des données
                         cmd.CommandText = sqlStr;
                         string collectivite = "";
-                        int[] poidss = new int[nbComposant];
-                        int[] totals = new int[nbComposant];
                         dr = cmd.ExecuteReader();
                         l = 0;
-                        //Création des colonnes composants
-                        if (nbComposant > 1) { ws.Columns.InsertCopy(5, nbComposant - 1, ws.Columns[5]); }
-                        for (int comp = 0; comp < nbComposant; comp++)
-                        {
-                            if (comp != nbComposant - 1) { ws.Cells[l + 20, 5 + comp].Style.Borders.SetBorders(MultipleBorders.Right, System.Drawing.Color.Black, LineStyle.Thin); }
-                            ws.Cells[l + 20, 5 + comp].Value = "Poids (kg) " + dr.GetName(3 + comp);
-                        }
+                        int poidsTotal = 0;
+                        //Inscription des données
                         while (dr.Read())
                         {
-                            if (l > 0)  //On ne traite pas le changement de collectivité pour la première ligne
-                            {
-                                if (collectivite != dr.GetValue(0).ToString())
-                                {
-                                    //Changement de produit
-                                    ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 4 + nbComposant).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-                                    ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 4 + nbComposant).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
-                                    ws.Cells[l + 21, 1].Style.Font.Weight = 700;
-                                    ws.Cells[l + 21, 1].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                    ws.Cells[l + 21, 1].Value = "Total " + collectivite;
-                                    for (int comp = 0; comp < nbComposant; comp++)
-                                    {
-                                        ws.Cells[l + 21, 5 + comp].Style.Font.Weight = 700;
-                                        ws.Cells[l + 21, 5 + comp].Style.Font.Size = 220;
-                                        ws.Cells[l + 21, 5 + comp].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                                        ws.Cells[l + 21, 5 + comp].Value = poidss[comp];
-                                        totals[comp] += poidss[comp];
-                                        poidss[comp] = 0;
-                                    }
-                                    collectivite = dr.GetValue(0).ToString();
-                                    l++;
-                                }
-                                ws.Cells[l + 21, 0].Value = dr.GetValue(1).ToString();
-                                ws.Cells[l + 21, 1].Value = dr.GetValue(0).ToString();
-                                ws.Cells[l + 21, 4].Value = dr.GetValue(2).ToString();
-                                for (int comp = 0; comp < nbComposant; comp++)
-                                {
-                                    ws.Cells[l + 21, 5 + comp].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                                    ws.Cells[l + 21, 5 + comp].Value = dr.GetValue(3 + comp);
-                                    poidss[comp] += (int)dr.GetSqlInt32(3 + comp);
-                                }
-                                l++;
-                            }
-                            else
-                            {
-                                ws.Cells[l + 21, 0].Value = dr.GetValue(1).ToString();
-                                ws.Cells[l + 21, 1].Value = dr.GetValue(0).ToString();
-                                ws.Cells[l + 21, 4].Value = dr.GetValue(2).ToString();
-                                for (int comp = 0; comp < nbComposant; comp++)
-                                {
-                                    ws.Cells[l + 21, 5 + comp].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                                    ws.Cells[l + 21, 5 + comp].Value = dr.GetValue(3 + comp);
-                                    poidss[comp] += (int)dr.GetSqlInt32(3 + comp);
-                                }
-                                collectivite = dr.GetValue(0).ToString();
-                                l++;
-                            }
+                            ws.Cells[l + 21, 0].Value = dr.GetValue(1).ToString();
+                            ws.Cells[l + 21, 1].Value = dr.GetValue(0).ToString();
+                            ws.Cells[l + 21, 4].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
+                            ws.Cells[l + 21, 4].Value = (int)dr.GetSqlInt32(2);
+                            poidsTotal += (int)dr.GetSqlInt32(2);
+
+                            l++;
                         }
                         dr.Close();
-                        //Dernier sous-total
-                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 4 + nbComposant).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-                        ws.Cells[l + 21, 1].Style.Font.Weight = 700;
-                        ws.Cells[l + 21, 1].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 21, 1].Value = "Total " + collectivite;
-                        for (int comp = 0; comp < nbComposant; comp++)
-                        {
-                            ws.Cells[l + 21, 5 + comp].Style.Font.Weight = 700;
-                            ws.Cells[l + 21, 5 + comp].Style.Font.Size = 220;
-                            ws.Cells[l + 21, 5 + comp].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                            ws.Cells[l + 21, 5 + comp].Value = poidss[comp];
-                            totals[comp] += poidss[comp];
-                        }
                         //Total général
                         l++;
-                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 4 + nbComposant).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 4 + nbComposant).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
+                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 4).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
+                        ws.Cells.GetSubrangeAbsolute(l + 21, 0, l + 21, 4).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
                         ws.Cells[l + 21, 1].Style.Font.Weight = 700;
                         ws.Cells[l + 21, 1].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
                         ws.Cells[l + 21, 1].Value = "Total";
-                        for (int comp = 0; comp < nbComposant; comp++)
-                        {
-                            ws.Cells[l + 21, 5 + comp].Style.Font.Weight = 700;
-                            ws.Cells[l + 21, 5 + comp].Style.Font.Size = 220;
-                            ws.Cells[l + 21, 5 + comp].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
-                            ws.Cells[l + 21, 5 + comp].Value = totals[comp];
-                        }
+                        ws.Cells[l + 21, 4].Style.Font.Weight = 700;
+                        ws.Cells[l + 21, 4].Style.Font.Size = 220;
+                        ws.Cells[l + 21, 4].Style.NumberFormat = NumberFormatBuilder.Number(0, useThousandsSeparator: true);
+                        ws.Cells[l + 21, 4].Value = poidsTotal;
                         //Fermeture de la source de données
                         dr.Close();
                         //Suppression des lignes en trop
@@ -2064,7 +1801,8 @@ namespace eVaSys.Utils
                         ws.PrintOptions.FitToPage = true;
                     }
                     f++;
-                    //Traitement de la feuille produits
+                    //------------------------------------------------------------------------------------------
+                    //Traitement de la feuille Hors collecte
                     //Si il a des données à traiter
                     exist = false;
                     sqlStr = "select count(*)"
@@ -2111,7 +1849,7 @@ namespace eVaSys.Utils
                         //Gestion des produits
                         //Création de la source de données
                         //Chaine SQL de récupération des données
-                        sqlStr = "select tblProduit.NomCommun, tblCommandeFournisseur.NumeroCommande, rep.D, composant.NomCommun, Poids, PUHT"
+                        sqlStr = "select tblProduit.NomCommun, tblCommandeFournisseur.NumeroCommande, rep.D, null as NomCommun, Poids, PUHT"
                             + " from tblProduit 	"
                             + " 	inner join"
                             + "  			("
@@ -2123,11 +1861,10 @@ namespace eVaSys.Utils
                             + "   			from tblRepartition"
                             + "  			where RefCommandeFournisseur is null 		) as rep on rep.RefProduit=tblProduit.RefProduit 	   "
                             + " 	inner join tblRepartitionProduit on tblRepartitionProduit.RefRepartition=rep.RefRepartition 	"
-                            + " 	inner join tblProduit as composant on composant.RefProduit=tblRepartitionProduit.RefProduit"
                             + " 	left join tblCommandeFournisseur on rep.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
                             + "     left join tblEntite on tblRepartitionProduit.RefFournisseur=tblEntite.RefEntite"
                             + " where tblEntite.RefEntite is null and rep.RefFournisseur=" + cDT.RefEntite + " and rep.D between  @debut and @fin"
-                            + " order by tblProduit.NomCommun, tblCommandeFournisseur.NumeroCommande, rep.D, composant.NomCommun";
+                            + " order by tblProduit.NomCommun, tblCommandeFournisseur.NumeroCommande, rep.D";
                         //Chargement des données
                         produit = "";
                         poids = 0;
@@ -2138,112 +1875,41 @@ namespace eVaSys.Utils
                         l = 0;
                         while (dr.Read())
                         {
-                            if (l > 0)  //On ne traite pas le changement de produit pour la première ligne
-                            {
-                                if (produit != dr.GetValue(0).ToString())
-                                {
-                                    //Changement de produit
-                                    ws.Cells.GetSubrangeAbsolute(l + 23, 0, l + 23, 6).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-                                    ws.Cells.GetSubrangeAbsolute(l + 23, 0, l + 23, 6).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
-                                    ws.Cells[l + 23, 3].Style.Font.Weight = 700;
-                                    ws.Cells[l + 23, 3].Style.Font.Size = 220;
-                                    ws.Cells[l + 23, 3].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                    ws.Cells[l + 23, 3].Value = "Total " + produit;
-                                    ws.Cells[l + 23, 4].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                    ws.Cells[l + 23, 4].Style.Font.Weight = 700;
-                                    ws.Cells[l + 23, 4].Style.Font.Size = 220;
-                                    ws.Cells[l + 23, 4].Value = poids;
-                                    ws.Cells[l + 23, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                    ws.Cells[l + 23, 6].Style.Font.Weight = 700;
-                                    ws.Cells[l + 23, 6].Style.Font.Size = 220;
-                                    ws.Cells[l + 23, 6].Style.NumberFormat = "#,##0.00";
-                                    ws.Cells[l + 23, 6].Value = prix;
-                                    produit = dr.GetValue(0).ToString();
-                                    poidsTotal += poids;
-                                    prixTotal += prix;
-                                    poids = 0;
-                                    prix = 0;
-                                    l++;
-                                }
                                 ws.Cells[l + 23, 0].Style.Font.Size = 220;
                                 ws.Cells[l + 23, 0].Value = dr.GetValue(0).ToString();
                                 ws.Cells[l + 23, 1].Style.Font.Size = 220;
                                 ws.Cells[l + 23, 1].Value = dr.GetValue(1).ToString();
                                 ws.Cells[l + 23, 2].Style.Font.Size = 220;
                                 ws.Cells[l + 23, 2].Value = ((DateTime)dr.GetSqlDateTime(2)).ToString("dd/MM/yy");
+                                ws.Cells[l + 23, 3].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
                                 ws.Cells[l + 23, 3].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 3].Value = dr.GetValue(3).ToString();
+                                ws.Cells[l + 23, 3].Value = dr.GetValue(4).ToString();
                                 ws.Cells[l + 23, 4].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
                                 ws.Cells[l + 23, 4].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 4].Value = dr.GetValue(4).ToString();
+                                ws.Cells[l + 23, 4].Value = dr.GetValue(5).ToString();
                                 ws.Cells[l + 23, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 23, 5].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 5].Value = dr.GetValue(5).ToString();
-                                ws.Cells[l + 23, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 23, 6].Style.NumberFormat = "#,##0.00";
-                                ws.Cells[l + 23, 6].Value = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
+                                ws.Cells[l + 23, 5].Style.NumberFormat = "#,##0.00";
+                                ws.Cells[l + 23, 5].Value = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
                                 poids += (int)dr.GetSqlInt32(4);
                                 prix += Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
                                 l++;
-                            }
-                            else
-                            {
-                                ws.Cells[l + 23, 0].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 0].Value = dr.GetValue(0).ToString();
-                                ws.Cells[l + 23, 1].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 1].Value = dr.GetValue(1).ToString();
-                                ws.Cells[l + 23, 2].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 2].Value = ((DateTime)dr.GetSqlDateTime(2)).ToString("dd/MM/yy");
-                                ws.Cells[l + 23, 3].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 3].Value = dr.GetValue(3).ToString();
-                                ws.Cells[l + 23, 4].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 23, 4].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 4].Value = dr.GetValue(4).ToString();
-                                ws.Cells[l + 23, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 23, 5].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 5].Value = dr.GetValue(5).ToString();
-                                ws.Cells[l + 23, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 23, 6].Style.NumberFormat = "#,##0.00";
-                                ws.Cells[l + 23, 6].Value = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
-                                produit = dr.GetValue(0).ToString();
-                                poids = (int)dr.GetSqlInt32(4);
-                                prix = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
-                                l++;
-                            }
                         }
                         dr.Close();
-                        //Dernier sous-total
-                        ws.Cells.GetSubrangeAbsolute(l + 23, 0, l + 23, 6).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
-                        ws.Cells[l + 23, 3].Style.Font.Weight = 700;
-                        ws.Cells[l + 23, 3].Style.Font.Size = 220;
-                        ws.Cells[l + 23, 3].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 23, 3].Value = "Total " + produit;
-                        ws.Cells[l + 23, 4].Style.Font.Weight = 700;
-                        ws.Cells[l + 23, 4].Style.Font.Size = 220;
-                        ws.Cells[l + 23, 4].Value = poids;
-                        ws.Cells[l + 23, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 23, 6].Style.Font.Weight = 700;
-                        ws.Cells[l + 23, 6].Style.Font.Size = 220;
-                        ws.Cells[l + 23, 6].Style.NumberFormat = "#,##0.00";
-                        ws.Cells[l + 23, 6].Value = prix;
-                        poidsTotal += poids;
-                        prixTotal += prix;
                         //Total général
-                        l++;
                         ws.Cells.GetSubrangeAbsolute(l + 23, 0, l + 23, 6).Style.Borders.SetBorders(MultipleBorders.Top, System.Drawing.Color.Black, LineStyle.Thin);
                         ws.Cells.GetSubrangeAbsolute(l + 23, 0, l + 23, 6).Style.Borders.SetBorders(MultipleBorders.Bottom, System.Drawing.Color.Black, LineStyle.Thin);
+                        ws.Cells[l + 23, 2].Style.Font.Weight = 700;
+                        ws.Cells[l + 23, 2].Style.Font.Size = 220;
+                        ws.Cells[l + 23, 2].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                        ws.Cells[l + 23, 2].Value = "Total";
                         ws.Cells[l + 23, 3].Style.Font.Weight = 700;
                         ws.Cells[l + 23, 3].Style.Font.Size = 220;
-                        ws.Cells[l + 23, 3].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 23, 3].Value = "Total";
-                        ws.Cells[l + 23, 4].Style.Font.Weight = 700;
-                        ws.Cells[l + 23, 4].Style.Font.Size = 220;
-                        ws.Cells[l + 23, 4].Value = poidsTotal;
-                        ws.Cells[l + 23, 6].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                        ws.Cells[l + 23, 6].Style.Font.Weight = 700;
-                        ws.Cells[l + 23, 6].Style.Font.Size = 220;
-                        ws.Cells[l + 23, 6].Style.NumberFormat = "#,##0.00";
-                        ws.Cells[l + 23, 6].Value = prixTotal;
+                        ws.Cells[l + 23, 3].Value = poidsTotal;
+                        ws.Cells[l + 23, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                        ws.Cells[l + 23, 5].Style.Font.Weight = 700;
+                        ws.Cells[l + 23, 5].Style.Font.Size = 220;
+                        ws.Cells[l + 23, 5].Style.NumberFormat = "#,##0.00";
+                        ws.Cells[l + 23, 5].Value = prixTotal;
                         //Fermeture de la source de données
                         dr.Close();
                         //Inscription du bon texte facture

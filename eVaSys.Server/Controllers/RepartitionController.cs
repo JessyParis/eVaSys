@@ -304,14 +304,14 @@ namespace eVaSys.Controllers
                 }
                 //Mark as dirty if applicable
                 if (rC.RefCollectivite != rCVM.Collectivite.RefEntite
-                    || rC.RefProcess != rCVM.Process.RefProcess
-                    || rC.RefProduit != rCVM.Produit.RefProduit
+                    || rC.RefProcess != rCVM.Process?.RefProcess
+                    || rC.RefProduit != rCVM.Produit?.RefProduit
                     || rC.Poids != rCVM.Poids
                     || rC.PUHT != rCVM.PUHT) { dirty = true; }
                 //Update data
                 rC.RefCollectivite = rCVM.Collectivite.RefEntite;
-                rC.RefProcess = rCVM.Process.RefProcess;
-                rC.RefProduit = rCVM.Produit.RefProduit;
+                rC.RefProcess = rCVM.Process?.RefProcess;
+                rC.RefProduit = rCVM.Produit?.RefProduit;
                 rC.Poids = rCVM.Poids;
                 rC.PUHT = rCVM.PUHT;
             }
@@ -349,14 +349,14 @@ namespace eVaSys.Controllers
                 }
                 //Mark as dirty if applicable
                 if (rC.RefFournisseur != rCVM.Fournisseur?.RefEntite
-                    || rC.RefProcess != rCVM.Process.RefProcess
-                    || rC.RefProduit != rCVM.Produit.RefProduit
+                    || rC.RefProcess != rCVM.Process?.RefProcess
+                    || rC.RefProduit != rCVM.Produit?.RefProduit
                     || rC.Poids != rCVM.Poids
                     || rC.PUHT != rCVM.PUHT) { dirty = true; }
                 //Update data
                 rC.RefFournisseur = rCVM.Fournisseur?.RefEntite;
-                rC.RefProcess = rCVM.Process.RefProcess;
-                rC.RefProduit = rCVM.Produit.RefProduit;
+                rC.RefProcess = rCVM.Process?.RefProcess;
+                rC.RefProduit = rCVM.Produit?.RefProduit;
                 rC.Poids = rCVM.Poids;
                 rC.PUHT = rCVM.PUHT;
             }

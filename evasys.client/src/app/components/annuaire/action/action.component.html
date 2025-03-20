@@ -69,22 +69,33 @@
               </mat-form-field>
               <div style="margin: 0 0 10px 0;">
                 <mat-card appearance="outlined" style="white-space: pre-wrap;">
-                  <mat-card-content [style.overflow]="'auto'" [style.height.px]="'40'">
+                  <mat-card-content [style.overflow]="'auto'" [style.height.px]="'105'">
                     <p>{{actionActionTypesLabel()}}</p>
                   </mat-card-content>
                 </mat-card>
               </div>
               <mat-form-field style="width:100%;">
                 <mat-label>{{applicationUserContext.getCulturedRessourceText(1196)}}</mat-label>
-                <input matInput formControlName="Libelle" maxlength="69" />
+                <textarea matInput formControlName="Libelle" maxlength="69" style="height:150px;"></textarea>
                 <button *ngIf="form.get('Libelle').value && form.get('Libelle').enabled"
                         matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Libelle').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
                 </button>
               </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="boxNormalSize">
+        <table class="cadre_primary">
+          <tr>
+            <td class="cadre_header_primary"></td>
+          </tr>
+          <tr>
+            <td class="cadre_body">
               <mat-form-field style="width:100%;">
                 <mat-label>{{applicationUserContext.getCulturedRessourceText(104)}}</mat-label>
-                <textarea matInput formControlName="Cmt" maxlength="10000" style="height:150px;"></textarea>
+                <textarea matInput formControlName="Cmt" maxlength="10000" style="height:600px;"></textarea>
                 <button *ngIf="form.get('Cmt').value && form.get('Cmt').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Cmt').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
                 </button>

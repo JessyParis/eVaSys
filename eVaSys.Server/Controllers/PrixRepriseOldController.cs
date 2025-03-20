@@ -26,11 +26,11 @@ using Telerik.Windows.Documents.Media;
 namespace eVaSys.Controllers
 {
     [Route("evapi/[controller]")]
-    public class PrixRepriseController : BaseApiController
+    public class PrixRepriseOldController : BaseApiController
     {
         private readonly IMapper _mapper;
         #region Constructor
-        public PrixRepriseController(ApplicationDbContext context, IConfiguration configuration, IMapper mapper)
+        public PrixRepriseOldController(ApplicationDbContext context, IConfiguration configuration, IMapper mapper)
             : base(context, configuration)
         {
             _mapper = mapper;
@@ -38,6 +38,41 @@ namespace eVaSys.Controllers
         #endregion Constructor
 
         #region RESTful Conventions
+        /// <summary>
+        /// GET: evapi/getprixreprises
+        /// Retrieves the PrixReprise list for the given date and process
+        /// </summary>
+        [HttpGet("GetPrixReprises")]
+        public IActionResult GetPrixReprises()
+        {
+            //Get headers
+            string refProcess = Request.Headers["refProcess"].ToString();
+            string d = Request.Headers["d"].ToString();
+            string filterProduits = Request.Headers["filterProduits"].ToString();
+            string filterComposants = Request.Headers["filterComposants"].ToString();
+            int refP = 0;
+            DateTime dRef = DateTime.MinValue;
+            List<PrixReprise> prxList = new();
+            //Get PrixReprises
+            if (int.TryParse(refProcess, out refP) && DateTime.TryParse(d, out dRef))
+            {
+                prxList = SelectPrixReprises(refP, dRef, filterProduits, filterComposants);
+            }
+            else
+            {
+                return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711)));
+            }
+            // handle requests asking for non-existing object
+            if (prxList.Count == 0)
+            {
+                return NotFound(new NotFoundError(CurrentContext.CulturedRessources.GetTextRessource(460)));
+            }
+            //End
+            //Return Json
+            return new JsonResult(
+                _mapper.Map<List<PrixReprise>, List<PrixRepriseViewModel>>(prxList),
+                JsonSettings);
+        }
         /// <summary>
         /// GET: evapi/prixreprise/{id}
         /// Retrieves the PrixReprise with the given {id}, or that corresponds to parameters in header
@@ -62,7 +97,7 @@ namespace eVaSys.Controllers
             //Get or create prixReprise
             if (id == 0)
             {
-                if (int.TryParse(refProduit, out refPt) && DateTime.TryParse(d, out dRef))
+                if (int.TryParse(refProcess, out refPs) && int.TryParse(refProduit, out refPt) && int.TryParse(refComposant, out refC) && DateTime.TryParse(d, out dRef))
                 {
                     //If Entite, try to find a PrixReprise with Contrat
                     if (int.TryParse(refEntite, out refE))
@@ -70,7 +105,7 @@ namespace eVaSys.Controllers
                         prixReprise = DbContext.PrixReprises
                             .Include(r => r.UtilisateurCreation)
                             .Include(r => r.UtilisateurModif)
-                            .Where(el => (el.RefProduit == refPt
+                            .Where(el => (el.RefProcess == refPs && el.RefProduit == refPt && el.RefComposant == refC
                                 && el.Contrat.ContratEntites.Any(e => e.RefEntite == refE)
                                 && el.D.Month == dRef.Month && el.D.Year == dRef.Year))
                             .FirstOrDefault();
@@ -81,7 +116,7 @@ namespace eVaSys.Controllers
                             prixReprise = DbContext.PrixReprises
                                 .Include(r => r.UtilisateurCreation)
                                 .Include(r => r.UtilisateurModif)
-                                .Where(el => el.RefProduit == refPt
+                                .Where(el => el.RefProcess == refPs && el.RefProduit == refPt && el.RefComposant == refC
                                     && el.D.Month == dRef.Month && el.D.Year == dRef.Year
                                     && el.RefContrat == null)
                                 .FirstOrDefault();
@@ -140,9 +175,9 @@ namespace eVaSys.Controllers
                     else
                     {
                         prx = new PrixReprise();
-                        prx.RefProcess = prxR.Process?.RefProcess;
+                        prx.RefProcess = prxR.Process.RefProcess;
                         prx.RefProduit = prxR.Produit.RefProduit;
-                        prx.RefComposant = prxR.Composant?.RefProduit;
+                        prx.RefComposant = prxR.Composant.RefProduit;
                         prx.RefContrat = prxR.Contrat?.RefContrat;
                         prx.D = prxR.D;
                         DbContext.PrixReprises.Add(prx);
@@ -325,43 +360,6 @@ namespace eVaSys.Controllers
                 return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711)));
             }
         }
-        /// <summary>
-        /// GET: evapi/getprixreprises
-        /// Retrieves the PrixReprise list for the given date and process
-        /// </summary>
-        [HttpGet("GetPrixReprises")]
-        public IActionResult GetPrixReprises()
-        {
-            //Get headers
-            string refProcess = Request.Headers["refProcess"].ToString();
-            string d = Request.Headers["d"].ToString();
-            string filterProduits = Request.Headers["filterProduits"].ToString();
-            string filterComposants = Request.Headers["filterComposants"].ToString();
-            int? refP = null;
-            DateTime dRef = DateTime.MinValue;
-            List<PrixReprise> prxList = new();
-            //Init
-            if (int.TryParse(refProcess, out int refPTmp)) { refP = refPTmp; }
-            //Get PrixReprises
-            if (DateTime.TryParse(d, out dRef))
-            {
-                prxList = SelectPrixReprises(refP, dRef, filterProduits, filterComposants);
-            }
-            else
-            {
-                return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711)));
-            }
-            // handle requests asking for non-existing object
-            if (prxList.Count == 0)
-            {
-                return NotFound(new NotFoundError(CurrentContext.CulturedRessources.GetTextRessource(460)));
-            }
-            //End
-            //Return Json
-            return new JsonResult(
-                _mapper.Map<List<PrixReprise>, List<PrixRepriseViewModel>>(prxList),
-                JsonSettings);
-        }
         #endregion
         #region Services
         /// <summary>
@@ -381,74 +379,50 @@ namespace eVaSys.Controllers
         /// <summary>
         /// find all possible/existing PrixReprise
         /// </summary>
-        private List<PrixReprise> SelectPrixReprises(int? refP, DateTime dRef, string filterProduits, string filterComposants)
+        private List<PrixReprise> SelectPrixReprises(int refP, DateTime dRef, string filterProduits, string filterComposants)
         {
             List<PrixReprise> prxList = new();
             PrixReprise prx;
             SqlCommand cmd = new();
             SqlDataAdapter dA = new(cmd);
             DataSet dS = new();
-            string sqlStr = "";
-            if (refP != null)
-            {
-                sqlStr = "select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
-                    + "     , tbrPrixReprise.RefContrat"
-                    + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
-                    + " from tblProduit"
-                    + " 	inner join tbmProduitComposant on tblProduit.refProduit=tbmProduitComposant.RefProduit"
-                    + " 	inner join tblProduit as composant on composant.RefProduit=tbmProduitComposant.RefComposant"
-                    + " 	left join (select * from tbrPrixReprise where D=@d and RefProcess=@refProcess) as tbrPrixReprise on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant"
-                    + " where ((composant.Actif=1 and tblProduit.Actif=1) or tbrPrixReprise.RefPrixReprise is not null) and tbrPrixReprise.RefContrat is null"
-                    + " union all"
-                    + " select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
-                    + " 	, tblContrat.RefContrat"
-                    + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
-                    + " from tblCommandeClient"
-                    + " 	inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient"
-                    + " 	inner join tblProduit on tblCommandeClient.RefProduit = tblProduit.RefProduit"
-                    + " 	inner join tbmProduitComposant on tblProduit.refProduit=tbmProduitComposant.RefProduit"
-                    + " 	inner join tblProduit as composant on composant.RefProduit=tbmProduitComposant.RefComposant	"
-                    + " 	inner join tblContrat on tblCommandeClient.RefContrat=tblContrat.RefContrat"
-                    + " 	left join (select * from tbrPrixReprise where D=@d and RefProcess=@refProcess) as tbrPrixReprise "
-                    + " 		on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant and tbrPrixReprise.RefContrat=tblCommandeClient.RefContrat"
-                    + " where tblCommandeClient.RefContrat is not null and tblCommandeClientMensuelle.D=@d";
-            }
-            else
-            {
-                sqlStr = "select tbrPrixReprise.RefPrixReprise, @d as D, null as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, null as RefComposant, null as Composant"
-                    + "     , tbrPrixReprise.RefContrat"
-                    + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
-                    + " from tblProduit"
-                    + " 	left join (select * from tbrPrixReprise where D=@d) as tbrPrixReprise on tbrPrixReprise.RefProduit=tblProduit.RefProduit"
-                    + " where (tblProduit.Actif=1 or tbrPrixReprise.RefPrixReprise is not null) and tbrPrixReprise.RefContrat is null"
-                    + " union all"
-                    + " select tbrPrixReprise.RefPrixReprise, @d as D, null as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, null as RefComposant, null as Composant"
-                    + " 	, tblContrat.RefContrat"
-                    + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
-                    + " from tblCommandeClient"
-                    + " 	inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient"
-                    + " 	inner join tblProduit on tblCommandeClient.RefProduit = tblProduit.RefProduit"
-                    + " 	inner join tblContrat on tblCommandeClient.RefContrat=tblContrat.RefContrat"
-                    + " 	left join (select * from tbrPrixReprise where D=@d) as tbrPrixReprise "
-                    + " 		on tbrPrixReprise.RefProduit=tblProduit.RefProduit and tbrPrixReprise.RefContrat=tblCommandeClient.RefContrat"
-                    + " where tblCommandeClient.RefContrat is not null and tblCommandeClientMensuelle.D=@d";
-            }
+            string sqlStr = "select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
+                + "     , tbrPrixReprise.RefContrat"
+                + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
+                + " from tblProduit"
+                + " 	inner join tbmProduitComposant on tblProduit.refProduit=tbmProduitComposant.RefProduit"
+                + " 	inner join tblProduit as composant on composant.RefProduit=tbmProduitComposant.RefComposant"
+                + " 	left join (select * from tbrPrixReprise where D=@d and RefProcess=@refProcess) as tbrPrixReprise on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant"
+                + " where ((composant.Actif=1 and tblProduit.Actif=1) or tbrPrixReprise.RefPrixReprise is not null) and tbrPrixReprise.RefContrat is null"
+                + " union all"
+                + " select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
+                + " 	, tblContrat.RefContrat"
+                + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
+                + " from tblCommandeClient"
+                + " 	inner join tblCommandeClientMensuelle on tblCommandeClient.RefCommandeClient=tblCommandeClientMensuelle.RefCommandeClient"
+                + " 	inner join tblProduit on tblCommandeClient.RefProduit = tblProduit.RefProduit"
+                + " 	inner join tbmProduitComposant on tblProduit.refProduit=tbmProduitComposant.RefProduit"
+                + " 	inner join tblProduit as composant on composant.RefProduit=tbmProduitComposant.RefComposant	"
+                + " 	inner join tblContrat on tblCommandeClient.RefContrat=tblContrat.RefContrat"
+                + " 	left join (select * from tbrPrixReprise where D=@d and RefProcess=@refProcess) as tbrPrixReprise "
+                + " 		on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant and tbrPrixReprise.RefContrat=tblCommandeClient.RefContrat"
+                + " where tblCommandeClient.RefContrat is not null and tblCommandeClientMensuelle.D=@d"
+                ;
+            cmd.Parameters.Add("@refProcess", SqlDbType.Int).Value = refP;
             cmd.Parameters.Add("@d", SqlDbType.DateTime).Value = dRef;
-            if (refP != null) { cmd.Parameters.Add("@refProcess", SqlDbType.Int).Value = refP; }
             if (filterProduits != "")
             {
                 sqlStr += " and tblProduit.Refproduit in (";
                 sqlStr += Utils.Utils.CreateSQLParametersFromString("refProduit", filterProduits, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
                 sqlStr += ")";
             }
-            if (filterComposants != "" && refP != null)
+            if (filterComposants != "")
             {
                 sqlStr += " and composant.RefProduit in (";
                 sqlStr += Utils.Utils.CreateSQLParametersFromString("refComposant", filterComposants, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
                 sqlStr += ")";
             }
-            if (refP != null) { sqlStr += " 	order by tblProduit.Libelle, composant.Libelle"; }
-            else { sqlStr += " 	order by tblProduit.Libelle"; }
+            sqlStr += " 	order by tblProduit.Libelle, composant.Libelle";
             cmd.CommandText = sqlStr;
             cmd.Connection = (SqlConnection)DbContext.Database.GetDbConnection();
             dA.Fill(dS);
@@ -466,11 +440,19 @@ namespace eVaSys.Controllers
                 {
                     prx = new PrixReprise();
                     DbContext.PrixReprises.Add(prx);
-                    prx.Produit = DbContext.Produits.FirstOrDefault(el => el.RefProduit == (int)dRow["RefProduit"]);
-                    if (prx.Produit != null)
+                    prx.Process = DbContext.Processs.FirstOrDefault(el => el.RefProcess == refP);
+                    if (prx.Process != null)
                     {
-                        prx.D = dRef;
-                        prxList.Add(prx);
+                        prx.Produit = DbContext.Produits.FirstOrDefault(el => el.RefProduit == (int)dRow["RefProduit"]);
+                        if (prx.Produit != null)
+                        {
+                            prx.Composant = DbContext.Produits.FirstOrDefault(el => el.RefProduit == (int)dRow["RefComposant"]);
+                            if (prx != null)
+                            {
+                                prx.D = dRef;
+                                prxList.Add(prx);
+                            }
+                        }
                     }
                     if (dRow["RefContrat"] != DBNull.Value)
                     {
