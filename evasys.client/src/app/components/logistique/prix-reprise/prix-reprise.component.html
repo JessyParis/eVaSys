@@ -7,8 +7,8 @@
         </div>
       </div>
     </header>
-    <form id="MyForm" [formGroup]="form" class="ev-dataform-container">
-      <div class="ev-taskbar-container mat-elevation-z3">
+    <form id="MyForm" [formGroup]="form">
+      <div class="ev-taskbar-container mat-elevation-z3" style="padding:5px;">
         <div class="ev-taskbar-left-container">
           <mat-form-field style="width:100%;" *ngIf="false">
             <mat-label>{{applicationUserContext.getCulturedRessourceText(583)}}</mat-label>
@@ -33,86 +33,88 @@
           </mat-form-field>
         </div>
       </div>
-      <div class="boxTripleSize">
-        <table class="cadre_primary">
-          <tr>
-            <td class="cadre_header_primary">
-              {{applicationUserContext.getCulturedRessourceText(625)}}
-            </td>
-          </tr>
-          <tr>
-            <td class="cadre_body">
-              <table class="fixed_headers table-no-pad-no-space">
-                <thead class="background-color-accent">
-                  <tr>
-                    <th style="padding:5px;">
-                      {{applicationUserContext.getCulturedRessourceText(19)}}
-                      <br />{{applicationUserContext.getCulturedRessourceText(595)}}/{{applicationUserContext.getCulturedRessourceText(583)}}
-                    </th>
-                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1548)}}</th>
-                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
-                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(613)}}</th>
-                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(614)}}</th>
-                    <th style="padding:5px;"></th>
-                  </tr>
-                </thead>
-                <tbody formArrayName="PrxReps">
-                  <tr [formGroupName]="i" *ngFor="let group of getFormData.controls; let i=index">
-                    <td style="padding: 0px 5px 0px 5px;">
-                      {{prixReprises[i].Produit.Libelle}}
-                      <br />{{prixReprises[i].Composant?.Libelle}}
-                      <br />{{prixReprises[i].Process?.Libelle}}
-                    </td>
-                    <td style="padding: 0px 5px 0px 5px;">{{prixReprises[i].Contrat?.IdContrat}}</td>
-                    <td style="padding: 0px 5px 0px 5px;">
-                      <mat-form-field style="width:100%; text-align: right">
-                        <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [errorStateMatcher]="matcher" />
-                        <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
-                        <button *ngIf="group.get('PUHT').value!=null && group.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHT').setValue(null)" tabindex="-1" type="button">
-                          <mat-icon>close</mat-icon>
-                        </button>
-                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.max">
-                          {{applicationUserContext.getCulturedRessourceText(573) + (group.get('PUHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
-                        </mat-error>
-                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.min">
-                          {{applicationUserContext.getCulturedRessourceText(687) + (group.get('PUHT').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
-                        </mat-error>
-                        <mat-hint class="color-accent-dark" align="end" *ngIf="!group.get('PUHT').errors?.max && !group.get('PUHT').errors?.min && group.get('PUHT').value<0">{{applicationUserContext.getCulturedRessourceText(800)}}</mat-hint>
-                      </mat-form-field>
-                    </td>
-                    <td style="padding: 0px 5px 0px 5px;" [class]="prixReprises[i].Produit.PUHTSurtri?'':'background-color-grey'">
-                      <mat-form-field style="width:100%; text-align: right" *ngIf="prixReprises[i].Produit.PUHTSurtri">
-                        <input matInput formControlName="PUHTSurtri" mask="separator.2" [errorStateMatcher]="matcher" />
-                        <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
-                        <button *ngIf="group.get('PUHTSurtri').value!=null && group.get('PUHTSurtri').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHTSurtri').setValue(null)" tabindex="-1" type="button">
-                          <mat-icon>close</mat-icon>
-                        </button>
-                        <mat-error align="end" *ngIf="(group.get('PUHTSurtri').touched || group.get('PUHTSurtri').dirty) && group.get('PUHTSurtri').errors?.max">
-                          {{applicationUserContext.getCulturedRessourceText(573) + (group.get('PUHTSurtri').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
-                        </mat-error>
-                      </mat-form-field>
-                    </td>
-                    <td style="padding: 0px 5px 0px 5px;" [class]="prixReprises[i].Produit.PUHTTransport?'':'background-color-grey'">
-                      <mat-form-field style="width:100%; text-align: right" *ngIf="prixReprises[i].Produit.PUHTTransport">
-                        <input matInput formControlName="PUHTTransport" mask="separator.2" [errorStateMatcher]="matcher" />
-                        <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
-                        <button *ngIf="group.get('PUHTTransport').value!=null && group.get('PUHTTransport').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHTTransport').setValue(null)" tabindex="-1" type="button">
-                          <mat-icon>close</mat-icon>
-                        </button>
-                        <mat-error align="end" *ngIf="(group.get('PUHTTransport').touched || group.get('PUHTTransport').dirty) && group.get('PUHTTransport').errors?.max">
-                          {{applicationUserContext.getCulturedRessourceText(573) + (group.get('PUHTTransport').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
-                        </mat-error>
-                      </mat-form-field>
-                    </td>
-                    <td style="padding: 0px 5px 0px 5px;">
-                      <mat-icon class="ev-button-right color-tooltip-info-icon" [matTooltip]="getCreationTooltipText(i)">info</mat-icon>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </table>
+      <div class="ev-dataform-container">
+        <div class="boxTripleSize">
+          <table class="cadre_primary">
+            <tr>
+              <td class="cadre_header_primary">
+                {{applicationUserContext.getCulturedRessourceText(625)}}
+              </td>
+            </tr>
+            <tr>
+              <td class="cadre_body">
+                <table class="fixed_headers table-no-pad-no-space">
+                  <thead class="background-color-accent">
+                    <tr>
+                      <th style="padding:5px;">
+                        {{applicationUserContext.getCulturedRessourceText(19)}}
+                        <br />{{applicationUserContext.getCulturedRessourceText(595)}}/{{applicationUserContext.getCulturedRessourceText(583)}}
+                      </th>
+                      <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1548)}}</th>
+                      <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
+                      <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(613)}}</th>
+                      <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(614)}}</th>
+                      <th style="padding:5px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="PrxReps">
+                    <tr [formGroupName]="i" *ngFor="let group of getFormData.controls; let i=index">
+                      <td style="padding: 0px 5px 0px 5px;">
+                        {{prixReprises[i].Produit.Libelle}}
+                        <br />{{prixReprises[i].Composant?.Libelle}}
+                        <br />{{prixReprises[i].Process?.Libelle}}
+                      </td>
+                      <td style="padding: 0px 5px 0px 5px;">{{prixReprises[i].Contrat?.IdContrat}}</td>
+                      <td style="padding: 0px 5px 0px 5px;">
+                        <mat-form-field style="width:100%; text-align: right">
+                          <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [errorStateMatcher]="matcher" />
+                          <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
+                          <button *ngIf="group.get('PUHT').value!=null && group.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHT').setValue(null)" tabindex="-1" type="button">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.max">
+                            {{applicationUserContext.getCulturedRessourceText(573) + (group.get('PUHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                          </mat-error>
+                          <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.min">
+                            {{applicationUserContext.getCulturedRessourceText(687) + (group.get('PUHT').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                          </mat-error>
+                          <mat-hint class="color-accent-dark" align="end" *ngIf="!group.get('PUHT').errors?.max && !group.get('PUHT').errors?.min && group.get('PUHT').value<0">{{applicationUserContext.getCulturedRessourceText(800)}}</mat-hint>
+                        </mat-form-field>
+                      </td>
+                      <td style="padding: 0px 5px 0px 5px;" [class]="prixReprises[i].Produit.PUHTSurtri?'':'background-color-grey'">
+                        <mat-form-field style="width:100%; text-align: right" *ngIf="prixReprises[i].Produit.PUHTSurtri">
+                          <input matInput formControlName="PUHTSurtri" mask="separator.2" [errorStateMatcher]="matcher" />
+                          <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
+                          <button *ngIf="group.get('PUHTSurtri').value!=null && group.get('PUHTSurtri').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHTSurtri').setValue(null)" tabindex="-1" type="button">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <mat-error align="end" *ngIf="(group.get('PUHTSurtri').touched || group.get('PUHTSurtri').dirty) && group.get('PUHTSurtri').errors?.max">
+                            {{applicationUserContext.getCulturedRessourceText(573) + (group.get('PUHTSurtri').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                          </mat-error>
+                        </mat-form-field>
+                      </td>
+                      <td style="padding: 0px 5px 0px 5px;" [class]="prixReprises[i].Produit.PUHTTransport?'':'background-color-grey'">
+                        <mat-form-field style="width:100%; text-align: right" *ngIf="prixReprises[i].Produit.PUHTTransport">
+                          <input matInput formControlName="PUHTTransport" mask="separator.2" [errorStateMatcher]="matcher" />
+                          <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
+                          <button *ngIf="group.get('PUHTTransport').value!=null && group.get('PUHTTransport').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHTTransport').setValue(null)" tabindex="-1" type="button">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <mat-error align="end" *ngIf="(group.get('PUHTTransport').touched || group.get('PUHTTransport').dirty) && group.get('PUHTTransport').errors?.max">
+                            {{applicationUserContext.getCulturedRessourceText(573) + (group.get('PUHTTransport').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                          </mat-error>
+                        </mat-form-field>
+                      </td>
+                      <td style="padding: 0px 5px 0px 5px;">
+                        <mat-icon class="ev-button-right color-tooltip-info-icon" [matTooltip]="getCreationTooltipText(i)">info</mat-icon>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
     </form>
     <footer class="ev-footer"></footer>

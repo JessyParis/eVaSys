@@ -94,7 +94,7 @@ namespace eValorplast.BLL
                         if (culture.Name == "en-GB") { _name = "November"; } else { _name = "Novembre"; }
                         break;
                     case 12:
-                        if (culture.Name == "en-GB") { _name = "December"; } else { _name = "décembre"; }
+                        if (culture.Name == "en-GB") { _name = "December"; } else { _name = "Décembre"; }
                         break;
                 }
             }
