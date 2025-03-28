@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Renderer2 } from "@angular/core";
+import { Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from "@angular/core";
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidationErrors, ValidatorFn, AbstractControl, FormGroupDirective, NgForm, UntypedFormArray } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
@@ -63,7 +63,7 @@ class MyValidators {
 
 export class RepartitionComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
-  //Variables
+  //Variablesf
   repartition: dataModelsInterfaces.Repartition = {} as dataModelsInterfaces.Repartition;
   //Form
   form: UntypedFormGroup;
@@ -74,7 +74,7 @@ export class RepartitionComponent implements OnInit {
   collectiviteListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   collectiviteNAListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   poidsFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, Validators.max(400000)]);
-  pUHTFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, Validators.max(2500), Validators.min(-1500)]);
+  pUHTFC: UntypedFormControl = new UntypedFormControl(null, [Validators.max(2500), Validators.min(-1500)]);
   repartitionCollectivite: UntypedFormArray = new UntypedFormArray([]);
   repartitionProduit: UntypedFormArray = new UntypedFormArray([]);
   //Variables
@@ -92,6 +92,7 @@ export class RepartitionComponent implements OnInit {
   //Display
   requiredCollectiviteList: boolean = false;
   requiredCollectiviteNAList: boolean = false;
+  requiredPrixReprise: boolean = false;
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
     , private listService: ListService
@@ -230,7 +231,7 @@ export class RepartitionComponent implements OnInit {
     for (const repColl of this.repartition.RepartitionCollectivites) {
       const grp = this.fb.group({
         Poids: [repColl.Poids, [Validators.required, Validators.max(400000)]],
-        PUHT: [repColl.PUHT, [Validators.required, Validators.max(2500), Validators.min(-1500)]],
+        PUHT: [repColl.PUHT, [Validators.max(2500), Validators.min(-1500)]],
       });
       this.repartitionCollectivite.push(grp);
     }
@@ -238,7 +239,7 @@ export class RepartitionComponent implements OnInit {
     for (const repColl of this.repartition.RepartitionProduits) {
       const grp = this.fb.group({
         Poids: [repColl.Poids, [Validators.required, Validators.max(400000)]],
-        PUHT: [repColl.PUHT, [Validators.required, Validators.max(2500), Validators.min(-1500)]],
+        PUHT: [repColl.PUHT, [Validators.max(2500), Validators.min(-1500)]],
       });
       this.repartitionProduit.push(grp);
     }
@@ -372,9 +373,8 @@ export class RepartitionComponent implements OnInit {
     )
       .subscribe(result => {
         this.pUHTFC.setValue(result.PUHT - result.PUHTSurtri - result.PUHTTransport);
-        const element = this.renderer.selectRootElement("#inputPoids");
-        setTimeout(() => element.focus(), 0);
-      }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+      }, error =>
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1550), duration: 4000 } as appInterfaces.SnackbarMsg));
   }
   //-----------------------------------------------------------------------------------
   //Collectivite selected
@@ -388,9 +388,6 @@ export class RepartitionComponent implements OnInit {
       this.refCollectiviteSelected = selectedRefEntite;
       //Get PrixReprise
       this.getPrixReprise();
-      //Focus Poids if RepartitionProduit
-      const element = this.renderer.selectRootElement("#inputPoids");
-      setTimeout(() => element.focus(), 0);
     }
     this.manageScreen();
   }

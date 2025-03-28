@@ -175,6 +175,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   visibleFilterCommandesFournisseurAttribuees: boolean = false;
   visibleFilterValideDPrevues: boolean = false;
   visibleFilterYearList: boolean = false;
+  visibleFilterRepartitionAFinaliser: boolean = false;
   //Misc
   refMessageVisualisations: number = 0;
   refTransportConcurrence: number = 0;
@@ -266,6 +267,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       AnomalieCommandeFournisseur: new UntypedFormControl(this.applicationUserContext.filterAnomalieCommandeFournisseur),
       Actif: new UntypedFormControl(this.applicationUserContext.filterActif),
       Collecte: new UntypedFormControl(this.applicationUserContext.filterCollecte),
+      RepartitionAFinaliser: new UntypedFormControl(this.applicationUserContext.filterRepartitionAFinaliser),
       NonRepartissable: new UntypedFormControl(
         this.applicationUserContext.filterNonRepartissable ? "1" : (this.applicationUserContext.filterNonRepartissable == false ? "0" : ""))
     });
@@ -827,17 +829,17 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
         || this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuControle
         || this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuNonConformite
         || this.applicationUserContext.currentMenu.name === MenuName.ModulePrestataireMenuCommandeFournisseur
-        )
+      )
     );
     this.visibleFilterClientList = (
       !this.applicationUserContext.connectedUtilisateur.Client
-      &&!this.applicationUserContext.connectedUtilisateur.CentreDeTri
+      && !this.applicationUserContext.connectedUtilisateur.CentreDeTri
       && (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeClient
         || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur
         || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuClientApplication
         || this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuControle
         || this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuNonConformite
-        )
+      )
     );
     this.visibleFilterComposantList = (
       this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuPrixReprise
@@ -1049,8 +1051,8 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     );
     this.visibleFilterCommandesFournisseurAttribuees = (
       (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur
-      && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Client))
-      ||(this.applicationUserContext.currentMenu.name === MenuName.ModulePrestataireMenuCommandeFournisseur)
+        && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Client))
+      || (this.applicationUserContext.currentMenu.name === MenuName.ModulePrestataireMenuCommandeFournisseur)
     );
     this.visibleFilterVilleArriveeList = (
       !this.applicationUserContext.connectedUtilisateur.CentreDeTri
@@ -1092,6 +1094,12 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       || this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuControle
       || this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuNonConformite
       || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuJourFerie
+    );
+    this.visibleFilterRepartitionAFinaliser = (
+      this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Administrateur
+      && (
+        this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuRepartition
+      )
     );
     this.visibleFilterCollecte = (
       this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuProduit
@@ -1411,6 +1419,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     this.applicationUserContext.filterActif = this.form.get("Actif").value;
     this.applicationUserContext.filterNonRepartissable = (this.form.get("NonRepartissable").value == "1" ? true : (this.form.get("NonRepartissable").value == "0" ? false : null));
     this.applicationUserContext.filterCollecte = this.form.get("Collecte").value;
+    this.applicationUserContext.filterRepartitionAFinaliser = this.form.get("RepartitionAFinaliser").value;
   }
   //-----------------------------------------------------------------------------------
   //Save filters
@@ -1899,7 +1908,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       , this.formPrixRepriseCopy.get("YearListFrom").value ? this.formPrixRepriseCopy.get("YearListFrom").value.toString() : "", this.formPrixRepriseCopy.get("MonthListFrom").value ? this.formPrixRepriseCopy.get("MonthListFrom").value : ""
       , this.formPrixRepriseCopy.get("YearListTo").value ? this.formPrixRepriseCopy.get("YearListTo").value.toString() : "", this.formPrixRepriseCopy.get("MonthListTo").value ? this.formPrixRepriseCopy.get("MonthListTo").value : ""
       , this.filterEcoOrganismes, this.filterEntiteTypes, this.filterMessageTypes, this.filterApplicationProduitOrigines, this.applicationUserContext.filterActif, this.applicationUserContext.filterNonRepartissable, this.applicationUserContext.filterCollecte
-      , this.applicationUserContext.filterDonneeEntiteSage, this.filterUtilisateurMaitres
+      , this.applicationUserContext.filterDonneeEntiteSage, this.filterUtilisateurMaitres, this.applicationUserContext.filterRepartitionAFinaliser
     )
   }
   //-----------------------------------------------------------------------------------
@@ -2182,6 +2191,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     this.form.get("Actif").setValue(this.applicationUserContext.filterActif);
     this.form.get("NonRepartissable").setValue(this.applicationUserContext.filterNonRepartissable);
     this.form.get("Collecte").setValue(this.applicationUserContext.filterCollecte);
+    this.form.get("RepartitionAFinaliser").setValue(this.applicationUserContext.filterRepartitionAFinaliser);
   }
   public onFilterTextReset() {
     this.applicationUserContext.filterText = "";
@@ -2366,7 +2376,7 @@ export class GridDataSource implements DataSource<any> {
     , augmentation = "0", selectedItem = "", moisDechargementPrevuItem = ""
     , yearFrom = "", monthFrom = "", yearTo = "", monthTo = ""
     , filterEcoOrganismes = "", filterEntiteTypes = "", filterMessageTypes = "", filterApplicationProduitOrigines = "", filterActif = false, filterNonRepartissable = true, filterCollecte = ""
-    , filterDonneeEntiteSage = false, filterUtilisateurMaitres = ""
+    , filterDonneeEntiteSage = false, filterUtilisateurMaitres = "", filterRepartitionAFinaliser = false
     ) {
     //Show loading indicator
     this.loadingSubject.next(true);
@@ -2384,7 +2394,7 @@ export class GridDataSource implements DataSource<any> {
       , augmentation, selectedItem, moisDechargementPrevuItem
       , yearFrom, monthFrom, yearTo, monthTo
       , filterEcoOrganismes, filterEntiteTypes, filterMessageTypes, filterApplicationProduitOrigines, filterActif, filterNonRepartissable
-      , filterCollecte, filterDonneeEntiteSage, filterUtilisateurMaitres).pipe<any, HttpResponse<any[]>>(
+      , filterCollecte, filterDonneeEntiteSage, filterUtilisateurMaitres, filterRepartitionAFinaliser).pipe<any, HttpResponse<any[]>>(
         catchError(() => of([])),
         finalize(() => { this.loadingSubject.next(false); })
       )

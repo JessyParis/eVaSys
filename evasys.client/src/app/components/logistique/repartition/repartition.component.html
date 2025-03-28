@@ -92,7 +92,7 @@
                 <mat-option *ngFor="let collectiviteNA of collectiviteNAList | async " [value]="collectiviteNA">{{collectiviteNA.Libelle}}</mat-option>
               </mat-autocomplete>
               <mat-form-field style="width:100%;" *ngIf="!!refCollectiviteSelected">
-                <input id="inputPoids" matInput formControlName="Poids" mask="separator" [errorStateMatcher]="matcher" />
+                <input matInput formControlName="Poids" mask="separator" [errorStateMatcher]="matcher"/>
                 <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
                 <button *ngIf="form.get('Poids').value!=null && form.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Poids').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
@@ -103,7 +103,7 @@
                 <mat-error align="end" *ngIf="(form.get('Poids').touched || form.get('Poids').dirty) && form.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               </mat-form-field>
               <mat-form-field style="width:100%; text-align: right" *ngIf="!!refCollectiviteSelected">
-                <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [errorStateMatcher]="matcher" />
+                <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [required]="requiredPrixReprise" [errorStateMatcher]="matcher" />
                 <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
                 <button *ngIf="form.get('PUHT').value!=null && form.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PUHT').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
@@ -162,7 +162,7 @@
                     </td>
                     <td style="padding: 0px 5px 0px 5px;">
                       <mat-form-field style="width:100%; text-align: right">
-                        <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" required [errorStateMatcher]="matcher" />
+                        <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [required]="requiredPrixReprise" [errorStateMatcher]="matcher" />
                         <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
                         <button *ngIf="group.get('PUHT').value!=null && group.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHT').setValue(null)" tabindex="-1" type="button">
                           <mat-icon>close</mat-icon>
@@ -230,7 +230,7 @@
                     </td>
                     <td style="padding: 0px 5px 0px 5px;">
                       <mat-form-field style="width:100%; text-align: right">
-                        <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" required [errorStateMatcher]="matcher" />
+                        <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [required]="requiredPrixReprise" [errorStateMatcher]="matcher" />
                         <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
                         <button *ngIf="group.get('PUHT').value!=null && group.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHT').setValue(null)" tabindex="-1" type="button">
                           <mat-icon>close</mat-icon>

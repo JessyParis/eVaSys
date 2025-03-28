@@ -410,7 +410,7 @@
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field  *ngIf="visibleFilterUtilisateurMaitreList" class="ev-control-left" style="width:400px;">
+          <mat-form-field *ngIf="visibleFilterUtilisateurMaitreList" class="ev-control-left" style="width:400px;">
             <mat-label>{{applicationUserContext.getCulturedRessourceText(1473)}}</mat-label>
             <mat-select multiple formControlName="UtilisateurMaitreList" [compareWith]="compareFnUtilisateurMaitre">
               <mat-option>
@@ -507,6 +507,10 @@
           <mat-checkbox *ngIf="visibleFilterDonneeEntiteSage" class="ev-control-left"
                         formControlName="DonneeEntiteSage" matTooltip={{applicationUserContext.getCulturedRessourceText(1469)}}>
             {{applicationUserContext.getCulturedRessourceText(1468)}}
+          </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterRepartitionAFinaliser" class="ev-control-left"
+                        formControlName="RepartitionAFinaliser" matTooltip={{applicationUserContext.getCulturedRessourceText(1553)}}>
+            {{applicationUserContext.getCulturedRessourceText(1551)}}
           </mat-checkbox>
         </div>
         <div class="ev-taskbar-right-container">

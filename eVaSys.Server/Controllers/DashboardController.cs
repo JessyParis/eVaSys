@@ -87,7 +87,7 @@ namespace eVaSys.Controllers
                     }
                     if (CurrentContext.ConnectedUtilisateur.RefPrestataire != null)
                     {
-                        sqlStr += " and tblCommandeFournisseur.RefPrestataire=" + CurrentContext.ConnectedUtilisateur.RefPrestataire;
+                        sqlStrUrgent += " and tblCommandeFournisseur.RefPrestataire=" + CurrentContext.ConnectedUtilisateur.RefPrestataire;
                     }
                     break;
                 case "DatesTransporteur":
@@ -137,6 +137,27 @@ namespace eVaSys.Controllers
                     {
                         sqlStr += " and tblCommandeFournisseur.RefEntite=" + CurrentContext.ConnectedUtilisateur.RefCentreDeTri + " and RefCommandeFournisseurStatut in (1,2)";
                     }
+                    break;
+                case "RepartitionAFinaliser":
+                    sqlStr = "select count(distinct RefRepartition) from tblRepartition"
+                        + "     inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
+                        + "     inner join tblUtilisateur on tblUtilisateur.RefUtilisateur=tblRepartition.RefUtilisateurCreation"
+                        + " where tblCommandeFournisseur.DDechargement is not null"
+                        + "     and tblUtilisateur.RefCentreDeTri is null"
+                        + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
+                        + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
+                        + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
+                        + "     )";
+                    sqlStrUrgent = "select count(distinct RefRepartition) from tblRepartition"
+                        + "     inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
+                        + "     inner join tblUtilisateur on tblUtilisateur.RefUtilisateur=tblRepartition.RefUtilisateurCreation"
+                        + " where tblCommandeFournisseur.DDechargement is null"
+                        + "     and tblUtilisateur.RefCentreDeTri is not null"
+                        + "     and DDechargement>getdate() and month(DDechargement)!=month(getdate())"
+                        + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
+                        + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
+                        + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
+                        + "     )";
                     break;
                 case "MessagePourDiffusion":
                     sqlStr = "select count(*)"
@@ -429,7 +450,7 @@ namespace eVaSys.Controllers
                         + "     inner join (select RefNonConformite, min(Ordre) as ordre from tblNonConformiteEtape where DValide is null group by RefNonConformite) as etape on etape.RefNonConformite = tblNonConformite.RefNonConformite"
                         + "     inner join tblNonConformiteEtape on tblNonConformiteEtape.RefNonConformite = Etape.RefNonConformite and tblNonConformiteEtape.Ordre = etape.Ordre"
                         + " where (IFFournisseurFacture = 1 and IFFournisseurFactureNro is null)";
-                        break;
+                    break;
                 case "NonConformitesACloturer":
                     sqlStr = "select count(*)"
                         + " from tblNonConformite"

@@ -103,8 +103,9 @@ namespace eVaSys.Controllers
             bool filterNonConformitesPlanActionAValider = (Request.Headers["filterNonConformitesPlanActionAValider"] == "true" ? true : false);
             bool filterNonConformitesPlanActionNR = (Request.Headers["filterNonConformitesPlanActionNR"] == "true" ? true : false);
             bool filterActif = (Request.Headers["filterActif"] == "true" ? true : false);
-            bool? filterNonRepartissable = null;
             string filterCollecte = Request.Headers["filterCollecte"].ToString();
+            bool filterRepartitionAFinaliser = (Request.Headers["filterRepartitionAFinaliser"] == "true" ? true : false);
+            bool? filterNonRepartissable = null;
             if (Request.Headers["filterNonRepartissable"] == "true") { filterNonRepartissable = true; }
             else if (Request.Headers["filterNonRepartissable"] == "false") { filterNonRepartissable = false; }
             SqlCommand cmd = new();
@@ -851,6 +852,14 @@ namespace eVaSys.Controllers
                                 + " 	left join tblEntite as fournisseur on tblRepartition.RefFournisseur=fournisseur.RefEntite"
                                 + " 	left join tblProduit as produit on tblRepartition.RefProduit=produit.RefProduit"
                                 + " where 1=1";
+                            if (filterRepartitionAFinaliser)
+                            {
+                                sqlStr += " and tblCommandeFournisseur.DDechargement is not null"
+                                    + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
+                                    + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
+                                    + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
+                                    + "     )";
+                            }
                             //General Filters
                             sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, filterText
                                 , null

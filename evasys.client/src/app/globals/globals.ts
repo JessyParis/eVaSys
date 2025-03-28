@@ -99,6 +99,7 @@ export class ApplicationUserContext {
   public filterActif: boolean = false;
   public filterGlobalActif: boolean = true;
   public filterNonRepartissable: boolean = null;
+  public filterRepartitionAFinaliser: boolean = false;
   public filterEmailType: any = null;
   public filterContactSelectedColumns: appClasses.EnvDataColumn[] = [];
   //Navigation
@@ -247,19 +248,10 @@ export class ApplicationUserContext {
     }
   }
   public setDefaultFilters() {
-    if (this._connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Utilisateur
-      || this._connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur
-    ) {
-      //this.filterEnvCommandeFournisseurStatuts = [];
-      //this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.EnAttente));
-      //this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Ouverte));
-    }
     if (this._connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Transporteur
     ) {
       this.filterEnvCommandeFournisseurStatuts = [];
       this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Ouverte));
-      //this.filterBegin = moment([1, 0, 1, 0, 0, 0, 0]);
-      //this.filterEnd = moment([1, 0, 1, 0, 0, 0, 0]);
       this.filterTransporteurs = [];
       this.filterTransporteurs.push(this.connectedUtilisateur.Transporteur);
     }
@@ -271,8 +263,6 @@ export class ApplicationUserContext {
       this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Receptionnee));
       this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Refusee));
       this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Repartie));
-      //this.filterBegin = moment([1, 0, 1, 0, 0, 0, 0]);
-      //this.filterEnd = moment([1, 0, 1, 0, 0, 0, 0]);
       this.filterClients = [];
       this.filterClients.push(this.connectedUtilisateur.Client);
     }

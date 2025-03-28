@@ -3368,7 +3368,7 @@ namespace eVaSys.Controllers
                     + "         + '-' + cast(client.RefEntite as varchar(20))"
                     + "         + '-' + cast(tblProduit.RefProduit as varchar(20))"
                     + "         + '-' + isnull(cast(tbrModeTransportEE.RefModeTransportEE as varchar(20)),'NR') as [Numéro Référence]"
-                    + "     , dbo.ToCiteoStandard(tblProduit.NomCommun) as [Standard]"
+                    + "     , isnull(tblProduit.CodeEE,'ND') as [Standard]"
                     + "     , fournisseur.CodeEE as [Point d'enlèvement]"
                     + "     , collectivite.CodeEE as [Collectivité]"
                     + " 	, cast(cast(sum(Poids) as decimal(10,3))/1000 as decimal(10,3)) as [Tonnage réparti par CL (en tonnes)]"
@@ -3420,7 +3420,7 @@ namespace eVaSys.Controllers
                     sqlStr += ")";
                 }
                 //Group by
-                sqlStr += " group by year(VueRepartitionUnitaireDetail.D), month(VueRepartitionUnitaireDetail.D), fournisseur.CodeEE, collectivite.CodeEE, dbo.ToCiteoStandard(tblProduit.NomCommun)"
+                sqlStr += " group by year(VueRepartitionUnitaireDetail.D), month(VueRepartitionUnitaireDetail.D), fournisseur.CodeEE, collectivite.CodeEE, isnull(tblProduit.CodeEE,'ND')"
                     + "     , client.CodeEE, tbrModeTransportEE.Libelle"
                     + "     , collectivite.RefEntite, fournisseur.RefEntite, client.RefEntite, tblProduit.RefProduit, tbrModeTransportEE.RefModeTransportEE";
                 //Count

@@ -67,6 +67,9 @@ export class HomeComponent implements OnInit {
   CommandesBourseAffrettementCss: string = "boxDashboard ev-dashboard-off ev-dashboard-off-color-logistique";
   CommandesBourseAffrettementNb: string = "0";
   CommandesBourseAffrettementNbUrgent: string = "0";
+  RepartitionAFinaliserCss: string = "boxDashboard ev-dashboard-off ev-dashboard-off-color-logistique";
+  RepartitionAFinaliserNb: string = "0";
+  RepartitionAFinaliserNbUrgent: string = "0";
   MessagePourDiffusionCss: string = "boxDashboard ev-dashboard-off ev-dashboard-on-color-administration";
   MessagePourDiffusionNb: string = "0";
   MessagePourDiffusionNbUrgent: string = "0";
@@ -261,6 +264,19 @@ export class HomeComponent implements OnInit {
       if (result.nbUrgent > 0) { this.CommandesEnCoursCss += " ev-dashboard-on-warning ev-dashboard-on-color-logistique ev-dashboard-click"; }
       else if (result.nb > 0) { this.CommandesEnCoursCss += " ev-dashboard-on ev-dashboard-on-color-logistique ev-dashboard-click"; }
       else { this.CommandesEnCoursCss += " ev-dashboard-off ev-dashboard-off-color-logistique"; }
+    }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+    //Répartition à finaliser
+    this.http.get<appInterfaces.DashboardItem>(url, {
+      headers: new HttpHeaders()
+        .set("itemName", "RepartitionAFinaliser"),
+      responseType: "json"
+    }).subscribe(result => {
+      this.RepartitionAFinaliserNb = result.nb.toString();
+      this.RepartitionAFinaliserNbUrgent = result.nbUrgent.toString();
+      this.RepartitionAFinaliserCss = "boxDashboard";
+      if (result.nbUrgent > 0) { this.RepartitionAFinaliserCss += " ev-dashboard-on-warning ev-dashboard-on-color-logistique ev-dashboard-click"; }
+      else if (result.nb > 0) { this.RepartitionAFinaliserCss += " ev-dashboard-on ev-dashboard-on-color-logistique ev-dashboard-click"; }
+      else { this.RepartitionAFinaliserCss += " ev-dashboard-off ev-dashboard-off-color-logistique"; }
     }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     //Messages
     this.http.get<appInterfaces.DashboardItem>(url, {
@@ -712,6 +728,22 @@ export class HomeComponent implements OnInit {
       //Set filter
       this.applicationUserContext.filterEnvCommandeFournisseurStatuts = [];
       this.applicationUserContext.filterEnvCommandeFournisseurStatuts.push(this.applicationUserContext.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Ouverte));
+      //Navigate
+      this.router.navigate(["grid"]);
+      //Emit event for app compoment refresh (active menus and modules)
+      this.eventEmitterService.onDashboardItemClick();
+    }
+  }
+  //------------------------------------------------------------------------------
+  //Navigation to menu
+  RepartitionAFinaliserClick() {
+    if (this.RepartitionAFinaliserNb !== "0" || this.RepartitionAFinaliserNbUrgent !== "0") {
+      this.applicationUserContext.currentModule = this.applicationUserContext.envModules.find(x => x.name === ModuleName.Logistique);
+      this.applicationUserContext.currentMenu = this.applicationUserContext.envMenus.find(x => x.name === MenuName.LogistiqueMenuRepartition);
+      //RAZ filters
+      this.applicationUserContext.razFilters();
+      //Set filter
+      this.applicationUserContext.filterRepartitionAFinaliser = true;
       //Navigate
       this.router.navigate(["grid"]);
       //Emit event for app compoment refresh (active menus and modules)

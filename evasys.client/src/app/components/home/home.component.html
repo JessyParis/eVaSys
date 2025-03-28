@@ -203,6 +203,20 @@
         </tr>
       </table>
     </div>
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'" [class]="RepartitionAFinaliserCss"
+         (click)="RepartitionAFinaliserClick()" [@fadeInOnEnter] [@pulse]="RepartitionAFinaliserNbUrgent!='0'">
+      <table class="ev-dashboard-table">
+        <tr class="ev-dashboard-nb-tr">
+          <td class="ev-dashboard-nb">{{RepartitionAFinaliserNb}}</td>
+        </tr>
+        <tr>
+          <td class="ev-dashboard-label">{{this.applicationUserContext.getCulturedRessourceText(1551)}}</td>
+        </tr>
+        <tr class="ev-dashboard-warning-tr" *ngIf="RepartitionAFinaliserNbUrgent != '0'">
+          <td class="ev-dashboard-warning">{{RepartitionAFinaliserNbUrgent}}&nbsp;{{this.applicationUserContext.getCulturedRessourceText(382)}}</td>
+        </tr>
+      </table>
+    </div>
     <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
            || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur'" [class]="EvolutionPrixTransportCss"
          (click)="EvolutionPrixTransportClick()" [@fadeInOnEnter] [@pulse]="EvolutionPrixTransportNbUrgent!='0'">

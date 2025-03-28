@@ -286,6 +286,11 @@ $ev-app-theme: mat.m2-define-light-theme(
   width: 400px;
   max-width: 400px;
   min-width: 400px;
+  border-spacing: 0;
+  border-collapse: separate;
+  border-width: 0;
+  border-style: none;
+  /*border-radius: 10px 10px 5px 5px;*/
   margin: 10px 0px 0px 10px;
   overflow: hidden;
   -ms-overflow-style: none;
@@ -299,6 +304,11 @@ $ev-app-theme: mat.m2-define-light-theme(
   width: 810px;
   max-width: 810px;
   min-width: 810px;
+  border-spacing: 0;
+  border-collapse: separate;
+  border-width: 0;
+  border-style: none;
+  /*border-radius: 10px 10px 5px 5px;*/
   margin: 10px 0px 0px 10px;
   @include mat.elevation(2);
 }
@@ -310,6 +320,11 @@ $ev-app-theme: mat.m2-define-light-theme(
   width: 1220px;
   max-width: 1220px;
   min-width: 1220px;
+  border-spacing: 0;
+  border-collapse: separate;
+  border-width: 0;
+  border-style: none;
+  /*border-radius: 10px 10px 5px 5px;*/
   margin: 10px 0px 0px 10px;
   @include mat.elevation(2);
 }
@@ -321,7 +336,12 @@ $ev-app-theme: mat.m2-define-light-theme(
   width: 400px;
   max-width: 400px;
   min-width: 400px;
-  margin: 10px 0px 0px 10px;
+  border-spacing: 0;
+  border-collapse: separate;
+  border-width: 0;
+  border-style: none;
+  border-radius: 10px 10px 5px 5px;
+  /*margin: 10px 0px 0px 10px;*/
   @include mat.elevation(2);
 }
 
@@ -332,6 +352,11 @@ $ev-app-theme: mat.m2-define-light-theme(
   width: 400px;
   max-width: 400px;
   min-width: 400px;
+  border-spacing: 0;
+  border-collapse: separate;
+  border-width: 0;
+  border-style: none;
+  /*border-radius: 10px 10px 5px 5px;*/
   margin: 10px 0px 0px 10px;
   overflow: hidden;
   -ms-overflow-style: none;
@@ -345,6 +370,11 @@ $ev-app-theme: mat.m2-define-light-theme(
   width: 810px;
   max-width: 810px;
   min-width: 810px;
+  border-spacing: 0;
+  border-collapse: separate;
+  border-width: 0;
+  border-style: none;
+  /*border-radius: 10px 10px 5px 5px;*/
   margin: 10px 0px 0px 10px;
   @include mat.elevation(2);
 }
@@ -451,31 +481,34 @@ legend {
 }
 
 .cadre_primary {
-  border-collapse: collapse;
-  border-width: 0px;
-  border-spacing: 0px;
   height: 100%;
   width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-collapse: separate;
+  /*border-radius: 10px 10px 5px 5px;*/
   border: thin solid mat.m2-get-color-from-palette($ev-palette-primary, 500);
   background-color: white;
 }
 
 .cadre_accent {
-  border-collapse: collapse;
-  border-width: 0px;
-  border-spacing: 0px;
   height: 100%;
   width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-collapse: separate;
+  /*border-radius: 10px 10px 5px 5px;*/
   border: thin solid mat.m2-get-color-from-palette($ev-palette-accent, 500);
   background-color: white;
 }
 
 .cadre_warn {
-  border-collapse: collapse;
-  border-width: 0px;
-  border-spacing: 0px;
   height: 100%;
   width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-collapse: separate;
+  /*border-radius: 10px 10px 5px 5px;*/
   border: thin solid mat.m2-get-color-from-palette($ev-palette-warn, 500);
   background-color: white;
 }

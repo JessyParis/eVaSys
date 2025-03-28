@@ -25,7 +25,7 @@ export class GridService {
     , filterAnomalieCommandeFournisseur = false, filterControle = false, filterDRs = "", filterCommandesFournisseurAttribuees = false
     , augmentation = "", selectedItem = "", moisDechargementPrevuItem = ""
     , yearFrom = "", monthFrom = "", yearTo = "", monthTo = "", filterEcoOrganismes = "", filterEntiteTypes = "", filterMessageTypes = "", filterApplicationProduitOrigines = "", filterActif = false, filterNonRepartissable = null
-    , filterCollecte = "", filterDonneeEntiteSage = false, filterUtilisateurMaitres = ""
+    , filterCollecte = "", filterDonneeEntiteSage = false, filterUtilisateurMaitres = "", filterRepartitionAFinaliser = false
     ): Observable<HttpResponse<any[]>> {
     return this.http.get<any[]>(this.baseUrl + url,
       {
@@ -89,6 +89,7 @@ export class GridService {
           .set("filterActif", filterActif ? "true" : "false")
           .set("filterNonRepartissable", filterNonRepartissable == null ? "" : (filterNonRepartissable == false ? "false" : "true"))
           .set("filterCollecte", filterCollecte)
+          .set("filterRepartitionAFinaliser", filterRepartitionAFinaliser ? "true" : "false")
         ,
         params: new HttpParams()
           .set("filterText", removeAccents(filterText))

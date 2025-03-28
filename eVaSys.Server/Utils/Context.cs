@@ -195,7 +195,6 @@ namespace eVaSys.Utils
                     [MenuName.LogistiqueMenuExportSAGE.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuExportSAGE.ToString(), RefRessource = 428, CulturedCaption = cR.GetTextRessource(428) == "" ? "?Exports SAGE?" : cR.GetTextRessource(428), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
                     [MenuName.LogistiqueMenuImpression.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuImpression.ToString(), RefRessource = 429, CulturedCaption = cR.GetTextRessource(429) == "" ? "?Impressions?" : cR.GetTextRessource(429), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
                     [MenuName.LogistiqueMenuPrixReprise.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuPrixReprise.ToString(), RefRessource = 431, CulturedCaption = cR.GetTextRessource(431) == "" ? "?Prix de reprise?" : cR.GetTextRessource(431), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuRepartition.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuRepartition.ToString(), RefRessource = 432, CulturedCaption = cR.GetTextRessource(432) == "" ? "?Répartitions?" : cR.GetTextRessource(432), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
                     [MenuName.LogistiqueMenuTransportNonValide.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportNonValide.ToString(), RefRessource = 266, CulturedCaption = cR.GetTextRessource(266) == "" ? "?Validation en attente?" : cR.GetTextRessource(266), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
                     [MenuName.LogistiqueMenuModifierTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuModifierTransport.ToString(), RefRessource = 38, CulturedCaption = cR.GetTextRessource(38) == "" ? "?Consulter/Modifier?" : cR.GetTextRessource(38), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
                     [MenuName.LogistiqueMenuImporterTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuImporterTransport.ToString(), RefRessource = 267, CulturedCaption = cR.GetTextRessource(267) == "" ? "?Importer?" : cR.GetTextRessource(267), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
@@ -373,6 +372,9 @@ namespace eVaSys.Utils
 
                 menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuChargementAnnule, 1245, ModuleName.Logistique, "");
                 SetMenuGrid(menu, DataColumnName.RefCommandeFournisseur, false, "", "");
+
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuRepartition, 432, ModuleName.Logistique, "");
+                SetMenuGrid(menu, DataColumnName.RefRepartition, false, "", "");
 
                 menu = CreateEnvMenu(cR, MenuName.ModulePrestataireMenuCommandeFournisseur, 427, ModuleName.ModulePrestataire, "");
                 SetMenuGrid(menu, DataColumnName.RefCommandeFournisseur, false, "", "");
