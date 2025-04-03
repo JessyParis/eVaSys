@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from "@angular/core";
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidationErrors, ValidatorFn, AbstractControl, FormGroupDirective, NgForm, UntypedFormArray } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidationErrors, ValidatorFn, AbstractControl, FormGroupDirective, NgForm, UntypedFormArray, FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ApplicationUserContext } from "../../../globals/globals";
@@ -70,10 +70,12 @@ export class RepartitionComponent implements OnInit {
   formRepartitionCollectivite: UntypedFormGroup;
   formRepartitionProduit: UntypedFormGroup;
   enterTypeFC: UntypedFormControl = new UntypedFormControl(null);
+  enterModeFC = new FormControl();
   infoTextFC: UntypedFormControl = new UntypedFormControl(null);
   collectiviteListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   collectiviteNAListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   poidsFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, Validators.max(400000)]);
+  percentFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, Validators.max(100)]);
   pUHTFC: UntypedFormControl = new UntypedFormControl(null, [Validators.max(2500), Validators.min(-1500)]);
   repartitionCollectivite: UntypedFormArray = new UntypedFormArray([]);
   repartitionProduit: UntypedFormArray = new UntypedFormArray([]);
@@ -114,6 +116,7 @@ export class RepartitionComponent implements OnInit {
       CollectiviteList: this.collectiviteListFC,
       CollectiviteNAList: this.collectiviteNAListFC,
       Poids: this.poidsFC,
+      Percent: this.percentFC,
       PUHT: this.pUHTFC
     });
     this.formRepartitionCollectivite = this.fb.group({
@@ -123,6 +126,7 @@ export class RepartitionComponent implements OnInit {
       RepartitionProduit: this.repartitionProduit
     });
     this.enterTypeFC.setValue("Collectivite");
+    this.enterModeFC.setValue("kg");
     this.lockScreen();
   }
   //-----------------------------------------------------------------------------------
@@ -176,6 +180,67 @@ export class RepartitionComponent implements OnInit {
             .subscribe(result => {
               this.collectiviteList = result;
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+        }
+        //Get missing PrixReprise if applicable
+        let missingPrixReprise: boolean = false;
+        let missingPrixRepriseMsgCreated: boolean = false;
+        let foundPrixReprise: boolean = false;
+        let foundPrixRepriseMsgCreated: boolean = false;
+        if (this.repartition.RepartitionCollectivites.some(e => e.PUHT == null)) {
+          this.repartition.RepartitionCollectivites.forEach(e => {
+            if (e.PUHT == null) {
+              this.dataModelService.getPrixReprise(0, null
+                , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
+                , null
+                , e.Collectivite.RefEntite
+                , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+              )
+                .subscribe(result => {
+                  e.PUHT = result.PUHT - result.PUHTSurtri - result.PUHTTransport;
+                  foundPrixReprise = true;
+                  //Update form
+                  this.updateForm();
+                  if (foundPrixReprise && !foundPrixRepriseMsgCreated) {
+                    this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1556), duration: 4000 } as appInterfaces.SnackbarMsg);
+                    foundPrixRepriseMsgCreated = true;
+                  }
+                }, error => {
+                  missingPrixReprise = true
+                  if (missingPrixReprise && !missingPrixRepriseMsgCreated) {
+                    this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1555), duration: 4000 } as appInterfaces.SnackbarMsg);
+                    missingPrixRepriseMsgCreated = true;
+                  }
+                });
+            }
+          });
+        }
+        if (this.repartition.RepartitionProduits.some(e => e.PUHT == null)) {
+          this.repartition.RepartitionProduits.forEach(e => {
+            if (e.PUHT == null) {
+              this.dataModelService.getPrixReprise(0, null
+                , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
+                , null
+                , e.Fournisseur.RefEntite
+                , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+              )
+                .subscribe(result => {
+                  e.PUHT = result.PUHT - result.PUHTSurtri - result.PUHTTransport;
+                  foundPrixReprise = true;
+                  //Update form
+                  this.updateForm();
+                  if (foundPrixReprise && !foundPrixRepriseMsgCreated) {
+                    this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1556), duration: 4000 } as appInterfaces.SnackbarMsg);
+                    foundPrixRepriseMsgCreated = true;
+                  }
+                }, error => {
+                  missingPrixReprise = true
+                  if (missingPrixReprise && !missingPrixRepriseMsgCreated) {
+                    this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1555), duration: 4000 } as appInterfaces.SnackbarMsg);
+                    missingPrixRepriseMsgCreated = true;
+                  }
+                });
+            }
+          });
         }
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     }
@@ -254,6 +319,7 @@ export class RepartitionComponent implements OnInit {
     this.collectiviteListFC.disable();
     this.collectiviteNAListFC.disable();
     this.poidsFC.disable();
+    this.percentFC.disable();
     this.pUHTFC.disable();
     this.formRepartitionCollectivite.disable();
     this.formRepartitionProduit.disable();
@@ -265,6 +331,7 @@ export class RepartitionComponent implements OnInit {
     this.collectiviteListFC.enable();
     this.collectiviteNAListFC.enable();
     this.poidsFC.enable();
+    this.percentFC.enable();
     this.pUHTFC.enable();
     this.formRepartitionCollectivite.enable();
     this.formRepartitionProduit.enable();
@@ -295,6 +362,14 @@ export class RepartitionComponent implements OnInit {
         this.collectiviteListFC.setValidators(Validators.required);
         this.collectiviteNAListFC.updateValueAndValidity();
         this.collectiviteNAListFC.updateValueAndValidity();
+      }
+      if (this.enterModeFC.value === "kg") {
+        this.percentFC.disable();
+        this.poidsFC.enable();
+      }
+      else {
+        this.percentFC.enable();
+        this.poidsFC.disable();
       }
     }
   }
@@ -419,7 +494,7 @@ export class RepartitionComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Add a new RepartitionCollectivite
   addRepartitionCollectivite() {
-    if (this.refCollectiviteSelected && this.poidsFC.value && this.pUHTFC.value !== null) {
+    if (this.refCollectiviteSelected && (this.poidsFC.value || this.percentFC.value)) {
       //Save data
       this.saveData();
       //Process
@@ -430,6 +505,11 @@ export class RepartitionComponent implements OnInit {
       this.dataModelService.getEntite(this.refCollectiviteSelected, null, null)
         .subscribe(result => {
           rC.Collectivite = result;
+          //Poids
+          if (this.enterModeFC.value === "kg") { rC.Poids = this.poidsFC.value; }
+          else {
+            rC.Poids = (this.repartition.PoidsReparti * this.percentFC.value / 100);
+          }
           rC.Poids = this.poidsFC.value;
           rC.PUHT = this.pUHTFC.value;
           this.repartition.RepartitionCollectivites.push(rC);
@@ -455,7 +535,7 @@ export class RepartitionComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Add a new RepartitionProduit
   addRepartitionProduit() {
-    if (this.poidsFC.value && this.pUHTFC.value !== null) {
+    if (this.refCollectiviteSelected && (this.poidsFC.value || this.percentFC.value)) {
       //Save data
       this.saveData();
       //Process
@@ -467,7 +547,10 @@ export class RepartitionComponent implements OnInit {
         this.dataModelService.getEntite(this.refCollectiviteSelected, null, null)
           .subscribe(result => {
             rC.Fournisseur = result;
-            rC.Poids = this.poidsFC.value;
+            if (this.enterModeFC.value === "kg") { rC.Poids = this.poidsFC.value; }
+            else {
+              rC.Poids = ((this.repartition.PoidsChargement-this.repartition.PoidsReparti) * this.percentFC.value / 100);
+            }
             rC.PUHT = this.pUHTFC.value;
             this.repartition.RepartitionProduits.push(rC);
             //Update form

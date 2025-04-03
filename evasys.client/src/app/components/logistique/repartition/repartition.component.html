@@ -91,7 +91,7 @@
               <mat-autocomplete #autoCollectiviteNA="matAutocomplete" [displayWith]="autoCollectiviteNADisplayFn" (optionSelected)="onCollectiviteNASelected()">
                 <mat-option *ngFor="let collectiviteNA of collectiviteNAList | async " [value]="collectiviteNA">{{collectiviteNA.Libelle}}</mat-option>
               </mat-autocomplete>
-              <mat-form-field style="width:100%;" *ngIf="!!refCollectiviteSelected">
+              <mat-form-field style="width:50%;" *ngIf="!!refCollectiviteSelected && enterModeFC.value=='kg'">
                 <input matInput formControlName="Poids" mask="separator" [errorStateMatcher]="matcher"/>
                 <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
                 <button *ngIf="form.get('Poids').value!=null && form.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Poids').setValue(null)" tabindex="-1" type="button">
@@ -102,6 +102,25 @@
                 </mat-error>
                 <mat-error align="end" *ngIf="(form.get('Poids').touched || form.get('Poids').dirty) && form.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               </mat-form-field>
+              <mat-form-field style="width:50%;" *ngIf="!!refCollectiviteSelected && enterModeFC.value=='percent'">
+                <input matInput formControlName="Percent"  mask="separator.4" [errorStateMatcher]="matcher"/>
+                <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(203)}}</span>
+                <button *ngIf="form.get('Percent').value!=null && form.get('Percent').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Percent').setValue(null)" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error align="end" *ngIf="(form.get('Percent').touched || form.get('Percent').dirty) && form.get('Percent').errors?.max">
+                  {{applicationUserContext.getCulturedRessourceText(573) + (form.get('Percent').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                </mat-error>
+                <mat-error align="end" *ngIf="(form.get('Percent').touched || form.get('Percent').dirty) && form.get('Percent').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              </mat-form-field>
+              <mat-button-toggle-group [formControl]="enterModeFC" class="ev-button-right" hideSingleSelectionIndicator="true" *ngIf="!!refCollectiviteSelected">
+                <mat-button-toggle value="kg" aria-label="Poids" (click)="manageScreen()">
+                  <mat-icon matTooltip={{applicationUserContext.getCulturedRessourceText(1557)}}>scale</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle value="percent" aria-label="%" (click)="manageScreen()">
+                  <mat-icon matTooltip={{applicationUserContext.getCulturedRessourceText(1558)}}>percent</mat-icon>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
               <mat-form-field style="width:100%; text-align: right" *ngIf="!!refCollectiviteSelected">
                 <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [required]="requiredPrixReprise" [errorStateMatcher]="matcher" />
                 <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>

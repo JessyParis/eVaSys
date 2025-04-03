@@ -550,6 +550,7 @@ export class ApplicationUserContext {
     this.filterEE = null;
     this.filterEmailType = null;
     this.filterContactSelectedColumns = [];
+    this.filterRepartitionAFinaliser = false;
     //Set default mandatory filters
     this.setDefaultFilters();
   }
