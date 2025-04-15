@@ -254,6 +254,61 @@ namespace eVaSys.Controllers
             }
         }
 
+        /// <summary>
+        /// GET: api/repartition/issimilar
+        /// ROUTING TYPE: attribute-based
+        /// </summary>
+        /// <returns>Check Repartition for same product in the last year</returns>
+        [HttpGet("issimilar")]
+        public IActionResult IsSimilar()
+        {
+            string refCommandeFournisseur = Request.Headers["refCommandeFournisseur"].ToString();
+            string d = Request.Headers["d"].ToString();
+            int refCF = 0;
+            DateTime D = DateTime.MinValue;
+            //Check mandatory parameters
+            if (int.TryParse(refCommandeFournisseur, out refCF) && DateTime.TryParse(d, out D))
+            {
+                CommandeFournisseur cF = null; //Original Repartition
+                cF = DbContext.CommandeFournisseurs.Where(e=>e.RefCommandeFournisseur == refCF).FirstOrDefault(); 
+                //Exit if no result
+                if (cF == null) { return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711))); }
+                //Process if ok
+                var q = DbContext.Repartitions
+                    .Include(i => i.CommandeFournisseur)
+                    .Include(i => i.RepartitionCollectivites)
+                    .Include(i => i.RepartitionProduits)
+                    .Where(i =>
+                        i.CommandeFournisseur.RefEntite == cF.RefEntite
+                        && i.CommandeFournisseur.RefProduit == cF.RefProduit
+                        && i.CommandeFournisseur.DChargement <= D && i.CommandeFournisseur.DChargement > D.AddDays(-365));
+                //Same type (collect, hors collecte or both)
+                if (cF.PoidsReparti == 0) {
+                    q = q.Where(e => e.CommandeFournisseur.PoidsReparti == 0);
+                }
+                else if (cF.PoidsReparti == cF.PoidsChargement)
+                {
+                    q = q.Where(e => e.CommandeFournisseur.PoidsReparti == e.CommandeFournisseur.PoidsChargement);
+                }
+                else
+                {
+                    q = q.Where(e => e.CommandeFournisseur.PoidsReparti != e.CommandeFournisseur.PoidsChargement);
+                }
+                q = q.OrderByDescending(e => e.CommandeFournisseur.DChargement);
+                var rep=q.FirstOrDefault();
+                //Exit if no result
+                if (rep == null) { return BadRequest(new NotFoundError(CurrentContext.CulturedRessources.GetTextRessource(460))); }
+                //Return Json
+                return new JsonResult(
+                    _mapper.Map<Repartition, RepartitionViewModel>(rep),
+                    JsonSettings);
+            }
+            else
+            {
+                return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711)));
+            }
+        }
+
         #endregion Attribute-based Routing
 
         #region Services

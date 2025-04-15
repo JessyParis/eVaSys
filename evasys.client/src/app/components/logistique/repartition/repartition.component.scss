@@ -55,16 +55,16 @@
   border-collapse: collapse;
 
   td:nth-child(1), th:nth-child(1) {
-    min-width: 385px;
-    max-width: 385px;
-    width: 385px;
+    min-width: 300px;
+    max-width: 300px;
+    width: 300px;
     box-sizing: border-box;
   }
 
   td:nth-child(2), th:nth-child(2) {
-    min-width: 180px;
-    max-width: 180px;
-    width: 180px;
+    min-width: 75px;
+    max-width: 75px;
+    width: 75px;
     box-sizing: border-box;
   }
 
@@ -76,6 +76,13 @@
   }
 
   td:nth-child(4), th:nth-child(4) {
+    min-width: 180px;
+    max-width: 180px;
+    width: 180px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(5), th:nth-child(5) {
     min-width: 50px;
     max-width: 50px;
     width: 50px;

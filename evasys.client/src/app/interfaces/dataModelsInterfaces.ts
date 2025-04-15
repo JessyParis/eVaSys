@@ -1264,6 +1264,7 @@ export interface RepartitionProduit {
   Produit: Produit;
   Poids: number;
   PUHT: number;
+  Percentage: number;
 }
 export interface RepartitionCollectivite {
   RefRepartitionCollectivite: number;
@@ -1273,6 +1274,7 @@ export interface RepartitionCollectivite {
   Produit: Produit;
   Poids: number;
   PUHT: number;
+  Percentage: number;
 }
 export interface Repreneur {
   RefRepreneur: number;

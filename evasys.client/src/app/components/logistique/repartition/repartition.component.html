@@ -20,7 +20,7 @@
   </header>
   <div class="ev-dataform-container">
     <form id="MyForm" [formGroup]="form" class="ev-horizontal-container" (ngSubmit)="onSubmit()">
-      <div class="boxNormalSizeHalfHeight">
+      <div class="boxNormalSize">
         <table class="cadre_primary">
           <tr>
             <td class="cadre_header_primary">
@@ -52,7 +52,7 @@
           </tr>
         </table>
       </div>
-      <div class="boxNormalSizeHalfHeight">
+      <div class="boxNormalSize">
         <table class="cadre_primary">
           <tr>
             <td class="cadre_header_primary">
@@ -91,7 +91,7 @@
               <mat-autocomplete #autoCollectiviteNA="matAutocomplete" [displayWith]="autoCollectiviteNADisplayFn" (optionSelected)="onCollectiviteNASelected()">
                 <mat-option *ngFor="let collectiviteNA of collectiviteNAList | async " [value]="collectiviteNA">{{collectiviteNA.Libelle}}</mat-option>
               </mat-autocomplete>
-              <mat-form-field style="width:50%;" *ngIf="!!refCollectiviteSelected && enterModeFC.value=='kg'">
+              <mat-form-field style="width:50%;" *ngIf="enterModeFC.value=='kg'">
                 <input matInput formControlName="Poids" mask="separator" [errorStateMatcher]="matcher"/>
                 <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
                 <button *ngIf="form.get('Poids').value!=null && form.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Poids').setValue(null)" tabindex="-1" type="button">
@@ -102,7 +102,7 @@
                 </mat-error>
                 <mat-error align="end" *ngIf="(form.get('Poids').touched || form.get('Poids').dirty) && form.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               </mat-form-field>
-              <mat-form-field style="width:50%;" *ngIf="!!refCollectiviteSelected && enterModeFC.value=='percent'">
+              <mat-form-field style="width:50%;" *ngIf="enterModeFC.value=='percent'">
                 <input matInput formControlName="Percent"  mask="separator.4" [errorStateMatcher]="matcher"/>
                 <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(203)}}</span>
                 <button *ngIf="form.get('Percent').value!=null && form.get('Percent').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Percent').setValue(null)" tabindex="-1" type="button">
@@ -113,7 +113,7 @@
                 </mat-error>
                 <mat-error align="end" *ngIf="(form.get('Percent').touched || form.get('Percent').dirty) && form.get('Percent').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               </mat-form-field>
-              <mat-button-toggle-group [formControl]="enterModeFC" class="ev-button-right" hideSingleSelectionIndicator="true" *ngIf="!!refCollectiviteSelected">
+              <mat-button-toggle-group [formControl]="enterModeFC" class="ev-button-right" hideSingleSelectionIndicator="true">
                 <mat-button-toggle value="kg" aria-label="Poids" (click)="manageScreen()">
                   <mat-icon matTooltip={{applicationUserContext.getCulturedRessourceText(1557)}}>scale</mat-icon>
                 </mat-button-toggle>
@@ -121,7 +121,7 @@
                   <mat-icon matTooltip={{applicationUserContext.getCulturedRessourceText(1558)}}>percent</mat-icon>
                 </mat-button-toggle>
               </mat-button-toggle-group>
-              <mat-form-field style="width:100%; text-align: right" *ngIf="!!refCollectiviteSelected">
+              <mat-form-field style="width:100%; text-align: right">
                 <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [required]="requiredPrixReprise" [errorStateMatcher]="matcher" />
                 <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
                 <button *ngIf="form.get('PUHT').value!=null && form.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PUHT').setValue(null)" tabindex="-1" type="button">
@@ -158,6 +158,7 @@
                 <thead class="background-color-accent">
                   <tr>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(594)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1559)}}</th>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(56)}}</th>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
                     <th style="padding:5px;"></th>
@@ -166,6 +167,7 @@
                 <tbody formArrayName="RepartitionCollectivite">
                   <tr [formGroupName]="i" *ngFor="let group of getFormRepartitionCollectiviteData.controls; let i=index">
                     <td style="padding: 0px 5px 0px 5px;">{{repartition?.RepartitionCollectivites[i]?.Collectivite?.Libelle + " (" + repartition?.RepartitionCollectivites[i]?.Collectivite?.CodeEE + ")"}}</td>
+                    <td style="padding: 0px 5px 0px 5px;" class="color-grey">&#40;{{toFixed(repartition?.RepartitionCollectivites[i]?.Percentage,2)}}&nbsp;&#37;&#41;</td>
                     <td style="padding: 0px 5px 0px 5px;">
                       <mat-form-field style="width:100%;">
                         <input matInput formControlName="Poids" mask="separator" required [errorStateMatcher]="matcher" />
@@ -224,6 +226,7 @@
                 <thead class="background-color-accent">
                   <tr>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(602)}}</th>
+                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1559)}}</th>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(56)}}</th>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
                     <th style="padding:5px;"></th>
@@ -234,6 +237,7 @@
                     <td style="padding: 0px 5px 0px 5px;">
                       {{repartition?.RepartitionProduits[i]?.Fournisseur ? (repartition?.RepartitionProduits[i]?.Fournisseur?.Libelle + " (" + repartition?.RepartitionProduits[i]?.Fournisseur?.CodeEE + ")") : applicationUserContext.getCulturedRessourceText(17)}}
                     </td>
+                    <td style="padding: 0px 5px 0px 5px;" class="color-grey">&#40;{{toFixed(repartition?.RepartitionProduits[i]?.Percentage,2)}}&nbsp;&#37;&#41;</td>
                     <td style="padding: 0px 5px 0px 5px;">
                       <mat-form-field style="width:100%;">
                         <input matInput formControlName="Poids" mask="separator" required [errorStateMatcher]="matcher" />

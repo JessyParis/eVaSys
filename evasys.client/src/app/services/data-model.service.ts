@@ -342,6 +342,17 @@ export class DataModelService {
     });
   }
   //-----------------------------------------------------------------------------------
+  //Check if similar Repartition exists: same Produit, less than 1 year old
+  isSimilarRepartition(refCommandeFournisseur: number, d: moment.Moment): Observable<dataModelsInterfaces.Repartition> {
+    var url = this.baseUrl + "evapi/repartition/issimilar";
+    return this.http.get<dataModelsInterfaces.Repartition>(url, {
+      headers: new HttpHeaders()
+        .set("refCommandeFournisseur", refCommandeFournisseur.toString())
+        .set("d", !d ? "" : moment(d).format("YYYY-MM-DDT00:00:00.000")),
+      responseType: "json"
+    });
+  }
+  //-----------------------------------------------------------------------------------
   //Unmark Mixtes linked CommandeFournisseur
   unmarkMixte(numeroCommande: number): Observable<boolean> {
     var url = this.baseUrl + "evapi/commandefournisseur/unmarkmixte";

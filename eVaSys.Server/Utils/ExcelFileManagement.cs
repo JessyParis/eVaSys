@@ -2011,7 +2011,7 @@ namespace eVaSys.Utils
                                 ws.Cells[l + 23, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
                                 ws.Cells[l + 23, 5].Style.NumberFormat = "#,##0.00";
                                 ws.Cells[l + 23, 5].Value = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
-                                poids += (int)dr.GetSqlInt32(4);
+                                poidsTotal += (int)dr.GetSqlInt32(4);
                                 prix += Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
                                 l++;
                         }

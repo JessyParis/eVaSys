@@ -13,7 +13,7 @@ import { Observable, of } from "rxjs";
 import { debounceTime, switchMap } from "rxjs/operators";import moment from "moment";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
-import { showErrorToUser, setOriginalMenu, getCreationModificationTooltipText } from "../../../globals/utils";
+import { showErrorToUser, setOriginalMenu, getCreationModificationTooltipText, toFixed, getFormattedNumeroCommande } from "../../../globals/utils";
 import { HabilitationLogistique } from "../../../globals/enums";
 import { EventEmitterService } from "../../../services/event-emitter.service";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
@@ -95,6 +95,9 @@ export class RepartitionComponent implements OnInit {
   requiredCollectiviteList: boolean = false;
   requiredCollectiviteNAList: boolean = false;
   requiredPrixReprise: boolean = false;
+  //Functions
+  toFixed = toFixed;
+  getFormattedNumeroCommande = getFormattedNumeroCommande;
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
     , private listService: ListService
@@ -258,6 +261,7 @@ export class RepartitionComponent implements OnInit {
           if (this.repartition.PoidsReparti === 0) {
             this.enterTypeFC.setValue("Produit");
           }
+          this.checkSimilar();
           //Update form
           this.updateForm();
           //Get other data
@@ -309,8 +313,20 @@ export class RepartitionComponent implements OnInit {
       this.repartitionProduit.push(grp);
     }
     this.infoTextFC.setValue(this.repartition.InfoText);
+    //Calculate percentages
+    this.calculatePercentages() 
     //Manage screen
     this.manageScreen();
+  }
+  //-----------------------------------------------------------------------------------
+  //Calculate percentages
+  calculatePercentages() {
+    for (const repColl of this.repartition.RepartitionCollectivites) {
+      repColl.Percentage = (repColl.Poids / this.repartition.PoidsReparti) * 100;
+    }
+    for (const repColl of this.repartition.RepartitionProduits) {
+      repColl.Percentage = (repColl.Poids / (this.repartition.PoidsChargement - this.repartition.PoidsReparti)) * 100;
+    }
   }
   //-----------------------------------------------------------------------------------
   //Lock all controls
@@ -494,7 +510,10 @@ export class RepartitionComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Add a new RepartitionCollectivite
   addRepartitionCollectivite() {
-    if (this.refCollectiviteSelected && (this.poidsFC.value || this.percentFC.value)) {
+    if (this.refCollectiviteSelected
+      && ((this.poidsFC.value && this.enterModeFC.value === "kg")
+        || (this.percentFC.value && this.enterModeFC.value === "percent"))
+    ) {
       //Save data
       this.saveData();
       //Process
@@ -510,7 +529,6 @@ export class RepartitionComponent implements OnInit {
           else {
             rC.Poids = (this.repartition.PoidsReparti * this.percentFC.value / 100);
           }
-          rC.Poids = this.poidsFC.value;
           rC.PUHT = this.pUHTFC.value;
           this.repartition.RepartitionCollectivites.push(rC);
           //Update form
@@ -535,23 +553,25 @@ export class RepartitionComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Add a new RepartitionProduit
   addRepartitionProduit() {
-    if (this.refCollectiviteSelected && (this.poidsFC.value || this.percentFC.value)) {
+    if ((this.poidsFC.value && this.enterModeFC.value === "kg")
+            || (this.percentFC.value && this.enterModeFC.value === "percent")
+        ) {
       //Save data
       this.saveData();
       //Process
       let rC = {} as dataModelsInterfaces.RepartitionProduit;
       rC.RefRepartitionProduit = 0;
       rC.RefRepartition = this.repartition.RefRepartition;
+      if (this.enterModeFC.value === "kg") { rC.Poids = this.poidsFC.value; }
+      else {
+        rC.Poids = ((this.repartition.PoidsChargement - this.repartition.PoidsReparti) * this.percentFC.value / 100);
+      }
+      rC.PUHT = this.pUHTFC.value;
       //Get collectivite
       if (this.refCollectiviteSelected) {
         this.dataModelService.getEntite(this.refCollectiviteSelected, null, null)
           .subscribe(result => {
             rC.Fournisseur = result;
-            if (this.enterModeFC.value === "kg") { rC.Poids = this.poidsFC.value; }
-            else {
-              rC.Poids = ((this.repartition.PoidsChargement-this.repartition.PoidsReparti) * this.percentFC.value / 100);
-            }
-            rC.PUHT = this.pUHTFC.value;
             this.repartition.RepartitionProduits.push(rC);
             //Update form
             this.updateForm();
@@ -560,8 +580,6 @@ export class RepartitionComponent implements OnInit {
           }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
       }
       else {
-        rC.Poids = this.poidsFC.value;
-        rC.PUHT = this.pUHTFC.value;
         this.repartition.RepartitionProduits.push(rC);
         //Update form
         this.updateForm();
@@ -588,6 +606,7 @@ export class RepartitionComponent implements OnInit {
     this.collectiviteListFC.setValue(null);
     this.collectiviteNAListFC.setValue(null);
     this.refCollectiviteSelected = null;
+    this.percentFC.setValue(null);
     this.poidsFC.setValue(null);
     this.pUHTFC.setValue(null);
     this.manageScreen();
@@ -719,6 +738,78 @@ export class RepartitionComponent implements OnInit {
   //Autocomplete display
   autoCollectiviteNADisplayFn(coll?: dataModelsInterfaces.EntiteList): string | undefined {
     return coll ? coll.Libelle : undefined;
+  }
+  //-----------------------------------------------------------------------------------
+  //Check Repartition for same product in the last year
+  checkSimilar() {
+    //If new Repartition
+    if (!this.repartition.RefRepartition && this.repartition.CommandeFournisseur?.RefCommandeFournisseur) {
+      this.dataModelService.isSimilarRepartition(this.repartition.CommandeFournisseur.RefCommandeFournisseur, moment(this.repartition.CommandeFournisseur.DChargement))
+        .subscribe((result => {
+          if (result) {
+            let repartitionSimilar = result;
+            let msg: string;
+            msg = this.applicationUserContext.getCulturedRessourceText(1560);
+            const dialogRef = this.dialog.open(ConfirmComponent, {
+              width: "350px",
+              data: {
+                title: this.applicationUserContext.getCulturedRessourceText(337), message: "", htmlMessage: msg
+              },
+              restoreFocus: false
+            });
+            dialogRef.afterClosed().subscribe(result => {
+              if (result === "yes") {
+                //Apply similar to RepartitionCollectivites
+                if (repartitionSimilar.RepartitionCollectivites.length > 0) {
+                  repartitionSimilar.RepartitionCollectivites.forEach(e => {
+                    let f: dataModelsInterfaces.RepartitionCollectivite = {
+                      RefRepartitionCollectivite: 0,
+                      RefRepartition: this.repartition.RefRepartition,
+                      Collectivite: e.Collectivite,
+                      Poids: Math.round(this.repartition.CommandeFournisseur.PoidsReparti * (e.Poids / repartitionSimilar.CommandeFournisseur.PoidsReparti)),
+                      PUHT: e.PUHT,
+                      Percentage: null,
+                      Process: null,
+                      Produit: null,
+                    };
+                    this.repartition.RepartitionCollectivites.push(f);
+                  });
+                  //Adjust to total
+                  let total: number = this.repartition.RepartitionCollectivites.reduce((a, b) => a + (b["Poids"] || 0), 0);
+                  let diff: number = this.repartition.PoidsReparti - total;
+                  if (diff !== 0) {
+                    this.repartition.RepartitionCollectivites[0].Poids += diff;
+                  }
+                }
+                //Apply similar to RepartitionProduits
+                if (repartitionSimilar.RepartitionProduits.length > 0) {
+                  repartitionSimilar.RepartitionProduits.forEach(e => {
+                    let f: dataModelsInterfaces.RepartitionProduit = {
+                      RefRepartitionProduit: 0,
+                      RefRepartition: this.repartition.RefRepartition,
+                      Fournisseur: e.Fournisseur,
+                      Poids: Math.round((this.repartition.CommandeFournisseur.PoidsChargement - this.repartition.CommandeFournisseur.PoidsReparti) * (e.Poids / (repartitionSimilar.CommandeFournisseur.PoidsReparti - repartitionSimilar.CommandeFournisseur.PoidsChargement))),
+                      PUHT: e.PUHT,
+                      Percentage: null,
+                      Process: null,
+                      Produit: null,
+                    };
+                    this.repartition.RepartitionProduits.push(f);
+                  });
+                  //Adjust to total
+                  let total: number = this.repartition.RepartitionProduits.reduce((a, b) => a + (b["Poids"] || 0), 0);
+                  let diff: number = (this.repartition.PoidsChargement - this.repartition.PoidsReparti) - total;
+                  if (diff !== 0) {
+                    this.repartition.RepartitionProduits[0].Poids += diff;
+                  }
+                }
+                //Update form
+                this.updateForm();
+              }
+            });
+          }
+        }));
+    }
   }
   //-----------------------------------------------------------------------------------
   //Back to list

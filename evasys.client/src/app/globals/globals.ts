@@ -182,6 +182,7 @@ export class ApplicationUserContext {
   //devLogin = "lydie.malioche@veolia.com"; devPwd = "1Toto$aaaaaa";      //CITEO
 
   parametres: dataModelsInterfaces.Parametre[] = [];
+  parametres22: dataModelsInterfaces.Parametre[] = [];
   envModules: appClasses.EnvModule[] = [];
   envMenus: appClasses.EnvMenu[] = [];
   envComponents: appClasses.EnvComponent[] = [];
