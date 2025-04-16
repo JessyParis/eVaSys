@@ -104,8 +104,7 @@ export class RepartitionComponent implements OnInit {
     , private dataModelService: DataModelService
     , private eventEmitterService: EventEmitterService
     , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog
-    , private renderer: Renderer2) {
+    , public dialog: MatDialog) {
     // create an empty object from the interface
     this.repartition = {} as dataModelsInterfaces.Repartition;
     this.createForm();
@@ -314,7 +313,22 @@ export class RepartitionComponent implements OnInit {
     }
     this.infoTextFC.setValue(this.repartition.InfoText);
     //Calculate percentages
-    this.calculatePercentages() 
+    this.calculatePercentages();
+    //Message if 100% and Poids incorrect
+    if (this.enterModeFC.value == "percent") {
+      let totalPercentCollectivite: number = this.repartition.RepartitionCollectivites.reduce((a, b) => a + (b["Percentage"] || 0), 0);
+      let totalPercentProduit: number = this.repartition.RepartitionProduits.reduce((a, b) => a + (b["Percentage"] || 0), 0);
+      let totalpoidsCollectivite: number = this.repartition.RepartitionCollectivites.reduce((a, b) => a + (b["Poids"] || 0), 0);
+      let totalpoidsProduit: number = this.repartition.RepartitionProduits.reduce((a, b) => a + (b["Poids"] || 0), 0);
+      if (totalPercentCollectivite === 100 && totalpoidsCollectivite !== this.repartition.PoidsReparti
+        || totalPercentProduit === 100 && totalpoidsProduit !== (this.repartition.PoidsChargement - this.repartition.PoidsReparti)) {
+        const dialogRef = this.dialog.open(InformationComponent, {
+          width: "350px",
+          data: { title: this.applicationUserContext.getCulturedRessourceText(337), message: this.applicationUserContext.getCulturedRessourceText(1562) },
+          restoreFocus: false
+        });
+      }
+    }
     //Manage screen
     this.manageScreen();
   }
@@ -322,10 +336,10 @@ export class RepartitionComponent implements OnInit {
   //Calculate percentages
   calculatePercentages() {
     for (const repColl of this.repartition.RepartitionCollectivites) {
-      repColl.Percentage = (repColl.Poids / this.repartition.PoidsReparti) * 100;
+      repColl.Percentage = Math.round((repColl.Poids / this.repartition.PoidsReparti) * 10000)/100;
     }
     for (const repColl of this.repartition.RepartitionProduits) {
-      repColl.Percentage = (repColl.Poids / (this.repartition.PoidsChargement - this.repartition.PoidsReparti)) * 100;
+      repColl.Percentage = Math.round((repColl.Poids / (this.repartition.PoidsChargement - this.repartition.PoidsReparti)) * 10000)/100;
     }
   }
   //-----------------------------------------------------------------------------------
@@ -527,7 +541,7 @@ export class RepartitionComponent implements OnInit {
           //Poids
           if (this.enterModeFC.value === "kg") { rC.Poids = this.poidsFC.value; }
           else {
-            rC.Poids = (this.repartition.PoidsReparti * this.percentFC.value / 100);
+            rC.Poids = Math.round(this.repartition.PoidsReparti * this.percentFC.value / 100);
           }
           rC.PUHT = this.pUHTFC.value;
           this.repartition.RepartitionCollectivites.push(rC);
@@ -564,7 +578,7 @@ export class RepartitionComponent implements OnInit {
       rC.RefRepartition = this.repartition.RefRepartition;
       if (this.enterModeFC.value === "kg") { rC.Poids = this.poidsFC.value; }
       else {
-        rC.Poids = ((this.repartition.PoidsChargement - this.repartition.PoidsReparti) * this.percentFC.value / 100);
+        rC.Poids = Math.round((this.repartition.PoidsChargement - this.repartition.PoidsReparti) * this.percentFC.value / 100);
       }
       rC.PUHT = this.pUHTFC.value;
       //Get collectivite

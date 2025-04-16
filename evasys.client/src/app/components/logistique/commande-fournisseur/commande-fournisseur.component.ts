@@ -2520,7 +2520,8 @@ export class CommandeFournisseurComponent implements OnInit {
   ////-----------------------------------------------------------------------------------
   ////PoidsChargement change
   //onPoidsChargementChange(s: string) {
-  //  this.poidsRepartiFC.setValue(this.dDechargementFC.value == null && this.commandeFournisseur.Produit && this.commandeFournisseur.Produit.Collecte ? this.poidsChargementFC.value : this.poidsRepartiFC.value);
+  //  //Inform user if Repartition exists
+  //  if(this.commandeFournisseur.re)
   //}
   //-----------------------------------------------------------------------------------
   //DDechargement change
