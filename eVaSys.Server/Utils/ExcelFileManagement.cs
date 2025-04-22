@@ -2032,7 +2032,7 @@ namespace eVaSys.Utils
                                 ws.Cells[l + 23, 5].Style.NumberFormat = "#,##0.00";
                                 ws.Cells[l + 23, 5].Value = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
                                 poidsTotal += (int)dr.GetSqlInt32(4);
-                                prix += Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
+                                prixTotal += Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
                                 l++;
                         }
                         dr.Close();
@@ -2050,7 +2050,7 @@ namespace eVaSys.Utils
                         ws.Cells[l + 23, 5].Style.Font.Weight = 700;
                         ws.Cells[l + 23, 5].Style.Font.Size = 220;
                         ws.Cells[l + 23, 5].Style.NumberFormat = "#,##0.00";
-                        ws.Cells[l + 23, 5].Value = prixTotal;
+                        //ws.Cells[l + 23, 5].Value = prixTotal;
                         //Fermeture de la source de données
                         dr.Close();
                         //Inscription du bon texte facture

@@ -1024,7 +1024,7 @@ namespace eVaSys.Controllers
                             //General Filters
                             sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, filterText
                                 , new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.ProduitLibelle, Enumerations.DataColumnName.ProduitNomCommercial, Enumerations.DataColumnName.ProduitNomCommun }
-                                , new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.ProduitCodeEE, Enumerations.DataColumnName.ProduitCodeListeVerte }
+                                , new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.ProduitCodeEE, Enumerations.DataColumnName.ProduitCodeListeVerte, Enumerations.DataColumnName.RefProduit }
                                 );
                             //Filters
                             if (filterProduits != "")

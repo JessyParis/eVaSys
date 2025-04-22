@@ -15,17 +15,12 @@ using eVaSys.ViewModels;
 using Limilabs.Mail;
 using Limilabs.Mail.Headers;
 using Limilabs.Mail.MIME;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Net;
 
 namespace eVaSys.Controllers
