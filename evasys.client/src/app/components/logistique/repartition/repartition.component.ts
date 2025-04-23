@@ -183,6 +183,8 @@ export class RepartitionComponent implements OnInit {
               this.collectiviteList = result;
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
         }
+        //GetPrixReprise
+        this.getPrixReprise();
         //Get missing PrixReprise if applicable
         this.getMissingPrixReprises()
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -201,6 +203,9 @@ export class RepartitionComponent implements OnInit {
           if (this.repartition.PoidsReparti === 0) {
             this.enterTypeFC.setValue("Produit");
           }
+          //GetPrixReprise
+          this.getPrixReprise();
+          //Check similar
           this.checkSimilar();
           //Update form
           this.updateForm();
@@ -809,7 +814,7 @@ export class RepartitionComponent implements OnInit {
           this.dataModelService.getPrixReprise(0, null
             , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
             , null
-            , e.Fournisseur.RefEntite
+            , e.Fournisseur?.RefEntite
             , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
           )
             .subscribe(result => {

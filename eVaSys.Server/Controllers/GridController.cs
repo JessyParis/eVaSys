@@ -1075,6 +1075,7 @@ namespace eVaSys.Controllers
                             {
                                 sqlStr += " and (tblUtilisateur.Nom COLLATE Latin1_general_CI_AI like '%'+@filterText+'%' COLLATE Latin1_general_CI_AI"
                                     + " or tblUtilisateur.EMail COLLATE Latin1_general_CI_AI like '%'+@filterText+'%' COLLATE Latin1_general_CI_AI"
+                                    + " or cast(tblUtilisateur.RefUtilisateur as varchar(20)) = @filterText"
                                     + " or transporteur.Libelle COLLATE Latin1_general_CI_AI like '%'+@filterText+'%' COLLATE Latin1_general_CI_AI"
                                     + " or centredetri.Libelle COLLATE Latin1_general_CI_AI like '%'+@filterText+'%' COLLATE Latin1_general_CI_AI"
                                     + " or centredetri.CodeEE = @filterText"
@@ -1123,6 +1124,7 @@ namespace eVaSys.Controllers
                             if (!string.IsNullOrEmpty(filterText))
                             {
                                 sqlStr += " and (tblUtilisateur.Nom COLLATE Latin1_general_CI_AI like '%'+@filterText+'%' COLLATE Latin1_general_CI_AI"
+                                    + " or cast(tblUtilisateur.RefUtilisateur as varchar(20)) = @filterText"
                                     + " or transporteur.Libelle COLLATE Latin1_general_CI_AI like '%'+@filterText+'%' COLLATE Latin1_general_CI_AI"
                                     + " or centredetri.Libelle COLLATE Latin1_general_CI_AI like '%'+@filterText+'%' COLLATE Latin1_general_CI_AI"
                                     + " or centredetri.CodeEE = @filterText"
