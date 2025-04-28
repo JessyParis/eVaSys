@@ -256,8 +256,16 @@ namespace eVaSys.Controllers
                     sqlStr = "select count(distinct tblEntite.RefEntite)"
                         + " from F_COMPTET"
                         + " 	inner join tblEntite on SAGECodeComptable=CT_Num"
-                        + " where ((rtrim(ltrim(isnull(CT_Siret,''))) != rtrim(ltrim(isnull(IdNational,''))))"
-                        + "     or (rtrim(ltrim(isnull(CT_Identifiant,''))) != rtrim(ltrim(isnull(CodeTVA,'')))))";
+                        + " where ("
+                        + "     ("
+                        + "         rtrim(ltrim(isnull(CT_Siret,''))) != rtrim(ltrim(isnull(IdNational,'')))"
+                        + "         and rtrim(ltrim(isnull(CT_Siret,''))) != '' and rtrim(ltrim(isnull(IdNational,''))) != ''"
+                        + "     )"
+                        + "     or ("
+                        + "         rtrim(ltrim(isnull(CT_Identifiant,''))) != rtrim(ltrim(isnull(CodeTVA,'')))"
+                        + "        and rtrim(ltrim(isnull(CT_Identifiant,''))) != '' and rtrim(ltrim(isnull(CodeTVA,''))) != ''"
+                        + "     )"
+                        + " )";
                     if (CurrentContext.filterGlobalActif)
                     {
                         sqlStr += " and tblEntite.Actif=1";

@@ -64,12 +64,12 @@
             <mat-checkbox formControlName="Collecte" style="width:100%;">
               {{applicationUserContext.getCulturedRessourceText(603)}}
             </mat-checkbox>
-            <mat-checkbox formControlName="Composant" style="width:100%;">
+            <mat-checkbox formControlName="Composant" style="width:100%;" (change)="onComposantChange($event)">
               {{applicationUserContext.getCulturedRessourceText(595)}}
             </mat-checkbox>
             <mat-form-field style="width:100%;">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(1026)}}</mat-label>
-              <input matInput formControlName="NumeroStatistique" maxlength="50" required [errorStateMatcher]="matcher" />
+              <input matInput formControlName="NumeroStatistique" maxlength="50" [required]="requiredNumeroStatistique" [errorStateMatcher]="matcher" />
               <button *ngIf="form.get('NumeroStatistique').value!=null && form.get('NumeroStatistique').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('NumeroStatistique').setValue(null)" tabindex="-1" type="button">
                 <mat-icon>close</mat-icon>
               </button>
@@ -77,7 +77,7 @@
             </mat-form-field>
             <mat-form-field style="width:100%;">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(10081)}}</mat-label>
-              <mat-select formControlName="SAGECodeTransportList" required [errorStateMatcher]="matcher">
+              <mat-select formControlName="SAGECodeTransportList" [required]="requiredSAGECodeTransport" [errorStateMatcher]="matcher">
                 <mat-option *ngFor="let sAGECodeTransport of sAGECodeTransportList" [value]="sAGECodeTransport.RefSAGECodeTransport">{{sAGECodeTransport.Libelle}}&nbsp;-&nbsp;{{sAGECodeTransport.Code}}</mat-option>
               </mat-select>
               <button *ngIf="form.get('SAGECodeTransportList').value && form.get('SAGECodeTransportList').enabled"
@@ -88,7 +88,7 @@
             </mat-form-field>
             <mat-form-field style="width:100%;">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(1033)}}</mat-label>
-              <input matInput formControlName="CodeListeVerte" required [errorStateMatcher]="matcher" maxlength="50" />
+              <input matInput formControlName="CodeListeVerte" [required]="requiredCodeListeVerte" [errorStateMatcher]="matcher" maxlength="50" />
               <button *ngIf="form.get('CodeListeVerte').value!=null && form.get('CodeListeVerte').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CodeListeVerte').setValue(null)" tabindex="-1" type="button">
                 <mat-icon>close</mat-icon>
               </button>

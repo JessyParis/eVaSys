@@ -282,6 +282,8 @@ export class CommandeFournisseurComponent implements OnInit {
   //Misc
   lastUploadResut: appInterfaces.UploadResponseBody;
   dMin = moment(new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0, 0)).add(-1, "years");
+  originalPoidsChargement: number = null;
+  originalPoidsReparti: number = null;
   // Subject that emits when the component has been destroyed.
   protected _onDestroy = new Subject<void>();
   //Constructor
@@ -1273,6 +1275,18 @@ export class CommandeFournisseurComponent implements OnInit {
     if (this.motifAnomalieTransporteurList) { this.commandeFournisseur.MotifAnomalieTransporteur = this.motifAnomalieTransporteurList.find(x => x.RefMotifAnomalieTransporteur === this.motifAnomalieTransporteurListFC.value); }
     this.commandeFournisseur.CmtAnomalieTransporteur = this.cmtAnomalieTransporteurFC.value;
     this.commandeFournisseur.DTraitementAnomalieTransporteur = (this.traitementAnomalieTransporteurFC.value === true ? moment() : null);
+    //Handle PoidsChargement and PoidsReparti change
+    if (this.commandeFournisseur.PoidsChargement != this.originalPoidsChargement
+      || this.commandeFournisseur.PoidsReparti != this.originalPoidsReparti) {
+      const dialogRef = this.dialog.open(InformationComponent, {
+        width: "350px",
+        data: { title: this.applicationUserContext.getCulturedRessourceText(337), message: this.applicationUserContext.getCulturedRessourceText(1561) },
+        autoFocus: false,
+        restoreFocus: false
+      });
+      this.originalPoidsChargement = this.commandeFournisseur.PoidsChargement;
+      this.originalPoidsReparti = this.commandeFournisseur.PoidsReparti;
+    }
   }
   //-----------------------------------------------------------------------------------
   //Deletes the data model in DB
@@ -2517,12 +2531,6 @@ export class CommandeFournisseurComponent implements OnInit {
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     }
   }
-  ////-----------------------------------------------------------------------------------
-  ////PoidsChargement change
-  //onPoidsChargementChange(s: string) {
-  //  //Inform user if Repartition exists
-  //  if(this.commandeFournisseur.re)
-  //}
   //-----------------------------------------------------------------------------------
   //DDechargement change
   onDDechargementDateChange(d: moment.Moment) {

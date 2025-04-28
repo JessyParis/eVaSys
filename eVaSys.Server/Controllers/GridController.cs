@@ -842,6 +842,7 @@ namespace eVaSys.Controllers
                             //Chaine SQL globale
                             sqlStr = "select RefRepartition as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefRepartition.ToString()].Name + "]"
                                 + "     , isnull(f.Libelle,fournisseur.Libelle) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriLibelle.ToString()].Name + "]"
+                                + "     , isnull(f.CodeEE,fournisseur.CodeEE) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCITEO.ToString()].Name + "]"
                                 + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                 + "     , isnull(p.Libelle, produit.Libelle) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                 + "     , isnull(tblCommandeFournisseur.DDechargement, tblRepartition.D) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RepartitionD.ToString()].Name + "]"
@@ -1619,8 +1620,16 @@ namespace eVaSys.Controllers
                             sqlStr += " where 1=1 ";
                             if (filterDonneeEntiteSage)
                             {
-                                sqlStr += " and ((rtrim(ltrim(isnull(F_COMPTET.CT_Siret,''))) != rtrim(ltrim(isnull(tblEntite.IdNational,''))))"
-                                + "     or (rtrim(ltrim(isnull(F_COMPTET.CT_Identifiant,''))) != rtrim(ltrim(isnull(tblEntite.CodeTVA,'')))))";
+                                sqlStr += " and ("
+                                + "     ("
+                                + "         rtrim(ltrim(isnull(CT_Siret,''))) != rtrim(ltrim(isnull(tblEntite.IdNational,'')))"
+                                + "         and rtrim(ltrim(isnull(CT_Siret,''))) != '' and rtrim(ltrim(isnull(tblEntite.IdNational,''))) != ''"
+                                + "     )"
+                                + "     or ("
+                                + "         rtrim(ltrim(isnull(CT_Identifiant,''))) != rtrim(ltrim(isnull(tblEntite.CodeTVA,'')))"
+                                + "        and rtrim(ltrim(isnull(CT_Identifiant,''))) != '' and rtrim(ltrim(isnull(tblEntite.CodeTVA,''))) != ''"
+                                + "     )"
+                                + " )";
                             }
                             //General Filters
                             sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, filterText

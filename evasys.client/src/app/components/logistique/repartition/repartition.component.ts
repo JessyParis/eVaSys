@@ -165,7 +165,7 @@ export class RepartitionComponent implements OnInit {
           //Enter type = Collectivite
           this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Entite.RefEntite : this.repartition.Fournisseur.RefEntite
             , true, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
-            , "", false)
+            , "", true)
             .subscribe(result => {
               this.collectiviteList = result;
               //Auto select
@@ -178,7 +178,7 @@ export class RepartitionComponent implements OnInit {
         else {
           this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Entite.RefEntite : this.repartition.Fournisseur.RefEntite
             , true, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
-            , "", false)
+            , "", true)
             .subscribe(result => {
               this.collectiviteList = result;
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
@@ -405,7 +405,7 @@ export class RepartitionComponent implements OnInit {
     if (value && value.length > 1) {
       return this.listService.getListCollectivite(null, null
         , null, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
-        , value ? value : "", false);
+        , value ? value : "", true);
     }
     else {
       let r: dataModelsInterfaces.EntiteList[] = [];

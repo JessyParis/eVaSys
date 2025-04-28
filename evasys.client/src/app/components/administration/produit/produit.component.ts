@@ -13,6 +13,7 @@ import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { BaseFormComponent } from "../../_ancestors/base-form.component";
 import { ListService } from "../../../services/list.service";
+import { MatCheckboxChange } from "@angular/material/checkbox";
 
 @Component({
     selector: "produit",
@@ -26,6 +27,10 @@ export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Pro
   produitGroupeReportingList: dataModelsInterfaces.ProduitGroupeReporting[] = [];
   produitComposantList: dataModelsInterfaces.ProduitComposant[] = [];
   produitStandardList: dataModelsInterfaces.ProduitStandard[] = [];
+  //Validators
+  requiredCodeListeVerte: boolean = true;
+  requiredSAGECodeTransport: boolean = true;
+  requiredNumeroStatistique: boolean = true;
   //Form
   form: UntypedFormGroup;
   produit: dataModelsInterfaces.Produit = {Actif: true} as dataModelsInterfaces.Produit;
@@ -35,9 +40,9 @@ export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Pro
   nomCommunFC: UntypedFormControl = new UntypedFormControl(null);
   collecteFC: UntypedFormControl = new UntypedFormControl(null);
   composantFC: UntypedFormControl = new UntypedFormControl(null);
-  numeroStatistiqueFC: UntypedFormControl = new UntypedFormControl(null);
-  sAGECodeTransportListFC: UntypedFormControl = new UntypedFormControl(null);
-  codeListeVerteFC: UntypedFormControl = new UntypedFormControl(null);
+  numeroStatistiqueFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+  sAGECodeTransportListFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+  codeListeVerteFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
   applicationProduitOrigineListFC: UntypedFormControl = new UntypedFormControl(null);
   produitGroupeReportingListFC: UntypedFormControl = new UntypedFormControl(null);
   incitationQualiteFC: UntypedFormControl = new UntypedFormControl(null);
@@ -168,6 +173,40 @@ export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Pro
     //Manage screen
     this.manageScreen();
   }
+  //Manage screen
+  manageScreen() {
+    //Global lock
+    if (1 !== 1) {
+      this.lockScreen();
+    }
+    else {
+      //Init
+      this.unlockScreen();
+      //validators
+      if (this.produit.Composant) {
+        this.requiredSAGECodeTransport = false;
+        this.sAGECodeTransportListFC.clearValidators();
+        this.sAGECodeTransportListFC.updateValueAndValidity();
+        this.requiredCodeListeVerte = false;
+        this.codeListeVerteFC.clearValidators();
+        this.codeListeVerteFC.updateValueAndValidity();
+        this.requiredNumeroStatistique = false;
+        this.numeroStatistiqueFC.clearValidators();
+        this.numeroStatistiqueFC.updateValueAndValidity();
+      }
+      else {
+        this.requiredSAGECodeTransport = true;
+        this.sAGECodeTransportListFC.setValidators([Validators.required]);
+        this.sAGECodeTransportListFC.updateValueAndValidity();
+        this.requiredCodeListeVerte = true;
+        this.codeListeVerteFC.setValidators([Validators.required]);
+        this.codeListeVerteFC.updateValueAndValidity();
+        this.requiredNumeroStatistique = true;
+        this.numeroStatistiqueFC.setValidators([Validators.required]);
+        this.numeroStatistiqueFC.updateValueAndValidity();
+      }
+    }
+  }
   //-----------------------------------------------------------------------------------
   //Creates a new similar Produit
   onCopy() {
@@ -207,6 +246,14 @@ export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Pro
     this.produit.CmtFournisseur = this.cmtFournisseurFC.value;
     this.produit.CmtTransporteur = this.cmtTransporteurFC.value;
     this.produit.CmtClient = this.cmtClientFC.value;
+    //manage screen
+    this.manageScreen();
+  }
+  //-----------------------------------------------------------------------------------
+  //If Composant, or not
+  onComposantChange(ev: MatCheckboxChange) {
+    this.produit.Composant = ev.checked ? true : false;
+    this.manageScreen();
   }
   //-----------------------------------------------------------------------------------
   //Saves the data model in DB
