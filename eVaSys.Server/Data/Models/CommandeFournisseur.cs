@@ -318,6 +318,20 @@ namespace eVaSys.Data
                 return Utils.Utils.IsLockedData(LockableData.RefCommandeFournisseur.ToString(), RefCommandeFournisseur, DbContext);
             }
         }
+        [NotMapped]
+        public bool Reparti
+        {
+            get
+            {
+                bool r = false;
+                if (Repartitions?.Count() > 0) { r = true; }
+                else
+                {
+                    r = (DbContext.Repartitions.Where(e => e.RefCommandeFournisseur == RefCommandeFournisseur).Count() > 0);
+                }
+                return r;
+            }
+        }
 
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
@@ -455,13 +469,14 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            bool existsInDB = (Utils.Utils.DbScalar("select count(*) from tblCommandeFournisseur where RefCommandeFournisseur=" + RefCommandeFournisseur, DbContext.Database.GetDbConnection()) != "0");
+            bool existsInDB = (DbContext.CommandeFournisseurs.Where(q => q.NumeroCommande == NumeroCommande && q.RefCommandeFournisseur != RefCommandeFournisseur).Count() == 0);
             int c = DbContext.CommandeFournisseurs.Where(q => q.NumeroCommande == NumeroCommande).Count();
-            if ((!existsInDB && c > 0) || (existsInDB && c > 1) || Libelle?.Length > 50)
+            if ((!existsInDB && c > 0) || (existsInDB && c > 1) || Libelle?.Length > 50 || DMoisDechargementPrevu == null)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
                 if ((!existsInDB && c > 0) || (existsInDB && c > 1)) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }
                 if (Libelle?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(394); }
+                if (DMoisDechargementPrevu == null) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1563); }
             }
             return r;
         }

@@ -272,6 +272,7 @@ export interface CommandeFournisseur {
   DAnomalieOk: string | moment.Moment;
   UtilisateurAnomalieOk: Utilisateur;
   NonRepartissable: boolean;
+  Reparti: boolean;
   RefExt: string;
   Prestataire: Entite;
   CommandeFournisseurFichiers: CommandeFournisseurFichier[];

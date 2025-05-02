@@ -282,8 +282,8 @@ export class CommandeFournisseurComponent implements OnInit {
   //Misc
   lastUploadResut: appInterfaces.UploadResponseBody;
   dMin = moment(new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0, 0)).add(-1, "years");
-  originalPoidsChargement: number = null;
-  originalPoidsReparti: number = null;
+  originalPoidsChargement: number = 0;
+  originalPoidsReparti: number = 0;
   // Subject that emits when the component has been destroyed.
   protected _onDestroy = new Subject<void>();
   //Constructor
@@ -698,7 +698,6 @@ export class CommandeFournisseurComponent implements OnInit {
       this.dDechargementPrevueFCRequired = false;
       this.dChargementFCRequired = false;
       this.dDechargementFCRequired = false;
-      this.dMoisDechargementPrevuFCRequired = false;
       this.poidsRepartiFCRequired = false;
       this.nbBalleDechargementFCRequired = false;
       this.poidsDechargementFCRequired = false;
@@ -800,7 +799,6 @@ export class CommandeFournisseurComponent implements OnInit {
         this.dDechargementPrevueFCRequired = true;
         this.dChargementFCRequired = true;
         this.dDechargementFCRequired = true;
-        this.dMoisDechargementPrevuFCRequired = true;
         this.poidsRepartiFCRequired = true;
         this.nbBalleDechargementFCRequired = true;
         this.poidsDechargementFCRequired = true;
@@ -1276,8 +1274,8 @@ export class CommandeFournisseurComponent implements OnInit {
     this.commandeFournisseur.CmtAnomalieTransporteur = this.cmtAnomalieTransporteurFC.value;
     this.commandeFournisseur.DTraitementAnomalieTransporteur = (this.traitementAnomalieTransporteurFC.value === true ? moment() : null);
     //Handle PoidsChargement and PoidsReparti change
-    if (this.commandeFournisseur.PoidsChargement != this.originalPoidsChargement
-      || this.commandeFournisseur.PoidsReparti != this.originalPoidsReparti) {
+    if ((this.commandeFournisseur.PoidsChargement != this.originalPoidsChargement || this.commandeFournisseur.PoidsReparti != this.originalPoidsReparti)
+      && this.commandeFournisseur.Reparti ){
       const dialogRef = this.dialog.open(InformationComponent, {
         width: "350px",
         data: { title: this.applicationUserContext.getCulturedRessourceText(337), message: this.applicationUserContext.getCulturedRessourceText(1561) },

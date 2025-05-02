@@ -438,7 +438,7 @@ namespace eVaSys.Utils
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
             var sqlConn = (SqlConnection)dbContext.Database.GetDbConnection();
                 //Initialisations
-                //Recherche du contact BL
+                //Recherche du contact
                 string bl = "";
             bl = Utils.DbScalar("select tbmContactAdresse.RefContactAdresse from tbmContactAdresse"
                 + "     inner join tbmContactAdresseContactAdresseProcess on tbmContactAdresseContactAdresseProcess.RefContactAdresse=tbmContactAdresse.RefContactAdresse"
