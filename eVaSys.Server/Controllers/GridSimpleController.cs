@@ -248,6 +248,7 @@ namespace eVaSys.Controllers
                         + " 	inner join tbmContactAdresseContactAdresseProcess on tbmContactAdresse.RefContactAdresse = tbmContactAdresseContactAdresseProcess.RefContactAdresse"
                         + "     left join tblEmailNoteCredit on F_DOCENTETE.DO_PIECE=tblEmailNoteCredit.RefSAGEDocument"
                         + " where tbmContactAdresseContactAdresseProcess.RefContactAdresseProcess = 3 and tbmContactAdresse.Email is not null"
+                        + "     and tbmContactAdresse.Actif = 1 and tblAdresse.Actif=1 and tblEntite.Actif=1"
                         + " 	and DO_TYPE = 17 and DO_DATE >= @d"
                         + "     and tblEmailNoteCredit.RefSAGEDocument is null";
                     //Filters

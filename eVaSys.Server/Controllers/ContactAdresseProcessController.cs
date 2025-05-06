@@ -9,6 +9,7 @@
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
 using eVaSys.Data;
+using eVaSys.Utils;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,7 +43,10 @@ namespace eVaSys.Controllers
             System.Linq.IQueryable<eVaSys.Data.ContactAdresseProcess> req = DbContext.ContactAdresseProcesss;
             //Get data
             var all = req
-                .Where(e=> e.RefContactAdresseProcess != 2 && e.RefContactAdresseProcess != 5 && e.RefContactAdresseProcess != 6 && e.RefContactAdresseProcess != 8)
+                .Where(e=> e.RefContactAdresseProcess != (int)Enumerations.ContactAdresseProcess.DemandeEnlevement 
+                    && e.RefContactAdresseProcess != (int)Enumerations.ContactAdresseProcess.InteressementCentreDeTri
+                    && e.RefContactAdresseProcess != (int)Enumerations.ContactAdresseProcess.RepriseCollectivite
+                    && e.RefContactAdresseProcess != (int)Enumerations.ContactAdresseProcess.IncitationQualite)
                 .OrderBy(el => el.Libelle).ToArray();
             //Return Json
             return new JsonResult(

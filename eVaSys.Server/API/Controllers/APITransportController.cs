@@ -75,7 +75,7 @@ namespace eVaSys.Controllers
             foreach (var c in cmds)
             {
                 var v = new APITransportViewModel();
-                var ctc = c.AdresseClient.ContactAdresses.Where(e => e.Actif == true && e.ContactAdresseContactAdresseProcesss.Any(f => f.RefContactAdresseProcess == 1)).FirstOrDefault();
+                var ctc = c.AdresseClient.ContactAdresses.Where(e => e.Actif == true && e.ContactAdresseContactAdresseProcesss.Any(f => f.RefContactAdresseProcess == (int)Enumerations.ContactAdresseProcess.BonDeLivraison)).FirstOrDefault();
                 v.RefCommandeFournisseur = c.RefCommandeFournisseur;
                 v.NumeroCommande = c.NumeroCommande;
                 v.CommandeFournisseurStatutLibelle = c.CommandeFournisseurStatut.Libelle;

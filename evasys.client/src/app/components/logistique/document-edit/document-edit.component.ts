@@ -52,8 +52,12 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   quarterList: appInterfaces.Quarter[];
   yearList: appInterfaces.Year[];
   documentEditTypeList: any[] = [
-    { t: "EtatTrimerstrielCollectivite", name: this.applicationUserContext.getCulturedRessourceText(720) }
-    , { t: "EtatMensuelReception", name: this.applicationUserContext.getCulturedRessourceText(721) }]
+    { t: "EtatTrimerstrielCollectiviteCS", name: this.applicationUserContext.getCulturedRessourceText(1361) }
+    , { t: "EtatMensuelCollectiviteHCS", name: this.applicationUserContext.getCulturedRessourceText(1385) }
+    , { t: "CertificatRecyclageCS", name: this.applicationUserContext.getCulturedRessourceText(1386) }
+    , { t: "CertificatRecyclageHCS", name: this.applicationUserContext.getCulturedRessourceText(1387) }
+    , { t: "EtatMensuelReception", name: this.applicationUserContext.getCulturedRessourceText(1431) }
+  ]
   //Loading indicator
   loading = false;
   color = "warn" as ThemePalette;
@@ -157,11 +161,19 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.centreDeTriListFC.enable()
         this.monthListFC.enable();
         break;
-      case "EtatTrimerstrielCollectivite":
+      case "EtatTrimerstrielCollectiviteCS":
+      case "CertificatRecyclageCS":
+      case "CertificatRecyclageHCS":
         this.collectiviteListFC.enable();
         this.quarterListFC.enable();
         this.centreDeTriListFC.disable()
         this.monthListFC.disable();
+        break;
+      case "EtatMensuelCollectiviteHCS":
+        this.collectiviteListFC.enable();
+        this.quarterListFC.disable();
+        this.centreDeTriListFC.disable()
+        this.monthListFC.enable();
         break;
     }
   }
@@ -183,11 +195,10 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       filterCollectivites = Array.prototype.map.call(this.collectiviteListFC.value, function (item: EntiteList) { return item.RefEntite; }).join(",");
     }
     // Display progress bar
-    //this.progressBar.start();
+    this.progressBar.start();
     //Process
     switch (this.documentEditTypeListFC.value) {
       case "EtatMensuelReception":
-        //Collectivités
         var url = this.baseUrl + "evapi/documentedit/etatmensuelreception";
         this.http
           .get(url, {
@@ -211,8 +222,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             showErrorToUser(this.dialog, error, this.applicationUserContext);
           });
         break;
-      case "EtatTrimerstrielCollectivite":
-        //Centres de tri
+      case "EtatTrimerstrielCollectiviteCS":
         var url = this.baseUrl + "evapi/documentedit/etattrimerstrielcollectivitecs";
         this.http
           .get(url, {
@@ -224,7 +234,53 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             responseType: "blob"
           })
           .pipe(
-            finalize(() => this.displayProgressBar = false)
+            finalize(() => { this.progressBar.stop(); })
+          )
+          .subscribe((data: HttpResponse<Blob>) => {
+            let contentDispositionHeader = data.headers.get("Content-Disposition");
+            let fileName = getAttachmentFilename(contentDispositionHeader);
+            this.downloadFile(data.body, fileName);
+          }, error => {
+            showErrorToUser(this.dialog, error, this.applicationUserContext);
+          });
+        break;
+      case "EtatMensuelCollectiviteHCS":
+        var url = this.baseUrl + "evapi/documentedit/etatmensuelcollectivitehcs";
+        this.http
+          .get(url, {
+            headers: new HttpHeaders()
+              .set("filterCollectivites", filterCollectivites)
+              .set("month", this.monthListFC.value == null ? "0" : (moment(this.monthListFC.value).month() + 1).toString())
+              .set("year", this.yearListFC.value == null ? "0" : this.yearListFC.value.toString()),
+            observe: "response",
+            responseType: "blob"
+          })
+          .pipe(
+            finalize(() => { this.progressBar.stop(); })
+          )
+          .subscribe((data: HttpResponse<Blob>) => {
+            let contentDispositionHeader = data.headers.get("Content-Disposition");
+            let fileName = getAttachmentFilename(contentDispositionHeader);
+            this.downloadFile(data.body, fileName);
+          }, error => {
+            showErrorToUser(this.dialog, error, this.applicationUserContext);
+          });
+        break;
+      case "CertificatRecyclageCS":
+      case "CertificatRecyclageHCS":
+        var url = this.baseUrl + "evapi/documentedit/certificatrecyclage";
+        this.http
+          .get(url, {
+            headers: new HttpHeaders()
+              .set("filterCollectivites", filterCollectivites)
+              .set("quarter", this.quarterListFC.value == null ? "0" : this.quarterListFC.value.toString())
+              .set("year", this.yearListFC.value == null ? "0" : this.yearListFC.value.toString())
+              .set("cs", this.documentEditTypeListFC.value == "CertificatRecyclageCS" ? "true" : "false"),
+            observe: "response",
+            responseType: "blob"
+          })
+          .pipe(
+            finalize(() => { this.progressBar.stop(); })
           )
           .subscribe((data: HttpResponse<Blob>) => {
             let contentDispositionHeader = data.headers.get("Content-Disposition");

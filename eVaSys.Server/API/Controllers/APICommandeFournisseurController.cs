@@ -457,7 +457,7 @@ namespace eVaSys.Controllers
                         .Include(r => r.ContactAdresseContactAdresseProcesss)
                         .Include(r => r.Adresse)
                         .Where(el => el.RefEntite == refEntite
-                            && el.ContactAdresseContactAdresseProcesss.Any(related => related.RefContactAdresseProcess == 1)).FirstOrDefault();
+                            && el.ContactAdresseContactAdresseProcesss.Any(related => related.RefContactAdresseProcess == (int)Enumerations.ContactAdresseProcess.BonDeLivraison)).FirstOrDefault();
                     if (cA != null)
                     {
                         dataModel.RefContactAdresse = cA.RefContactAdresse;

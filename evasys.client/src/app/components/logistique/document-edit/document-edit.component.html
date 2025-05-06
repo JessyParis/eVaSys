@@ -25,7 +25,11 @@
               </mat-select>
               <mat-error align="end" *ngIf="(form.get('DocumentEditTypeList').touched || form.get('DocumentEditTypeList').dirty) && form.get('DocumentEditTypeList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
             </mat-form-field>
-            <mat-form-field style="width:100%;" *ngIf="form.get('DocumentEditTypeList').value==='EtatTrimerstrielCollectivite'">
+            <mat-form-field style="width:100%;"
+                            *ngIf="form.get('DocumentEditTypeList').value==='EtatTrimerstrielCollectiviteCS'
+                              || form.get('DocumentEditTypeList').value==='EtatMensuelCollectiviteHCS'
+                              || form.get('DocumentEditTypeList').value==='CertificatRecyclageCS'
+                              || form.get('DocumentEditTypeList').value==='CertificatRecyclageHCS'">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(316)}}</mat-label>
               <mat-select formControlName="CollectiviteList"
                           multiple [compareWith]="compareFnCollectivite">
@@ -49,7 +53,9 @@
               </mat-select>
               <mat-error align="end" *ngIf="(form.get('CentreDeTriList').touched || form.get('CentreDeTriList').dirty) && form.get('CentreDeTriList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
             </mat-form-field>
-            <mat-form-field style="width:100%;" *ngIf="form.get('DocumentEditTypeList').value==='EtatMensuelReception'">
+            <mat-form-field style="width:100%;"
+                            *ngIf="form.get('DocumentEditTypeList').value==='EtatMensuelReception'
+                              || form.get('DocumentEditTypeList').value==='EtatMensuelCollectiviteHCS'">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(571)}}</mat-label>
               <mat-select formControlName="MonthList"
                           required [errorStateMatcher]="matcher">
@@ -57,7 +63,10 @@
               </mat-select>
               <mat-error align="end" *ngIf="(form.get('MonthList').touched || form.get('MonthList').dirty) && form.get('MonthList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
             </mat-form-field>
-            <mat-form-field style="width:100%;" *ngIf="form.get('DocumentEditTypeList').value==='EtatTrimerstrielCollectivite'">
+            <mat-form-field style="width:100%;"
+                            *ngIf="form.get('DocumentEditTypeList').value==='EtatTrimerstrielCollectiviteCS'
+                              || form.get('DocumentEditTypeList').value==='CertificatRecyclageCS'
+                              || form.get('DocumentEditTypeList').value==='CertificatRecyclageHCS'">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(696)}}</mat-label>
               <mat-select formControlName="QuarterList"
                           required [errorStateMatcher]="matcher">

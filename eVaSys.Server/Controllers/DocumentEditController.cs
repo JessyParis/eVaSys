@@ -115,7 +115,7 @@ namespace eVaSys.Controllers
         /// <summary>
         /// GET: api/documentedit/etattrimerstrielcollectivitecs
         /// ROUTING TYPE: attribute-based
-        /// create file EtatTrimerstrielCollectivite
+        /// create file EtatTrimerstrielCollectiviteHCS
         /// </summary>
         /// <returns>Text file</returns>
         [HttpGet("etatmensuelcollectivitehcs")]
@@ -202,7 +202,7 @@ namespace eVaSys.Controllers
                 MemoryStream mS = new();
                 //Init
                 //Create file
-                mS = ExcelFileManagement.CreateFicheRepartition(r, "xlsx", DbContext, _env.ContentRootPath);
+                mS = ExcelFileManagement.CreateFicheRepartition(r, "xlsx", DbContext, _env.ContentRootPath, CurrentContext);
                 //return file
                 var cD = new System.Net.Mime.ContentDisposition
                 {

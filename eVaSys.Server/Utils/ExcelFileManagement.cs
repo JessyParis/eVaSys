@@ -18,6 +18,7 @@ using eValorplast.BLL;
 using GemBox.Spreadsheet.Charts;
 using GemBox.Spreadsheet.Drawing;
 using System.Globalization;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 
 namespace eVaSys.Utils
 {
@@ -424,126 +425,118 @@ namespace eVaSys.Utils
         /// <summary>
         /// Create Fiche de répartition
         /// </summary>
-        public static MemoryStream CreateFicheRepartition(int refEntite, string fileType, ApplicationDbContext dbContext, string rootPath)
+        public static MemoryStream CreateFicheRepartition(int refEntite, string fileType, ApplicationDbContext dbContext, string rootPath, Context currentContext)
         {
             MemoryStream ms = new();
             int i = 0; //Compteur de lignes
             int l = 0;      //Compteur de lignes
-            int f = 0;  //compteur de feuilles
             string sqlStr = "";
+            //Validation
+            Entite entite = dbContext.Entites.Where(e => e.RefEntite == refEntite).FirstOrDefault();
+            if (entite == null)
+            {
+                throw new Exception(currentContext.CulturedRessources.GetTextRessource(356));
+            }
+            //Traitements
             SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
             var excelFile = ExcelFile.Load(rootPath + @"\Assets\Templates\FicheRepartition.xlsx");            //Création de la feuille
             GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
             //Initialisations
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
             var sqlConn = (SqlConnection)dbContext.Database.GetDbConnection();
-                //Initialisations
-                //Recherche du contact
-                string bl = "";
-            bl = Utils.DbScalar("select tbmContactAdresse.RefContactAdresse from tbmContactAdresse"
-                + "     inner join tbmContactAdresseContactAdresseProcess on tbmContactAdresseContactAdresseProcess.RefContactAdresse=tbmContactAdresse.RefContactAdresse"
-                + "     inner join tblAdresse on tbmContactAdresse.RefAdresse=tblAdresse.RefAdresse"
-                + " where RefContactAdresseProcess=4 and tblAdresse.RefEntite=" + refEntite.ToString(), (SqlConnection)dbContext.Database.GetDbConnection());
-            if (bl != "") {
-                ContactAdresse ca = dbContext.ContactAdresses
-                    .Include(i=>i.Entite)
-                    .Include(i=>i.Adresse)
-                    .Where(e => e.RefContactAdresse == System.Convert.ToInt32(bl)).FirstOrDefault();
-                if (ca != null) {
-                    //Traitement de la feuille de répartition
-                    //Unitaire
-                    //Initialisations
-                    ws = excelFile.Worksheets[1];
-                    //Informations générales
-                    ws.Cells[8, 0].Value += ca.Entite.Libelle + (string.IsNullOrWhiteSpace(ca.Entite.CodeEE) ? "" : " (" + ca.Entite.CodeEE + ")");
-                    ws.Cells[17, 0].Value = Utils.GetParametre(3, dbContext).ValeurTexte
-                        + " - tél. : " + Utils.GetParametre(4, dbContext).ValeurTexte
-                        + " - e-mail : " + Utils.GetParametre(2, dbContext).ValeurTexte;
-                    //Gestion des produits
-                    //Création de la source de données
-                    sqlStr = "select tblProduit.NomCommun"
-                        + " from tbmEntiteProduit inner join tblProduit on tbmEntiteProduit.RefProduit=tblProduit.RefProduit"
-                        + " where RefEntite=" + ca.Entite.RefEntite
-                        + " order by tblProduit.NomCommun";
-                    //Chargement des données
-                    SqlCommand cmd = new SqlCommand(); //commande Sql courante
-                    cmd.CommandText = sqlStr;
-                    cmd.Connection = sqlConn;
-                    SqlDataReader dr = cmd.ExecuteReader();
-                    l = 9;
-                    while (dr.Read())
-                    {
-                        if (l > 14)
-                        {
-                            //ws.Rows[l].InsertCopy(1, ws.Rows[14]);
-                            ws.Rows.InsertCopy(l, ws.Rows[14]);
-                            ws.Cells[l, 3].Value = null;
-                            ws.Cells[l, 4].Value = null;
-                            //ws.Cells.GetSubrangeAbsolute(l, 3, l, 4).Merged = true;
-                        }
-                        ws.Cells[l, 3].Value = dr.GetValue(0);
-                        l++;
-                    }
-                    //Fermeture de la source de données
-                    dr.Close();
-                    //Gestion des collectivités
-                    //Création de la source de données
-                    sqlStr = "select distinct Libelle"
-                        + " from ("
-                        + "     select tblEntite.Libelle + case when tblEntite.CodeEE is null then '' else ' (' + tblEntite.CodeEE + ')' end as Libelle"
-                        + "     from tbmEntiteEntite inner join tblEntite on tbmEntiteEntite.RefEntiteRtt=tblEntite.RefEntite"
-                        + "         inner join tblContratCollectivite on tblEntite.RefEntite=tblContratCollectivite.RefEntite"
-                        + "     where tbmEntiteEntite.Actif=1 and tblEntite.RefEntiteType=1 and tbmEntiteEntite.RefEntite=" + ca.Entite.RefEntite
-                        + "         and getdate() between DDebut and DFin"
-                        + "     union all"
-                        + "     select tblEntite.Libelle + case when tblEntite.CodeEE is null then '' else ' (' + tblEntite.CodeEE + ')' end as Libelle"
-                        + "     from tbmEntiteEntite inner join tblEntite on tbmEntiteEntite.RefEntite=tblEntite.RefEntite"
-                        + "         inner join tblContratCollectivite on tblEntite.RefEntite=tblContratCollectivite.RefEntite"
-                        + "     where tbmEntiteEntite.Actif=1 and tblEntite.RefEntiteType=1 and tbmEntiteEntite.RefEntiteRtt=" + ca.Entite.RefEntite
-                        + "         and getdate() between DDebut and DFin"
-                        + " ) as u order by Libelle";
-                    //Chargement des données
-                    cmd = new SqlCommand(); //commande Sql courante
-                    cmd.CommandText = sqlStr;
-                    cmd.Connection = sqlConn;
-                    dr = cmd.ExecuteReader();
-                    if (l > 14) { l += 6; }
-                    else { l = 21; }
-                    while (dr.Read())
-                    {
-                        ws.Cells[l, 0].Value = dr.GetValue(0);
-                        l++;
-                    }
-                    //Fermeture de la source de données
-                    dr.Close();
-                    //Suppression des lignes inutiles
-                    for (i = 85; i >= l + 10; i--)
-                    {
-                        ws.Rows.Remove(i);
-                    }
-                    //Hauteur de ligne
-                    ws.Rows[15].AutoFit();
-                    ws.Rows[19].AutoFit();
-                    //Suppression des feuilles inutiles pour ne garder que la répartition unitaire
-                    excelFile.Worksheets.Remove(3);
-                    excelFile.Worksheets.Remove(2);
-                    excelFile.Worksheets.Remove(0);
-
-                    //Sauvegarde du fichier
-                    if (fileType == "xlsx")
-                    {
-                        excelFile.Save(ms, SaveOptions.XlsxDefault);
-                    }
-                    else
-                    {
-                        PdfConformanceLevel conformanceLevel = PdfConformanceLevel.PdfA2a;
-                        excelFile.Save(ms, new PdfSaveOptions()
-                        {
-                            SelectionType = SelectionType.EntireFile,
-                            ConformanceLevel = conformanceLevel
-                        });
-                    }
+            //Traitement de la feuille de répartition
+            //Unitaire
+            //Initialisations
+            ws = excelFile.Worksheets[1];
+            //Informations générales
+            ws.Cells[8, 0].Value += entite.Libelle + (string.IsNullOrWhiteSpace(entite.CodeEE) ? "" : " (" + entite.CodeEE + ")");
+            ws.Cells[17, 0].Value = Utils.GetParametre(3, dbContext).ValeurTexte
+                + " - tél. : " + Utils.GetParametre(4, dbContext).ValeurTexte
+                + " - e-mail : " + Utils.GetParametre(2, dbContext).ValeurTexte;
+            //Gestion des produits
+            //Création de la source de données
+            sqlStr = "select tblProduit.NomCommun"
+                + " from tbmEntiteProduit inner join tblProduit on tbmEntiteProduit.RefProduit=tblProduit.RefProduit"
+                + " where RefEntite=" + entite.RefEntite
+                + " order by tblProduit.NomCommun";
+            //Chargement des données
+            SqlCommand cmd = new SqlCommand(); //commande Sql courante
+            cmd.CommandText = sqlStr;
+            cmd.Connection = sqlConn;
+            if (sqlConn.State == ConnectionState.Closed) { sqlConn.Open(); }
+            SqlDataReader dr = cmd.ExecuteReader();
+            l = 9;
+            while (dr.Read())
+            {
+                if (l > 14)
+                {
+                    //ws.Rows[l].InsertCopy(1, ws.Rows[14]);
+                    ws.Rows.InsertCopy(l, ws.Rows[14]);
+                    ws.Cells[l, 3].Value = null;
+                    ws.Cells[l, 4].Value = null;
+                    //ws.Cells.GetSubrangeAbsolute(l, 3, l, 4).Merged = true;
                 }
+                ws.Cells[l, 3].Value = dr.GetValue(0);
+                l++;
+            }
+            //Fermeture de la source de données
+            dr.Close();
+            //Gestion des collectivités
+            //Création de la source de données
+            sqlStr = "select distinct Libelle"
+                + " from ("
+                + "     select tblEntite.Libelle + case when tblEntite.CodeEE is null then '' else ' (' + tblEntite.CodeEE + ')' end as Libelle"
+                + "     from tbmEntiteEntite inner join tblEntite on tbmEntiteEntite.RefEntiteRtt=tblEntite.RefEntite"
+                + "         inner join tblContratCollectivite on tblEntite.RefEntite=tblContratCollectivite.RefEntite"
+                + "     where tbmEntiteEntite.Actif=1 and tblEntite.RefEntiteType=1 and tbmEntiteEntite.RefEntite=" + entite.RefEntite
+                + "         and getdate() between DDebut and DFin"
+                + "     union all"
+                + "     select tblEntite.Libelle + case when tblEntite.CodeEE is null then '' else ' (' + tblEntite.CodeEE + ')' end as Libelle"
+                + "     from tbmEntiteEntite inner join tblEntite on tbmEntiteEntite.RefEntite=tblEntite.RefEntite"
+                + "         inner join tblContratCollectivite on tblEntite.RefEntite=tblContratCollectivite.RefEntite"
+                + "     where tbmEntiteEntite.Actif=1 and tblEntite.RefEntiteType=1 and tbmEntiteEntite.RefEntiteRtt=" + entite.RefEntite
+                + "         and getdate() between DDebut and DFin"
+                + " ) as u order by Libelle";
+            //Chargement des données
+            cmd = new SqlCommand(); //commande Sql courante
+            cmd.CommandText = sqlStr;
+            cmd.Connection = sqlConn;
+            dr = cmd.ExecuteReader();
+            if (l > 14) { l += 6; }
+            else { l = 21; }
+            while (dr.Read())
+            {
+                ws.Cells[l, 0].Value = dr.GetValue(0);
+                l++;
+            }
+            //Fermeture de la source de données
+            dr.Close();
+            //Suppression des lignes inutiles
+            for (i = 85; i >= l + 10; i--)
+            {
+                ws.Rows.Remove(i);
+            }
+            //Hauteur de ligne
+            ws.Rows[15].AutoFit();
+            ws.Rows[19].AutoFit();
+            //Suppression des feuilles inutiles pour ne garder que la répartition unitaire
+            excelFile.Worksheets.Remove(3);
+            excelFile.Worksheets.Remove(2);
+            excelFile.Worksheets.Remove(0);
+
+            //Sauvegarde du fichier
+            if (fileType == "xlsx")
+            {
+                excelFile.Save(ms, SaveOptions.XlsxDefault);
+            }
+            else
+            {
+                PdfConformanceLevel conformanceLevel = PdfConformanceLevel.PdfA2a;
+                excelFile.Save(ms, new PdfSaveOptions()
+                {
+                    SelectionType = SelectionType.EntireFile,
+                    ConformanceLevel = conformanceLevel
+                });
             }
             return ms;
         }
@@ -863,7 +856,7 @@ namespace eVaSys.Utils
             //Préparation à l'impression en masse
             //Création de la source de données pour les collectivités
             sqlStr = "select distinct tblRepartitionCollectivite.RefCollectivite, tblEntite.CodeEE, tblEntite.Libelle, c.Adr1, c.adr2"
-                + "     , c.CodePostal, c.Ville, c.Libelle, c.Nom"
+                + "     , c.CodePostal, c.Ville"
                 + " from"
                 + "     ("
                 + "         select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D "
@@ -876,13 +869,9 @@ namespace eVaSys.Utils
                 + "     ) as rep"
                 + "     inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition"
                 + "     inner join tblEntite on tblRepartitionCollectivite.RefCollectivite=tblEntite.RefEntite"
-                + "     left join(select tblAdresse.RefEntite, tblAdresse.Adr1, tblAdresse.adr2, tblAdresse.CodePostal, tblAdresse.Ville, tbrCivilite.Libelle, tblContact.Nom"
+                + "     left join(select tblAdresse.RefEntite, tblAdresse.Adr1, tblAdresse.adr2, tblAdresse.CodePostal, tblAdresse.Ville"
                 + "         from tblAdresse "
-                + "             inner join tbmContactAdresse on tbmContactAdresse.RefAdresse=tblAdresse.RefAdresse"
-                + "             inner join tbmContactAdresseContactAdresseProcess on tbmContactAdresseContactAdresseProcess.RefContactAdresse=tbmContactAdresse.RefContactAdresse"
-                + "             left join tblContact on tblContact.RefContact=tbmContactAdresse.RefContact"
-                + "             left join tbrCivilite on tblContact.RefCivilite=tbrCivilite.RefCivilite"
-                + "         where tbmContactAdresse.Actif=1 and RefContactAdresseProcess=3"
+                + "         where tblAdresse.RefAdresse in (select min(tblAdresse.RefAdresse) as RefAdresse from tblAdresse where Actif=1 and RefAdresseType=1 group by RefEntite)"
                 + "         ) as c on tblEntite.RefEntite=c.RefEntite";
             if (!string.IsNullOrEmpty(filterCollectivites))
             {
@@ -917,8 +906,6 @@ namespace eVaSys.Utils
                     string adr2 = dRow[4].ToString();
                     string codePostal = dRow[5].ToString();
                     string ville = dRow[6].ToString();
-                    string civilite = dRow[7].ToString();
-                    string nom = dRow[8].ToString();
                     //Copie des feuilles
                     ws = excelFile.Worksheets[f];
                     ws.Name = ws.Name + refEntite;
@@ -937,7 +924,7 @@ namespace eVaSys.Utils
                     }
                     ws.Cells[l, 6].Value = codePostal + " " + ville;
                     l += 3;
-                    ws.Cells[14, 6].Value += civilite + " " + nom;
+                    ws.Cells[14, 6].Value = "";
                     ws.Cells[15, 6].Value += DateTime.Now.ToString("dd/MM/yyyy");
                     ws.Cells[17, 0].Value += codeEE;
                     ws.Cells[18, 0].Value = "Contact : " + Utils.GetParametre(3, dbContext).ValeurTexte
@@ -964,30 +951,6 @@ namespace eVaSys.Utils
                         + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"
                         + " 	inner join tblEntite as fournisseur on univers.RefFournisseur=fournisseur.RefEntite"
                         + " order by tblProduit.NomCommun, fournisseur.Libelle";
-                    //sqlStr = "select tblProduit.NomCommun, fournisseur.Libelle + case when fournisseur.CodeEE is not null then ' (' + fournisseur.CodeEE + ')' else '' end"
-                    //    + "     , RefProcess, RefComposant, Poids, PUHT, univers.PUHTSurtri, univers.PUHTTransport"
-                    //    + " from"
-                    //    + " 	( select rep.RefProduit, rep.RefFournisseur, null as RefProcess, null as RefComposant, sum(Poids) as Poids"
-                    //    + " 		, tblRepartitionCollectivite.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport as PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
-                    //    + " 		from"
-                    //    + " 			("
-                    //    + " 				select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D"
-                    //    + " 				from tblRepartition"
-                    //    + " 					inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                    //    + " 				where tblCommandeFournisseur.DDechargement >= convert(datetime,'" + t.Begin.ToString("yyyy-MM-dd 00:00:00") + "',120) and DDechargement < convert(datetime,'" + (t.End.AddDays(1)).ToString("yyyy-MM-dd 00:00:00") + "',120)"
-                    //    + " 				union all"
-                    //    + " 				select RefRepartition, RefFournisseur, RefProduit, D"
-                    //    + " 				from tblRepartition"
-                    //    + " 				where RefCommandeFournisseur is null and D >= convert(datetime,'" + t.Begin.ToString("yyyy-MM-dd 00:00:00") + "',120) and D < convert(datetime,'" + (t.End.AddDays(1)).ToString("yyyy-MM-dd 00:00:00") + "',120)) as rep"
-                    //    + " 			inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition"
-                    //    + " 			inner join tbrPrixReprise on tbrPrixReprise.RefProcess=tblRepartitionCollectivite.RefProcess and tbrPrixReprise.RefComposant=tblRepartitionCollectivite.RefProduit and tbrPrixReprise.RefProduit=rep.RefProduit"
-                    //    + " 					and month(rep.D)=month(tbrPrixReprise.D) and year(rep.D)=year(tbrPrixReprise.D)"
-                    //    + " 		where tblRepartitionCollectivite.RefCollectivite=" + refEntite
-                    //    + " 		group by rep.RefProduit, rep.RefFournisseur, tblRepartitionCollectivite.PUHT+tbrPrixReprise.PUHTSurtri+tbrPrixReprise.PUHTTransport, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
-                    //    + " 		 ) as univers"
-                    //    + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"
-                    //    + " 	inner join tblEntite as fournisseur on univers.RefFournisseur=fournisseur.RefEntite"
-                    //    + " order by tblProduit.NomCommun, fournisseur.Libelle";
                     //Chargement des données
                     SqlCommand cmd = new(); //commande Sql courante
                     cmd.Connection = sqlConn;
@@ -1136,7 +1099,7 @@ namespace eVaSys.Utils
             //Préparation à l'impression en masse
             //Création de la source de données pour les collectivités
             sqlStr = "select distinct tblRepartitionProduit.RefFournisseur, tblEntite.CodeEE, tblEntite.Libelle, c.Adr1, c.adr2"
-                + "     , c.CodePostal, c.Ville, c.Libelle, c.Nom"
+                + "     , c.CodePostal, c.Ville"
                 + " from"
                 + "     ("
                 + "         select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D "
@@ -1149,13 +1112,9 @@ namespace eVaSys.Utils
                 + "     ) as rep"
                 + "     inner join tblRepartitionProduit on tblRepartitionProduit.RefRepartition=rep.RefRepartition"
                 + "     inner join tblEntite on tblRepartitionProduit.RefFournisseur=tblEntite.RefEntite"
-                + "     left join(select tblAdresse.RefEntite, tblAdresse.Adr1, tblAdresse.adr2, tblAdresse.CodePostal, tblAdresse.Ville, tbrCivilite.Libelle, tblContact.Nom"
+                + "     left join(select tblAdresse.RefEntite, tblAdresse.Adr1, tblAdresse.adr2, tblAdresse.CodePostal, tblAdresse.Ville"
                 + "         from tblAdresse "
-                + "             inner join tbmContactAdresse on tbmContactAdresse.RefAdresse=tblAdresse.RefAdresse"
-                + "             inner join tbmContactAdresseContactAdresseProcess on tbmContactAdresseContactAdresseProcess.RefContactAdresse=tbmContactAdresse.RefContactAdresse"
-                + "             left join tblContact on tblContact.RefContact=tbmContactAdresse.RefContact"
-                + "             left join tbrCivilite on tblContact.RefCivilite=tbrCivilite.RefCivilite"
-                + "         where RefContactAdresseProcess=3"
+                + "         where tblAdresse.RefAdresse in (select min(tblAdresse.RefAdresse) as RefAdresse from tblAdresse where Actif=1 and RefAdresseType=1 group by RefEntite)"
                 + "         ) as c on tblEntite.RefEntite=c.RefEntite";
             if (!string.IsNullOrEmpty(filterCollectivites))
             {
@@ -1189,8 +1148,6 @@ namespace eVaSys.Utils
                     string adr2 = dRow[4].ToString();
                     string codePostal = dRow[5].ToString();
                     string ville = dRow[6].ToString();
-                    string civilite = dRow[7].ToString();
-                    string nom = dRow[8].ToString();
                     //Copie des feuilles
                     ws = excelFile.Worksheets[f];
                     ws.Name = ws.Name + refEntite;
@@ -1209,7 +1166,7 @@ namespace eVaSys.Utils
                     }
                     ws.Cells[l, 6].Value = codePostal + " " + ville;
                     l += 3;
-                    ws.Cells[14, 6].Value += civilite + " " + nom;
+                    ws.Cells[14, 6].Value = "";
                     ws.Cells[15, 6].Value += DateTime.Now.ToString("dd/MM/yyyy");
                     ws.Cells[17, 0].Value += codeEE;
                     ws.Cells[18, 0].Value = "Contact : " + Utils.GetParametre(3, dbContext).ValeurTexte
@@ -1448,9 +1405,9 @@ namespace eVaSys.Utils
                     //Traitement de la feuille état
                     //Texte
                     ws = excelFile.Worksheets[f];
-                    ws.Cells[8, 5].Value += t.Name;
-                    ws.Cells[9, 5].Value = libelle;
-                    ws.Cells[10, 5].Value = codeEE;
+                    ws.Cells[8, 4].Value += t.Name;
+                    ws.Cells[9, 4].Value = libelle;
+                    ws.Cells[10, 4].Value = codeEE;
                     ws.Cells[15, 4].Value = "Paris, le " + DateTime.Now.ToString("dd/MM/yyyy");
                     //Gestion des produits
                     //Création de la source de données
@@ -1682,9 +1639,8 @@ namespace eVaSys.Utils
 
                     //Initialisations
                     Entite cDT = dbContext.Entites.Where(el => el.RefEntite == (int)dRow[0]).FirstOrDefault();
-                    ContactAdresse ca = dbContext.ContactAdresses.Where(el => el.Adresse.RefEntite == cDT.RefEntite
-                    && el.ContactAdresseContactAdresseProcesss.Any(related => related.RefContactAdresseProcess == (int)Enumerations.ContactAdresseProcess.ReceptionMensuelle)).FirstOrDefault();
-                    Adresse adr = dbContext.Adresses.Where(el => el.RefAdresse == ca.RefAdresse).FirstOrDefault();
+                    Adresse adr = dbContext.Adresses.Where(el => el.RefEntite == cDT.RefEntite && el.Actif 
+                    && (el.RefAdresseType == 1 || el.RefAdresseType == 4)).OrderBy(o=>o.RefAdresseType).FirstOrDefault();
                     //Copie des feuilles
                     ws = excelFile.Worksheets[f];
                     ws.Name = ws.Name + cDT.RefEntite;
@@ -1711,7 +1667,7 @@ namespace eVaSys.Utils
                     }
                     ws.Cells[l, 3].Value = adr.CodePostal + " " + adr.Ville;
                     l += 3;
-                    ws.Cells[14, 3].Value += ca.Contact.Civilite.Libelle + " " + ca.Contact.Nom;
+                    ws.Cells[14, 3].Value = "";
                     ws.Rows[14].AutoFit();
                     ws.Cells[15, 3].Value += DateTime.Now.ToString("dd/MM/yyyy");
                     ws.Cells[17, 0].Value += cDT.CodeEE;
@@ -1843,7 +1799,7 @@ namespace eVaSys.Utils
                         }
                         ws.Cells[l, 3].Value = adr.CodePostal + " " + adr.Ville;
                         l += 3;
-                        ws.Cells[14, 3].Value += ca.Contact.Civilite.Libelle + " " + ca.Contact.Nom;
+                        ws.Cells[14, 3].Value = "";
                         ws.Rows[14].AutoFit();
                         ws.Cells[15, 3].Value += DateTime.Now.ToString("dd/MM/yyyy");
                         ws.Cells[17, 0].Value += cDT.CodeEE;
@@ -1981,7 +1937,7 @@ namespace eVaSys.Utils
                         }
                         ws.Cells[l, 3].Value = adr.CodePostal + " " + adr.Ville;
                         l += 3;
-                        ws.Cells[14, 3].Value += ca.Contact.Civilite.Libelle + " " + ca.Contact.Nom;
+                        ws.Cells[14, 3].Value = "";
                         ws.Rows[14].AutoFit();
                         ws.Cells[15, 3].Value += DateTime.Now.ToString("dd/MM/yyyy");
                         ws.Cells[17, 0].Value += cDT.CodeEE;
