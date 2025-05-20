@@ -1049,6 +1049,7 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.Pourcentage, 203, EnvDataColumnDataType.decimalNumber2, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.EconomieCO2KgT, 1464, EnvDataColumnDataType.intNumber, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.AnneeTexte, 569, EnvDataColumnDataType.text, "", "");
+                CreateEnvDataColumn(cR, DataColumnName.PUHTUnique, 0, EnvDataColumnDataType.bit, "", "");
             }
         }
         private void CreateEnvDataColumn(CulturedRessources cR, DataColumnName col, int ress, EnvDataColumnDataType type,  string field, string fullfield, string cmt = "")

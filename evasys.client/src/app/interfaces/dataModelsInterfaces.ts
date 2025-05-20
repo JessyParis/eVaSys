@@ -1256,6 +1256,7 @@ export interface Repartition {
   InfoText: string;
   CreationText: string;
   ModificationText: string;
+  ValidationText: string;
 }
 export interface RepartitionProduit {
   RefRepartitionProduit: number;

@@ -925,9 +925,15 @@ namespace eVaSys.Controllers
                 sqlStr += "     , DDechargement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDDechargement.ToString()].Name + "]"
                     + "     , NbBalleDechargement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNbBalleDechargement.ToString()].Name + "]"
                     + "     , PoidsDechargement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurPoidsDechargement.ToString()].Name + "]"
-                    + "     , PrixTonneHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurPrixTonneHT.ToString()].Name + "]";
-                sqlStr += "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
+                    + "     , PrixTonneHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurPrixTonneHT.ToString()].Name + "]"
+                    + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                     + "     , NumeroAffretement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement.ToString()].Name + "]"
+                    + "     , case when (tblCommandeFournisseur.DDechargement < convert(datetime,'2012-01-01 00:00:00',120) or unitaire.RefCommandeFournisseur is not null or mensuelle.RefRepartition is not null) then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(545) + "'"
+                    + "         else case when DDechargement is not null then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(546) + "'"
+                    + "         else case when RefusCamion = 1 then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(551) + "'"
+                    + "         else case when tblCommandeFournisseur.RefCommandeFournisseurStatut is not null then (case when tbsCommandeFournisseurStatut.RefCommandeFournisseurStatut=1 then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(547) + "'"
+                    + "         else case when tbsCommandeFournisseurStatut.RefCommandeFournisseurStatut=2 then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(548) + "' else '" + CurrentContext.CulturedRessources.GetTextSQLRessource(549) + "' end end)"
+                    + "         else '" + CurrentContext.CulturedRessources.GetTextSQLRessource(550) + "' end end end end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurStatut.ToString()].Name + "]"
                     + "     , dbo.CommandeMixte(NumeroAffretement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMixte.ToString()].Name + "]";
                 if (CurrentContext.ConnectedUtilisateur.RefClient == null)
                 {
@@ -948,6 +954,8 @@ namespace eVaSys.Controllers
                         + "     , DTraitementAnomalieClient as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDTraitementAnomalieClient.ToString()].Name + "]"
                         + "     , tbrMotifAnomalieClient.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.MotifAnomalieClientLibelle.ToString()].Name + "]"
                         + "     , CmtAnomalieClient as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurCmtAnomalieClient.ToString()].Name + "]"
+                        + "     , VueRepartitionUnitaireDetail.PUHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHT.ToString()].Name + "]"
+                        + "     , VueRepartitionUnitaireDetail.PUHTUnique as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PUHTUnique.ToString()].Name + "]"
                         ;
                 }
                 sqlStr += " from tblCommandeFournisseur"
@@ -970,6 +978,12 @@ namespace eVaSys.Controllers
                     + "     left join tbrMotifAnomalieChargement on tblCommandeFournisseur.RefMotifAnomalieChargement=tbrMotifAnomalieChargement.RefMotifAnomalieChargement"
                     + "     left join tbrMotifAnomalieClient on tblCommandeFournisseur.RefMotifAnomalieClient=tbrMotifAnomalieClient.RefMotifAnomalieClient"
                     + "     left join tbrMotifAnomalieTransporteur on tblCommandeFournisseur.RefMotifAnomalieTransporteur=tbrMotifAnomalieTransporteur.RefMotifAnomalieTransporteur"
+                    + "     left join (select distinct RefCommandeFournisseur from tblRepartition) as unitaire on tblCommandeFournisseur.RefCommandeFournisseur=unitaire.RefCommandeFournisseur "
+                    + "     left join tblRepartition as mensuelle on tblCommandeFournisseur.RefEntite=mensuelle.RefFournisseur and year(tblCommandeFournisseur.DDechargement)=year(mensuelle.D) and month(tblCommandeFournisseur.DDechargement)=month(mensuelle.D) and tblCommandeFournisseur.RefProduit=mensuelle.RefProduit"
+                    + "     left join tbsCommandeFournisseurStatut on tbsCommandeFournisseurStatut.RefCommandeFournisseurStatut=tblCommandeFournisseur.RefCommandeFournisseurStatut"
+                    + "     left join (select RefCommandeFournisseur, case when count(distinct PUHT)>1 then null else max(PUHT) end as PUHT, case when count(distinct PUHT)>1 then 0 else 1 end as PUHTUnique"
+                    + "         from VueRepartitionUnitaireDetail"
+                    + "         group by RefCommandeFournisseur) as VueRepartitionUnitaireDetail on tblCommandeFournisseur.RefCommandeFournisseur=VueRepartitionUnitaireDetail.RefCommandeFournisseur"
                     + " where DDechargement between @begin and @end ";
                 //Filtre DR
                 if (CurrentContext.filterDR)
@@ -3365,7 +3379,7 @@ namespace eVaSys.Controllers
                     + "         + '-' + cast(month(VueRepartitionUnitaireDetail.D) as varchar(2))"
                     + "         + '-' + cast(collectivite.RefEntite as varchar(20))"
                     + "         + '-' + cast(fournisseur.RefEntite as varchar(20))"
-                    + "         + '-' + cast(client.RefEntite as varchar(20))"
+                    + "         + '-' + cast(tblAdresse.RefAdresse as varchar(20))"
                     + "         + '-' + cast(tblProduit.RefProduit as varchar(20))"
                     + "         + '-' + isnull(cast(tbrModeTransportEE.RefModeTransportEE as varchar(20)),'NR') as [Numéro Référence]"
                     + "     , isnull(tblProduit.CodeEE,'ND') as [Standard]"
@@ -3373,7 +3387,7 @@ namespace eVaSys.Controllers
                     + "     , collectivite.CodeEE as [Collectivité]"
                     + " 	, cast(cast(sum(Poids) as decimal(10,3))/1000 as decimal(10,3)) as [Tonnage réparti par CL (en tonnes)]"
                     + "     , 'recycleur_final' as [Déclarant Confidentiel ou Recycleur Final ou Centre de sutri]"
-                    + "     , cast(client.RefEntite as varchar(20)) as [Nom Destination]"
+                    + "     , cast(tblAdresse.RefAdresse as varchar(20)) as [Nom Destination]"
                     + "     , tbrModeTransportEE.Libelle as [Mode de transport]"
                     + "     , '' as [Intermédiaire 1]"
                     + "     , '' as [Intermédiaire 2]"
@@ -3422,7 +3436,7 @@ namespace eVaSys.Controllers
                 //Group by
                 sqlStr += " group by year(VueRepartitionUnitaireDetail.D), month(VueRepartitionUnitaireDetail.D), fournisseur.CodeEE, collectivite.CodeEE, isnull(tblProduit.CodeEE,'ND')"
                     + "     , client.CodeEE, tbrModeTransportEE.Libelle"
-                    + "     , collectivite.RefEntite, fournisseur.RefEntite, client.RefEntite, tblProduit.RefProduit, tbrModeTransportEE.RefModeTransportEE";
+                    + "     , collectivite.RefEntite, fournisseur.RefEntite, tblAdresse.RefAdresse, tblProduit.RefProduit, tbrModeTransportEE.RefModeTransportEE";
                 //Count
                 sqlStrCount = sqlStr;
             }

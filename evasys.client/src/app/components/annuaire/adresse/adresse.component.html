@@ -20,7 +20,8 @@
       <div class="boxNormalSize">
         <table class="cadre_primary">
           <tr>
-            <td class="cadre_header_primary"></td>
+            <td class="cadre_header_primary">{{adresse?.RefAdresse ? 'id = ' + adresse?.RefAdresse?.toString() : applicationUserContext.getCulturedRessourceText(9)}}
+            </td>
           </tr>
           <tr>
             <td class="cadre_body">

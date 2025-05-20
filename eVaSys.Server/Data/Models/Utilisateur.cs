@@ -329,6 +329,7 @@ namespace eVaSys.Data
         public ICollection<RegionReporting> RegionReportingModifs { get; set; }
         public ICollection<Repartition> RepartitionCreations { get; set; }
         public ICollection<Repartition> RepartitionModifs { get; set; }
+        public ICollection<Repartition> RepartitionValides { get; set; }
         public ICollection<Repreneur> RepreneurCreations { get; set; }
         public ICollection<Repreneur> RepreneurModifs { get; set; }
         public ICollection<RepriseType> RepriseTypeCreations { get; set; }
@@ -569,6 +570,7 @@ namespace eVaSys.Data
             nbLinkedData += DbContext.Entry(this).Collection(b => b.RegionEEModifs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.RepartitionCreations).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.RepartitionModifs).Query().Count();
+            nbLinkedData += DbContext.Entry(this).Collection(b => b.RepartitionValides).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.RepreneurCreations).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.RepreneurModifs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.RepriseTypeCreations).Query().Count();

@@ -546,6 +546,7 @@ export enum DataColumnName {
   ProduitGroupeReportingLibelle = "ProduitGroupeReportingLibelle",
   ProduitGroupeReportingCouleur = "ProduitGroupeReportingCouleur",
   ProduitGroupeReportingTypeLibelle = "ProduitGroupeReportingTypeLibelle",
+  PUHTUnique = "PUHTUnique",
   RegionEELibelle = "RegionEELibelle",
   RegionReportingLibelle = "RegionReportingLibelle",
   RepreneurContrat = "RepreneurContrat",

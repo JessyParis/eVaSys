@@ -1107,6 +1107,10 @@ namespace eVaSys.Utils
             rowVals[1] = Enumerations.HabilitationLogistique.Utilisateur.ToString();
             menuRights.Rows.Add(rowVals);
             rowVals = new object[2];
+            rowVals[0] = Enumerations.MenuName.LogistiqueMenuRepartition.ToString();
+            rowVals[1] = Enumerations.HabilitationLogistique.CentreDeTri.ToString();
+            menuRights.Rows.Add(rowVals);
+            rowVals = new object[2];
             rowVals[0] = Enumerations.MenuName.LogistiqueMenuPrixReprise.ToString();
             rowVals[1] = Enumerations.HabilitationLogistique.Administrateur.ToString();
             menuRights.Rows.Add(rowVals);

@@ -13,7 +13,7 @@ import { Observable, of } from "rxjs";
 import { debounceTime, switchMap } from "rxjs/operators";import moment from "moment";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
-import { showErrorToUser, setOriginalMenu, getCreationModificationTooltipText, toFixed, getFormattedNumeroCommande } from "../../../globals/utils";
+import { showErrorToUser, setOriginalMenu, getCreationModificationTooltipText, toFixed, getFormattedNumeroCommande, cmp } from "../../../globals/utils";
 import { HabilitationLogistique } from "../../../globals/enums";
 import { EventEmitterService } from "../../../services/event-emitter.service";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
@@ -148,6 +148,8 @@ export class RepartitionComponent implements OnInit {
       this.http.get<dataModelsInterfaces.Repartition>(url).subscribe(result => {
         //Get data
         this.repartition = result;
+        this.repartition.RepartitionCollectivites.sort(function (a, b) { return cmp(a.RefRepartitionCollectivite, b.RefRepartitionCollectivite); });
+        this.repartition.RepartitionProduits.sort(function (a, b) { return cmp(a.RefRepartitionProduit, b.RefRepartitionProduit); });
         this.repartitionCollectivite.setValidators(new MyValidators(this.repartition).poidsTotalRepartitionCollectiviteValidator);
         this.repartitionProduit.setValidators(new MyValidators(this.repartition).poidsTotalRepartitionProduitValidator);
         //Set EnterType if needed
@@ -330,13 +332,18 @@ export class RepartitionComponent implements OnInit {
       this.collectiviteNAListFC.updateValueAndValidity();
       if (this.collectiviteListFC.value) { this.collectiviteNAListFC.disable(); }
       if (this.collectiviteNAListFC.value) { this.collectiviteListFC.disable(); }
+      //If CDT
+      if (!this.applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite) {
+        this.formRepartitionProduit.disable();
+        this.enterTypeFC.value == "Collectivite"
+      }
       //Process
       if (this.enterTypeFC.value === "Collectivite") {
         this.requiredCollectiviteNAList = true;
         this.requiredCollectiviteList = true;
         this.collectiviteListFC.setValidators(Validators.required);
-        this.collectiviteListFC.setValidators(Validators.required);
-        this.collectiviteNAListFC.updateValueAndValidity();
+        this.collectiviteListFC.updateValueAndValidity();
+        this.collectiviteNAListFC.setValidators(Validators.required);
         this.collectiviteNAListFC.updateValueAndValidity();
       }
       if (this.enterModeFC.value === "kg") {
@@ -708,6 +715,8 @@ export class RepartitionComponent implements OnInit {
         .subscribe((result => {
           if (result) {
             let repartitionSimilar = result;
+            repartitionSimilar.RepartitionCollectivites.sort(function (a, b) { return cmp(a.RefRepartitionCollectivite, b.RefRepartitionCollectivite); });
+            repartitionSimilar.RepartitionProduits.sort(function (a, b) { return cmp(a.RefRepartitionProduit, b.RefRepartitionProduit); });
             let msg: string;
             msg = this.applicationUserContext.getCulturedRessourceText(1560);
             const dialogRef = this.dialog.open(ConfirmComponent, {

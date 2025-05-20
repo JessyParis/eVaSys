@@ -154,13 +154,13 @@
           </tr>
           <tr>
             <td class="cadre_body">
-              <table class="fixed_headers_repartition table-no-pad-no-space">
+              <table [class]="'fixed_headers_repartition' + (applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite ? '_cdt' : '')  +' table-no-pad-no-space'">
                 <thead class="background-color-accent">
                   <tr>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(594)}}</th>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1559)}}</th>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(56)}}</th>
-                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
+                    <th style="padding:5px;" *ngIf="!applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
                     <th style="padding:5px;"></th>
                   </tr>
                 </thead>
@@ -181,7 +181,7 @@
                         <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
                       </mat-form-field>
                     </td>
-                    <td style="padding: 0px 5px 0px 5px;">
+                    <td style="padding: 0px 5px 0px 5px;" *ngIf="!applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite">
                       <mat-form-field style="width:100%; text-align: right">
                         <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [required]="requiredPrixReprise" [errorStateMatcher]="matcher" />
                         <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
@@ -199,7 +199,7 @@
                       </mat-form-field>
                     </td>
                     <td style="padding: 0px 5px 0px 5px;">
-                      <button mat-icon-button (click)="onDeleteRepartitionCollectivite(i)" type="button"><mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon></button>
+                      <button mat-icon-button (click)="onDeleteRepartitionCollectivite(i)" type="button" *ngIf="!applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite"><mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon></button>
                     </td>
                   </tr>
                 </tbody>
@@ -222,13 +222,13 @@
           </tr>
           <tr>
             <td class="cadre_body">
-              <table class="fixed_headers_repartition table-no-pad-no-space">
+              <table [class]="'fixed_headers_repartition' + (applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite ? '_cdt' : '')  +' table-no-pad-no-space'">
                 <thead class="background-color-accent">
                   <tr>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(602)}}</th>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1559)}}</th>
                     <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(56)}}</th>
-                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
+                    <th style="padding:5px;" *ngIf="!applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
                     <th style="padding:5px;"></th>
                   </tr>
                 </thead>
@@ -251,7 +251,7 @@
                         <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
                       </mat-form-field>
                     </td>
-                    <td style="padding: 0px 5px 0px 5px;">
+                    <td style="padding: 0px 5px 0px 5px;" *ngIf="!applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite">
                       <mat-form-field style="width:100%; text-align: right">
                         <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [required]="requiredPrixReprise" [errorStateMatcher]="matcher" />
                         <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
@@ -269,7 +269,7 @@
                       </mat-form-field>
                     </td>
                     <td style="padding: 0px 5px 0px 5px;">
-                      <button mat-icon-button (click)="onDeleteRepartitionProduit(i)" type="button"><mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon></button>
+                      <button mat-icon-button (click)="onDeleteRepartitionProduit(i)" type="button" *ngIf="!applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite"><mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon></button>
                     </td>
                   </tr>
                 </tbody>

@@ -668,6 +668,7 @@ namespace eVaSys.Utils
             ProduitGroupeReportingLibelle,
             ProduitGroupeReportingCouleur,
             ProduitGroupeReportingTypeLibelle,
+            PUHTUnique,
             RegionEELibelle,
             RegionReportingLibelle,
             RepreneurLibelle,

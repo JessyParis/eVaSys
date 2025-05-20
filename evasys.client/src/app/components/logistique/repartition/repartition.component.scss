@@ -1,52 +1,53 @@
 
 
 .fixed_headers_commande_fournisseurs {
+  width: 335px;
+  min-width: 335px;
+  max-width: 335px;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  td:nth-child(1), th:nth-child(1) {
+    min-width: 115px;
+    max-width: 115px;
+    width: 115px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(2), th:nth-child(2) {
+    min-width: 100px;
+    max-width: 100px;
+    width: 100px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(3), th:nth-child(3) {
+    min-width: 100px;
+    box-sizing: border-box;
+  }
+
+  thead {
+
+    tr {
+      display: block;
+      position: relative;
+    }
+
+    th {
+      text-align: left;
+    }
+  }
+
+  tbody {
+    display: block;
+    overflow: auto;
     width: 335px;
     min-width: 335px;
     max-width: 335px;
-    table-layout: fixed;
-    border-collapse: collapse;
-
-    td:nth-child(1), th:nth-child(1) {
-        min-width: 115px;
-        max-width: 115px;
-        width: 115px;
-        box-sizing: border-box;
-    }
-
-    td:nth-child(2), th:nth-child(2) {
-        min-width: 100px;
-        max-width: 100px;
-        width: 100px;
-        box-sizing: border-box;
-    }
-
-    td:nth-child(3), th:nth-child(3) {
-        min-width: 100px;
-        box-sizing: border-box;
-    }
-
-    thead {
-
-        tr {
-            display: block;
-            position: relative;
-        }
-
-        th {
-            text-align: left;
-        }
-    }
-
-    tbody {
-        display: block;
-        overflow: auto;
-        width: 335px;
-        min-width: 335px;
-        max-width: 335px;
-        height: 290px;
-    }
+    height: 290px;
+  }
 }
+
 .fixed_headers_repartition {
   width: 795px;
   min-width: 795px;
@@ -111,3 +112,59 @@
   }
 }
 
+.fixed_headers_repartition_cdt {
+  width: 795px;
+  min-width: 795px;
+  max-width: 795px;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  td:nth-child(1), th:nth-child(1) {
+    min-width: 480px;
+    max-width: 480px;
+    width: 480px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(2), th:nth-child(2) {
+    min-width: 75px;
+    max-width: 75px;
+    width: 75px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(3), th:nth-child(3) {
+    min-width: 180px;
+    max-width: 180px;
+    width: 180px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(5), th:nth-child(5) {
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+    box-sizing: border-box;
+  }
+
+  thead {
+
+    tr {
+      display: block;
+      position: relative;
+    }
+
+    th {
+      text-align: left;
+    }
+  }
+
+  tbody {
+    display: block;
+    overflow: auto;
+    width: 795px;
+    min-width: 795px;
+    max-width: 795px;
+    height: 630px;
+  }
+}

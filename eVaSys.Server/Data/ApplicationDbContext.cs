@@ -3506,6 +3506,11 @@ namespace eVaSys.Data
                     .WithMany(p => p.RepartitionModifs)
                     .HasForeignKey(d => d.RefUtilisateurModif)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(d => d.UtilisateurValide)
+                    .WithMany(p => p.RepartitionValides)
+                    .HasForeignKey(d => d.RefUtilisateurValide)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
             modelBuilder.Entity<RepartitionCollectivite>(entity =>
             {

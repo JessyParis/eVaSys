@@ -203,7 +203,8 @@
         </tr>
       </table>
     </div>
-    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'" [class]="RepartitionAFinaliserCss"
+    <div *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+         || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri'XXX" [class]="RepartitionAFinaliserCss"
          (click)="RepartitionAFinaliserClick()" [@fadeInOnEnter] [@pulse]="RepartitionAFinaliserNbUrgent!='0'">
       <table class="ev-dashboard-table">
         <tr class="ev-dashboard-nb-tr">

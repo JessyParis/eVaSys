@@ -2263,6 +2263,20 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       URL.revokeObjectURL(url);
     }
   }
+  //-----------------------------------------------------------------------------------
+  //Styling
+  setStyle(item: any, column: any): string {
+    let classes: string = "ev-cell";
+    //General styling
+    switch (this.applicationUserContext.currentMenu.name) {
+      case MenuName.LogistiqueMenuExtractionReception:
+        if (column.columnDef === DataColumnName.PrixReprisePUHT) {
+          if (item.PUHTUnique == 0) { classes += " background-color-anomalie"; }
+        }
+        break;
+    }
+    return classes;
+  }
 }
 //-----------------------------------------------------------------------------------
 //Datasource class

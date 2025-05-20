@@ -56,6 +56,7 @@ namespace eVaSys.Controllers
                 repartition = DbContext.Repartitions
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
+                        .Include(r => r.UtilisateurValide)
                         .Include(r => r.RepartitionCollectivites)
                         .Include(r => r.RepartitionProduits)
                         .AsSplitQuery()
@@ -71,6 +72,7 @@ namespace eVaSys.Controllers
                     repartition = DbContext.Repartitions
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
+                        .Include(r => r.UtilisateurValide)
                         .Include(r => r.RepartitionCollectivites)
                         .Include(r => r.RepartitionProduits)
                         .AsSplitQuery()
@@ -325,6 +327,8 @@ namespace eVaSys.Controllers
             dataModel.RefCommandeFournisseur = viewModel.CommandeFournisseur?.RefCommandeFournisseur;
             dataModel.RefProduit = (viewModel.CommandeFournisseur == null ? (int?)viewModel.Produit.RefProduit : null); ;
             dataModel.D = (viewModel.CommandeFournisseur == null ? viewModel.D : null);
+            dataModel.DValide = (viewModel.DValide == null ? null : (viewModel.DValide != dataModel.DValide ? (DateTime?)DateTime.Now : dataModel.DValide));
+            dataModel.RefUtilisateurValide = viewModel.UtilisateurValide?.RefUtilisateur;
             //Dirty marker
             bool dirty = false;
             //Remove related data RepartitionCollectivite

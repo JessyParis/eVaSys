@@ -932,21 +932,17 @@ namespace eVaSys.Utils
                     //Gestion des produits
                     //Création de la source de données
                     sqlStr = "select tblProduit.NomCommun, fournisseur.Libelle + case when fournisseur.CodeEE is not null then ' (' + fournisseur.CodeEE + ')' else '' end"
-                        + "     , RefProcess, RefComposant, Poids, PUHT, univers.PUHTSurtri, univers.PUHTTransport"
+                        + "     , RefProcess, RefComposant, Poids, PUHT"
                         + " from"
                         + " 	( select VueRepartitionUnitaireDetail.RefProduit, tblCommandeFournisseur.RefEntite as RefFournisseur, null as RefProcess, null as RefComposant, sum(VueRepartitionUnitaireDetail.Poids) as Poids"
-                        + "         , VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
+                        + "         , VueRepartitionUnitaireDetail.PUHT"
                         + "         from tblCommandeFournisseur"
                         + "             inner join VueRepartitionUnitaireDetail on tblCommandeFournisseur.RefCommandeFournisseur=VueRepartitionUnitaireDetail.RefCommandeFournisseur"
                         + "         	left join VueCommandeFournisseurContrat on VueRepartitionUnitaireDetail.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
-                        + "         	inner join tbrPrixReprise on tbrPrixReprise.RefProcess=VueRepartitionUnitaireDetail.RefProcess and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit "
-                        + "         		and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit"
-                        + "         		and month(VueRepartitionUnitaireDetail.D)=month(tbrPrixReprise.D) and year(VueRepartitionUnitaireDetail.D)=year(tbrPrixReprise.D)"
-                        + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
                         + "             where VueRepartitionUnitaireDetail.Collecte=1 and VueRepartitionUnitaireDetail.D between @debut and @fin"
                         + "                 and VueRepartitionUnitaireDetail.RefFournisseur=" + refEntite
                         + "         group by VueRepartitionUnitaireDetail.RefProduit, tblCommandeFournisseur.RefEntite"
-                        + "             , VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
+                        + "             , VueRepartitionUnitaireDetail.PUHT"
                         + " 		 ) as univers"
                         + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"
                         + " 	inner join tblEntite as fournisseur on univers.RefFournisseur=fournisseur.RefEntite"
@@ -1174,21 +1170,17 @@ namespace eVaSys.Utils
                     //Gestion des produits
                     //Création de la source de données
                     sqlStr = "select tblProduit.NomCommun, fournisseur.Libelle + case when fournisseur.CodeEE is not null then ' (' + fournisseur.CodeEE + ')' else '' end"
-                        + "     , RefProcess, RefComposant, Poids, PUHT, univers.PUHTSurtri, univers.PUHTTransport"
+                        + "     , RefProcess, RefComposant, Poids, PUHT"
                         + " from"
                         + " 	( select VueRepartitionUnitaireDetail.RefProduit, tblCommandeFournisseur.RefEntite as RefFournisseur, null as RefProcess, null as RefComposant, sum(VueRepartitionUnitaireDetail.Poids) as Poids"
-                        + "         , VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
+                        + "         , VueRepartitionUnitaireDetail.PUHT"
                         + "         from tblCommandeFournisseur"
                         + "             inner join VueRepartitionUnitaireDetail on tblCommandeFournisseur.RefCommandeFournisseur=VueRepartitionUnitaireDetail.RefCommandeFournisseur"
                         + "         	left join VueCommandeFournisseurContrat on VueRepartitionUnitaireDetail.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
-                        + "         	inner join tbrPrixReprise on tbrPrixReprise.RefProcess=VueRepartitionUnitaireDetail.RefProcess and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit "
-                        + "         		and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit"
-                        + "         		and month(VueRepartitionUnitaireDetail.D)=month(tbrPrixReprise.D) and year(VueRepartitionUnitaireDetail.D)=year(tbrPrixReprise.D)"
-                        + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
                         + "             where VueRepartitionUnitaireDetail.Collecte=0 and VueRepartitionUnitaireDetail.D between @debut and @fin"
                         + "                 and VueRepartitionUnitaireDetail.RefFournisseur=" + refEntite
                         + "         group by VueRepartitionUnitaireDetail.RefProduit, tblCommandeFournisseur.RefEntite"
-                        + "             , VueRepartitionUnitaireDetail.PUHT, tbrPrixReprise.PUHTSurtri, tbrPrixReprise.PUHTTransport"
+                        + "             , VueRepartitionUnitaireDetail.PUHT"
                         + " 		 ) as univers"
                         + " 	inner join tblProduit on univers.RefProduit=tblProduit.refProduit"
                         + " 	inner join tblEntite as fournisseur on univers.RefFournisseur=fournisseur.RefEntite"
@@ -1239,7 +1231,7 @@ namespace eVaSys.Utils
                                 ws.Cells[l + 21, 7].Style.NumberFormat = NumberFormatBuilder.Number(2, useThousandsSeparator: true);
                                 ws.Cells[l + 21, 7].Value = dr.GetValue(5);
                                 poids += (int)dr.GetSqlInt32(4);
-                                prix += Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * ((decimal)dr.GetValue(5) - (decimal)dr.GetValue(6) - (decimal)dr.GetValue(7)), 2, MidpointRounding.AwayFromZero);
+                                prix += Math.Round(Convert.ToDecimal((int)dr.GetValue(4)) / 1000 * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
                                 l++;
                             }
                             else
@@ -1254,7 +1246,7 @@ namespace eVaSys.Utils
                                 ws.Cells[l + 21, 7].Value = dr.GetValue(5);
                                 produit = dr.GetValue(0).ToString();
                                 poids = (int)dr.GetSqlInt32(4);
-                                prix = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * ((decimal)dr.GetValue(5) - (decimal)dr.GetValue(6) - (decimal)dr.GetValue(7)), 2, MidpointRounding.AwayFromZero);
+                                prix = Math.Round(Convert.ToDecimal((int)dr.GetValue(4)) / 1000 * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
                                 l++;
                             }
                         }
@@ -3890,7 +3882,6 @@ namespace eVaSys.Utils
                     && (
                         name == Enumerations.MenuName.LogistiqueMenuPartMarcheTransporteur.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatReceptionProduitDR.ToString()
-                        || name == Enumerations.MenuName.LogistiqueMenuExtractionReception.ToString()
                         || name == Enumerations.MenuName.QualiteMenuEtatIncitationQualite.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuTonnageCDTProduitComposant.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuTonnageCLSousContrat.ToString()
