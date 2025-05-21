@@ -54,9 +54,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   documentEditTypeList: any[] = [
     { t: "EtatTrimerstrielCollectiviteCS", name: this.applicationUserContext.getCulturedRessourceText(1361) }
     , { t: "EtatMensuelCollectiviteHCS", name: this.applicationUserContext.getCulturedRessourceText(1385) }
+    , { t: "EtatMensuelReception", name: this.applicationUserContext.getCulturedRessourceText(1431) }
     , { t: "CertificatRecyclageCS", name: this.applicationUserContext.getCulturedRessourceText(1386) }
     , { t: "CertificatRecyclageHCS", name: this.applicationUserContext.getCulturedRessourceText(1387) }
-    , { t: "EtatMensuelReception", name: this.applicationUserContext.getCulturedRessourceText(1431) }
   ]
   //Loading indicator
   loading = false;
