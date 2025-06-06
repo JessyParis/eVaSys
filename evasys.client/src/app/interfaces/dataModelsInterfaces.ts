@@ -1253,6 +1253,9 @@ export interface Repartition {
   RepartitionProduits: RepartitionProduit[];
   PoidsReparti: number;
   PoidsChargement: number;
+  UtilisateurCreation: Utilisateur;
+  UtilisateurValide: Utilisateur;
+  DValide: string | moment.Moment;
   InfoText: string;
   CreationText: string;
   ModificationText: string;

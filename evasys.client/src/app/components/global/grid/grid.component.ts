@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, Inject, OnDestroy } from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
-import { HttpClient, HttpResponse, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { CollectionViewer, DataSource } from "@angular/cdk/collections";
 import { Observable, of, BehaviorSubject, ReplaySubject, Subject } from "rxjs";
 import { catchError, finalize, tap, takeUntil } from "rxjs/operators";
@@ -24,7 +24,6 @@ import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { DataModelService } from "../../../services/data-model.service";
 import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
 import { UtilisateurList } from "../../../interfaces/dataModelsInterfaces";
-import { EnvComponent } from "../../../classes/appClasses";
 
 @Component({
     selector: "grid",
@@ -1096,9 +1095,10 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuJourFerie
     );
     this.visibleFilterRepartitionAFinaliser = (
-      this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Administrateur
-      && (
         this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuRepartition
+      && (
+        this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Administrateur
+        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.CentreDeTri
       )
     );
     this.visibleFilterCollecte = (
@@ -1288,7 +1288,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
           }])
           break;
         case MenuName.LogistiqueMenuRepartition:
-          this.router.navigate(["repartition", item.RefRepartition, {
+          this.router.navigate(["repartition", item.RefRepartition??0, {
             refCommandeFournisseur: item.RefCommandeFournisseur
           }])
           break;

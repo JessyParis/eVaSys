@@ -279,7 +279,7 @@
                 </tr>
                 <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'
                                 || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
-                                || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTriXXX'">
+                                || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='CentreDeTri'">
                   <td (click)="onMenu('LogistiqueMenuRepartition')" [class]="logistiqueMenuRepartitionStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuRepartition')}}</td>
                 </tr>
                 <tr *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur'

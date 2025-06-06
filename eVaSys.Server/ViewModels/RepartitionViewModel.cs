@@ -28,6 +28,7 @@ namespace eVaSys.ViewModels
         public ICollection<RepartitionProduitViewModel> RepartitionProduits { get; set; }
         public int? PoidsReparti { get; set; }
         public int? PoidsChargement { get; set; }
+        public UtilisateurViewModel UtilisateurCreation { get; set; }
         public UtilisateurViewModel UtilisateurValide { get; set; }
         public DateTime? DValide { get; set; }
         public string InfoText { get; set; }

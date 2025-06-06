@@ -78,8 +78,10 @@ namespace eVaSys.Controllers
                         .AsSplitQuery()
                         .Where(q => (q.RefCommandeFournisseur == refCommandeFournisseur
                         || (q.RefProduit == cmdF.RefProduit && q.RefFournisseur == cmdF.RefEntite
-                        && ((DateTime)q.D).Month == ((DateTime)cmdF.DDechargement).Month && ((DateTime)q.D).Year == ((DateTime)cmdF.DDechargement).Year)))
+                        && (q.D ?? DateTime.MinValue).Month == (cmdF.DDechargement ?? DateTime.MinValue).Month
+                        && (q.D ?? DateTime.MinValue).Year == (cmdF.DDechargement ?? DateTime.MinValue).Year)))
                         .FirstOrDefault();
+                    //Open existing or create new one
                     if (repartition == null)
                     {
                         //Create new element

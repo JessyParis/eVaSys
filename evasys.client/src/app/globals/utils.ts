@@ -1,5 +1,4 @@
 import { MatDialog } from "@angular/material/dialog";
-import { HttpResponse } from "@angular/common/http";
 import { InformationComponent } from "../components/dialogs/information/information.component";
 import { ApplicationUserContext } from "./globals";
 import { CommandeFournisseur, ContactAdresse, ContactAdresseServiceFonction, Contrat, ContratCollectivite, EntiteType } from "../interfaces/dataModelsInterfaces";
@@ -9,13 +8,10 @@ import { AppLink, MatTableColumn } from '../interfaces/appInterfaces';
 import { EnvDataColumn } from '../classes/appClasses';
 import { DataType, MenuName, DataColumnName } from './enums';
 import { ConfirmComponent } from "../components/dialogs/confirm/confirm.component";
-import { Observable, of, startWith } from "rxjs";
+import { Observable } from "rxjs";
 import { DataModelService } from "../services/data-model.service";
-import { assertPlatform } from "@angular/core";
 import { FormArray } from "@angular/forms";
 import { SeriesPoint } from "@progress/kendo-angular-charts";
-import { DownloadService } from "../services/download.service";
-import { isNullOrUndefined } from "@progress/kendo-angular-editor/util";
 
 /// <Propriété>
 /// -----------------------------------------------------------------------------------------------------

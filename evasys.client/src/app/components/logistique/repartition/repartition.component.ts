@@ -318,7 +318,10 @@ export class RepartitionComponent implements OnInit {
   //Manage screen
   manageScreen() {
     //Global lock
-    if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.Administrateur) {
+    if ((this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.Administrateur
+      && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.CentreDeTri)
+      || this.repartition.CommandeFournisseur?.ExportSAGE === true
+    ) {
       this.lockScreen();
     }
     else {
@@ -422,17 +425,19 @@ export class RepartitionComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Get PrixReprise
   getPrixReprise() {
-    //Get existing PrixReprise
-    this.dataModelService.getPrixReprise(0, null
-      , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
-      , null
-      , this.collectiviteListFC.value ? this.collectiviteListFC.value : this.collectiviteNAListFC.value
-      , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
-    )
-      .subscribe(result => {
-        this.pUHTFC.setValue(result.PUHT - result.PUHTSurtri - result.PUHTTransport);
-      }, error =>
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1550), duration: 4000 } as appInterfaces.SnackbarMsg));
+    if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur) {
+      //Get existing PrixReprise
+      this.dataModelService.getPrixReprise(0, null
+        , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
+        , null
+        , this.collectiviteListFC.value ? this.collectiviteListFC.value : this.collectiviteNAListFC.value
+        , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+      )
+        .subscribe(result => {
+          this.pUHTFC.setValue(result.PUHT - result.PUHTSurtri - result.PUHTTransport);
+        }, error =>
+          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1550), duration: 4000 } as appInterfaces.SnackbarMsg));
+    }
   }
   //-----------------------------------------------------------------------------------
   //Collectivite selected
@@ -651,8 +656,13 @@ export class RepartitionComponent implements OnInit {
   }
   //-----------------------------------------------------------------------------------
   //Saves the data model in DB
-  saveRepartition() {
+  saveRepartition(valid:boolean) {
     this.saveData();
+    //Check if valid
+    if (valid) {
+      this.repartition.UtilisateurValide = this.applicationUserContext.connectedUtilisateur;
+      this.repartition.DValide = moment();
+    }
     //Process
     var url = this.baseUrl + "evapi/repartition";
     //Update 
@@ -785,65 +795,67 @@ export class RepartitionComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Get missing PrixReprise if applicable
   getMissingPrixReprises() {
-    let missingPrixReprise: boolean = false;
-    let missingPrixRepriseMsgCreated: boolean = false;
-    let foundPrixReprise: boolean = false;
-    let foundPrixRepriseMsgCreated: boolean = false;
-    if (this.repartition.RepartitionCollectivites.some(e => e.PUHT == null)) {
-      this.repartition.RepartitionCollectivites.forEach(e => {
-        if (e.PUHT == null) {
-          this.dataModelService.getPrixReprise(0, null
-            , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
-            , null
-            , e.Collectivite.RefEntite
-            , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
-          )
-            .subscribe(result => {
-              e.PUHT = result.PUHT - result.PUHTSurtri - result.PUHTTransport;
-              foundPrixReprise = true;
-              //Update form
-              this.updateForm();
-              if (foundPrixReprise && !foundPrixRepriseMsgCreated) {
-                this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1556), duration: 4000 } as appInterfaces.SnackbarMsg);
-                foundPrixRepriseMsgCreated = true;
-              }
-            }, error => {
-              missingPrixReprise = true
-              if (missingPrixReprise && !missingPrixRepriseMsgCreated) {
-                this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1555), duration: 4000 } as appInterfaces.SnackbarMsg);
-                missingPrixRepriseMsgCreated = true;
-              }
-            });
-        }
-      });
-    }
-    if (this.repartition.RepartitionProduits.some(e => e.PUHT == null)) {
-      this.repartition.RepartitionProduits.forEach(e => {
-        if (e.PUHT == null) {
-          this.dataModelService.getPrixReprise(0, null
-            , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
-            , null
-            , e.Fournisseur?.RefEntite
-            , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
-          )
-            .subscribe(result => {
-              e.PUHT = result.PUHT - result.PUHTSurtri - result.PUHTTransport;
-              foundPrixReprise = true;
-              //Update form
-              this.updateForm();
-              if (foundPrixReprise && !foundPrixRepriseMsgCreated) {
-                this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1556), duration: 4000 } as appInterfaces.SnackbarMsg);
-                foundPrixRepriseMsgCreated = true;
-              }
-            }, error => {
-              missingPrixReprise = true
-              if (missingPrixReprise && !missingPrixRepriseMsgCreated) {
-                this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1555), duration: 4000 } as appInterfaces.SnackbarMsg);
-                missingPrixRepriseMsgCreated = true;
-              }
-            });
-        }
-      });
+    if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur) {
+      let missingPrixReprise: boolean = false;
+      let missingPrixRepriseMsgCreated: boolean = false;
+      let foundPrixReprise: boolean = false;
+      let foundPrixRepriseMsgCreated: boolean = false;
+      if (this.repartition.RepartitionCollectivites.some(e => e.PUHT == null)) {
+        this.repartition.RepartitionCollectivites.forEach(e => {
+          if (e.PUHT == null) {
+            this.dataModelService.getPrixReprise(0, null
+              , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
+              , null
+              , e.Collectivite.RefEntite
+              , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+            )
+              .subscribe(result => {
+                e.PUHT = result.PUHT - result.PUHTSurtri - result.PUHTTransport;
+                foundPrixReprise = true;
+                //Update form
+                this.updateForm();
+                if (foundPrixReprise && !foundPrixRepriseMsgCreated) {
+                  this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1556), duration: 4000 } as appInterfaces.SnackbarMsg);
+                  foundPrixRepriseMsgCreated = true;
+                }
+              }, error => {
+                missingPrixReprise = true
+                if (missingPrixReprise && !missingPrixRepriseMsgCreated) {
+                  this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1555), duration: 4000 } as appInterfaces.SnackbarMsg);
+                  missingPrixRepriseMsgCreated = true;
+                }
+              });
+          }
+        });
+      }
+      if (this.repartition.RepartitionProduits.some(e => e.PUHT == null)) {
+        this.repartition.RepartitionProduits.forEach(e => {
+          if (e.PUHT == null) {
+            this.dataModelService.getPrixReprise(0, null
+              , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
+              , null
+              , e.Fournisseur?.RefEntite
+              , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+            )
+              .subscribe(result => {
+                e.PUHT = result.PUHT - result.PUHTSurtri - result.PUHTTransport;
+                foundPrixReprise = true;
+                //Update form
+                this.updateForm();
+                if (foundPrixReprise && !foundPrixRepriseMsgCreated) {
+                  this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1556), duration: 4000 } as appInterfaces.SnackbarMsg);
+                  foundPrixRepriseMsgCreated = true;
+                }
+              }, error => {
+                missingPrixReprise = true
+                if (missingPrixReprise && !missingPrixRepriseMsgCreated) {
+                  this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1555), duration: 4000 } as appInterfaces.SnackbarMsg);
+                  missingPrixRepriseMsgCreated = true;
+                }
+              });
+          }
+        });
+      }
     }
   }
   //-----------------------------------------------------------------------------------
@@ -857,6 +869,8 @@ export class RepartitionComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Format multiline tooltip text for creation/modification
   getCreationModificationTooltipText(): string {
-    return getCreationModificationTooltipText(this.repartition);
+    let s: string = getCreationModificationTooltipText(this.repartition);
+    if (this.repartition.ValidationText) { s += "\n" + this.repartition.ValidationText; }
+    return s;
   }
 }

@@ -145,21 +145,23 @@ namespace eVaSys.Controllers
                         sqlStr = "select count(distinct RefRepartition) from tblRepartition"
                             + "     inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
                             + "     inner join tblUtilisateur on tblUtilisateur.RefUtilisateur=tblRepartition.RefUtilisateurCreation"
-                            + " where tblCommandeFournisseur.DDechargement is not null"
-                            + "     and tblUtilisateur.RefCentreDeTri is null"
+                            + " where tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1"
+                            + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
                             + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
                             + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
                             + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
+                            + "         or (tblUtilisateur.RefCentreDeTri is not null and tblRepartition.DValide is null)"
                             + "     )";
                         sqlStrUrgent = "select count(distinct RefRepartition) from tblRepartition"
                             + "     inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
                             + "     inner join tblUtilisateur on tblUtilisateur.RefUtilisateur=tblRepartition.RefUtilisateurCreation"
-                            + " where tblCommandeFournisseur.DDechargement is null"
-                            + "     and tblUtilisateur.RefCentreDeTri is not null"
-                            + "     and DDechargement>getdate() and month(DDechargement)!=month(getdate())"
+                            + " where tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1"
+                            + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
+                            + "     and month(tblCommandeFournisseur.DChargement)=month(getdate()) and year(tblCommandeFournisseur.DChargement)=year(getdate()) and day(getdate())>=25"
                             + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
                             + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
                             + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
+                            + "         or (tblUtilisateur.RefCentreDeTri is not null and tblRepartition.DValide is null)"
                             + "     )";
                     }
                     if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
@@ -168,17 +170,18 @@ namespace eVaSys.Controllers
                             + "     left join tblRepartition on tblCommandeFournisseur.RefCommandeFournisseur = tblRepartition.RefCommandeFournisseur"
                             + "     inner join tblProduit on tblCommandeFournisseur.RefProduit = tblProduit.RefProduit"
                             + " where tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and tblProduit.Collecte = 1"
-                            + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2024000000"
+                            + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
                             + "     and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))"
                             + "     and tblCommandeFournisseur.RefEntite = " + CurrentContext.ConnectedUtilisateur.RefCentreDeTri.ToString();
                         sqlStrUrgent = "select count(distinct tblCommandeFournisseur.RefCommandeFournisseur) from tblCommandeFournisseur"
                             + "     left join tblRepartition on tblCommandeFournisseur.RefCommandeFournisseur = tblRepartition.RefCommandeFournisseur"
                             + "     inner join tblProduit on tblCommandeFournisseur.RefProduit = tblProduit.RefProduit"
                             + " where tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and tblProduit.Collecte = 1"
-                            + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2024000000"
+                            + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
                             + "     and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))"
                             + "     and tblCommandeFournisseur.RefEntite = " + CurrentContext.ConnectedUtilisateur.RefCentreDeTri.ToString()
-                            + "     and dbo.ProchainJourTravaille(DChargement,2)<getdate()";
+                            + "     and month(tblCommandeFournisseur.DChargement)=month(getdate()) and year(tblCommandeFournisseur.DChargement)=year(getdate()) and day(getdate())>=25"
+                            + "     and DChargement < DATEFROMPARTS(YEAR(getdate()), MONTH(getdate()), 1)";
                     }
                     break;
                 case "MessagePourDiffusion":
@@ -526,7 +529,10 @@ namespace eVaSys.Controllers
             }
             else
             {
-                return BadRequest(new BadRequestError());
+                res.nb = "";
+                res.nbUrgent = "";
+                //Return Json
+                return new JsonResult(res, JsonSettings);
             }
         }
         #endregion

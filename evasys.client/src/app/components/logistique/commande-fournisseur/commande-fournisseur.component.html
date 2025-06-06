@@ -10,8 +10,7 @@
         </button>
         <button mat-raised-button color="accent" class="ev-button-left" type="button" (click)="onAcceptAnomalie()"
                 *ngIf="!(locked && saveLocked)
-                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
-                            || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')
                         && (form.errors?.prixTonneHTEquals0
                             ||form.errors?.nbBalleChargementAwayFrombBalleDechargement
                             ||form.errors?.poidsChargementAwayFromPoidsDechargement
@@ -26,8 +25,7 @@
                 *ngIf="!locked
                         && commandeFournisseur.DDechargement===null
                         && !commandeFournisseur.Transporteur
-                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
-                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')"
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')"
                 [disabled]="!commandeFournisseur.Entite
                         || !commandeFournisseur.Produit
                         || commandeFournisseur.DMoisDechargementPrevu===null
@@ -39,24 +37,21 @@
                 *ngIf="!locked
                         && commandeFournisseur.DDechargement===null
                         && commandeFournisseur.Transporteur
-                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
-                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')">
           {{applicationUserContext.getCulturedRessourceText(522)}}
         </button>
         <button mat-raised-button class="ev-button-left" type="button" (click)="onFindCible();"
                 *ngIf="!locked
                         && commandeFournisseur.DDechargement===null
                         && commandeFournisseur.Transporteur
-                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
-                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')">
           {{commandeFournisseur.ValideDPrevues ? applicationUserContext.getCulturedRessourceText(566) : applicationUserContext.getCulturedRessourceText(1073)}}
         </button>
         <button mat-raised-button class="ev-button-left" type="button" (click)="onCopy();"
                 *ngIf="!locked
                         && !commandeFournisseur.CommandeFournisseurStatut
                         && !commandeFournisseur.Transporteur
-                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
-                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')">
           {{applicationUserContext.getCulturedRessourceText(525)}}
         </button>
         <button mat-raised-button class="ev-button-left" type="button" (click)="onCancelUnloading();"
@@ -64,22 +59,21 @@
                         && !reparti
                         && commandeFournisseur.RefCommandeFournisseur!==null
                         && commandeFournisseur.DDechargement!==null
-                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
-                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')">
           {{applicationUserContext.getCulturedRessourceText(530)}}
         </button>
         <button mat-raised-button class="ev-button-left" type="button" (click)="onMixte();"
                 *ngIf="!locked
                         && commandeFournisseur.Transporteur
                         && commandeFournisseur.DDechargement===null
-                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
-                        || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                        && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')">
           {{applicationUserContext.getCulturedRessourceText(532)}}
         </button>
         <button mat-raised-button class="ev-button-left" type="button" (click)="onRepartition();" [disabled]="!isFormValidForSave()"
                 *ngIf="commandeFournisseur.DDechargement !== null && commandeFournisseur.PoidsDechargement !== null && commandeFournisseur.RefCommandeFournisseur >0
                         && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
-                            || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur')">
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur'
+                            || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'CentreDeTri')">
           {{applicationUserContext.getCulturedRessourceText(601)}}
         </button>
         <button mat-raised-button class="ev-button-left" type="button" (click)="onUploadFile();"

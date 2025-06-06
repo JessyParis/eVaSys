@@ -840,48 +840,10 @@ namespace eVaSys.Controllers
                             break;
                         case "LogistiqueMenuRepartition":
                             //Filters
-                            string fil = "";
-                            //Filter for current user
-                            if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
-                            {
-                                fil += " and isnull(tblRepartition.RefFournisseur,tblCommandeFournisseur.RefEntite) = " + CurrentContext.ConnectedUtilisateur.RefCentreDeTri;
-                            }
-                            //General Filters
-                            fil = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, fil, filterText
-                                , null
-                                , new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.CommandeFournisseurNumeroCommande }
-                                );
-                            //Other filters
-                            if (!string.IsNullOrEmpty(filterCentreDeTris))
-                            {
-                                fil += " and isnull(f.RefEntite,fournisseur.RefEntite) in (";
-                                fil += Utils.Utils.CreateSQLParametersFromString("refCentreDeTri", filterCentreDeTris, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
-                                fil += ")";
-                            }
-                            if (!string.IsNullOrEmpty(filterProduits))
-                            {
-                                fil += " and isnull(p.RefProduit, produit.Refproduit) in (";
-                                fil += Utils.Utils.CreateSQLParametersFromString("refProduit", filterProduits, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
-                                fil += ")";
-                            }
-                            if (!string.IsNullOrEmpty(filterYears))
-                            {
-                                fil += " and isnull(year(tblCommandeFournisseur.DDechargement),year(tblRepartition.D)) in (";
-                                fil += Utils.Utils.CreateSQLParametersFromString("refAnnee", filterYears, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
-                                fil += ")";
-                            }
-                            if (!string.IsNullOrEmpty(filterMonths))
-                            {
-                                fil += " and isnull(month(tblCommandeFournisseur.DDechargement),month(tblRepartition.D)) in (";
-                                fil += Utils.Utils.CreateSQLParametersFromString("refMonth", filterMonths, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
-                                fil += ")";
-                            }
-                            if (CurrentContext.filterDR)
-                            {
-                                fil += " and isnull(f.RefEntite,fournisseur.RefEntite) in (select RefEntite from tbmEntiteDR where RefDR=" + CurrentContext.RefUtilisateur + ")";
-                            }
+                            string refCentreDeTris = "", refProduits = "", refYears = "", refMonths = "";
                             //Chaine SQL globale
                             sqlStr = "select RefRepartition as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefRepartition.ToString()].Name + "]"
+                                + "     , tblCommandeFournisseur.RefCommandeFournisseur as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeFournisseur.ToString()].Name + "]"
                                 + "     , isnull(f.CodeEE,fournisseur.CodeEE) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCITEO.ToString()].Name + "]"
                                 + "     , isnull(f.Libelle,fournisseur.Libelle) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriLibelle.ToString()].Name + "]"
                                 + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
@@ -893,28 +855,125 @@ namespace eVaSys.Controllers
                                 + " 	left join tblProduit as p on tblCommandeFournisseur.RefProduit=p.RefProduit"
                                 + " 	left join tblEntite as fournisseur on tblRepartition.RefFournisseur=fournisseur.RefEntite"
                                 + " 	left join tblProduit as produit on tblRepartition.RefProduit=produit.RefProduit"
-                                + " where 1=1" + fil;
+                                + "     left join tblUtilisateur on tblUtilisateur.RefUtilisateur=tblRepartition.RefUtilisateurCreation"
+                                + " where 1=1";
+                            //Filter for current user
+                            if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
+                            {
+                                sqlStr += " and isnull(tblRepartition.RefFournisseur,tblCommandeFournisseur.RefEntite) = " + CurrentContext.ConnectedUtilisateur.RefCentreDeTri;
+                            }
+                            //General Filters
+                            sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, filterText
+                                , null
+                                , new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.CommandeFournisseurNumeroCommande }
+                                );
+                            //Other filters
+                            if (!string.IsNullOrEmpty(filterCentreDeTris))
+                            {
+                                refCentreDeTris = Utils.Utils.CreateSQLParametersFromString("refCentreDeTri", filterCentreDeTris, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                                sqlStr += " and isnull(f.RefEntite,fournisseur.RefEntite) in (";
+                                sqlStr += refCentreDeTris;
+                                sqlStr += ")";
+                            }
+                            if (!string.IsNullOrEmpty(filterProduits))
+                            {
+                                refProduits = Utils.Utils.CreateSQLParametersFromString("refProduit", filterProduits, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                                sqlStr += " and isnull(p.RefProduit, produit.Refproduit) in (";
+                                sqlStr += refProduits;
+                                sqlStr += ")";
+                            }
+                            if (!string.IsNullOrEmpty(filterYears))
+                            {
+                                refYears = Utils.Utils.CreateSQLParametersFromString("refAnnee", filterYears, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                                sqlStr += " and isnull(year(tblCommandeFournisseur.DDechargement),year(tblRepartition.D)) in (";
+                                sqlStr += refYears;
+                                sqlStr += ")";
+                            }
+                            if (!string.IsNullOrEmpty(filterMonths))
+                            {
+                                refMonths = Utils.Utils.CreateSQLParametersFromString("refMonth", filterMonths, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                                sqlStr += " and isnull(month(tblCommandeFournisseur.DDechargement),month(tblRepartition.D)) in (";
+                                sqlStr += refMonths;
+                                sqlStr += ")";
+                            }
+                            if (CurrentContext.filterDR)
+                            {
+                                sqlStr += " and isnull(f.RefEntite,fournisseur.RefEntite) in (select RefEntite from tbmEntiteDR where RefDR=" + CurrentContext.RefUtilisateur + ")";
+                            }
                             if (filterRepartitionAFinaliser)
                             {
-                                sqlStr += " and tblCommandeFournisseur.DDechargement is not null"
-                                    + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
-                                    + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
-                                    + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
-                                    + "     )";
+                                if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
+                                {
+                                    sqlStr += " and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and p.Collecte = 1"
+                                        + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
+                                        + "     and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))";
+                                }
+                                else
+                                {
+                                    sqlStr += " and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1"
+                                        + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
+                                        + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
+                                        + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
+                                        + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
+                                        + "         or (tblUtilisateur.RefCentreDeTri is not null and tblRepartition.DValide is null)"
+                                        + "     )";
+                                }
                             }
                             //Add Repartition to create if CDT
-                            if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null) {
+                            if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
+                            {
                                 sqlStr += " union all select tblRepartition.RefRepartition as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefRepartition.ToString()].Name + "]"
+                                    + "     , tblCommandeFournisseur.RefCommandeFournisseur as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeFournisseur.ToString()].Name + "]"
                                     + "     , f.CodeEE as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCITEO.ToString()].Name + "]"
-                                    + "     , f.Libelle,fournisseur.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriLibelle.ToString()].Name + "]"
+                                    + "     , f.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriLibelle.ToString()].Name + "]"
                                     + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
-                                    + "     , isnull(p.Libelle, produit.Libelle) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
-                                    + "     , isnull(tblCommandeFournisseur.DDechargement, tblRepartition.D) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RepartitionD.ToString()].Name + "]"
+                                    + "     , p.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
+                                    + "     , tblCommandeFournisseur.DDechargement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RepartitionD.ToString()].Name + "]"
                                     + " from tblRepartition"
                                     + " 	right join tblCommandeFournisseur on tblRepartition.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
                                     + " 	left join tblEntite as f on tblCommandeFournisseur.RefEntite=f.RefEntite"
-                                    + " 	left join tblProduit as p on tblCommandeFournisseur.RefProduit=p.RefProduit"
-                                    + " where tblRepartition.RefRepartition is null" + fil;
+                                    + " 	inner join tblProduit as p on tblCommandeFournisseur.RefProduit=p.RefProduit"
+                                    + " where tblRepartition.RefRepartition is null and NonRepartissable=0 and p.Collecte=1 and tblCommandeFournisseur.NumeroCommande > 2025000000"
+                                    + "     and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1";
+                            }
+                            //Filter for current user
+                            if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
+                            {
+                                sqlStr += " and tblCommandeFournisseur.RefEntite = " + CurrentContext.ConnectedUtilisateur.RefCentreDeTri;
+                            }
+                            //General Filters
+                            sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, filterText
+                                , null
+                                , new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.CommandeFournisseurNumeroCommande }
+                                );
+                            //Other filters
+                            if (!string.IsNullOrEmpty(filterCentreDeTris))
+                            {
+                                sqlStr += " and f.RefEntite in (";
+                                sqlStr += refCentreDeTris;
+                                sqlStr += ")";
+                            }
+                            if (!string.IsNullOrEmpty(filterProduits))
+                            {
+                                sqlStr += " and p.RefProduit in (";
+                                sqlStr += refProduits;
+                                sqlStr += ")";
+                            }
+                            if (!string.IsNullOrEmpty(filterYears))
+                            {
+                                sqlStr += " and year(tblCommandeFournisseur.DDechargement) in (";
+                                sqlStr += refYears;
+                                sqlStr += ")";
+                            }
+                            if (!string.IsNullOrEmpty(filterMonths))
+                            {
+                                sqlStr += " and month(tblCommandeFournisseur.DDechargement) in (";
+                                sqlStr += refMonths;
+                                sqlStr += ")";
+                            }
+                            if (CurrentContext.filterDR)
+                            {
+                                sqlStr += " and f.RefEntite in (select RefEntite from tbmEntiteDR where RefDR=" + CurrentContext.RefUtilisateur + ")";
                             }
                             break;
                         case "LogistiqueMenuPrixReprise":
@@ -1545,7 +1604,7 @@ namespace eVaSys.Controllers
                         case "AdministrationMenuAide":
                             ////Chaine SQL globale
                             sqlStr = "select tblAide.RefAide as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefAide.ToString()].Name + "]";
-                            if(CurrentContext.CurrentCulture.Name == "en-GB")
+                            if (CurrentContext.CurrentCulture.Name == "en-GB")
                             {
                                 sqlStr += "     , tblAide.LibelleENGB as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AideLibelleENGB.ToString()].Name + "]";
                             }
@@ -1553,7 +1612,7 @@ namespace eVaSys.Controllers
                             {
                                 sqlStr += "     , tblAide.LibelleFRFR as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AideLibelleFRFR.ToString()].Name + "]";
                             }
-                            sqlStr+= "     , tblAide.ValeurHTML as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AideValeurHTML.ToString()].Name + "]"
+                            sqlStr += "     , tblAide.ValeurHTML as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AideValeurHTML.ToString()].Name + "]"
                                 + " from tblAide"
                                 + " where 1=1";
                             if (CurrentContext.CurrentCulture.Name == "en-GB")
@@ -2261,8 +2320,6 @@ namespace eVaSys.Controllers
                     //Get the total row count
                     cmd.CommandText = "select count(*) from (" + sqlStr + ") as univers";
                     nbRow = cmd.ExecuteScalar().ToString();
-                    //sqlConn.Close();
-                    //sqlConn.Open();
                     //Get formatted data page
                     if (menu == Enumerations.MenuName.LogistiqueMenuCommandeFournisseur.ToString() && string.IsNullOrEmpty(sortExpression))
                     {

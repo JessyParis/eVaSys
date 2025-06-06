@@ -118,17 +118,20 @@ namespace eVaSys.Data
                     //Unit
                     s = cR.GetTextRessource(14) + " - " + Utils.Utils.FormatNumeroCommande(CommandeFournisseur.NumeroCommande.ToString())
                         + Environment.NewLine + CommandeFournisseur.Entite.Libelle + " (" + CommandeFournisseur.Entite.CodeEE + ")"
-                        + Environment.NewLine + CommandeFournisseur.Produit.Libelle
-                        + Environment.NewLine + cR.GetTextRessource(587) + " - " + ((DateTime)CommandeFournisseur.DDechargement).ToString("d", currentCulture)
-                        + Environment.NewLine + cR.GetTextRessource(229) + " - " + PoidsChargement.ToString()
-                        + Environment.NewLine + cR.GetTextRessource(480) + " - " + PoidsReparti.ToString();
+                        + Environment.NewLine + CommandeFournisseur.Produit.Libelle;
+                    if (CommandeFournisseur.DDechargement != null)
+                    {
+                        s += Environment.NewLine + cR.GetTextRessource(587) + " - " + ((DateTime)CommandeFournisseur.DDechargement).ToString("d", currentCulture);
+                    }
+                    s += Environment.NewLine + cR.GetTextRessource(229) + " - " + PoidsChargement.ToString()
+                    + Environment.NewLine + cR.GetTextRessource(480) + " - " + PoidsReparti.ToString();
                 }
                 else
                 {
                     //Monthly
                     s = Fournisseur.Libelle + " (" + Fournisseur.CodeEE + ")"
                         + Environment.NewLine + Produit.Libelle
-                        + Environment.NewLine + ((DateTime)D).ToString("MMMM yyyy", currentCulture) 
+                        + Environment.NewLine + ((DateTime)D).ToString("MMMM yyyy", currentCulture)
                         + Environment.NewLine + cR.GetTextRessource(229) + " - " + PoidsChargement.ToString()
                         + Environment.NewLine + cR.GetTextRessource(480) + " - " + PoidsReparti.ToString();
                     ;
