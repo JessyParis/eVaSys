@@ -1669,6 +1669,24 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     this.selection.clear();
   }
   //-----------------------------------------------------------------------------------
+  //Validate Repartition
+  validateRepartitions() {
+    this.applicationUserContext.selectedItem = Array.from(this.selection.selected, item => item.RefRepartition);
+    //Get all transports to validate
+    if (this.applicationUserContext.selectedItem && this.applicationUserContext.selectedItem.length > 0) {
+      this.selectedItem = Array.prototype.map.call(this.applicationUserContext.selectedItem, function (item: number) { return item.toString(); }).join(",");
+    }
+    else {
+      this.selectedItem = "";
+    }
+    //Reset pager
+    this.pagin.pageIndex = 0;
+    //Calculate and get rows back
+    this.loadPage(ActionName.ValidateRepartition);
+    //Reset selection
+    this.selection.clear();
+  }
+  //-----------------------------------------------------------------------------------
   //Set filters
   setFilters() {
     this.filterText = this.applicationUserContext.filterText;
@@ -2450,6 +2468,7 @@ export class GridDataSource implements DataSource<any> {
               && (this.applicationUserContext.filterEnvCommandeFournisseurStatuts && this.applicationUserContext.filterEnvCommandeFournisseurStatuts.length === 1 && this.applicationUserContext.filterEnvCommandeFournisseurStatuts[0].name === EnvCommandeFournisseurStatutName.DemandeEnlevement)
               && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
             || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuUtilisateurInactif
+            || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuRepartition && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
           ) {
             if (!this.displayedColumns.includes("select"))
             this.displayedColumns.unshift("select");

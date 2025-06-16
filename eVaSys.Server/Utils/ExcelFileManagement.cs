@@ -1964,24 +1964,27 @@ namespace eVaSys.Utils
                         l = 0;
                         while (dr.Read())
                         {
-                                ws.Cells[l + 23, 0].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 0].Value = dr.GetValue(0).ToString();
-                                ws.Cells[l + 23, 1].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 1].Value = dr.GetValue(1).ToString();
-                                ws.Cells[l + 23, 2].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 2].Value = ((DateTime)dr.GetSqlDateTime(2)).ToString("dd/MM/yy");
-                                ws.Cells[l + 23, 3].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 23, 3].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 3].Value = dr.GetValue(4).ToString();
-                                ws.Cells[l + 23, 4].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 23, 4].Style.Font.Size = 220;
-                                ws.Cells[l + 23, 4].Value = dr.GetValue(5).ToString();
-                                ws.Cells[l + 23, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
-                                ws.Cells[l + 23, 5].Style.NumberFormat = "#,##0.00";
+                            ws.Cells[l + 23, 0].Style.Font.Size = 220;
+                            ws.Cells[l + 23, 0].Value = dr.GetValue(0).ToString();
+                            ws.Cells[l + 23, 1].Style.Font.Size = 220;
+                            ws.Cells[l + 23, 1].Value = dr.GetValue(1).ToString();
+                            ws.Cells[l + 23, 2].Style.Font.Size = 220;
+                            ws.Cells[l + 23, 2].Value = ((DateTime)dr.GetSqlDateTime(2)).ToString("dd/MM/yy");
+                            ws.Cells[l + 23, 3].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                            ws.Cells[l + 23, 3].Style.Font.Size = 220;
+                            ws.Cells[l + 23, 3].Value = dr.GetValue(4).ToString();
+                            ws.Cells[l + 23, 4].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                            ws.Cells[l + 23, 4].Style.Font.Size = 220;
+                            ws.Cells[l + 23, 4].Value = dr.GetValue(5).ToString();
+                            ws.Cells[l + 23, 5].Style.HorizontalAlignment = HorizontalAlignmentStyle.Right;
+                            ws.Cells[l + 23, 5].Style.NumberFormat = "#,##0.00";
+                            if (dr.GetValue(5) != DBNull.Value)
+                            {
                                 ws.Cells[l + 23, 5].Value = Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
-                                poidsTotal += (int)dr.GetSqlInt32(4);
-                                prixTotal += Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
-                                l++;
+                            }
+                            poidsTotal += (int)dr.GetSqlInt32(4);
+                            //prixTotal += Math.Round((Convert.ToDecimal((int)dr.GetValue(4)) / 1000) * (decimal)dr.GetValue(5), 2, MidpointRounding.AwayFromZero);
+                            l++;
                         }
                         dr.Close();
                         //Total général
@@ -3404,6 +3407,18 @@ namespace eVaSys.Utils
                         if (n > 0 && min > 0)
                         {
                             ws.Cells[i, n].Style.Font.Weight = ExcelFont.BoldWeight;
+                        }
+                    }
+                    if (name == Enumerations.MenuName.LogistiqueMenuExtractionReception.ToString())
+                    {
+                        //Colorisation si prix de reprise non unique
+                        if (dR[currentContext.EnvDataColumns[Enumerations.DataColumnName.PUHTUnique.ToString()].Name] != DBNull.Value)
+                        {
+                            if ((bool)dR[currentContext.EnvDataColumns[Enumerations.DataColumnName.PUHTUnique.ToString()].Name] == false)
+                            {
+                                CellStyle style = ws.Cells[i, j-1].Style;
+                                style.FillPattern.SetSolid(System.Drawing.Color.FromArgb(int.Parse("C185F8", System.Globalization.NumberStyles.AllowHexSpecifier)));
+                            }
                         }
                     }
                     i++;

@@ -17,6 +17,7 @@ import { showErrorToUser, setOriginalMenu, getCreationModificationTooltipText, t
 import { HabilitationLogistique } from "../../../globals/enums";
 import { EventEmitterService } from "../../../services/event-emitter.service";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
+import { environment } from "../../../../environments/environment";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
     //Constructor
@@ -205,12 +206,12 @@ export class RepartitionComponent implements OnInit {
           if (this.repartition.PoidsReparti === 0) {
             this.enterTypeFC.setValue("Produit");
           }
+          //Update form
+          this.updateForm();
           //GetPrixReprise
           this.getPrixReprise();
           //Check similar
           this.checkSimilar();
-          //Update form
-          this.updateForm();
           //Get other data
           if (this.repartition.CommandeFournisseur == null) {
             this.getCommandeFournisseurs();
@@ -319,8 +320,10 @@ export class RepartitionComponent implements OnInit {
   manageScreen() {
     //Global lock
     if ((this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.Administrateur
-      && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.CentreDeTri)
+        && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.CentreDeTri)
       || this.repartition.CommandeFournisseur?.ExportSAGE === true
+      || (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.CentreDeTri
+        && !this.repartition.CommandeFournisseur.Produit.Collecte)
     ) {
       this.lockScreen();
     }
@@ -335,8 +338,8 @@ export class RepartitionComponent implements OnInit {
       this.collectiviteNAListFC.updateValueAndValidity();
       if (this.collectiviteListFC.value) { this.collectiviteNAListFC.disable(); }
       if (this.collectiviteNAListFC.value) { this.collectiviteListFC.disable(); }
-      //If CDT
-      if (!this.applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite) {
+      //If CDT, no HCS
+      if (this.applicationUserContext.connectedUtilisateur.CentreDeTri) {
         this.formRepartitionProduit.disable();
         this.enterTypeFC.value == "Collectivite"
       }
@@ -656,7 +659,7 @@ export class RepartitionComponent implements OnInit {
   }
   //-----------------------------------------------------------------------------------
   //Saves the data model in DB
-  saveRepartition(valid:boolean) {
+  saveRepartition(valid: boolean) {
     this.saveData();
     //Check if valid
     if (valid) {
@@ -670,7 +673,12 @@ export class RepartitionComponent implements OnInit {
       .post<dataModelsInterfaces.Repartition>(url, this.repartition)
       .subscribe(result => {
         this.repartition = result;
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        //Add specific message to CDT
+        let msg = this.applicationUserContext.getCulturedRessourceText(120);
+        if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.CentreDeTri) {
+          msg += " " + this.applicationUserContext.getCulturedRessourceText(1566);
+        }
+        this.snackBarQueueService.addMessage({ text: msg, duration: 4000 } as appInterfaces.SnackbarMsg);
         //Set original Menu
         setOriginalMenu(this.applicationUserContext, this.eventEmitterService);
         //Route back to grid
@@ -720,7 +728,7 @@ export class RepartitionComponent implements OnInit {
   //Check Repartition for same product in the last year
   checkSimilar() {
     //If new Repartition
-    if (!this.repartition.RefRepartition && this.repartition.CommandeFournisseur?.RefCommandeFournisseur) {
+    if (!this.repartition.RefRepartition && this.repartition.CommandeFournisseur?.RefCommandeFournisseur && !this.locked) {
       this.dataModelService.isSimilarRepartition(this.repartition.CommandeFournisseur.RefCommandeFournisseur, moment(this.repartition.CommandeFournisseur.DChargement))
         .subscribe((result => {
           if (result) {

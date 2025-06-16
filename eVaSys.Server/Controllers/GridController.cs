@@ -848,15 +848,26 @@ namespace eVaSys.Controllers
                                 + "     , isnull(f.Libelle,fournisseur.Libelle) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriLibelle.ToString()].Name + "]"
                                 + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                 + "     , isnull(p.Libelle, produit.Libelle) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
-                                + "     , isnull(tblCommandeFournisseur.DDechargement, tblRepartition.D) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RepartitionD.ToString()].Name + "]"
-                                + " from tblRepartition"
+                                + "     , isnull(tblCommandeFournisseur.DDechargement, tblRepartition.D) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RepartitionD.ToString()].Name + "]";
+                            if (CurrentContext.ConnectedUtilisateur.HabilitationLogistique == Enumerations.HabilitationLogistique.Administrateur.ToString())
+                            {
+                                sqlStr += "     , VueRepartitionUnitaireDetail.PUHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHT.ToString()].Name + "]"
+                                    + "     , VueRepartitionUnitaireDetail.PUHTUnique as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PUHTUnique.ToString()].Name + "]";
+                            }
+                            sqlStr += " from tblRepartition"
                                 + " 	left join tblCommandeFournisseur on tblRepartition.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
                                 + " 	left join tblEntite as f on tblCommandeFournisseur.RefEntite=f.RefEntite"
                                 + " 	left join tblProduit as p on tblCommandeFournisseur.RefProduit=p.RefProduit"
                                 + " 	left join tblEntite as fournisseur on tblRepartition.RefFournisseur=fournisseur.RefEntite"
                                 + " 	left join tblProduit as produit on tblRepartition.RefProduit=produit.RefProduit"
-                                + "     left join tblUtilisateur on tblUtilisateur.RefUtilisateur=tblRepartition.RefUtilisateurCreation"
-                                + " where 1=1";
+                                + "     left join tblUtilisateur on tblUtilisateur.RefUtilisateur=tblRepartition.RefUtilisateurCreation";
+                            if(CurrentContext.ConnectedUtilisateur.HabilitationLogistique == Enumerations.HabilitationLogistique.Administrateur.ToString())
+                            {
+                                sqlStr += "     left join (select RefCommandeFournisseur, case when count(distinct PUHT)>1 then null else max(PUHT) end as PUHT, case when count(distinct PUHT)>1 then 0 else 1 end as PUHTUnique"
+                                     + "         from VueRepartitionUnitaireDetail"
+                                     + "         group by RefCommandeFournisseur) as VueRepartitionUnitaireDetail on tblCommandeFournisseur.RefCommandeFournisseur=VueRepartitionUnitaireDetail.RefCommandeFournisseur";
+                            }
+                            sqlStr += " where 1=1";
                             //Filter for current user
                             if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
                             {
@@ -2299,6 +2310,36 @@ namespace eVaSys.Controllers
                         else
                         {
                             Response.Headers.Add("nbCopyPrixReprise", "");
+                        }
+                    }
+                    //Validate Repartition if needed
+                    if (menu == Enumerations.MenuName.LogistiqueMenuRepartition.ToString() && action == Enumerations.ActionName.ValidateRepartition.ToString())
+                    {
+                        if (!string.IsNullOrEmpty(selectedItem))
+                        {
+                            string[] els = moisDechargementPrevuItem.Split(',');
+                            int i = 0;
+                            foreach (string el in els)
+                            {
+                                //Check data
+                                int r = 0;
+                                if (int.TryParse(el, out r))
+                                {
+                                    Repartition rep = DbContext.Repartitions.Find(r);
+                                    if (rep == null)
+                                    {
+                                        rep.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
+                                        //Add and validate prices 
+                                        rep.SetPrixReprises();
+                                        rep.DValide = DateTime.Now;
+                                        //Next
+                                        i++;
+                                    }
+                                }
+                            }
+                            DbContext.SaveChanges();
+                            //Return nb of affected rows in header
+                            Response.Headers.Append("nbValidateRepartition", i.ToString());
                         }
                     }
                     //Export if needed

@@ -56,6 +56,13 @@
         </div>
       </div>
     </div>
+    <div *ngIf="this.applicationUserContext.currentMenu.name==='LogistiqueMenuRepartition' && applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
+      <div class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+            <button mat-raised-button color="primary" (click)="validateRepartitions()" class="ev-control-left">{{applicationUserContext.getCulturedRessourceText(1565)}}</button>
+        </div>
+      </div>
+    </div>
     <div *ngIf="this.applicationUserContext.currentMenu.name==='LogistiqueMenuTransportNonValide' && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')">
       <div class="ev-taskbar-container">
         <div class="ev-taskbar-left-container">

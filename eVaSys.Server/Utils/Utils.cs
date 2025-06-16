@@ -459,8 +459,11 @@ namespace eVaSys.Utils
                     sqlStr += " AND ("
                         + String.Join(" OR ", criteria)
                         + ")";
-                    // Add the associated query parameter
-                    cmd.Parameters.Add("@filterText", SqlDbType.NVarChar).Value = searchStr;
+                    // Add the associated query parameter if it does not exists
+                    if(!cmd.Parameters.Contains("@filterText"))
+                    {
+                        cmd.Parameters.Add("@filterText", SqlDbType.NVarChar).Value = searchStr;
+                    }
                 }
             }
             return sqlStr;

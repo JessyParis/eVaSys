@@ -581,7 +581,7 @@ export class CommandeFournisseurComponent implements OnInit {
     this.blocAnomalieChargementVisible = (
       this.commandeFournisseur.ValideDPrevues === true
       && (
-        this.applicationUserContext.connectedUtilisateur.CentreDeTri !== null
+        (this.applicationUserContext.connectedUtilisateur.CentreDeTri !== null && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.CentreDeTri)
         || (
           this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur
           || this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Utilisateur
@@ -881,18 +881,19 @@ export class CommandeFournisseurComponent implements OnInit {
       //CentreDeTri
       if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.CentreDeTri) {
         this.lockScreen();
-        this.saveLocked = false;
         //Unlock data
         //CmtFournisseur enable if not created via API
         if (!this.commandeFournisseur.RefExt) {
           this.cmtFournisseurFC.enable();
+          this.saveLocked = false;
         }
         //Anomalies
         this.blocAnomalieClientVisible = false;
         this.blocAnomalieTransporteurVisible = false;
-        if (this.commandeFournisseur.DTraitementAnomalieChargement == null) {
+        if (this.commandeFournisseur.DTraitementAnomalieChargement == null && this.blocAnomalieChargementVisible) {
           this.motifAnomalieChargementListFC.enable();
           this.cmtAnomalieChargementFC.enable();
+          this.saveLocked = false;
         }
         //Unlock/hide data if no customer attached
         //Deverrouillage de la case chargée et lot contrôlé si date de chargement prévisionnelle renseignée et statut ouvert et commande non réceptionnée
@@ -900,6 +901,7 @@ export class CommandeFournisseurComponent implements OnInit {
           && this.commandeFournisseur.CommandeFournisseurStatut.RefCommandeFournisseurStatut == CommandeFournisseurStatut.Ouverte) {
           this.chargementEffectueFC.enable();
           this.lotControleFC.enable();
+          this.saveLocked = false;
         }
         //While no customer
         if (!this.commandeFournisseur.AdresseClient) {
@@ -931,6 +933,7 @@ export class CommandeFournisseurComponent implements OnInit {
             this.adresseListFC.setValidators(Validators.required);
             this.adresseListFC.updateValueAndValidity();
           }
+          this.saveLocked = false;
         }
         //Chargement
         if (this.chargementEffectueFC.value == true) {
@@ -943,6 +946,7 @@ export class CommandeFournisseurComponent implements OnInit {
           this.dChargementFC.enable();
           this.dChargementFC.setValidators(Validators.required);
           this.dChargementFC.updateValueAndValidity();
+          this.saveLocked = false;
         }
       }
     }
@@ -1275,7 +1279,7 @@ export class CommandeFournisseurComponent implements OnInit {
     this.commandeFournisseur.DTraitementAnomalieTransporteur = (this.traitementAnomalieTransporteurFC.value === true ? moment() : null);
     //Handle PoidsChargement and PoidsReparti change
     if ((this.commandeFournisseur.PoidsChargement != this.originalPoidsChargement || this.commandeFournisseur.PoidsReparti != this.originalPoidsReparti)
-      && this.commandeFournisseur.Reparti ){
+      && this.commandeFournisseur.Reparti && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Administrateur){
       const dialogRef = this.dialog.open(InformationComponent, {
         width: "350px",
         data: { title: this.applicationUserContext.getCulturedRessourceText(337), message: this.applicationUserContext.getCulturedRessourceText(1561) },
@@ -2295,30 +2299,6 @@ export class CommandeFournisseurComponent implements OnInit {
         showInformationToUser(this.dialog, this.applicationUserContext.getCulturedRessourceText(1514), msg, this.applicationUserContext);
       }
     }
-  //  if (this.applicationUserContext.connectedUtilisateur.UtilisateurType == UtilisateurType.Valorplast) {
-  //    let msg: string = "";
-  //    if (!this.commandeFournisseur.ChargementEffectue && !this.commandeFournisseur.RefusCamion) {
-  //      if (this.commandeFournisseur.Produit.CmtFournisseur) {
-  //        msg += "<strong>" + this.applicationUserContext.getCulturedRessourceHTML(484) + "</strong>"
-  //          + "<br/>" + encode(this.commandeFournisseur.Produit.CmtFournisseur);
-  //      }
-  //      if (this.commandeFournisseur.Produit.CmtTransporteur) {
-  //        if (msg != "") { msg += "<br/>"; }
-  //        msg += "<strong>" + this.applicationUserContext.getCulturedRessourceHTML(499) + "</strong>"
-  //          + "<br/>" + encode(this.commandeFournisseur.Produit.CmtTransporteur);
-  //      }
-  //    }
-  //    if (!this.commandeFournisseur.DDechargement) {
-  //      if (this.commandeFournisseur.Produit.CmtClient) {
-  //        if (msg != "") { msg += "<br/>"; }
-  //        msg += "<strong>" + this.applicationUserContext.getCulturedRessourceHTML(482) + "</strong>"
-  //          + "<br/>" + encode(this.commandeFournisseur.Produit.CmtClient);
-  //      }
-  //    }
-  //    if (msg) {
-  //      showHtmlInformationToUser(this.dialog, this.applicationUserContext.getCulturedRessourceText(1514), msg, this.applicationUserContext);
-  //    }
-  //  }
   }
   //-----------------------------------------------------------------------------------
   //ContactAdresse selected
@@ -2769,30 +2749,38 @@ export class CommandeFournisseurComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Show repartition
   onRepartition() {
-    if (this.isFormValidForSave()) {
-      //Update data
-      this.saveData();
-      //Update if existing model
-      if (this.commandeFournisseur.RefCommandeFournisseur > 0) {
-        this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true).subscribe(result => {
-          this.commandeFournisseur = result;
-          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
-          //Save menu
-          if (this.applicationUserContext.fromMenu == null) {
-            this.applicationUserContext.fromMenu = this.applicationUserContext.currentMenu;
-          }
-          //Open Repartition
-          this.router.navigate(["repartition", "0", {
-            refCommandeFournisseur: this.commandeFournisseur.RefCommandeFournisseur
-          }])
-          this.applicationUserContext.currentModule = this.applicationUserContext.envModules.find(x => x.name === ModuleName.Logistique);
-          this.applicationUserContext.currentMenu = this.applicationUserContext.envMenus.find(x => x.name === MenuName.LogistiqueMenuRepartition);
-          this.eventEmitterService.onChangeMenu();
-        }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+    if (!this.locked) {
+      if (this.isFormValidForSave()) {
+        //Update data
+        this.saveData();
+        //Update if existing model
+        if (this.commandeFournisseur.RefCommandeFournisseur > 0) {
+          this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true).subscribe(result => {
+            this.commandeFournisseur = result;
+            this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+            //Save menu
+            if (this.applicationUserContext.fromMenu == null) {
+              this.applicationUserContext.fromMenu = this.applicationUserContext.currentMenu;
+            }
+            //Open Repartition
+            this.router.navigate(["repartition", "0", {
+              refCommandeFournisseur: this.commandeFournisseur.RefCommandeFournisseur
+            }])
+            this.applicationUserContext.currentModule = this.applicationUserContext.envModules.find(x => x.name === ModuleName.Logistique);
+            this.applicationUserContext.currentMenu = this.applicationUserContext.envMenus.find(x => x.name === MenuName.LogistiqueMenuRepartition);
+            this.eventEmitterService.onChangeMenu();
+          }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+        }
+      }
+      else {
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(589), duration: 4000 } as appInterfaces.SnackbarMsg);
       }
     }
     else {
-      this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(589), duration: 4000 } as appInterfaces.SnackbarMsg);
+      //Open Repartition
+      this.router.navigate(["repartition", "0", {
+        refCommandeFournisseur: this.commandeFournisseur.RefCommandeFournisseur
+      }])
     }
   }
   //------------------------------------------------------------------------------------------------------------------------------------------

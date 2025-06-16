@@ -512,6 +512,8 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
         this.applicationUserContext.filterProduits.push(p);
         p = { RefProduit: 174, Libelle: "" };
         this.applicationUserContext.filterProduits.push(p);
+        p = { RefProduit: 211, Libelle: "" };
+        this.applicationUserContext.filterProduits.push(p);
         break;
       case MenuName.LogistiqueMenuEtatDesFluxDevLeko:
         if (this.applicationUserContext.filterBegin.isSame(moment([1, 0, 1, 0, 0, 0, 0])) || this.applicationUserContext.filterEnd.isSame(moment([1, 0, 1, 0, 0, 0, 0]))) {
@@ -2270,7 +2272,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
     //General styling
     switch (this.applicationUserContext.currentMenu.name) {
       case MenuName.LogistiqueMenuExtractionReception:
-        if (column.columnDef === DataColumnName.PrixReprisePUHT) {
+        if (column.columnDef === DataColumnName.PUHTUnique) {
           if (item.PUHTUnique == 0) { classes += " background-color-anomalie"; }
         }
         break;

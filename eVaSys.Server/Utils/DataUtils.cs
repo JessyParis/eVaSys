@@ -886,6 +886,113 @@ namespace eVaSys.Utils
             }
             return dirty;
         }
+        /// <summary>
+        /// Write received data to dto
+        /// </summary>
+        public static bool UpdateDataRepartition(ref Repartition dataModel, RepartitionViewModel viewModel, int refUtilisateurCourant)
+        {
+            //Update main data
+            dataModel.RefFournisseur = (viewModel.CommandeFournisseur == null ? (int?)viewModel.Fournisseur.RefEntite : null);
+            dataModel.RefCommandeFournisseur = viewModel.CommandeFournisseur?.RefCommandeFournisseur;
+            dataModel.RefProduit = (viewModel.CommandeFournisseur == null ? (int?)viewModel.Produit.RefProduit : null); ;
+            dataModel.D = (viewModel.CommandeFournisseur == null ? viewModel.D : null);
+            dataModel.DValide = (viewModel.DValide == null ? null : (viewModel.DValide != dataModel.DValide ? (DateTime?)DateTime.Now : dataModel.DValide));
+            dataModel.RefUtilisateurValide = viewModel.UtilisateurValide?.RefUtilisateur;
+            //Dirty marker
+            bool dirty = false;
+            //Remove related data RepartitionCollectivite
+            if (dataModel.RepartitionCollectivites != null)
+            {
+                foreach (RepartitionCollectivite rC in dataModel.RepartitionCollectivites)
+                {
+                    if (viewModel.RepartitionCollectivites == null)
+                    {
+                        dataModel.RepartitionCollectivites.Remove(rC);
+                        dirty = true;
+                    }
+                    else if (viewModel.RepartitionCollectivites.Where(el => el.RefRepartitionCollectivite == rC.RefRepartitionCollectivite).FirstOrDefault() == null)
+                    {
+                        dataModel.RepartitionCollectivites.Remove(rC);
+                        dirty = true;
+                    }
+                }
+            }
+            //Add or update related data RepartitionCollectivites
+            foreach (RepartitionCollectiviteViewModel rCVM in viewModel.RepartitionCollectivites)
+            {
+                RepartitionCollectivite rC = null;
+                if (dataModel.RepartitionCollectivites != null && rCVM.RefRepartitionCollectivite != 0)
+                {
+                    rC = dataModel.RepartitionCollectivites.Where(el => el.RefRepartitionCollectivite == rCVM.RefRepartitionCollectivite).FirstOrDefault();
+                }
+                if (rC == null)
+                {
+                    rC = new RepartitionCollectivite();
+                    if (dataModel.RepartitionCollectivites == null) { dataModel.RepartitionCollectivites = new HashSet<RepartitionCollectivite>(); }
+                    dataModel.RepartitionCollectivites.Add(rC);
+                }
+                //Mark as dirty if applicable
+                if (rC.RefCollectivite != rCVM.Collectivite.RefEntite
+                    || rC.RefProcess != rCVM.Process?.RefProcess
+                    || rC.RefProduit != rCVM.Produit?.RefProduit
+                    || rC.Poids != rCVM.Poids
+                    || rC.PUHT != rCVM.PUHT) { dirty = true; }
+                //Update data
+                rC.RefCollectivite = rCVM.Collectivite.RefEntite;
+                rC.RefProcess = rCVM.Process?.RefProcess;
+                rC.RefProduit = rCVM.Produit?.RefProduit;
+                rC.Poids = rCVM.Poids;
+                rC.PUHT = rCVM.PUHT;
+            }
+            //Remove related data RepartitionProduit
+            if (dataModel.RepartitionProduits != null)
+            {
+                foreach (RepartitionProduit rC in dataModel.RepartitionProduits)
+                {
+                    if (viewModel.RepartitionProduits == null)
+                    {
+                        dataModel.RepartitionProduits.Remove(rC);
+                        dirty = true;
+                    }
+                    else if (viewModel.RepartitionProduits.Where(el => el.RefRepartitionProduit == rC.RefRepartitionProduit).FirstOrDefault() == null)
+                    {
+                        dataModel.RepartitionProduits.Remove(rC);
+                        dirty = true;
+                    }
+                }
+            }
+            //Add or update related data RepartitionProduits
+            foreach (RepartitionProduitViewModel rCVM in viewModel.RepartitionProduits)
+            {
+                RepartitionProduit rC = null;
+                if (dataModel.RepartitionProduits != null && rCVM.RefRepartitionProduit != 0)
+                {
+                    rC = dataModel.RepartitionProduits.Where(el => el.RefRepartitionProduit == rCVM.RefRepartitionProduit).FirstOrDefault();
+                }
+                if (rC == null)
+                {
+                    rC = new RepartitionProduit();
+                    if (dataModel.RepartitionProduits == null) { dataModel.RepartitionProduits = new HashSet<RepartitionProduit>(); }
+                    dataModel.RepartitionProduits.Add(rC);
+                }
+                //Mark as dirty if applicable
+                if (rC.RefFournisseur != rCVM.Fournisseur?.RefEntite
+                    || rC.RefProcess != rCVM.Process?.RefProcess
+                    || rC.RefProduit != rCVM.Produit?.RefProduit
+                    || rC.Poids != rCVM.Poids
+                    || rC.PUHT != rCVM.PUHT) { dirty = true; }
+                //Update data
+                rC.RefFournisseur = rCVM.Fournisseur?.RefEntite;
+                rC.RefProcess = rCVM.Process?.RefProcess;
+                rC.RefProduit = rCVM.Produit?.RefProduit;
+                rC.Poids = rCVM.Poids;
+                rC.PUHT = rCVM.PUHT;
+            }
+            //Mark for modification if applicable
+            if (dirty) { dataModel.DModif = DateTime.Now; }
+            //End
+            return dirty;
+        }
     }
 }
 

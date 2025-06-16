@@ -10,6 +10,7 @@
 using AutoMapper;
 using eVaSys.APIUtils;
 using eVaSys.Data;
+using eVaSys.Utils;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -151,7 +152,7 @@ namespace eVaSys.Controllers
             }
 
             //Set values
-            UpdateData(ref repartition, model);
+            DataUtils.UpdateDataRepartition(ref repartition, model, CurrentContext.ConnectedUtilisateur.RefUtilisateur);
 
             //Register session user
             repartition.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
@@ -318,114 +319,6 @@ namespace eVaSys.Controllers
         #endregion Attribute-based Routing
 
         #region Services
-
-        /// <summary>
-        /// Write received data to dto
-        /// </summary>
-        private void UpdateData(ref Repartition dataModel, RepartitionViewModel viewModel)
-        {
-            //Update main data
-            dataModel.RefFournisseur = (viewModel.CommandeFournisseur == null ? (int?)viewModel.Fournisseur.RefEntite : null);
-            dataModel.RefCommandeFournisseur = viewModel.CommandeFournisseur?.RefCommandeFournisseur;
-            dataModel.RefProduit = (viewModel.CommandeFournisseur == null ? (int?)viewModel.Produit.RefProduit : null); ;
-            dataModel.D = (viewModel.CommandeFournisseur == null ? viewModel.D : null);
-            dataModel.DValide = (viewModel.DValide == null ? null : (viewModel.DValide != dataModel.DValide ? (DateTime?)DateTime.Now : dataModel.DValide));
-            dataModel.RefUtilisateurValide = viewModel.UtilisateurValide?.RefUtilisateur;
-            //Dirty marker
-            bool dirty = false;
-            //Remove related data RepartitionCollectivite
-            if (dataModel.RepartitionCollectivites != null)
-            {
-                foreach (RepartitionCollectivite rC in dataModel.RepartitionCollectivites)
-                {
-                    if (viewModel.RepartitionCollectivites == null)
-                    {
-                        DbContext.RepartitionCollectivites.Remove(rC);
-                        dirty = true;
-                    }
-                    else if (viewModel.RepartitionCollectivites.Where(el => el.RefRepartitionCollectivite == rC.RefRepartitionCollectivite).FirstOrDefault() == null)
-                    {
-                        DbContext.RepartitionCollectivites.Remove(rC);
-                        dirty = true;
-                    }
-                }
-            }
-            //Add or update related data RepartitionCollectivites
-            foreach (RepartitionCollectiviteViewModel rCVM in viewModel.RepartitionCollectivites)
-            {
-                RepartitionCollectivite rC = null;
-                if (dataModel.RepartitionCollectivites != null && rCVM.RefRepartitionCollectivite != 0)
-                {
-                    rC = dataModel.RepartitionCollectivites.Where(el => el.RefRepartitionCollectivite == rCVM.RefRepartitionCollectivite).FirstOrDefault();
-                }
-                if (rC == null)
-                {
-                    rC = new RepartitionCollectivite();
-                    DbContext.RepartitionCollectivites.Add(rC);
-                    if (dataModel.RepartitionCollectivites == null) { dataModel.RepartitionCollectivites = new HashSet<RepartitionCollectivite>(); }
-                    dataModel.RepartitionCollectivites.Add(rC);
-                }
-                //Mark as dirty if applicable
-                if (rC.RefCollectivite != rCVM.Collectivite.RefEntite
-                    || rC.RefProcess != rCVM.Process?.RefProcess
-                    || rC.RefProduit != rCVM.Produit?.RefProduit
-                    || rC.Poids != rCVM.Poids
-                    || rC.PUHT != rCVM.PUHT) { dirty = true; }
-                //Update data
-                rC.RefCollectivite = rCVM.Collectivite.RefEntite;
-                rC.RefProcess = rCVM.Process?.RefProcess;
-                rC.RefProduit = rCVM.Produit?.RefProduit;
-                rC.Poids = rCVM.Poids;
-                rC.PUHT = rCVM.PUHT;
-            }
-            //Remove related data RepartitionProduit
-            if (dataModel.RepartitionProduits != null)
-            {
-                foreach (RepartitionProduit rC in dataModel.RepartitionProduits)
-                {
-                    if (viewModel.RepartitionProduits == null)
-                    {
-                        DbContext.RepartitionProduits.Remove(rC);
-                        dirty = true;
-                    }
-                    else if (viewModel.RepartitionProduits.Where(el => el.RefRepartitionProduit == rC.RefRepartitionProduit).FirstOrDefault() == null)
-                    {
-                        DbContext.RepartitionProduits.Remove(rC);
-                        dirty = true;
-                    }
-                }
-            }
-            //Add or update related data RepartitionProduits
-            foreach (RepartitionProduitViewModel rCVM in viewModel.RepartitionProduits)
-            {
-                RepartitionProduit rC = null;
-                if (dataModel.RepartitionProduits != null && rCVM.RefRepartitionProduit != 0)
-                {
-                    rC = dataModel.RepartitionProduits.Where(el => el.RefRepartitionProduit == rCVM.RefRepartitionProduit).FirstOrDefault();
-                }
-                if (rC == null)
-                {
-                    rC = new RepartitionProduit();
-                    DbContext.RepartitionProduits.Add(rC);
-                    if (dataModel.RepartitionProduits == null) { dataModel.RepartitionProduits = new HashSet<RepartitionProduit>(); }
-                    dataModel.RepartitionProduits.Add(rC);
-                }
-                //Mark as dirty if applicable
-                if (rC.RefFournisseur != rCVM.Fournisseur?.RefEntite
-                    || rC.RefProcess != rCVM.Process?.RefProcess
-                    || rC.RefProduit != rCVM.Produit?.RefProduit
-                    || rC.Poids != rCVM.Poids
-                    || rC.PUHT != rCVM.PUHT) { dirty = true; }
-                //Update data
-                rC.RefFournisseur = rCVM.Fournisseur?.RefEntite;
-                rC.RefProcess = rCVM.Process?.RefProcess;
-                rC.RefProduit = rCVM.Produit?.RefProduit;
-                rC.Poids = rCVM.Poids;
-                rC.PUHT = rCVM.PUHT;
-            }
-            //Mark for modification if applicable
-            if (dirty) { dataModel.DModif = DateTime.Now; }
-        }
 
         #endregion Services
     }

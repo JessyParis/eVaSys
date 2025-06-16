@@ -981,7 +981,7 @@ namespace eVaSys.Controllers
                     + "     left join (select distinct RefCommandeFournisseur from tblRepartition) as unitaire on tblCommandeFournisseur.RefCommandeFournisseur=unitaire.RefCommandeFournisseur "
                     + "     left join tblRepartition as mensuelle on tblCommandeFournisseur.RefEntite=mensuelle.RefFournisseur and year(tblCommandeFournisseur.DDechargement)=year(mensuelle.D) and month(tblCommandeFournisseur.DDechargement)=month(mensuelle.D) and tblCommandeFournisseur.RefProduit=mensuelle.RefProduit"
                     + "     left join tbsCommandeFournisseurStatut on tbsCommandeFournisseurStatut.RefCommandeFournisseurStatut=tblCommandeFournisseur.RefCommandeFournisseurStatut"
-                    + "     left join (select RefCommandeFournisseur, case when count(distinct PUHT)>1 then null else max(PUHT) end as PUHT, case when count(distinct PUHT)>1 then 0 else 1 end as PUHTUnique"
+                    + "     left join (select RefCommandeFournisseur, case when count(distinct PUHT)>1 then null else max(PUHT) end as PUHT, cast(case when count(distinct PUHT)>1 then 0 else 1 end as bit) as PUHTUnique"
                     + "         from VueRepartitionUnitaireDetail"
                     + "         group by RefCommandeFournisseur) as VueRepartitionUnitaireDetail on tblCommandeFournisseur.RefCommandeFournisseur=VueRepartitionUnitaireDetail.RefCommandeFournisseur"
                     + " where DDechargement between @begin and @end ";

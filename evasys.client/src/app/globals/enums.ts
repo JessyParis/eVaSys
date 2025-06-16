@@ -164,7 +164,8 @@ export enum ActionName {
   ChangeMoisDechargementPrevu = "ChangeMoisDechargementPrevu",
   CopyPrixReprise = "CopyPrixReprise",
   CentreDeTriForUtilisateur = "CentreDeTriForUtilisateur",
-  DeactivateUtilisateur = "DeactivateUtilisateur"
+  DeactivateUtilisateur = "DeactivateUtilisateur",
+  ValidateRepartition = "ValidateRepartition"
 }
 
 //Habilitations Module logistique

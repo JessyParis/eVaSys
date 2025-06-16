@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Media;
 
 namespace eVaSys.Data
 {
@@ -240,6 +241,33 @@ namespace eVaSys.Data
                 r += cR.GetTextRessource(393);
             }
             return r;
+        }
+        //--------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Set all existing PrixReprise
+        /// </summary>
+        public void SetPrixReprises()
+        {
+            if (CommandeFournisseur != null)
+            {
+                //Get PrixReprise for this Repartition
+                var pR = DbContext.PrixReprises
+                    .Where(el => el.D == (CommandeFournisseur.DChargement ?? CommandeFournisseur.D)
+                        && el.RefProduit == CommandeFournisseur.Produit.RefProduit
+                        && el.Process == null && el.Composant == null)
+                    .FirstOrDefault();
+                if (pR != null)
+                {
+                    foreach (var rP in RepartitionProduits)
+                    {
+                        if (rP.PUHT == null) rP.PUHT = pR.PUHT;
+                    }
+                    foreach (var rC in RepartitionCollectivites)
+                    {
+                        if (rC.PUHT == null) rC.PUHT = pR.PUHT;
+                    }
+                }
+            }
         }
     }
 }

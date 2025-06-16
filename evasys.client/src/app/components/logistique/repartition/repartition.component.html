@@ -126,7 +126,7 @@
                   <mat-icon matTooltip={{applicationUserContext.getCulturedRessourceText(1558)}}>percent</mat-icon>
                 </mat-button-toggle>
               </mat-button-toggle-group>
-              <mat-form-field style="width:100%; text-align: right">
+              <mat-form-field style="width:100%; text-align: right" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'">
                 <input matInput formControlName="PUHT" [allowNegativeNumbers]="true" mask="separator.2" [required]="requiredPrixReprise" [errorStateMatcher]="matcher" />
                 <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(513)}}</span>
                 <button *ngIf="form.get('PUHT').value!=null && form.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PUHT').setValue(null)" tabindex="-1" type="button">
