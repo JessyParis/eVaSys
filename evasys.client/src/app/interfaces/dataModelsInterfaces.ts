@@ -1056,6 +1056,8 @@ export interface NonConformite {
   IFClientFactureNro: string;
   IFClientCmtFacturation: string;
   IFClientDFacture: string | moment.Moment;
+  IFClientCommandeAFaire: boolean;
+  IFClientFactureEnAttente: boolean;
   NonConformiteNonConformiteFamilles: NonConformiteNonConformiteFamille[];
   NonConformiteFichiers: NonConformiterFichier[];
   NonConformiteEtapes: NonConformiteEtape[];

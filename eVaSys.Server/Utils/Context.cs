@@ -967,6 +967,8 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.MotifAnomalieChargementLibelle, 503, EnvDataColumnDataType.text, "Libelle", "tbrMotifAnomalieChargement.Libelle");
                 CreateEnvDataColumn(cR, DataColumnName.MotifAnomalieClientLibelle, 504, EnvDataColumnDataType.text, "Libelle", "tbrMotifAnomalieClient.Libelle");
                 CreateEnvDataColumn(cR, DataColumnName.MotifAnomalieTransporteurLibelle, 505, EnvDataColumnDataType.text, "Libelle", "tbrMotifAnomalieTransporteur.Libelle");
+                CreateEnvDataColumn(cR, DataColumnName.NonConformiteIFClientCommandeAFaire, 1568, EnvDataColumnDataType.bit, "IFClientCommandeAFaire", "tblNonConformite.IFClientCommandeAFaire");
+                CreateEnvDataColumn(cR, DataColumnName.NonConformiteIFClientFactureEnAttente, 1569, EnvDataColumnDataType.bit, "IFClientFactureEnAttente", "tblNonConformite.IFClientFactureEnAttente");
                 CreateEnvDataColumn(cR, DataColumnName.ParamEmailComptePOP, 1316, EnvDataColumnDataType.text, "ComptePOP", "tbsParamEmail.ComptePOP");
                 CreateEnvDataColumn(cR, DataColumnName.ParamEmailEmailExpediteur, 1333, EnvDataColumnDataType.text, "EmailExpediteur", "tbsParamEmail.EmailExpediteur");
                 CreateEnvDataColumn(cR, DataColumnName.ParamEmailLibelleExpediteur, 1305, EnvDataColumnDataType.text, "LibelleExpediteur", "tbsParamEmail.LibelleExpediteur");

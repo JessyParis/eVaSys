@@ -150,8 +150,8 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   visibleFilterMonthList: boolean = false;
   visibleFilterNonConformiteEtapeTypeList: boolean = false;
   visibleFilterNonConformiteNatureList: boolean = false;
-  visibleFilterIFFournisseur: boolean = false;
-  visibleFilterIFClient: boolean = false;
+  visibleFilterIFClientCommandeAFaire: boolean = false;
+  visibleFilterIFClientFactureEnAttente: boolean = false;
   visibleFilterIFFournisseurRetourLot: boolean = false;
   visibleFilterIFFournisseurFacture: boolean = false;
   visibleFilterIFFournisseurAttenteBonCommande: boolean = false;
@@ -245,8 +245,8 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       MonthList: new UntypedFormControl(this.applicationUserContext.filterMonths),
       NonConformiteEtapeTypeList: new UntypedFormControl(this.applicationUserContext.filterNonConformiteEtapeTypes),
       NonConformiteNatureList: new UntypedFormControl(this.applicationUserContext.filterNonConformiteNatures),
-      IFFournisseur: new UntypedFormControl(this.applicationUserContext.filterIFFournisseur),
-      IFClient: new UntypedFormControl(this.applicationUserContext.filterIFClient),
+      IFClientCommandeAFaire: new UntypedFormControl(this.applicationUserContext.filterIFClientCommandeAFaire),
+      IFClientFactureEnAttente: new UntypedFormControl(this.applicationUserContext.filterIFClientFactureEnAttente),
       IFFournisseurRetourLot: new UntypedFormControl(this.applicationUserContext.filterIFFournisseurRetourLot),
       IFFournisseurAttenteBonCommande: new UntypedFormControl(this.applicationUserContext.filterIFFournisseurAttenteBonCommande),
       IFFournisseurFacture: new UntypedFormControl(this.applicationUserContext.filterIFFournisseurFacture),
@@ -943,11 +943,11 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     this.visibleFilterNonConformiteNatureList = (
       this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuNonConformite
     );
-    this.visibleFilterIFFournisseur = (
+    this.visibleFilterIFClientCommandeAFaire = (
       this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuNonConformite
       && (this.applicationUserContext.connectedUtilisateur.HabilitationQualite === HabilitationLogistique.Administrateur)
     );
-    this.visibleFilterIFClient = (
+    this.visibleFilterIFClientFactureEnAttente = (
       this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuNonConformite
       && (this.applicationUserContext.connectedUtilisateur.HabilitationQualite === HabilitationLogistique.Administrateur
         || this.applicationUserContext.connectedUtilisateur.HabilitationQualite === HabilitationLogistique.Client)
@@ -1389,8 +1389,8 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     this.applicationUserContext.filterMonths = this.form.get("MonthList").value;
     this.applicationUserContext.filterNonConformiteEtapeTypes = this.form.get("NonConformiteEtapeTypeList").value;
     this.applicationUserContext.filterNonConformiteNatures = this.form.get("NonConformiteNatureList").value;
-    this.applicationUserContext.filterIFFournisseur = this.form.get("IFFournisseur").value;
-    this.applicationUserContext.filterIFClient = this.form.get("IFClient").value;
+    this.applicationUserContext.filterIFClientCommandeAFaire = this.form.get("IFClientCommandeAFaire").value;
+    this.applicationUserContext.filterIFClientFactureEnAttente = this.form.get("IFClientFactureEnAttente").value;
     this.applicationUserContext.filterIFFournisseurRetourLot = this.form.get("IFFournisseurRetourLot").value;
     this.applicationUserContext.filterIFFournisseurFacture = this.form.get("IFFournisseurFacture").value;
     this.applicationUserContext.filterIFFournisseurTransmissionFacturation = this.form.get("IFFournisseurTransmissionFacturation").value;
@@ -1917,7 +1917,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       , this.filterClients, this.filterTransporteurs, this.filterPrestataires, this.filterCentreDeTris, this.filterIndustriels, this.filterDptDeparts, this.filterDptArrivees, this.filterVilleDeparts, this.filterVilleArrivees
       , this.filterPayss, this.filterProcesss, this.filterRegionReportings, this.filterProduits, this.filterComposants, this.filterCamionTypes
       , this.filterMonths, this.filterYears, this.filterNonConformiteEtapeTypes, this.filterNonConformiteNatures
-      , this.applicationUserContext.filterIFFournisseur, this.applicationUserContext.filterIFClient, this.applicationUserContext.filterIFFournisseurRetourLot, this.applicationUserContext.filterIFFournisseurFacture, this.applicationUserContext.filterIFFournisseurAttenteBonCommande
+      , this.applicationUserContext.filterIFClientCommandeAFaire, this.applicationUserContext.filterIFClientFactureEnAttente, this.applicationUserContext.filterIFFournisseurRetourLot, this.applicationUserContext.filterIFFournisseurFacture, this.applicationUserContext.filterIFFournisseurAttenteBonCommande
       , this.applicationUserContext.filterIFFournisseurTransmissionFacturation, this.applicationUserContext.filterNonConformitesATraiter, this.applicationUserContext.filterNonConformitesATransmettre, this.applicationUserContext.filterNonConformitesPlanActionAValider
       , this.applicationUserContext.filterNonConformitesPlanActionNR
       , this.filterEnvCommandeFournisseurStatuts, this.applicationUserContext.filterDChargementModif, this.applicationUserContext.filterCommandesFournisseurNonChargees, this.applicationUserContext.filterValideDPrevues, this.applicationUserContext.filterDatesTransporteur
@@ -2185,8 +2185,8 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     this.form.get("YearList").setValue(this.applicationUserContext.filterYears);
     this.form.get("NonConformiteEtapeTypeList").setValue(this.applicationUserContext.filterNonConformiteEtapeTypes);
     this.form.get("NonConformiteNatureList").setValue(this.applicationUserContext.filterNonConformiteNatures);
-    this.form.get("IFFournisseur").setValue(this.applicationUserContext.filterIFFournisseur);
-    this.form.get("IFClient").setValue(this.applicationUserContext.filterIFClient);
+    this.form.get("IFClientCommandeAFaire").setValue(this.applicationUserContext.filterIFClientCommandeAFaire);
+    this.form.get("IFClientFactureEnAttente").setValue(this.applicationUserContext.filterIFClientFactureEnAttente);
     this.form.get("IFFournisseurRetourLot").setValue(this.applicationUserContext.filterIFFournisseurRetourLot);
     this.form.get("IFFournisseurFacture").setValue(this.applicationUserContext.filterIFFournisseurFacture);
     this.form.get("IFFournisseurAttenteBonCommande").setValue(this.applicationUserContext.filterIFFournisseurAttenteBonCommande);
@@ -2386,7 +2386,7 @@ export class GridDataSource implements DataSource<any> {
     , filterClients = "", filterTransporteurs = "", filterPrestataires = "", filterCentreDeTris = "", filterIndustriels = "", filterDptDeparts = "", filterDptArrivees = ""
     , filterVilleDeparts = "", filterVilleArrivees = "", filterPayss = "", filterProcesss = "", filterRegionReportings = "", filterProduits = "", filterComposants = "", filterCamionTypes = ""
     , filterMonths = "", filterYears = "", filterNonConformiteEtapeTypes = "", filterNonConformiteNatures = ""
-    , filterIFFournisseur = false, filterIFClient = false, filterIFFournisseurRetourLot = false, filterIFFournisseurFacture = false, filterIFFournisseurAttenteBonCommande = false
+    , filterIFClientCommandeAFaire = false, filterIFClientFactureEnAttente = false, filterIFFournisseurRetourLot = false, filterIFFournisseurFacture = false, filterIFFournisseurAttenteBonCommande = false
     , filterIFFournisseurTransmissionFacturation = false, filterNonConformitesATraiter = false, filterNonConformitesATransmettre = false, filterNonConformitesPlanActionAValider = false
     , filterNonConformitesPlanActionNR = false
     , filterEnvCommandeFournisseurStatuts = "", filterDChargementModif = false, filterCommandesFournisseurNonChargees = false, filterValideDPrevues = false, filterDatesTransporteur = false
@@ -2404,7 +2404,7 @@ export class GridDataSource implements DataSource<any> {
       , filterClients, filterTransporteurs, filterPrestataires, filterCentreDeTris, filterIndustriels, filterDptDeparts, filterDptArrivees, filterVilleDeparts, filterVilleArrivees
       , filterPayss, filterProcesss, filterRegionReportings, filterProduits, filterComposants, filterCamionTypes
       , filterMonths, filterYears, filterNonConformiteEtapeTypes, filterNonConformiteNatures
-      , filterIFFournisseur, filterIFClient, filterIFFournisseurRetourLot, filterIFFournisseurFacture, filterIFFournisseurAttenteBonCommande
+      , filterIFClientCommandeAFaire, filterIFClientFactureEnAttente, filterIFFournisseurRetourLot, filterIFFournisseurFacture, filterIFFournisseurAttenteBonCommande
       , filterIFFournisseurTransmissionFacturation, filterNonConformitesATraiter, filterNonConformitesATransmettre, filterNonConformitesPlanActionAValider
       , filterNonConformitesPlanActionNR
       , filterEnvCommandeFournisseurStatuts, filterDChargementModif, filterCommandesFournisseurNonChargees, filterValideDPrevues, filterDatesTransporteur
