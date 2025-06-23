@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, FormGroupDirective, NgForm } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApplicationUserContext } from "../../../globals/globals";
 import { MatDialog } from "@angular/material/dialog";
@@ -8,7 +8,7 @@ import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces"
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { UtilsService } from "../../../services/utils.service";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
-import { cmp, getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
+import { cmp, showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { BaseFormComponent } from "../../_ancestors/base-form.component";

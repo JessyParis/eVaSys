@@ -54,9 +54,7 @@ namespace eVaSys.Controllers
             string refProduit = Request.Headers["refProduit"].ToString();
             string refComposant = Request.Headers["refComposant"].ToString();
             string refEntite = Request.Headers["refEntite"].ToString();
-            int refPs = 0;
             int refPt = 0;
-            int refC = 0;
             int refE = 0;
             DateTime dRef = DateTime.MinValue;
             //Get or create prixReprise

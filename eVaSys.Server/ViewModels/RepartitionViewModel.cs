@@ -29,11 +29,8 @@ namespace eVaSys.ViewModels
         public int? PoidsReparti { get; set; }
         public int? PoidsChargement { get; set; }
         public UtilisateurViewModel UtilisateurCreation { get; set; }
-        public UtilisateurViewModel UtilisateurValide { get; set; }
-        public DateTime? DValide { get; set; }
         public string InfoText { get; set; }
         public string CreationText { get; set;}
         public string ModificationText { get; set; }
-        public string ValidationText { get; set; }
     }
 }

@@ -383,6 +383,36 @@ export class DataModelService {
     });
   }
   //-----------------------------------------------------------------------------------
+  //Get existing Repartition
+  getRepartition(refRepartition: number, refCommandeFournisseur: number): Observable<dataModelsInterfaces.Repartition> {
+    return this.http.get<dataModelsInterfaces.Repartition>(this.baseUrl + "evapi/repartition/" + (refRepartition ? refRepartition.toString() : "0"), {
+      headers: new HttpHeaders()
+        .set("refCommandeFournisseur", (refCommandeFournisseur ? refCommandeFournisseur.toString() : "0")),
+      responseType: "json"
+    });
+  }
+  //-----------------------------------------------------------------------------------
+  //Get existing CommandeFournisseur
+  getRepartitionCommandesFournisseurs(d: string | moment.Moment, refProduit: number, refFournisseur): Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl + "evapi/repartition/getcommandefournisseurs", {
+      headers: new HttpHeaders()
+        .set("d", moment(d).format("YYYY-MM-DD 00:00:00.000"))
+        .set("refProduit", refProduit.toString())
+        .set("refFournisseur", refFournisseur.toString()),
+      responseType: "json"
+    })
+  }
+  //-----------------------------------------------------------------------------------
+  //Post Repartition
+  postRepartition(Repartition: dataModelsInterfaces.Repartition): Observable<dataModelsInterfaces.Repartition> {
+    return this.http.post<dataModelsInterfaces.Repartition>(this.baseUrl + "evapi/repartition", Repartition);
+  }
+  //-----------------------------------------------------------------------------------
+  //Delete Repartition
+  deleteRepartition(refRepartition: number): Observable<any> {
+    return this.http.delete(this.baseUrl + "evapi/repartition/" + refRepartition.toString());
+  }
+  //-----------------------------------------------------------------------------------
   //Get existing Action
   getAction(refAction: number): Observable<dataModelsInterfaces.Action> {
     return this.http.get<dataModelsInterfaces.Action>(this.baseUrl + "evapi/action/" + (refAction ? refAction.toString() : "0"), {

@@ -57,7 +57,6 @@ namespace eVaSys.Controllers
                 repartition = DbContext.Repartitions
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
-                        .Include(r => r.UtilisateurValide)
                         .Include(r => r.RepartitionCollectivites)
                         .Include(r => r.RepartitionProduits)
                         .AsSplitQuery()
@@ -73,7 +72,6 @@ namespace eVaSys.Controllers
                     repartition = DbContext.Repartitions
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
-                        .Include(r => r.UtilisateurValide)
                         .Include(r => r.RepartitionCollectivites)
                         .Include(r => r.RepartitionProduits)
                         .AsSplitQuery()

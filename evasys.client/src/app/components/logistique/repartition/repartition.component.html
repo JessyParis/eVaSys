@@ -6,13 +6,8 @@
         <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
         <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm"
                 [disabled]="formRepartitionCollectivite.get('RepartitionCollectivite').invalid || formRepartitionProduit.get('RepartitionProduit').invalid"
-                *ngIf="!(locked && saveLocked)" (click)="saveRepartition(false)">
+                *ngIf="!(locked && saveLocked)" (click)="saveRepartition()">
           {{applicationUserContext.getCulturedRessourceText(6)}}
-        </button>
-        <button mat-raised-button class="ev-button-left" color="accent" type="button" (click)="saveRepartition(true);"
-                *ngIf="repartition.UtilisateurCreation?.CentreDeTri && !repartition.DValide
-                  && applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
-          {{applicationUserContext.getCulturedRessourceText(1565)}}
         </button>
         <button mat-raised-button class="ev-button-left" type="button" (click)="onCommandeFournisseur();" *ngIf="repartition.CommandeFournisseur">
           {{applicationUserContext.getCulturedRessourceText(776)}}

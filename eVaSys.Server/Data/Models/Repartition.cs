@@ -61,7 +61,6 @@ namespace eVaSys.Data
         public DateTime? D { get; set; }
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
-        public DateTime? DValide { get; set; }
         public ICollection<RepartitionCollectivite> RepartitionCollectivites { get; set; }
         public ICollection<RepartitionProduit> RepartitionProduits { get; set; }
         [NotMapped]
@@ -70,8 +69,6 @@ namespace eVaSys.Data
         public Utilisateur UtilisateurCreation { get; set; }
         public int? RefUtilisateurModif { get; set; }
         public Utilisateur UtilisateurModif { get; set; }
-        public int? RefUtilisateurValide { get; set; }
-        public Utilisateur UtilisateurValide { get; set; }
         public int PoidsReparti
         {
             get
@@ -163,19 +160,6 @@ namespace eVaSys.Data
                 {
                     CulturedRessources cR = new(currentCulture, DbContext);
                     s = cR.GetTextRessource(389) + " " + ((DateTime)DModif).ToString("G", currentCulture) + " " + cR.GetTextRessource(390) + " " + UtilisateurModif.Nom;
-                }
-                return s;
-            }
-        }
-        public string ValidationText
-        {
-            get
-            {
-                string s = "";
-                if (UtilisateurValide != null && DValide != null)
-                {
-                    CulturedRessources cR = new(currentCulture, DbContext);
-                    s = cR.GetTextRessource(852) + " " + ((DateTime)DValide).ToString("G", currentCulture) + " " + cR.GetTextRessource(390) + " " + UtilisateurValide.Nom;
                 }
                 return s;
             }

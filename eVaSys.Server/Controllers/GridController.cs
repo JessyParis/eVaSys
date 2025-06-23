@@ -915,7 +915,7 @@ namespace eVaSys.Controllers
                             {
                                 if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
                                 {
-                                    sqlStr += " and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and p.Collecte = 1"
+                                    sqlStr += " and tblCommandeFournisseur.ExportSAGE=0 and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and p.Collecte = 1"
                                         + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
                                         + "     and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))";
                                 }
@@ -944,7 +944,7 @@ namespace eVaSys.Controllers
                                     + " 	right join tblCommandeFournisseur on tblRepartition.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
                                     + " 	left join tblEntite as f on tblCommandeFournisseur.RefEntite=f.RefEntite"
                                     + " 	inner join tblProduit as p on tblCommandeFournisseur.RefProduit=p.RefProduit"
-                                    + " where tblRepartition.RefRepartition is null and NonRepartissable=0 and p.Collecte=1 and tblCommandeFournisseur.NumeroCommande > 2025000000"
+                                    + " where tblCommandeFournisseur.ExportSAGE=0 and tblRepartition.RefRepartition is null and NonRepartissable=0 and p.Collecte=1 and tblCommandeFournisseur.NumeroCommande > 2025000000"
                                     + "     and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1";
                             }
                             //Filter for current user
@@ -2331,7 +2331,6 @@ namespace eVaSys.Controllers
                                         rep.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
                                         //Add and validate prices 
                                         rep.SetPrixReprises();
-                                        rep.DValide = DateTime.Now;
                                         //Next
                                         i++;
                                     }

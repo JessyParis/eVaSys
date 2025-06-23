@@ -1,13 +1,13 @@
-import { Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidationErrors, ValidatorFn, AbstractControl, FormGroupDirective, NgForm, UntypedFormArray, FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ApplicationUserContext } from "../../../globals/globals";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { InformationComponent } from "../../dialogs/information/information.component";
 import { ListService } from "../../../services/list.service";
+import { UtilsService } from "../../../services/utils.service";
 import { DataModelService } from "../../../services/data-model.service";
 import { Observable, of } from "rxjs";
 import { debounceTime, switchMap } from "rxjs/operators";import moment from "moment";
@@ -15,9 +15,10 @@ import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces"
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { showErrorToUser, setOriginalMenu, getCreationModificationTooltipText, toFixed, getFormattedNumeroCommande, cmp } from "../../../globals/utils";
 import { HabilitationLogistique } from "../../../globals/enums";
-import { EventEmitterService } from "../../../services/event-emitter.service";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
-import { environment } from "../../../../environments/environment";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
+import { DomSanitizer } from "@angular/platform-browser";
+import { EventEmitterService } from "../../../services/event-emitter.service";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
     //Constructor
@@ -62,7 +63,7 @@ class MyValidators {
   standalone: false
 })
 
-export class RepartitionComponent implements OnInit {
+export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces.Repartition> {
   matcher = new MyErrorStateMatcher();
   //Variablesf
   repartition: dataModelsInterfaces.Repartition = {} as dataModelsInterfaces.Repartition;
@@ -99,13 +100,21 @@ export class RepartitionComponent implements OnInit {
   //Functions
   toFixed = toFixed;
   getFormattedNumeroCommande = getFormattedNumeroCommande;
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private listService: ListService
-    , private dataModelService: DataModelService
-    , private eventEmitterService: EventEmitterService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected listService: ListService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer
+    , protected eventEmitterService: EventEmitterService
+  ) {
+
+    super("ProduitComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     // create an empty object from the interface
     this.repartition = {} as dataModelsInterfaces.Repartition;
     this.createForm();
@@ -137,7 +146,6 @@ export class RepartitionComponent implements OnInit {
   ngOnInit() {
     let id = +this.activatedRoute.snapshot.params["id"];
     let refCommandeFournisseur = this.activatedRoute.snapshot.params["refCommandeFournisseur"];
-    var url = this.baseUrl + "evapi/repartition/" + id;
     //Register service to get CollectiviteNA
     this.collectiviteNAList = this.collectiviteNAListFC.valueChanges
       .pipe(
@@ -146,7 +154,7 @@ export class RepartitionComponent implements OnInit {
       );
     // get existing object if id exists
     if (id) {
-      this.http.get<dataModelsInterfaces.Repartition>(url).subscribe(result => {
+      this.dataModelService.getRepartition(id, 0).subscribe(result => {
         //Get data
         this.repartition = result;
         this.repartition.RepartitionCollectivites.sort(function (a, b) { return cmp(a.RefRepartitionCollectivite, b.RefRepartitionCollectivite); });
@@ -193,52 +201,48 @@ export class RepartitionComponent implements OnInit {
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     }
     else {
-      this.http.get<dataModelsInterfaces.Repartition>(url,
-        {
-          headers: new HttpHeaders()
-            .set("refCommandeFournisseur", refCommandeFournisseur)
-        }).subscribe(result => {
-          //Get data
-          this.repartition = result;
-          this.repartitionCollectivite.setValidators(new MyValidators(this.repartition).poidsTotalRepartitionCollectiviteValidator);
-          this.repartitionProduit.setValidators(new MyValidators(this.repartition).poidsTotalRepartitionProduitValidator);
-          //Set EnterType if needed
-          if (this.repartition.PoidsReparti === 0) {
-            this.enterTypeFC.setValue("Produit");
-          }
-          //Update form
-          this.updateForm();
-          //GetPrixReprise
-          this.getPrixReprise();
-          //Check similar
-          this.checkSimilar();
-          //Get other data
-          if (this.repartition.CommandeFournisseur == null) {
-            this.getCommandeFournisseurs();
-          }
-          if (this.enterTypeFC.value === "Collectivite") {
-            //Enter type = Collectivite
-            this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Entite.RefEntite : this.repartition.Fournisseur.RefEntite
-              , true, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
-              , "", false)
-              .subscribe(result => {
-                this.collectiviteList = result;
-                //Auto select
-                if (this.collectiviteList.length === 1) {
-                  this.collectiviteListFC.setValue(this.collectiviteList[0].RefEntite);
-                  this.refCollectiviteSelected = this.collectiviteList[0].RefEntite;
-                }
-              }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-          }
-          else {
-            this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Entite.RefEntite : this.repartition.Fournisseur.RefEntite
-              , true, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
-              , "", false)
-              .subscribe(result => {
-                this.collectiviteList = result;
-              }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-          }
-        }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+      this.dataModelService.getRepartition(id, refCommandeFournisseur).subscribe(result => {
+        //Get data
+        this.repartition = result;
+        this.repartitionCollectivite.setValidators(new MyValidators(this.repartition).poidsTotalRepartitionCollectiviteValidator);
+        this.repartitionProduit.setValidators(new MyValidators(this.repartition).poidsTotalRepartitionProduitValidator);
+        //Set EnterType if needed
+        if (this.repartition.PoidsReparti === 0) {
+          this.enterTypeFC.setValue("Produit");
+        }
+        //Update form
+        this.updateForm();
+        //GetPrixReprise
+        this.getPrixReprise();
+        //Check similar
+        this.checkSimilar();
+        //Get other data
+        if (this.repartition.CommandeFournisseur == null) {
+          this.getCommandeFournisseurs();
+        }
+        if (this.enterTypeFC.value === "Collectivite") {
+          //Enter type = Collectivite
+          this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Entite.RefEntite : this.repartition.Fournisseur.RefEntite
+            , true, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+            , "", false)
+            .subscribe(result => {
+              this.collectiviteList = result;
+              //Auto select
+              if (this.collectiviteList.length === 1) {
+                this.collectiviteListFC.setValue(this.collectiviteList[0].RefEntite);
+                this.refCollectiviteSelected = this.collectiviteList[0].RefEntite;
+              }
+            }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+        }
+        else {
+          this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Entite.RefEntite : this.repartition.Fournisseur.RefEntite
+            , true, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+            , "", false)
+            .subscribe(result => {
+              this.collectiviteList = result;
+            }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+        }
+      }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     }
   }
   //-----------------------------------------------------------------------------------
@@ -285,10 +289,10 @@ export class RepartitionComponent implements OnInit {
   //Calculate percentages
   calculatePercentages() {
     for (const repColl of this.repartition.RepartitionCollectivites) {
-      repColl.Percentage = Math.round((repColl.Poids / this.repartition.PoidsReparti) * 10000)/100;
+      repColl.Percentage = Math.round((repColl.Poids / this.repartition.PoidsReparti) * 10000) / 100;
     }
     for (const repColl of this.repartition.RepartitionProduits) {
-      repColl.Percentage = Math.round((repColl.Poids / (this.repartition.PoidsChargement - this.repartition.PoidsReparti)) * 10000)/100;
+      repColl.Percentage = Math.round((repColl.Poids / (this.repartition.PoidsChargement - this.repartition.PoidsReparti)) * 10000) / 100;
     }
   }
   //-----------------------------------------------------------------------------------
@@ -320,7 +324,7 @@ export class RepartitionComponent implements OnInit {
   manageScreen() {
     //Global lock
     if ((this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.Administrateur
-        && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.CentreDeTri)
+      && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.CentreDeTri)
       || this.repartition.CommandeFournisseur?.ExportSAGE === true
       || (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.CentreDeTri
         && !this.repartition.CommandeFournisseur.Produit.Collecte)
@@ -370,14 +374,9 @@ export class RepartitionComponent implements OnInit {
     if (this.repartition.CommandeFournisseur == null
       && this.repartition.D && this.repartition.Produit && this.repartition.Fournisseur) {
       //Get data
-      var url = this.baseUrl + "evapi/repartition/getcommandefournisseurs";
-      this.http.get<any[]>(url, {
-        headers: new HttpHeaders()
-          .set("d", moment(this.repartition.D).format("YYYY-MM-DD 00:00:00.000"))
-          .set("refProduit", this.repartition.Produit.RefProduit.toString())
-          .set("refFournisseur", this.repartition.Fournisseur.RefEntite.toString()),
-        responseType: "json"
-      }).subscribe(result => {
+      this.dataModelService.getRepartitionCommandesFournisseurs(this.repartition.D
+        , this.repartition.Produit.RefProduit, this.repartition.Fournisseur.RefEntite.toString())
+        .subscribe(result => {
         this.commandeFournisseurs = result;
         this.sumPoidsChargement = this.commandeFournisseurs.reduce((sum, c) => sum + c.PoidsChargement, 0)
         this.sumPoidsReparti = this.commandeFournisseurs.reduce((sum, c) => sum + c.PoidsReparti, 0)
@@ -529,8 +528,8 @@ export class RepartitionComponent implements OnInit {
   //Add a new RepartitionProduit
   addRepartitionProduit() {
     if ((this.poidsFC.value && this.enterModeFC.value === "kg")
-            || (this.percentFC.value && this.enterModeFC.value === "percent")
-        ) {
+      || (this.percentFC.value && this.enterModeFC.value === "percent")
+    ) {
       //Save data
       this.saveData();
       //Process
@@ -604,9 +603,7 @@ export class RepartitionComponent implements OnInit {
     });
   }
   delete() {
-    var url = this.baseUrl + "evapi/repartition/" + this.repartition.RefRepartition;
-    this.http
-      .delete(url)
+    this.dataModelService.deleteRepartition(this.repartition.RefRepartition)
       .subscribe(result => {
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(775), duration: 4000 } as appInterfaces.SnackbarMsg);
         //Set original Menu
@@ -659,65 +656,80 @@ export class RepartitionComponent implements OnInit {
   }
   //-----------------------------------------------------------------------------------
   //Saves the data model in DB
-  saveRepartition(valid: boolean) {
+  saveRepartition() {
     this.saveData();
-    //Check if valid
-    if (valid) {
-      this.repartition.UtilisateurValide = this.applicationUserContext.connectedUtilisateur;
-      this.repartition.DValide = moment();
-    }
     //Process
-    var url = this.baseUrl + "evapi/repartition";
-    //Update 
-    this.http
-      .post<dataModelsInterfaces.Repartition>(url, this.repartition)
-      .subscribe(result => {
-        this.repartition = result;
-        //Add specific message to CDT
-        let msg = this.applicationUserContext.getCulturedRessourceText(120);
-        if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.CentreDeTri) {
-          msg += " " + this.applicationUserContext.getCulturedRessourceText(1566);
-        }
-        this.snackBarQueueService.addMessage({ text: msg, duration: 4000 } as appInterfaces.SnackbarMsg);
-        //Set original Menu
-        setOriginalMenu(this.applicationUserContext, this.eventEmitterService);
-        //Route back to grid
-        this.router.navigate(["grid"]);
-      }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+    this.postRepartition("save");
   }
   //-----------------------------------------------------------------------------------
   //Go to CommandeFournisseur
   onCommandeFournisseur() {
     if (!this.locked) {
       this.saveData();
-      //Process
-      var url = this.baseUrl + "evapi/repartition";
-      //Update 
-      this.http
-        .post<dataModelsInterfaces.Repartition>(url, this.repartition)
-        .subscribe(result => {
-          this.repartition = result;
-          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
-          //Save menu
-          if (this.applicationUserContext.fromMenu == null) {
-            this.applicationUserContext.fromMenu = this.applicationUserContext.currentMenu;
+      //Check validity
+      if ((this.formRepartitionCollectivite.get('RepartitionCollectivite').invalid && this.formRepartitionCollectivite.get('RepartitionCollectivite').touched)
+        || (this.formRepartitionProduit.get('RepartitionProduit').invalid && this.formRepartitionProduit.get('RepartitionProduit').touched)) {
+        const dialogRef = this.dialog.open(ConfirmComponent, {
+          width: "350px",
+          data: { title: this.applicationUserContext.getCulturedRessourceText(1570), message: this.applicationUserContext.getCulturedRessourceText(1571) },
+          autoFocus: false,
+          restoreFocus: false
+        });
+        //After closed
+        dialogRef.afterClosed().subscribe(result => {
+          if (result === "yes") {
+            this.backToCommandeFournisseur();
           }
-          //Set original Menu
-          setOriginalMenu(this.applicationUserContext, this.eventEmitterService);
-          //Route
-          this.router.navigate(["commande-fournisseur", this.repartition.CommandeFournisseur.RefCommandeFournisseur.toString()]);
-        }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+        });
+      }
+      else {
+        //Save repartition if valide or untouched
+        if (!this.formRepartitionCollectivite.get('RepartitionCollectivite').touched
+          && !this.formRepartitionProduit.get('RepartitionProduit').touched) {
+          this.backToCommandeFournisseur();
+        }
+        else {
+          this.postRepartition("goCommandeFournisseur");
+        }
+      }
     }
     else {
-      //Save menu
-      if (this.applicationUserContext.fromMenu == null) {
-        this.applicationUserContext.fromMenu = this.applicationUserContext.currentMenu;
-      }
-      //Set original Menu
-      setOriginalMenu(this.applicationUserContext, this.eventEmitterService);
-      //Route
-      this.router.navigate(["commande-fournisseur", this.repartition.CommandeFournisseur.RefCommandeFournisseur.toString()]);
+      this.backToCommandeFournisseur();
     }
+  }
+  //-----------------------------------------------------------------------------------
+  //Saves the data model in DB
+  postRepartition(action: string) {
+    //Process
+    this.dataModelService.postRepartition(this.repartition)
+      .subscribe(result => {
+        this.repartition = result;
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        //Next action
+        switch (action) {
+          case "save":
+            //Set original Menu
+            setOriginalMenu(this.applicationUserContext, this.eventEmitterService);
+            //Route back to grid
+            this.router.navigate(["grid"]);
+            break;
+          case "goCommandeFournisseur":
+            this.backToCommandeFournisseur()
+            break;
+        }
+      }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+  }
+  //-----------------------------------------------------------------------------------
+  //Back to CommandeFournisseur
+  backToCommandeFournisseur() {
+    //Save menu
+    if (this.applicationUserContext.fromMenu == null) {
+      this.applicationUserContext.fromMenu = this.applicationUserContext.currentMenu;
+    }
+    //Set original Menu
+    setOriginalMenu(this.applicationUserContext, this.eventEmitterService);
+    //Route
+    this.router.navigate(["commande-fournisseur", this.repartition.CommandeFournisseur.RefCommandeFournisseur.toString()]);
   }
   //-----------------------------------------------------------------------------------
   //Autocomplete display
@@ -867,18 +879,9 @@ export class RepartitionComponent implements OnInit {
     }
   }
   //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    //Set original Menu
-    setOriginalMenu(this.applicationUserContext, this.eventEmitterService);
-    //Route back to grid
-    this.router.navigate(["grid"]);
-  }
-  //-----------------------------------------------------------------------------------
   //Format multiline tooltip text for creation/modification
   getCreationModificationTooltipText(): string {
     let s: string = getCreationModificationTooltipText(this.repartition);
-    if (this.repartition.ValidationText) { s += "\n" + this.repartition.ValidationText; }
     return s;
   }
 }

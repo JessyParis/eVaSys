@@ -1254,12 +1254,10 @@ export interface Repartition {
   PoidsReparti: number;
   PoidsChargement: number;
   UtilisateurCreation: Utilisateur;
-  UtilisateurValide: Utilisateur;
-  DValide: string | moment.Moment;
   InfoText: string;
   CreationText: string;
   ModificationText: string;
-  ValidationText: string;
+  AllowBaseForm: boolean;
 }
 export interface RepartitionProduit {
   RefRepartitionProduit: number;
