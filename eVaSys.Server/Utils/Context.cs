@@ -91,6 +91,7 @@ namespace eVaSys.Utils
                 CreateEnvComponent(typeof(CamionType), 10047, 10048, 10049, true, true);
                 CreateEnvComponent(typeof(Civilite), 469, 10003, 10004, true, true);
                 CreateEnvComponent(typeof(ClientApplication), 425, 707, 708, true, true);
+                CreateEnvComponent(typeof(CommandeFournisseur), 1573, 772, 773, true, true);
                 CreateEnvComponent(typeof(Document), 1442, 1198, 1443, true, true);
                 CreateEnvComponent(typeof(EcoOrganisme), 1416, 1417, 1418, true, true);
                 CreateEnvComponent(typeof(EntiteType), 646, 10067, 10068, true, false).GetId0 = true;
@@ -115,6 +116,7 @@ namespace eVaSys.Utils
                 CreateEnvComponent(typeof(ProduitGroupeReportingType), 1039, 1276, 1277, true, true);
                 CreateEnvComponent(typeof(RegionEE), 1154, 1536, 1537, true, true);
                 CreateEnvComponent(typeof(RegionReporting), 10073, 10075, 10076, true, true);
+                CreateEnvComponent(typeof(Repartition), 1574, 630, 775, true, true);
                 CreateEnvComponent(typeof(Repreneur), 1132, 1294, 1295, true, true);
                 CreateEnvComponent(typeof(RepriseType), 1131, 1279, 1280, true, true);
                 CreateEnvComponent(typeof(Ressource), 1285, 1286, 1287, false, false);

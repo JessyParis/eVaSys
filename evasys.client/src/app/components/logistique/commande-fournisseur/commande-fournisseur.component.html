@@ -69,8 +69,8 @@
                         && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')">
           {{applicationUserContext.getCulturedRessourceText(532)}}
         </button>
-        <button mat-raised-button class="ev-button-left" type="button" (click)="onRepartition();" [disabled]="!isFormValidForSave()"
-                *ngIf="commandeFournisseur.DDechargement !== null && commandeFournisseur.PoidsDechargement !== null && commandeFournisseur.RefCommandeFournisseur >0
+        <button mat-raised-button class="ev-button-left" type="button" (click)="onRepartition();"
+                *ngIf="commandeFournisseur.DChargement !== null && commandeFournisseur.ChargementEffectue && commandeFournisseur.RefCommandeFournisseur >0
                         && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
                             || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur'
                             || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'CentreDeTri')">
@@ -656,7 +656,8 @@
           <td class="cadre_body">
             <mat-form-field style="width:100%;">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(56)}}</mat-label>
-              <input matInput formControlName="PoidsChargement" mask="separator" required [errorStateMatcher]="matcher" />
+              <input matInput formControlName="PoidsChargement" mask="separator" required [errorStateMatcher]="matcher"
+                     (change)="onPoidsChargementChange()"/>
               <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
               <button *ngIf="form.get('PoidsChargement').value!=null && form.get('PoidsChargement').enabled
                                     && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PoidsChargement').setValue(null)" tabindex="-1" type="button">

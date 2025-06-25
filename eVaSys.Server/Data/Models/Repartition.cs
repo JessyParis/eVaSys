@@ -117,6 +117,10 @@ namespace eVaSys.Data
                     s = cR.GetTextRessource(14) + " - " + Utils.Utils.FormatNumeroCommande(CommandeFournisseur.NumeroCommande.ToString())
                         + Environment.NewLine + CommandeFournisseur.Entite.Libelle + " (" + CommandeFournisseur.Entite.CodeEE + ")"
                         + Environment.NewLine + CommandeFournisseur.Produit.Libelle;
+                    if (CommandeFournisseur.DChargement != null)
+                    {
+                        s += Environment.NewLine + cR.GetTextRessource(1572) + " - " + ((DateTime)CommandeFournisseur.DChargement).ToString("d", currentCulture);
+                    }
                     if (CommandeFournisseur.DDechargement != null)
                     {
                         s += Environment.NewLine + cR.GetTextRessource(587) + " - " + ((DateTime)CommandeFournisseur.DDechargement).ToString("d", currentCulture);

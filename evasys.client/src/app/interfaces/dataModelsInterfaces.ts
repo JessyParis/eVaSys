@@ -282,6 +282,7 @@ export interface CommandeFournisseur {
   CreationText: string;
   ModificationText: string;
   AnomalieOkText: string;
+  AllowBaseForm: boolean;
 }
 export interface CommandeFournisseurFichier {
   RefCommandeFournisseurFichier: number;

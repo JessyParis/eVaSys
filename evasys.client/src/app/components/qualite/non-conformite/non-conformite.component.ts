@@ -13,7 +13,7 @@ import { ComponentRelativeComponent } from "../../dialogs/component-relative/com
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
-import { showErrorToUser, setOriginalMenu, getAttachmentFilename } from "../../../globals/utils";
+import { showErrorToUser, setOriginalMenu, getAttachmentFilename, shortenLongText } from "../../../globals/utils";
 import { UploadComponent } from "../../dialogs/upload/upload.component";
 import { DownloadService } from "../../../services/download.service";
 import { ModuleName, MenuName, HabilitationQualite, InputFormComponentElementType } from "../../../globals/enums";
@@ -785,7 +785,7 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
           s = (!this.nonConformiteDemandeClientTypeListFC.value ? "" : this.nonConformiteDemandeClientTypeList.find(x => x.RefNonConformiteDemandeClientType === this.nonConformiteDemandeClientTypeListFC.value)?.Libelle);
           break;
         case 1:
-          s = (!this.descrValorplastFC.value ? "" : this.descrValorplastFC.value);
+          s = (!this.descrValorplastFC.value ? "" : shortenLongText(this.descrValorplastFC.value,300));
           break;
         case 2:
           s = this.applicationUserContext.getCulturedRessourceText(833) + " - ";
@@ -808,7 +808,7 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
           }
           if (!!this.cmtReponseClientFC.value) {
             if (s) { s += "\n"; }
-            s += this.cmtReponseClientFC.value;
+            s += shortenLongText(this.cmtReponseClientFC.value, 200);
           }
           break;
         case 4:
@@ -865,6 +865,7 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
             if (s) { s += "\n"; }
             s += this.nonConformiteFamillesLabel();
           }
+          s = shortenLongText(s, 150);
           if (!!this.iFFournisseurRetourLotFC.value) {
             if (s) { s += "\n"; }
             s += this.applicationUserContext.getCulturedRessourceText(827) + " - " + (!this.iFFournisseurRetourLotFC.value ? this.applicationUserContext.getCulturedRessourceText(206) : this.applicationUserContext.getCulturedRessourceText(205));

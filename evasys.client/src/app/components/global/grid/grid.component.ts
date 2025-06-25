@@ -691,6 +691,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     }
     if (
       this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuControle
+      || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuRepartition
     ) {
       this.labelMonthListFC = this.applicationUserContext.getCulturedRessourceText(1010);
       this.labelYearListFC = this.applicationUserContext.getCulturedRessourceText(1011);

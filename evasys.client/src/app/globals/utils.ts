@@ -375,11 +375,11 @@ export function shortenLongText(s: string, n: number = 100) {
   let r: string = s;
   if (s) {
     if (s.length > n - 3) {
-      s = s.substring(0, 96) + '...';
+      s = s.substring(0, n - 4) + '...';
     }
   }
   return s;
-};
+}
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 //Get Tooltip for ContactAdresseProcess

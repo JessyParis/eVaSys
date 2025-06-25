@@ -24,6 +24,9 @@ import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { ReplaySubject, Subject, takeUntil } from "rxjs";
 import { fadeInOnEnterAnimation } from "angular-animations";
 import { encode } from 'html-entities';
+import { DomSanitizer } from "@angular/platform-browser";
+import { UtilsService } from "../../../services/utils.service";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -151,7 +154,7 @@ const dDechargementPrevueMoisValidator: ValidatorFn = (control: AbstractControl)
     standalone: false
 })
 
-export class CommandeFournisseurComponent implements OnInit {
+export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsInterfaces.CommandeFournisseur> {
   matcher = new MyErrorStateMatcher(this.applicationUserContext);
   //Variables
   reparti: boolean = false;
@@ -286,15 +289,25 @@ export class CommandeFournisseurComponent implements OnInit {
   originalPoidsReparti: number = 0;
   // Subject that emits when the component has been destroyed.
   protected _onDestroy = new Subject<void>();
+    http: any;
+    baseUrl: string;
+    downloadService: any;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string, private fb: UntypedFormBuilder, public applicationUserContext: ApplicationUserContext
-    , private listService: ListService
-    , private dataModelService: DataModelService
-    , private downloadService: DownloadService
-    , private eventEmitterService: EventEmitterService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog) {
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
+    , private fb: UntypedFormBuilder
+    , public applicationUserContext: ApplicationUserContext
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected listService: ListService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer
+    , protected eventEmitterService: EventEmitterService
+  ) {
+
+    super("CommandeFournisseurComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     // create an empty object from the interface
     this.commandeFournisseur = {} as dataModelsInterfaces.CommandeFournisseur;
     // Create the form
@@ -1307,9 +1320,7 @@ export class CommandeFournisseurComponent implements OnInit {
     });
   }
   delete() {
-    var url = this.baseUrl + "evapi/commandefournisseur/" + this.commandeFournisseur.RefCommandeFournisseur;
-    this.http
-      .delete(url)
+    this.dataModelService.deleteCommandeFournisseur(this.commandeFournisseur.RefCommandeFournisseur)
       .subscribe(result => {
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(773), duration: 4000 } as appInterfaces.SnackbarMsg);
         //Set original Menu
@@ -1385,7 +1396,6 @@ export class CommandeFournisseurComponent implements OnInit {
         this.commandeFournisseur.UtilisateurAnomalieOk = this.applicationUserContext.connectedUtilisateur;
       }
       //Process
-      var url = this.baseUrl + "evapi/commandefournisseur";
       //Update DB
       this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true).subscribe(result => {
         //Check if another CommandeFournisseur have been sent to be processed
@@ -1453,7 +1463,6 @@ export class CommandeFournisseurComponent implements OnInit {
     });
   }
   unlock() {
-    var url = this.baseUrl + "evapi/commandefournisseur/unlock";
     this.dataModelService.unlockCommandeFournisseur(this.commandeFournisseur.RefCommandeFournisseur)
       .subscribe(result => {
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(1476), duration: 4000 } as appInterfaces.SnackbarMsg);
@@ -1920,8 +1929,7 @@ export class CommandeFournisseurComponent implements OnInit {
           //Format dates
           this.dataModelService.setTextFromMomentCommandeFournisseur(result);
           //Update linked CommandeFournisseur
-          this.http
-            .post<dataModelsInterfaces.CommandeFournisseur>(this.baseUrl + "evapi/commandefournisseur", result)
+          this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true)
             .subscribe(r => {
               this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
               //Manage screen
@@ -2408,6 +2416,10 @@ export class CommandeFournisseurComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //ChargementEffectue
   onChargementEffectueChange() {
+    //Set PoidsReparti if applicable
+    if (this.chargementEffectueFC.value == true && this.commandeFournisseur.Produit.Collecte)  {
+      this.poidsRepartiFC.setValue(this.commandeFournisseur.PoidsChargement);
+    }
     //Set values
     this.saveData();
     //Manage screen
@@ -2419,6 +2431,14 @@ export class CommandeFournisseurComponent implements OnInit {
         data: { title: this.applicationUserContext.getCulturedRessourceText(337), message: this.applicationUserContext.getCulturedRessourceText(1430) },
         restoreFocus: false
       });
+    }
+  }
+  //-----------------------------------------------------------------------------------
+  //PoidsChargement
+  onPoidsChargementChange() {
+    //Set PoidsReparti if applicable
+    if (this.commandeFournisseur.Produit.Collecte) {
+      this.poidsRepartiFC.setValue(this.commandeFournisseur.PoidsChargement);
     }
   }
   //-----------------------------------------------------------------------------------
@@ -2749,39 +2769,74 @@ export class CommandeFournisseurComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Show repartition
   onRepartition() {
-    if (!this.locked) {
-      if (this.isFormValidForSave()) {
-        //Update data
-        this.saveData();
+    if (!(this.locked && this.saveLocked)) {
+      //Update data
+      this.saveData();
+      //Check if form is valid for save
+      if (!this.isFormValidForSave() && this.form.touched) {
         //Update if existing model
-        if (this.commandeFournisseur.RefCommandeFournisseur > 0) {
-          this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true).subscribe(result => {
-            this.commandeFournisseur = result;
-            this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
-            //Save menu
-            if (this.applicationUserContext.fromMenu == null) {
-              this.applicationUserContext.fromMenu = this.applicationUserContext.currentMenu;
-            }
-            //Open Repartition
-            this.router.navigate(["repartition", "0", {
-              refCommandeFournisseur: this.commandeFournisseur.RefCommandeFournisseur
-            }])
-            this.applicationUserContext.currentModule = this.applicationUserContext.envModules.find(x => x.name === ModuleName.Logistique);
-            this.applicationUserContext.currentMenu = this.applicationUserContext.envMenus.find(x => x.name === MenuName.LogistiqueMenuRepartition);
-            this.eventEmitterService.onChangeMenu();
-          }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-        }
+        const dialogRef = this.dialog.open(ConfirmComponent, {
+          width: "350px",
+          data: { title: this.applicationUserContext.getCulturedRessourceText(1570), message: this.applicationUserContext.getCulturedRessourceText(1571) },
+          autoFocus: false,
+          restoreFocus: false
+        });
+        //After closed
+        dialogRef.afterClosed().subscribe(result => {
+          if (result === "yes") {
+            this.backToRepartition();
+          }
+        });
       }
       else {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(589), duration: 4000 } as appInterfaces.SnackbarMsg);
+        //Save repartition if valide or untouched
+        if (!this.form.touched) {
+          this.backToRepartition();
+        }
+        else {
+          this.postCommandeFournisseur("gotoRepartition");
+        }
       }
     }
     else {
-      //Open Repartition
-      this.router.navigate(["repartition", "0", {
-        refCommandeFournisseur: this.commandeFournisseur.RefCommandeFournisseur
-      }])
+      this.backToRepartition();
     }
+  }
+  //-----------------------------------------------------------------------------------
+  //Saves the data model in DB
+  postCommandeFournisseur(action: string) {
+    //Process
+    this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true)
+      .subscribe(result => {
+        this.commandeFournisseur = result;
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        //Next action
+        switch (action) {
+          case "save":
+            //Set original Menu
+            setOriginalMenu(this.applicationUserContext, this.eventEmitterService);
+            //Route back to grid
+            this.router.navigate(["grid"]);
+            break;
+          case "gotoRepartition":
+            this.backToRepartition()
+            break;
+        }
+      }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+  }
+  //-----------------------------------------------------------------------------------
+  //Back to Repartition
+  backToRepartition() {
+    //Save menu
+    if (this.applicationUserContext.fromMenu == null) {
+      this.applicationUserContext.fromMenu = this.applicationUserContext.currentMenu;
+    }
+    //Set original Menu
+    setOriginalMenu(this.applicationUserContext, this.eventEmitterService);
+    //Route
+    this.router.navigate(["repartition", "0", {
+      refCommandeFournisseur: this.commandeFournisseur.RefCommandeFournisseur
+    }])
   }
   //------------------------------------------------------------------------------------------------------------------------------------------
   //Calculation of NbBalle and PoidsChargement
@@ -2954,7 +3009,7 @@ export class CommandeFournisseurComponent implements OnInit {
       else {
         //Reload data
         var url = this.baseUrl + "evapi/commandefournisseur/" + this.commandeFournisseur.RefCommandeFournisseur;
-        this.http.get<dataModelsInterfaces.CommandeFournisseur>(url).subscribe(result => {
+        this.dataModelService.getCommandeFournisseur(this.commandeFournisseur.RefCommandeFournisseur, true).subscribe(result => {
           //Get data
           this.commandeFournisseur.CommandeFournisseurFichiers = result.CommandeFournisseurFichiers;
           //Update form
@@ -3050,14 +3105,6 @@ export class CommandeFournisseurComponent implements OnInit {
           }
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     }
-  }
-  //-----------------------------------------------------------------------------------
-  //Back to list
-  onBack() {
-    //Set original Menu
-    setOriginalMenu(this.applicationUserContext, this.eventEmitterService);
-    //Route back to grid
-    this.router.navigate(["grid"]);
   }
   //-----------------------------------------------------------------------------------
   //Apply filter

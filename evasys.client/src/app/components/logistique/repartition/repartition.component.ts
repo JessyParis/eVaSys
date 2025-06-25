@@ -20,16 +20,6 @@ import { BaseFormComponent } from "../../_ancestors/base-form.component";
 import { DomSanitizer } from "@angular/platform-browser";
 import { EventEmitterService } from "../../../services/event-emitter.service";
 
-class MyErrorStateMatcher implements ErrorStateMatcher {
-    //Constructor
-    constructor() { }
-    isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        let result: boolean = false;
-        result = !!((control && control.invalid));
-        return result;
-    }
-}
-
 class MyValidators {
     //Constructor
     constructor(public repartition: dataModelsInterfaces.Repartition) { }
@@ -64,7 +54,6 @@ class MyValidators {
 })
 
 export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces.Repartition> {
-  matcher = new MyErrorStateMatcher();
   //Variablesf
   repartition: dataModelsInterfaces.Repartition = {} as dataModelsInterfaces.Repartition;
   //Form
@@ -113,7 +102,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
     , protected eventEmitterService: EventEmitterService
   ) {
 
-    super("ProduitComponent", activatedRoute, router, applicationUserContext, dataModelService
+    super("RepartitionComponent", activatedRoute, router, applicationUserContext, dataModelService
       , utilsService, snackBarQueueService, dialog, sanitizer);
     // create an empty object from the interface
     this.repartition = {} as dataModelsInterfaces.Repartition;
@@ -689,7 +678,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
           this.backToCommandeFournisseur();
         }
         else {
-          this.postRepartition("goCommandeFournisseur");
+          this.postRepartition("gotoCommandeFournisseur");
         }
       }
     }
@@ -713,7 +702,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
             //Route back to grid
             this.router.navigate(["grid"]);
             break;
-          case "goCommandeFournisseur":
+          case "gotoCommandeFournisseur":
             this.backToCommandeFournisseur()
             break;
         }

@@ -848,10 +848,11 @@ namespace eVaSys.Controllers
                                 + "     , isnull(f.Libelle,fournisseur.Libelle) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriLibelle.ToString()].Name + "]"
                                 + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                 + "     , isnull(p.Libelle, produit.Libelle) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
-                                + "     , isnull(tblCommandeFournisseur.DDechargement, tblRepartition.D) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RepartitionD.ToString()].Name + "]";
+                                + "     , tblCommandeFournisseur.DChargement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDChargement.ToString()].Name + "]";
                             if (CurrentContext.ConnectedUtilisateur.HabilitationLogistique == Enumerations.HabilitationLogistique.Administrateur.ToString())
                             {
-                                sqlStr += "     , VueRepartitionUnitaireDetail.PUHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHT.ToString()].Name + "]"
+                                sqlStr += "     , isnull(tblCommandeFournisseur.DDechargement, tblRepartition.D) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RepartitionD.ToString()].Name + "]"
+                                    + "     , VueRepartitionUnitaireDetail.PUHT as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHT.ToString()].Name + "]"
                                     + "     , VueRepartitionUnitaireDetail.PUHTUnique as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PUHTUnique.ToString()].Name + "]";
                             }
                             sqlStr += " from tblRepartition"
@@ -896,14 +897,14 @@ namespace eVaSys.Controllers
                             if (!string.IsNullOrEmpty(filterYears))
                             {
                                 refYears = Utils.Utils.CreateSQLParametersFromString("refAnnee", filterYears, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
-                                sqlStr += " and isnull(year(tblCommandeFournisseur.DDechargement),year(tblRepartition.D)) in (";
+                                sqlStr += " and isnull(year(tblCommandeFournisseur.DChargement),year(tblRepartition.D)) in (";
                                 sqlStr += refYears;
                                 sqlStr += ")";
                             }
                             if (!string.IsNullOrEmpty(filterMonths))
                             {
                                 refMonths = Utils.Utils.CreateSQLParametersFromString("refMonth", filterMonths, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
-                                sqlStr += " and isnull(month(tblCommandeFournisseur.DDechargement),month(tblRepartition.D)) in (";
+                                sqlStr += " and isnull(month(tblCommandeFournisseur.DChargement),month(tblRepartition.D)) in (";
                                 sqlStr += refMonths;
                                 sqlStr += ")";
                             }
@@ -939,7 +940,7 @@ namespace eVaSys.Controllers
                                     + "     , f.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriLibelle.ToString()].Name + "]"
                                     + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                     + "     , p.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
-                                    + "     , tblCommandeFournisseur.DDechargement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RepartitionD.ToString()].Name + "]"
+                                    + "     , tblCommandeFournisseur.DChargement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDChargement.ToString()].Name + "]"
                                     + " from tblRepartition"
                                     + " 	right join tblCommandeFournisseur on tblRepartition.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
                                     + " 	left join tblEntite as f on tblCommandeFournisseur.RefEntite=f.RefEntite"

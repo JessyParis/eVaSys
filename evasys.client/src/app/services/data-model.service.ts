@@ -162,6 +162,11 @@ export class DataModelService {
       );
   }
   //-----------------------------------------------------------------------------------
+  //Delete CommandeFournisseur
+  deleteCommandeFournisseur(refCommandeFournisseur: number): Observable<any> {
+    return this.http.delete(this.baseUrl + "evapi/commandefournisseur/" + refCommandeFournisseur.toString());
+  }
+  //-----------------------------------------------------------------------------------
   //Create email CommandeFournisseur
   createEmailCommandeFournisseur(refCommandeFournisseur: number, emailType: string): Observable<number> {
     return this.http.get<number>(this.baseUrl + "evapi/commandefournisseur/createemail", {
