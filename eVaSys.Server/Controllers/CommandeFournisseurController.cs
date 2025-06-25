@@ -947,6 +947,7 @@ namespace eVaSys.Controllers
             //Store original data
             var chargementAnnuleOr = dataModel.ChargementAnnule;
             var chargementEffectueOr = dataModel.ChargementEffectue;
+            var refusCamionOr = dataModel.RefusCamion;
             //Process
             dataModel.NumeroCommande = viewModel.NumeroCommande ?? 0;
             dataModel.NumeroAffretement = viewModel.NumeroAffretement ?? 0;
@@ -1045,6 +1046,11 @@ namespace eVaSys.Controllers
                 dataModel.PoidsDechargement = 0;
                 dataModel.NbBalleDechargement = 0;
                 dataModel.PrixTonneHT = 0;
+            }
+            //Delete Repartition on RefusCamion
+            if(refusCamionOr == false && dataModel.RefusCamion == true)
+            {
+                DbContext.Repartitions.Where(i => i.RefCommandeFournisseur == (int)viewModel.RefCommandeFournisseur).ExecuteDelete();
             }
             //Anomalies
             if (viewModel.MotifAnomalieChargement == null)
