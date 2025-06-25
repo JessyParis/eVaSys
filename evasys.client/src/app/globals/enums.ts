@@ -457,6 +457,8 @@ export enum DataColumnName {
   NonConformiteIFClientDFacture = "NonConformiteIFClientDFacture",
   NonConformiteIFClientFactureMontant = "NonConformiteIFClientFactureMontant",
   NonConformiteIFClientFactureNro = "NonConformiteIFClientFactureNro",
+  NonConformiteIFClientCommandeAFaire = "NonConformiteIFClientCommandeAFaire",
+  NonConformiteIFClientFactureEnAttente = "NonConformiteIFClientFactureEnAttente",
   NonConformiteIFFournisseurAttenteBonCommandeNro = "NonConformiteIFFournisseurAttenteBonCommandeNro",
   NonConformiteIFFournisseurBonCommandeNro = "NonConformiteIFFournisseurBonCommandeNro",
   NonConformiteIFFournisseurCmtFacturation = "NonConformiteIFFournisseurCmtFacturation",

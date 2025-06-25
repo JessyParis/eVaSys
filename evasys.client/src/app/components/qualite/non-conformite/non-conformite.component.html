@@ -689,6 +689,10 @@
           <mat-divider></mat-divider>
           <div class="ev-flex-row-container" style="padding: 10px 0 0 0">
             <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;">
+              <mat-checkbox formControlName="IFClientCommandeAFaire"
+                             *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">{{applicationUserContext.getCulturedRessourceText(1568)}}</mat-checkbox>
+              <mat-checkbox formControlName="IFClientFactureEnAttente" (change)="onChangeIFClientFactureEnAttente()"
+                             *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">{{applicationUserContext.getCulturedRessourceText(1569)}}</mat-checkbox>
               <mat-form-field style="width:100%;">
                 <mat-label>{{applicationUserContext.getCulturedRessourceText(841)}}</mat-label>
                 <input matInput formControlName="IFClientFactureNro" maxlength="50" required [errorStateMatcher]="matcher" />
@@ -729,7 +733,8 @@
               {{applicationUserContext.getCulturedRessourceText(845)}}
             </button>
             <button mat-button color="primary" matStepperNext (click)="validateStep(6)"
-                    [disabled]="formGroup7.invalid || getStep(6)?.DValide || locked || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
+                    [disabled]="formGroup7.invalid || getStep(6)?.DValide || locked
+                    || applicationUserContext.connectedUtilisateur.HabilitationQualite!=='Administrateur'">
               {{applicationUserContext.getCulturedRessourceText(844)}}
             </button>
             <button mat-icon-button (click)="commentStep(6)" *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur' && !locked">

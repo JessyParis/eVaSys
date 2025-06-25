@@ -59,8 +59,8 @@ export class ApplicationUserContext {
   public filterNonConformiteNatures: dataModelsInterfaces.NonConformiteNature[];
   public filterProduitGroupeReportings: dataModelsInterfaces.ProduitGroupeReportingList[];
   public filterRegionReportings: dataModelsInterfaces.RegionReporting[];
-  public filterIFFournisseur: boolean = false;
-  public filterIFClient: boolean = false;
+  public filterIFClientCommandeAFaire: boolean = false;
+  public filterIFClientFactureEnAttente: boolean = false;
   public filterIFFournisseurRetourLot: boolean = false;
   public filterIFFournisseurFacture: boolean = false;
   public filterIFFournisseurAttenteBonCommande: boolean = false;
@@ -531,8 +531,8 @@ export class ApplicationUserContext {
     this.filterYears = [];
     this.filterMonthEnd = null;
     this.filterYearEnd = null;
-    this.filterIFFournisseur = false;
-    this.filterIFClient = false;
+    this.filterIFClientCommandeAFaire = false;
+    this.filterIFClientFactureEnAttente = false;
     this.filterIFFournisseurRetourLot = false;
     this.filterIFFournisseurFacture = false;
     this.filterIFFournisseurAttenteBonCommande = false;

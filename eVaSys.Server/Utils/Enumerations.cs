@@ -579,6 +579,8 @@ namespace eVaSys.Utils
             NonConformiteIFClientDFacture,
             NonConformiteIFClientFactureMontant,
             NonConformiteIFClientFactureNro,
+            NonConformiteIFClientCommandeAFaire,
+            NonConformiteIFClientFactureEnAttente,
             NonConformiteIFFournisseurAttenteBonCommandeNro,
             NonConformiteIFFournisseurBonCommandeNro,
             NonConformiteIFFournisseurCmtFacturation,

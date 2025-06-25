@@ -18,7 +18,7 @@ export class GridService {
     , filterClients = "", filterTransporteurs = "", filterPrestataires = "", filterCentreDeTris = "", filterIndustriels = "", filterDptDeparts = "", filterDptArrivees = ""
     , filterVilleDeparts = "", filterVilleArrivees = "", filterPayss = "", filterProcesss = "", filterRegionReportings = "", filterProduits = "", filterComposants = "", filterCamionTypes = ""
     , filterMonths = "", filterYears = "", filterNonConformiteEtapeTypes = "", filterNonConformiteNatures = ""
-    , filterIFFournisseur = false, filterIFClient = false, filterIFFournisseurRetourLot = false, filterIFFournisseurFacture = false, filterIFFournisseurAttenteBonCommande = false
+    , filterIFClientCommandeAFaire = false, filterIFClientFactureEnAttente = false, filterIFFournisseurRetourLot = false, filterIFFournisseurFacture = false, filterIFFournisseurAttenteBonCommande = false
     , filterIFFournisseurTransmissionFacturation = false, filterNonConformitesATraiter = false, filterNonConformitesATransmettre = false, filterNonConformitesPlanActionAValider = false
     , filterNonConformitesPlanActionNR = false
     , filterEnvCommandeFournisseurStatuts = "", filterDChargementModif = false, filterCommandesFournisseurNonChargees = false, filterValideDPrevues = false, filterDatesTransporteur = false
@@ -76,8 +76,8 @@ export class GridService {
           .set("filterCommandesFournisseurAttribuees", filterCommandesFournisseurAttribuees ? "true" : "false")
           .set("filterNonConformiteEtapeTypes", filterNonConformiteEtapeTypes)
           .set("filterNonConformiteNatures", filterNonConformiteNatures)
-          .set("filterIFFournisseur", filterIFFournisseur ? "true" : "false")
-          .set("filterIFClient", filterIFClient ? "true" : "false")
+          .set("filterIFClientCommandeAFaire", filterIFClientCommandeAFaire ? "true" : "false")
+          .set("filterIFClientFactureEnAttente", filterIFClientFactureEnAttente ? "true" : "false")
           .set("filterIFFournisseurRetourLot", filterIFFournisseurRetourLot ? "true" : "false")
           .set("filterIFFournisseurFacture", filterIFFournisseurFacture ? "true" : "false")
           .set("filterIFFournisseurAttenteBonCommande", filterIFFournisseurAttenteBonCommande ? "true" : "false")

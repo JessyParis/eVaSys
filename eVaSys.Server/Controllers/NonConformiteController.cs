@@ -408,6 +408,8 @@ namespace eVaSys.Controllers
             dataModel.IFClientFactureNro = Utils.Utils.SetEmptyStringToNull(viewModel.IFClientFactureNro);
             dataModel.IFClientCmtFacturation = Utils.Utils.SetEmptyStringToNull(viewModel.IFClientCmtFacturation);
             dataModel.IFClientDFacture = viewModel.IFClientDFacture;
+            dataModel.IFClientCommandeAFaire = viewModel.IFClientCommandeAFaire;
+            dataModel.IFClientFactureEnAttente = viewModel.IFClientFactureEnAttente;
             dataModel.PriseEnCharge = viewModel.PriseEnCharge ?? false;
             dataModel.MontantPriseEnCharge = viewModel.MontantPriseEnCharge;
             dataModel.CmtPriseEnCharge = Utils.Utils.SetEmptyStringToNull(viewModel.CmtPriseEnCharge);

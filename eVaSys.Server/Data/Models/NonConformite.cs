@@ -104,6 +104,8 @@ namespace eVaSys.Data
         public string IFClientFactureNro { get; set; }
         public string IFClientCmtFacturation { get; set; }
         public DateTime? IFClientDFacture { get; set; }
+        public bool IFClientCommandeAFaire { get; set; }
+        public bool IFClientFactureEnAttente { get; set; }
         public ICollection<NonConformiteNonConformiteFamille> NonConformiteNonConformiteFamilles { get; set; }
         public ICollection<NonConformiteFichier> NonConformiteFichiers { get; set; }
         public ICollection<NonConformiteEtape> NonConformiteEtapes { get; set; }

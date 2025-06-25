@@ -54,6 +54,8 @@ namespace eVaSys.ViewModels
         public string IFClientFactureNro { get; set; }
         public string IFClientCmtFacturation { get; set; }
         public DateTime? IFClientDFacture { get; set; }
+        public bool IFClientCommandeAFaire { get; set; }
+        public bool IFClientFactureEnAttente { get; set; }
         public ICollection<NonConformiteNonConformiteFamilleViewModel> NonConformiteNonConformiteFamilles { get; set; }
         public ICollection<NonConformiteFichierLightViewModel> NonConformiteFichiers { get; set; }
         public ICollection<NonConformiteEtapeViewModel> NonConformiteEtapes { get; set; }

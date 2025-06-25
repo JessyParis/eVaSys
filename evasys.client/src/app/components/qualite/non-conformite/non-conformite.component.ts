@@ -96,6 +96,8 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
   iFClientFC: UntypedFormControl = new UntypedFormControl();
   iFClientDescrFC: UntypedFormControl = new UntypedFormControl(null);
   iFClientFactureMontantFC: UntypedFormControl = new UntypedFormControl(null, [Validators.max(10000)]);
+  iFClientCommandeAFaireFC: UntypedFormControl = new UntypedFormControl();
+  iFClientFactureEnAttenteFC: UntypedFormControl = new UntypedFormControl();
   transmissionFournisseurFC: UntypedFormControl = new UntypedFormControl();
   dTransmissionFournisseurFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   actionDRFC: UntypedFormControl = new UntypedFormControl(null);
@@ -205,6 +207,8 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
       IFClientFactureNro: this.iFClientFactureNroFC,
       IFClientDFacture: this.iFClientDFactureFC,
       IFClientCmtFacturation: this.iFClientCmtFacturationFC,
+      IFClientCommandeAFaire: this.iFClientCommandeAFaireFC,
+      IFClientFactureEnAttente: this.iFClientFactureEnAttenteFC,
     });
     this.formGroup8 = this.fb.group({
       PriseEnCharge: this.priseEnChargeFC,
@@ -280,7 +284,10 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
           this.formGroup6Disabled = false;
           this.manageScreenFormGroup6();
         }
-        if (!this.nonConformite.NonConformiteEtapes[6]?.DValide) { this.formGroup7.enable(); }
+        if (!this.nonConformite.NonConformiteEtapes[6]?.DValide) {
+          this.formGroup7.enable();
+          this.manageScreenFormGroup7();
+        }
         if (!this.nonConformite.NonConformiteEtapes[7]?.DValide) { this.formGroup8.enable(); this.formGroup8Disabled = false; }
       }
       if (this.applicationUserContext.connectedUtilisateur.HabilitationQualite === HabilitationQualite.Utilisateur) {
@@ -341,6 +348,16 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
     this.iFFournisseurFactureNroFC.disable();
     if (this.iFFournisseurFactureFC.value) {
       this.iFFournisseurFactureNroFC.enable();
+    }
+  }
+  manageScreenFormGroup7() {
+    if (this.iFClientFactureEnAttenteFC.value) {
+      this.iFClientFactureNroFC.disable();
+      this.iFClientDFactureFC.disable();
+    }
+    else {
+      this.iFClientFactureNroFC.enable();
+      this.iFClientDFactureFC.enable();
     }
   }
   //-----------------------------------------------------------------------------------
@@ -467,6 +484,8 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
     this.iFClientFactureNroFC.setValue(this.nonConformite.IFClientFactureNro);
     this.iFClientDFactureFC.setValue(this.nonConformite.IFClientDFacture);
     this.iFClientCmtFacturationFC.setValue(this.nonConformite.IFClientCmtFacturation);
+    this.iFClientCommandeAFaireFC.setValue(this.nonConformite.IFClientCommandeAFaire);
+    this.iFClientFactureEnAttenteFC.setValue(this.nonConformite.IFClientFactureEnAttente);
     this.priseEnChargeFC.setValue(this.nonConformite.PriseEnCharge);
     this.montantPriseEnChargeFC.setValue(this.nonConformite.MontantPriseEnCharge);
     this.cmtPriseEnChargeFC.setValue(this.nonConformite.CmtPriseEnCharge);
@@ -524,6 +543,8 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
     this.nonConformite.IFClientFactureNro = this.iFClientFactureNroFC.value;
     this.nonConformite.IFClientDFacture = (this.iFClientDFactureFC.value == null ? null : this.iFClientDFactureFC.value);
     this.nonConformite.IFClientCmtFacturation = this.iFClientCmtFacturationFC.value;
+    this.nonConformite.IFClientCommandeAFaire = this.iFClientCommandeAFaireFC.value;
+    this.nonConformite.IFClientFactureEnAttente = this.iFClientFactureEnAttenteFC.value;
     this.nonConformite.PriseEnCharge = this.priseEnChargeFC.value;
     this.nonConformite.MontantPriseEnCharge = this.montantPriseEnChargeFC.value;
     this.nonConformite.CmtPriseEnCharge = this.cmtPriseEnChargeFC.value;
@@ -655,6 +676,15 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
       this.iFFournisseurTransmissionFacturationFC.setValue(false);
       this.iFFournisseurFactureNroFC.setValue(null);
       this.iFFournisseurCmtFacturationFC.setValue(null);
+    }
+    this.manageScreen();
+  }
+  //-----------------------------------------------------------------------------------
+  //on change IFClientFactureEnAttente
+  onChangeIFClientFactureEnAttente() {
+    if (this.iFClientFactureEnAttenteFC.value) {
+      this.iFClientFactureNroFC.setValue(null);
+      this.iFClientDFactureFC.setValue(null);
     }
     this.manageScreen();
   }

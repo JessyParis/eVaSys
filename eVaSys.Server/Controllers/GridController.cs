@@ -92,8 +92,8 @@ namespace eVaSys.Controllers
             string filterUtilisateurMaitres = Request.Headers["filterUtilisateurMaitres"].ToString();
             string filterNonConformiteEtapeTypes = Request.Headers["filterNonConformiteEtapeTypes"].ToString();
             string filterNonConformiteNatures = Request.Headers["filterNonConformiteNatures"].ToString();
-            bool filterIFFournisseur = (Request.Headers["filterIFFournisseur"] == "true" ? true : false);
-            bool filterIFClient = (Request.Headers["filterIFClient"] == "true" ? true : false);
+            bool filterIFClientCommandeAFaire = (Request.Headers["filterIFClientCommandeAFaire"] == "true" ? true : false);
+            bool filterIFClientFactureEnAttente = (Request.Headers["filterIFClientFactureEnAttente"] == "true" ? true : false);
             bool filterIFFournisseurRetourLot = (Request.Headers["filterIFFournisseurRetourLot"] == "true" ? true : false);
             bool filterIFFournisseurFacture = (Request.Headers["filterIFFournisseurFacture"] == "true" ? true : false);
             bool filterIFFournisseurAttenteBonCommande = (Request.Headers["filterIFFournisseurAttenteBonCommande"] == "true" ? true : false);
@@ -423,7 +423,7 @@ namespace eVaSys.Controllers
                                 || CurrentContext.ConnectedUtilisateur.HabilitationLogistique == Enumerations.HabilitationLogistique.Administrateur.ToString())
                             {
                                 sqlStr = "select tblCommandeFournisseur.RefCommandeFournisseur as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeFournisseur.ToString()].Name + "]"
-                                    + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
+                                    + "     , tblCommandeFournisseur.NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                     + "     , NumeroAffretement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement.ToString()].Name + "]"
                                     + "     , case when (tblCommandeFournisseur.DDechargement < convert(datetime,'2012-01-01 00:00:00',120) or unitaire.RefCommandeFournisseur is not null or mensuelle.RefRepartition is not null) then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(545) + "'"
                                     + "         else case when DDechargement is not null then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(546) + "'"
@@ -450,7 +450,7 @@ namespace eVaSys.Controllers
                                     + "     , DMoisDechargementPrevu as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMoisDechargementPrevu.ToString()].Name + "]"
                                     + "     , DChargementPrevue as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDChargementPrevue.ToString()].Name + "]"
                                     + "     , DDechargementPrevue as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDDechargementPrevue.ToString()].Name + "]"
-                                    + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
+                                    + "     , tblProduit.Libelle + case when tblContrat.RefContrat is null then '' else ' (' + tblContrat.IdContrat + ')' end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                     + "     , dbo.CommandeMixte(NumeroAffretement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMixte.ToString()].Name + "]"
                                     + "     , dbo.ProchainJourTravaille(DAffretement,2) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurLimiteExclusivite.ToString()].Name + "]"
                                     + "     , tblCommandeFournisseur.RefExt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurRefExt.ToString()].Name + "]";
@@ -464,7 +464,7 @@ namespace eVaSys.Controllers
                             if (CurrentContext.ConnectedUtilisateur.HabilitationModulePrestataire == Enumerations.HabilitationModulePrestataire.Fournisseur.ToString())
                             {
                                 sqlStr = "select tblCommandeFournisseur.RefCommandeFournisseur as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeFournisseur.ToString()].Name + "]"
-                                    + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
+                                    + "     , tblCommandeFournisseur.NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                     + "     , NumeroAffretement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement.ToString()].Name + "]"
                                     + "     , case when (tblCommandeFournisseur.DDechargement < convert(datetime,'2012-01-01 00:00:00',120) or unitaire.RefCommandeFournisseur is not null or mensuelle.RefRepartition is not null) then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(545) + "'"
                                     + "         else case when DDechargement is not null then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(546) + "'"
@@ -506,7 +506,7 @@ namespace eVaSys.Controllers
                             if (CurrentContext.ConnectedUtilisateur.HabilitationLogistique == Enumerations.HabilitationLogistique.Transporteur.ToString())
                             {
                                 sqlStr = "select tblCommandeFournisseur.RefCommandeFournisseur as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeFournisseur.ToString()].Name + "]"
-                                    + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
+                                    + "     , tblCommandeFournisseur.NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                     + "     , NumeroAffretement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement.ToString()].Name + "]"
 ;
                                 if ((menu == Enumerations.MenuName.LogistiqueMenuTransportCommande.ToString()
@@ -540,7 +540,7 @@ namespace eVaSys.Controllers
                             if (CurrentContext.ConnectedUtilisateur.HabilitationLogistique == Enumerations.HabilitationLogistique.Client.ToString())
                             {
                                 sqlStr = "select tblCommandeFournisseur.RefCommandeFournisseur as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeFournisseur.ToString()].Name + "]"
-                                    + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
+                                    + "     , tblCommandeFournisseur.NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                     + "     , NumeroAffretement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement.ToString()].Name + "]"
                                     + "     , transporteur.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.TransporteurLibelle.ToString()].Name + "]"
                                     + "     , tblEntite.CodeEE as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCITEO.ToString()].Name + "]"
@@ -551,7 +551,7 @@ namespace eVaSys.Controllers
                                     + "     , DMoisDechargementPrevu as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMoisDechargementPrevu.ToString()].Name + "]"
                                     + "     , DDechargementPrevue as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDDechargementPrevue.ToString()].Name + "]"
                                     + "     , HoraireDechargementPrevu as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurHoraireDechargementPrevu.ToString()].Name + "]"
-                                    + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
+                                    + "     , tblProduit.Libelle + case when tblContrat.RefContrat is null then '' else ' (' + tblContrat.IdContrat + ')' end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                     + "     , dbo.CommandeMixte(NumeroAffretement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMixte.ToString()].Name + "]"
                                     + "     , tblCommandeFournisseur.RefExt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurRefExt.ToString()].Name + "]";
                                 if (menu == Enumerations.MenuName.LogistiqueMenuCommandeFournisseur.ToString() || menu == Enumerations.MenuName.ModulePrestataireMenuCommandeFournisseur.ToString())
@@ -564,10 +564,10 @@ namespace eVaSys.Controllers
                             if (CurrentContext.ConnectedUtilisateur.HabilitationLogistique == Enumerations.HabilitationLogistique.CentreDeTri.ToString())
                             {
                                 sqlStr = "select tblCommandeFournisseur.RefCommandeFournisseur as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeFournisseur.ToString()].Name + "]"
-                                    + "     , NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
+                                    + "     , tblCommandeFournisseur.NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                     + "     , NumeroAffretement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement.ToString()].Name + "]"
                                     + "     , dbo.CommandeMixte(NumeroAffretement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMixte.ToString()].Name + "]"
-                                    + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
+                                    + "     , tblProduit.Libelle + case when tblContrat.RefContrat is null then '' else ' (' + tblContrat.IdContrat + ')' end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                     + "     , tblCommandeFournisseur.D as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDDisponibilite.ToString()].Name + "]"
                                     + "     , DChargementPrevue as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDChargementPrevue.ToString()].Name + "]"
                                     + "     , transporteur.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.TransporteurLibelle.ToString()].Name + "]"
@@ -605,6 +605,8 @@ namespace eVaSys.Controllers
                              + "     left join (select distinct RefFicheControle from tblControle) as tblControle on tblFicheControle.RefFicheControle=tblControle.RefFicheControle"
                              + "     left join (select distinct RefFicheControle from tblCVQ) as tblCVQ on tblFicheControle.RefFicheControle=tblCVQ.RefFicheControle"
                              + "     left join (select distinct RefCommandeFournisseur from tblNonConformite) as tblNonConformite on tblCommandeFournisseur.RefCommandeFournisseur=tblNonConformite.RefCommandeFournisseur"
+                             + "     left join VueCommandeFournisseurContrat on tblCommandeFournisseur.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
+                             + "     left join tblContrat on tblContrat.RefContrat=VueCommandeFournisseurContrat.RefContrat"
                              + " where 1=1";
                             if (CurrentContext.ConnectedUtilisateur.RefTransporteur != null)
                             {
@@ -2076,13 +2078,13 @@ namespace eVaSys.Controllers
                                 sqlStr += Utils.Utils.CreateSQLParametersFromString("refNonConformiteNature", filterNonConformiteNatures, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
                                 sqlStr += ")";
                             }
-                            if (filterIFFournisseur == true)
+                            if (filterIFClientCommandeAFaire == true)
                             {
-                                sqlStr += " and (IFFournisseurDescr is not null or IFFournisseurFactureMontant is not null or IFFournisseurDeductionTonnage is not null)";
+                                sqlStr += " and (IFClientCommandeAFaire=1)";
                             }
-                            if (filterIFClient == true)
+                            if (filterIFClientFactureEnAttente == true)
                             {
-                                sqlStr += " and (IFClientDescr is not null or IFClientFactureMontant is not null)";
+                                sqlStr += " and (IFClientFactureEnAttente=1)";
                             }
                             if (filterIFFournisseurRetourLot == true)
                             {
@@ -2296,7 +2298,7 @@ namespace eVaSys.Controllers
                             int r = DbContext.PrixReprises.Where(el => el.D.Year == yTo && el.D.Month == mTo).Count();
                             if (r == 0)
                             {
-                                sqlStrCopy = "insert into tbrPrixReprise (D,RefProcess,RefProduit,RefComposant, RefContrat,PUHT, PUHTSurtri, PUHTTransport,RefUtilisateurCreation)"
+                                sqlStrCopy = "insert into tbrPrixReprise (D,RefProcess,RefProduit,RefComposant, RefContrat, PUHT, PUHTSurtri, PUHTTransport,RefUtilisateurCreation)"
                                     + " select convert(datetime,'" + "01/" + mTo.ToString() + "/" + yTo.ToString() + "',103),RefProcess,RefProduit,RefComposant,RefContrat,PUHT, PUHTSurtri, PUHTTransport," + CurrentContext.RefUtilisateur.ToString()
                                     + " from tbrPrixReprise"
                                     + " where MONTH(D)=" + mFrom.ToString() + " and YEAR(D)=" + yFrom.ToString();
