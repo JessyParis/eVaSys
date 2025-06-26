@@ -2438,7 +2438,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
   onPoidsChargementChange() {
     //Set PoidsReparti if applicable
     if (this.commandeFournisseur.Produit.Collecte) {
-      this.poidsRepartiFC.setValue(this.commandeFournisseur.PoidsChargement);
+      this.poidsRepartiFC.setValue(this.poidsChargementFC.value);
     }
   }
   //-----------------------------------------------------------------------------------
