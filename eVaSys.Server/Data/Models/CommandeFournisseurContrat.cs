@@ -25,10 +25,9 @@ namespace eVaSys.Data
         {
         }
         #endregion
-        public int RefCommandeFournisseurContrat { get; set; }
         public int RefCommandeFournisseur { get; set; }
+        public CommandeFournisseur CommandeFournisseur { get; set; }
         public int RefContrat { get; set; }
         public Contrat Contrat { get; set; }
-        public ICollection<CommandeFournisseur> CommandeFournisseurs { get; set; }
     }
 }

@@ -65,8 +65,8 @@
                  || data.type==='UtilisateurMaitreForUtilisateur'
                  || data.type==='EntiteForDocument' || data.type==='AnnuaireAdresseInactive'
                  || data.type==='AnnuaireContactAdresseInactive' || data.type==='ContactModificationRequest'
-                 || data.type==='EntiteForContrat'"
-                 [type]="data.type" (askClose)="closeAsked($event)" [dataItems]="data.dataItems" [exclude]="data.exclude"></grid-simple>
+                 || data.type==='EntiteForContrat' || data.type==='NonConformiteForIFClientFacture'"
+                 [type]="data.type" (askClose)="closeAsked($event)" [dataItems]="data.dataItems" [exclude]="data.exclude" [ref]="data.ref"></grid-simple>
     <message-visualisations *ngIf="data.type=='MessageVisualisations'"
                             [refMessage]="data.ref"></message-visualisations>
     <transport-concurrence *ngIf="data.type=='TransportConcurrence'"

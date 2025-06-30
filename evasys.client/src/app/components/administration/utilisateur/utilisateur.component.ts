@@ -1,11 +1,9 @@
-import { Component, Inject, OnInit, OnDestroy } from "@angular/core";
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, FormGroupDirective, NgForm } from "@angular/forms";
+import { Component, Inject } from "@angular/core";
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from "@angular/forms";
 import { ReplaySubject, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ApplicationUserContext } from "../../../globals/globals";
-import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { DataModelService } from "../../../services/data-model.service";
 import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
@@ -17,10 +15,8 @@ import { getCreationModificationTooltipText, showErrorToUser, cmp, GetUtilisateu
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { ListService } from "../../../services/list.service";
 import { HabilitationAnnuaire, HabilitationLogistique, HabilitationModuleCentreDeTri, HabilitationModuleCollectivite, HabilitationModulePrestataire, HabilitationQualite, UtilisateurType } from "../../../globals/enums";
-import { EnvComponent } from "../../../classes/appClasses";
 import { kendoFontData } from "../../../globals/kendo-utils";
 import { UtilisateurList } from "../../../interfaces/dataModelsInterfaces";
-import { environment } from "../../../../environments/environment";
 import { DomSanitizer } from "@angular/platform-browser";
 import { BaseFormComponent } from "../../_ancestors/base-form.component";
 
@@ -452,7 +448,7 @@ export class UtilisateurComponent extends BaseFormComponent<dataModelsInterfaces
     this.updateForm();
   }
   //-----------------------------------------------------------------------------------
-  //Chose related element
+  //Choose related element
   choseElement(elementType: string) {
     let data: any;
     //Init

@@ -3,6 +3,7 @@
     <div class="ev-taskbar-container">
       <div class="ev-taskbar-left-container">
         <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
+        <aide-bouton (clicked)="visibleAide=true" *ngIf="hasAide"></aide-bouton>
         <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm"
                 [disabled]="form.invalid || saveLocked || (formGroup1.invalid && applicationUserContext.connectedUtilisateur.HabilitationQualite==='Client')" (click)="onSave('', 0)">
           {{applicationUserContext.getCulturedRessourceText(6)}}
@@ -105,9 +106,9 @@
                   <td style="padding: 0px 5px 0px 5px; width:70px; text-align:center;">
                     <img id="image" [src]="'data:image/jpeg;base64,'+nCF.MiniatureBase64" height="50" matTooltip={{applicationUserContext.getCulturedRessourceText(1392)}}
                          (click)="showPictures('NonConformite_1', nCF.RefNonConformite, nCF.RefNonConformiteFichier); "
-                         style="cursor:pointer;" *ngIf="nCF.MiniatureBase64"/>
+                         style="cursor:pointer;" *ngIf="nCF.MiniatureBase64" />
                     <mat-icon aria-hidden="false" aria-label="Fichier" fontIcon="description" class="color-grey"
-                               *ngIf="!nCF.MiniatureBase64"></mat-icon>
+                              *ngIf="!nCF.MiniatureBase64"></mat-icon>
                   </td>
                   <td style="padding: 0px 5px 0px 5px; cursor: pointer; overflow-wrap: break-word; max-width: 200px; " matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
                       (click)="getFile('NonConformiteFichier', nCF.RefNonConformiteFichier); ">
@@ -690,15 +691,19 @@
           <div class="ev-flex-row-container" style="padding: 10px 0 0 0">
             <div class="ev-flex-col-container" style="min-width: 300px; max-width: 400px; flex: 1 1 auto; margin: 0 20px 0 0;">
               <mat-checkbox formControlName="IFClientCommandeAFaire"
-                             *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">{{applicationUserContext.getCulturedRessourceText(1568)}}</mat-checkbox>
+                            *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">{{applicationUserContext.getCulturedRessourceText(1568)}}</mat-checkbox>
               <mat-checkbox formControlName="IFClientFactureEnAttente" (change)="onChangeIFClientFactureEnAttente()"
-                             *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">{{applicationUserContext.getCulturedRessourceText(1569)}}</mat-checkbox>
+                            *ngIf="applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur'">{{applicationUserContext.getCulturedRessourceText(1569)}}</mat-checkbox>
               <mat-form-field style="width:100%;">
                 <mat-label>{{applicationUserContext.getCulturedRessourceText(841)}}</mat-label>
                 <input matInput formControlName="IFClientFactureNro" maxlength="50" required [errorStateMatcher]="matcher" />
                 <button *ngIf="formGroup7.get('IFClientFactureNro').value!=null && formGroup7.get('IFClientFactureNro').enabled
                                     && (applicationUserContext.connectedUtilisateur.HabilitationQualite==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="formGroup7.get('IFClientFactureNro').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
+                </button>
+                <button matIconSuffix mat-icon-button aria-label="Reporter" (click)="chooseElement('NonConformiteForIFClientFacture');"
+                        tabindex="-1" type="button" *ngIf="formGroup7.get('IFClientFactureNro').value">
+                  <mat-icon>fork_right</mat-icon>
                 </button>
                 <mat-error align="end" *ngIf="formGroup7.get('IFClientFactureNro').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               </mat-form-field>
@@ -853,4 +858,4 @@
 <progress-bar [color]="color" [mode]="mode" [value]="value" [backdropEnabled]="true"
               [displayProgressBar]="displayProgressBar" position="GloballyTop">
 </progress-bar>
-
+<aide-conteneur [safeValeurHTML]="safeValeurHTML" (askClose)="visibleAide=false" *ngIf="visibleAide"></aide-conteneur>

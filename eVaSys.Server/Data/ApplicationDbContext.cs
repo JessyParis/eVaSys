@@ -951,11 +951,6 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefCamionType)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(d => d.CommandeFournisseurContrat)
-                    .WithMany(p => p.CommandeFournisseurs)
-                    .HasForeignKey(d => d.RefCamionType)
-                    .OnDelete(DeleteBehavior.Restrict);
-
                 entity.HasOne(d => d.AdresseClient)
                     .WithMany(p => p.CommandeFournisseurAdresseClients)
                     .HasForeignKey(d => d.RefAdresseClient)
@@ -1015,10 +1010,15 @@ namespace eVaSys.Data
                     .WithMany(p => p.CommandeFournisseurPrestataires)
                     .HasForeignKey(d => d.RefPrestataire)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(d => d.CommandeFournisseurContrat)
+                    .WithOne(p => p.CommandeFournisseur)
+                    .HasForeignKey<CommandeFournisseurContrat>(d => d.RefCommandeFournisseur)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
             modelBuilder.Entity<CommandeFournisseurContrat>(entity =>
             {
-                entity.HasKey(e => e.RefCommandeFournisseurContrat);
+                entity.HasKey(e => e.RefCommandeFournisseur);
 
                 entity.ToTable("VueCommandeFournisseurContrat");
 

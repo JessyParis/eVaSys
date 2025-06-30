@@ -16,6 +16,7 @@ using Microsoft.Data.SqlClient;
 using eVaSys.APIUtils;
 using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace eVaSys.Controllers
 {
@@ -287,6 +288,28 @@ namespace eVaSys.Controllers
                         sqlStr += " and tblEntite.Actif=1";
                     }
                     break;
+                case "NonConformiteForIFClientFacture":
+                    var nC = DbContext.NonConformites
+                        .Include(i => i.CommandeFournisseur)
+                        .Where(e=>e.RefNonConformite== System.Convert.ToInt32(filterText)).FirstOrDefault();
+                    if (nC != null)
+                    {
+                        //var refCmds = DbContext.NonConformites
+                        //    .Include(i => i.CommandeFournisseur)
+                        //    .Where(i => (i.IFClientDescr != null || i.IFClientFactureMontant != null)
+                        //        && (i.IFClientFactureNro == null || i.IFClientDFacture == null)
+                        //        && i.CommandeFournisseur.AdresseClient.RefEntite == nC.CommandeFournisseur.AdresseClient.RefEntite
+                        //    )
+                        //    .Select(i => new { CommandeFournisseurNumeroCommande = i.RefCommandeFournisseur })
+                        //.Distinct();
+                        sqlStr = "select distinct tblCommandeFournisseur.NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
+                            + " from tblCommandeFournisseur"
+                            + "     inner join tblNonConformite on tblCommandeFournisseur.RefCommandeFournisseur = tblNonConformite.RefCommandeFournisseur"
+                            + "     inner join tblAdresse on tblCommandeFournisseur.RefAdresseClient = tbladresse.RefAdresse"
+                            + " where (IFClientDescr is not null or IFClientFactureMontant is not null) and (IFClientFactureNro is null or IFClientDFacture is null)"
+                            + "     and tblAdresse.RefEntite=" + nC.CommandeFournisseur.AdresseClient.RefEntite.ToString();
+                    }
+                    break;
             }
             //Chargement des données si elles existent
             if (sqlStr != "")
@@ -309,7 +332,7 @@ namespace eVaSys.Controllers
                     dA.Fill(dS);
                 }
                 //Return nb of row in header
-                Response.Headers.Add("nbRow", nbRow);
+                Response.Headers.Append("nbRow", nbRow);
                 //Return Json
                 return new JsonResult(dS.Tables[0], JsonSettings);
             }

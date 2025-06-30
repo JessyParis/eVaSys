@@ -1065,6 +1065,7 @@ export interface NonConformite {
   NonConformiteTextCmd: string;
   NonConformiteTextClient: string;
   NonConformiteTextFournisseur: string;
+  AllowBaseForm: boolean;
 }
 export interface ParamEmail {
   RefParamEmail: number;

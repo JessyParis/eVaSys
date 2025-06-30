@@ -59,7 +59,7 @@ namespace eVaSys.Controllers
                         .ThenInclude(r => r.UtilisateurValide)
                         .Include(r => r.NonConformiteEtapes)
                         .ThenInclude(r => r.UtilisateurControle)
-                        .Include(r => r.NonConformiteFichiers.OrderBy(o=>o.RefNonConformiteFichier))
+                        .Include(r => r.NonConformiteFichiers.OrderBy(o => o.RefNonConformiteFichier))
                         .Include(r => r.NonConformiteNonConformiteFamilles)
                         .AsSplitQuery()
                         .Where(i => i.RefCommandeFournisseur == refCommandeFournisseur).FirstOrDefault();
@@ -84,7 +84,7 @@ namespace eVaSys.Controllers
                                         UtilisateurValide = DbContext.Utilisateurs.Where(e => e.RefUtilisateur == 1).FirstOrDefault(),
                                         RefUtilisateurValide = 1,
                                         DValide = DateTime.Now
-                                    }) ;
+                                    });
                             }
                             else
                                 nonConformite.NonConformiteEtapes.Add(
@@ -132,7 +132,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The NonConformiteViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]NonConformiteViewModel model)
+        public IActionResult Post([FromBody] NonConformiteViewModel model)
         {
             string valid = null;
             // return a generic HTTP Status 500 (Server Error)
@@ -260,6 +260,48 @@ namespace eVaSys.Controllers
                 return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711)));
             }
         }
+        /// <summary>
+        /// GET: api/nonconformite/setnonconformiteifclientfacture
+        /// ROUTING TYPE: attribute-based
+        /// Set Factu
+        /// </summary>
+        /// <returns>An array of NonConformiteFichier.</returns>
+        [HttpGet("setnonconformiteifclientfacture")]
+        public IActionResult setNonConforimiteIFClientFacture()
+        {
+            string refNonConformites = Request.Headers["refNonConformites"].ToString();
+            string iFClientFactureNro = Request.Headers["iFClientFactureNro"].ToString();
+            string iFClientDFacture = Request.Headers["iFClientDFacture"].ToString();
+            string[] refCmdFs = null;
+            DateTime dRef = DateTime.MinValue;
+            DateTime.TryParse(iFClientDFacture, out dRef);
+            int nb = 0;
+            //Check mandatory parameters
+            refCmdFs = refNonConformites.Split(",");
+            if (refCmdFs.Length > 0)
+            {
+                foreach (string refCmdF in refCmdFs)
+                {
+                    if (int.TryParse(refCmdF, out int refNumeroCommande))
+                    {
+                        var nC = DbContext.NonConformites
+                            .Include(r => r.CommandeFournisseur)
+                            .Where(i => i.CommandeFournisseur.NumeroCommande == refNumeroCommande)
+                            .FirstOrDefault();
+                        // handle requests asking for non-existing nonConformitezes
+                        if (nC != null)
+                        {
+                            nC.IFClientFactureNro = iFClientFactureNro;
+                            nC.IFClientDFacture = (dRef == DateTime.MinValue ? null : dRef);
+                            nC.IFClientFactureEnAttente = false;
+                            DbContext.SaveChanges();
+                            nb++;
+                        }
+                    }
+                }
+            }
+            return new JsonResult(nb, JsonSettings);
+        }
         #endregion
         #region Services
         /// <summary>
@@ -309,7 +351,7 @@ namespace eVaSys.Controllers
             //Manage Etapes creations/modifications
             if (Utils.Utils.SetEmptyStringToNull(viewModel.DescrClient) != dataModel.DescrClient
                 || viewModel.NonConformiteDemandeClientType?.RefNonConformiteDemandeClientType != dataModel.RefNonConformiteDemandeClientType
-                || viewModel.NonConformiteEtapes.Where(el=>el.NonConformiteEtapeType.RefNonConformiteEtapeType==1).FirstOrDefault().Cmt != dataModel.NonConformiteEtapes.Where(el => el.RefNonConformiteEtapeType == 1).FirstOrDefault().Cmt
+                || viewModel.NonConformiteEtapes.Where(el => el.NonConformiteEtapeType.RefNonConformiteEtapeType == 1).FirstOrDefault().Cmt != dataModel.NonConformiteEtapes.Where(el => el.RefNonConformiteEtapeType == 1).FirstOrDefault().Cmt
                 )
             {
                 manageEtapeModification(ref dataModel, 1);
@@ -323,7 +365,7 @@ namespace eVaSys.Controllers
                 || Utils.Utils.SetEmptyStringToNull(viewModel.IFClientDescr) != dataModel.IFClientDescr
                 || viewModel.IFClientFactureMontant != dataModel.IFClientFactureMontant
                 || modifiedNonConformiteFamille(dataModel, viewModel)
-                || viewModel.NonConformiteEtapes.Where(el=>el.NonConformiteEtapeType.RefNonConformiteEtapeType==2).FirstOrDefault().Cmt != dataModel.NonConformiteEtapes.Where(el => el.RefNonConformiteEtapeType == 2).FirstOrDefault().Cmt
+                || viewModel.NonConformiteEtapes.Where(el => el.NonConformiteEtapeType.RefNonConformiteEtapeType == 2).FirstOrDefault().Cmt != dataModel.NonConformiteEtapes.Where(el => el.RefNonConformiteEtapeType == 2).FirstOrDefault().Cmt
                 )
             {
                 manageEtapeModification(ref dataModel, 2);

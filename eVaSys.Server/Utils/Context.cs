@@ -107,6 +107,7 @@ namespace eVaSys.Utils
                 CreateEnvComponent(typeof(MotifAnomalieClient), 504, 10030, 10031, true, true);
                 CreateEnvComponent(typeof(MotifAnomalieTransporteur), 505, 10033, 10034, true, true);
                 CreateEnvComponent(typeof(MotifCamionIncomplet), 10022, 10023, 10024, true, true);
+                CreateEnvComponent(typeof(NonConformite), 849, 850, 851, true, true);
                 CreateEnvComponent(typeof(ParamEmail), 1007, 1532, 1533, true, true);
                 CreateEnvComponent(typeof(Parametre), 1413, 1414, 1415, true, true);
                 CreateEnvComponent(typeof(Pays), 10002, 10078, 10079, true, true);
@@ -452,7 +453,8 @@ namespace eVaSys.Utils
                     [ActionName.EntiteForDocument.ToString()] = new EnvAction() { Name = ActionName.EntiteForDocument.ToString(), Module = EnvModules[ModuleName.Administration.ToString()] },
                     [ActionName.EntiteForContrat.ToString()] = new EnvAction() { Name = ActionName.EntiteForContrat.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] },
                     [ActionName.DeactivateUtilisateur.ToString()] = new EnvAction() { Name = ActionName.DeactivateUtilisateur.ToString(), Module = EnvModules[ModuleName.Administration.ToString()] },
-                    [ActionName.ContactModificationRequest.ToString()] = new EnvAction() { Name = ActionName.ContactModificationRequest.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] }
+                    [ActionName.ContactModificationRequest.ToString()] = new EnvAction() { Name = ActionName.ContactModificationRequest.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] },
+                    [ActionName.NonConformiteForIFClientFacture.ToString()] = new EnvAction() { Name = ActionName.NonConformiteForIFClientFacture.ToString(), Module = EnvModules[ModuleName.Qualite.ToString()] }
                 };
             }
         }

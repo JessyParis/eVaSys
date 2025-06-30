@@ -104,7 +104,7 @@ namespace eVaSys.Controllers
                     }
                     else
                     {
-                        //Utils.Utils.DebugPrint("JSon Token timed out", Configuration["Data:DefaultConnection:ConnectionString"]);
+                        Utils.Utils.DebugPrint("JSon Token timed out", Configuration["Data:DefaultConnection:ConnectionString"]);
                     }
                 }
                 else

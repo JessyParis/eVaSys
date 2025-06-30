@@ -374,9 +374,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
     this.dataSource = new StatistiqueDataSource(this.statistiqueService, this.snackBarQueueService, this.applicationUserContext);
     //Init filters and pager
     this.pageSize = 100;
-    this.pagin.pageSize = 100;
     this.pageSizeOptions = [100];
-    this.pagin.pageSizeOptions = [100]
     //Page size
     switch (this.applicationUserContext.currentMenu.name) {
       case MenuName.AdministrationMenuSuiviLogin:
@@ -384,9 +382,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       case MenuName.AnnuaireMenuEvolutionTonnage:
       case MenuName.AnnuaireMenuNbAffretementTransporteur:
         this.pageSize = 200;
-        this.pagin.pageSize = 200;
         this.pageSizeOptions = [200];
-        this.pagin.pageSizeOptions = [200]
         break;
     }
     //init filter default values

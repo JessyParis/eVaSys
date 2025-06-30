@@ -289,9 +289,6 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
   originalPoidsReparti: number = 0;
   // Subject that emits when the component has been destroyed.
   protected _onDestroy = new Subject<void>();
-    http: any;
-    baseUrl: string;
-    downloadService: any;
   //Constructor
   constructor(protected activatedRoute: ActivatedRoute
     , protected router: Router
@@ -304,6 +301,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     , protected dialog: MatDialog
     , protected sanitizer: DomSanitizer
     , protected eventEmitterService: EventEmitterService
+    , protected downloadService: DownloadService
   ) {
 
     super("CommandeFournisseurComponent", activatedRoute, router, applicationUserContext, dataModelService
@@ -1272,7 +1270,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     this.commandeFournisseur.HoraireDechargementPrevu = this.horaireDechargementPrevuFC.value;
     this.commandeFournisseur.DDechargementPrevue = (this.dDechargementPrevueFC.value == null ? null : this.dDechargementPrevueFC.value);
     this.commandeFournisseur.PoidsDechargement = (this.poidsDechargementFC.value == null ? 0 : this.poidsDechargementFC.value);
-    this.commandeFournisseur.PoidsReparti = (this.commandeFournisseur.DDechargement == null && this.commandeFournisseur.Produit && this.commandeFournisseur.Produit.Collecte ? 0 : (this.poidsRepartiFC.value == null ? 0 : this.poidsRepartiFC.value));
+    this.commandeFournisseur.PoidsReparti = (this.poidsRepartiFC.value == null ? 0 : this.poidsRepartiFC.value);
     this.commandeFournisseur.DDechargement = (this.dDechargementFC.value == null ? null : this.dDechargementFC.value);
     this.commandeFournisseur.NbBalleDechargement = (this.nbBalleDechargementFC.value == null ? 0 : this.nbBalleDechargementFC.value);
     this.commandeFournisseur.RefusCamion = this.refusCamionFC.value;
@@ -3008,7 +3006,6 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
       }
       else {
         //Reload data
-        var url = this.baseUrl + "evapi/commandefournisseur/" + this.commandeFournisseur.RefCommandeFournisseur;
         this.dataModelService.getCommandeFournisseur(this.commandeFournisseur.RefCommandeFournisseur, true).subscribe(result => {
           //Get data
           this.commandeFournisseur.CommandeFournisseurFichiers = result.CommandeFournisseurFichiers;

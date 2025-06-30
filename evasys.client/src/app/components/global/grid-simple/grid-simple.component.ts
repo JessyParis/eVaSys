@@ -14,11 +14,12 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { DataColumnName, MenuName, ModuleName } from "../../../globals/enums";
 import moment from "moment";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
-import { createMatTableColumn } from "../../../globals/utils";
+import { createMatTableColumn, showErrorToUser } from "../../../globals/utils";
 import { MatTableColumn } from '../../../interfaces/appInterfaces';
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { EventEmitterService } from "../../../services/event-emitter.service";
 import { ErrorStateMatcher } from "@angular/material/core";
+import { DataModelService } from "../../../services/data-model.service";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -42,6 +43,7 @@ export class GridSimpleComponent implements AfterViewInit, OnInit {
   @Input() type: string;
   @Input() dataItems: any[];
   @Input() exclude: string;
+  @Input() ref: string;
   @Output() askClose = new EventEmitter<any>();
   visibleUtilisateurType: boolean = false;
   //Form
@@ -69,6 +71,7 @@ export class GridSimpleComponent implements AfterViewInit, OnInit {
     , private eventEmitterService: EventEmitterService
     , public applicationUserContext: ApplicationUserContext
     , private snackBarQueueService: SnackBarQueueService
+    , protected dataModelService: DataModelService
     , public dialog: MatDialog) {
     this.http = http;
     // override the route reuse strategy
@@ -105,6 +108,7 @@ export class GridSimpleComponent implements AfterViewInit, OnInit {
         this.sort.active = DataColumnName.TexteAdresseList;
         this.sort.direction = "asc";
         this.pagin.pageSize = 1000;
+        this.pageSize = 1000;
         this.pagin.hidePageSize = true;
         this.loadPage("");
         break;
@@ -114,7 +118,6 @@ export class GridSimpleComponent implements AfterViewInit, OnInit {
         this.pagin.pageSize = 1000;
         this.pagin.hidePageSize = true;
         this.matSortDisabled = true;
-        this.pageSize = 1000;
         this.loadPage("");
         break;
       case "IncitationQualite":
@@ -148,6 +151,15 @@ export class GridSimpleComponent implements AfterViewInit, OnInit {
         this.sort.direction = "asc";
         this.loadPage("");
         break;
+      case "NonConformiteForIFClientFacture":
+        this.sort.active = DataColumnName.CommandeFournisseurNumeroCommande;
+        this.sort.direction = "asc";
+        this.pagin.pageSize = 1000;
+        this.pageSize = 1000;
+        this.pagin.hidePageSize = true;
+        this.form.get("FilterText").setValue(this.ref);
+        this.loadPage("");
+        break;
     }
     //Localization
     this.pagin._intl.firstPageLabel = this.applicationUserContext.getCulturedRessourceText(294);
@@ -155,7 +167,14 @@ export class GridSimpleComponent implements AfterViewInit, OnInit {
     this.pagin._intl.itemsPerPageLabel = this.applicationUserContext.getCulturedRessourceText(296);
     this.pagin._intl.previousPageLabel = this.applicationUserContext.getCulturedRessourceText(297);
     this.pagin._intl.nextPageLabel = this.applicationUserContext.getCulturedRessourceText(298);
-    this.pagin._intl.getRangeLabel = (page: number, pageSize: number, length: number) => { if (length === 0 || pageSize === 0) { return ("0 de " + length); } length = Math.max(length, 0); const startIndex = page * pageSize; const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize; return ((startIndex + 1) + " - " + endIndex + " de " + length); }
+    this.pagin._intl.getRangeLabel = (page: number, pageSize: number, length: number) =>
+    {
+      if (length === 0 || pageSize === 0) { return ("0 de " + length); }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      const endIndex = (startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize);
+      return ((startIndex + 1) + " - " + endIndex + " de " + length);
+    }
     //Manage screen
     this.manageScreen();
   }
@@ -235,6 +254,19 @@ export class GridSimpleComponent implements AfterViewInit, OnInit {
       case "AnnuaireContactAdresseInactive":
         //Emit event for dialog closing
         this.askClose.emit({ type: this.type, ref: 0 });
+        break;
+    }
+  }
+
+  //-----------------------------------------------------------------------------------
+  //Return selected NumeroCommande
+  setNonConformiteIFClientFacture() {
+    switch (this.type) {
+      case "NonConformiteForIFClientFacture":
+        let selectedRefs: string = "";
+        selectedRefs = this.selection.selected.map(e => e.CommandeFournisseurNumeroCommande).join(",");
+        //Emit event for dialog closing
+        this.askClose.emit({ type: this.type, ref: selectedRefs });
         break;
     }
   }
@@ -389,6 +421,7 @@ export class GridDataSource implements DataSource<any> {
         )
         .subscribe((resp: HttpResponse<any[]>) => {
           let n: number = parseInt(resp.headers.get("nbRow"), 10);
+          console.log(n);
           if (!isNaN(n)) { this.nbRow = n };
           //Manage columns if data is present
           if (resp.body.length > 0) {
@@ -413,6 +446,11 @@ export class GridDataSource implements DataSource<any> {
             if (refreshColumns) {
               this.columns = columnsTmp;
               this.displayedColumns = this.columns.map(c => c.columnDef);
+            }
+            //Select column
+            if (type === "NonConformiteForIFClientFacture") {
+              if (!this.displayedColumns.includes("select"))
+                this.displayedColumns.unshift("select");
             }
           }
           else {

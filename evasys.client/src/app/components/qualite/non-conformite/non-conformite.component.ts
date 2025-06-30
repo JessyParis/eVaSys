@@ -24,16 +24,10 @@ import { ProgressBarComponent } from "../../global/progress-bar/progress-bar.com
 import { finalize } from "rxjs/operators";
 import { toSpaceThousandSepatator } from "../../../globals/utils";
 import { ProgressBarMode } from "@angular/material/progress-bar";
+import { BaseFormComponent } from "../../_ancestors/base-form.component";
+import { DomSanitizer } from "@angular/platform-browser";
+import { UtilsService } from "../../../services/utils.service";
 
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  //Constructor
-  constructor() { }
-  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let result: boolean = false;
-    result = !!((control && control.invalid));
-    return result;
-  }
-}
 /** At least one NonConformiteFamille must be checked*/
 const nonConformiteFamillesValidator: ValidatorFn = (control: UntypedFormArray): ValidationErrors | null => {
   const nonConformiteFamillesFA = control;
@@ -52,8 +46,7 @@ const nonConformiteFamillesValidator: ValidatorFn = (control: UntypedFormArray):
     standalone: false
 })
 
-export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy {
-  matcher = new MyErrorStateMatcher();
+export class NonConformiteComponent extends BaseFormComponent<dataModelsInterfaces.NonConformite> implements OnInit, AfterViewInit, OnDestroy {
   //Misc
   lastUploadResut: appInterfaces.UploadResponseBody;
   nextAction: string;
@@ -140,17 +133,21 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('stepper') stepper: MatStepper;
   @ViewChild(ProgressBarComponent) progressBar: ProgressBarComponent;
   //Constructor
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private http: HttpClient, @Inject("BASE_URL") private baseUrl: string
+  constructor(protected activatedRoute: ActivatedRoute
+    , protected router: Router
     , private fb: UntypedFormBuilder
     , public applicationUserContext: ApplicationUserContext
-    , private dataModelService: DataModelService
-    , private listService: ListService
-    , private downloadService: DownloadService
+    , protected dataModelService: DataModelService
+    , protected utilsService: UtilsService
+    , protected listService: ListService
+    , protected snackBarQueueService: SnackBarQueueService
+    , protected dialog: MatDialog
+    , protected sanitizer: DomSanitizer
     , private eventEmitterService: EventEmitterService
-    , private snackBarQueueService: SnackBarQueueService
-    , public dialog: MatDialog
-) {
+    , private downloadService: DownloadService
+  ) {
+    super("NonConformiteComponent", activatedRoute, router, applicationUserContext, dataModelService
+      , utilsService, snackBarQueueService, dialog, sanitizer);
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -627,8 +624,7 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
       }
       else {
         //Reload data
-        var url = this.baseUrl + "evapi/nonconformite/" + this.nonConformite.RefNonConformite;
-        this.http.get<dataModelsInterfaces.NonConformite>(url).subscribe(result => {
+        this.dataModelService.getNonConformite(this.nonConformite.RefNonConformite,null).subscribe(result => {
           //Get data
           this.nonConformite.NonConformiteFichiers = result.NonConformiteFichiers;
           this.initNonConformiteFichierArrays();
@@ -1045,6 +1041,39 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
   //-----------------------------------------------------------------------------------
+  //Choose element to save to other NonConformite 
+  chooseElement(elementType: string) {
+    let data: any;
+    //Init
+    this.saveData();
+    switch (elementType) {
+      case "NonConformiteForIFClientFacture":
+        data = {
+          title: this.applicationUserContext.getCulturedRessourceText(1575)
+          , type: elementType
+          , ref: this.nonConformite.RefNonConformite.toString()
+        };
+        break;
+    }
+    //Open dialog
+    const dialogRef = this.dialog.open(ComponentRelativeComponent, {
+      width: "50%",
+      maxHeight: "80vh",
+      data,
+      autoFocus: false,
+      restoreFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.dataModelService.setNonConforimiteIFClientFacture(result.ref, this.iFClientFactureNroFC.value, this.iFClientDFactureFC.value)
+          .subscribe(result => {
+            //Inform user
+            this.snackBarQueueService.addMessage({ text: result + " " + this.applicationUserContext.getCulturedRessourceText(1577), duration: 4000 } as appInterfaces.SnackbarMsg);
+          }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+      }
+    });
+  }
+  //-----------------------------------------------------------------------------------
   //Download a file
   getFile(fileType: string, RefNonConformiteFichier: number) {
     this.downloadService.download(fileType, RefNonConformiteFichier.toString(), "", this.nonConformite.RefNonConformite, "")
@@ -1122,7 +1151,6 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
   onSave(next: string, fileType: number) {
     this.nextAction = next;
     this.saveData();
-    var url = this.baseUrl + "evapi/nonconformite";
     // Display progress bar
     this.progressBar.start();
     //Format dates
@@ -1200,9 +1228,7 @@ export class NonConformiteComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
   delete() {
-    var url = this.baseUrl + "evapi/nonconformite/" + this.nonConformite.RefNonConformite;
-    this.http
-      .delete(url)
+    this.dataModelService.deleteNonConformite(this.nonConformite.RefNonConformite)
       .subscribe(() => {
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(851), duration: 4000 } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);

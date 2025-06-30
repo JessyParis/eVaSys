@@ -578,6 +578,22 @@ export class DataModelService {
     });
   }
   //-----------------------------------------------------------------------------------
+  //Delete NonConformite
+  deleteNonConformite(refNonConformite: number): Observable<any> {
+    return this.http.delete(this.baseUrl + "evapi/conconformite/" + refNonConformite.toString());
+  }
+  //-----------------------------------------------------------------------------------
+  //Set facture data to NonConformites
+  setNonConforimiteIFClientFacture(refNonConformites: string, iFClientFactureNro: string, iFClientDFacture: moment.Moment): Observable<number> {
+    return this.http.get<number>(this.baseUrl + "evapi/nonconformite/setnonconformiteifclientfacture", {
+      headers: new HttpHeaders()
+        .set("refNonConformites", refNonConformites)
+        .set("iFClientFactureNro", iFClientFactureNro)
+        .set("iFClientDFacture", !iFClientDFacture ? "" : moment(iFClientDFacture).format("YYYY-MM-DDT00:00:00.000")),
+      responseType: "json"
+    });
+  }
+  //-----------------------------------------------------------------------------------
   //Get NonConformiteDemandeClientType
   getNonConformiteDemandeClientType(refNonConformiteDemandeClientType: number): Observable<dataModelsInterfaces.NonConformiteDemandeClientType> {
     return this.http.get<dataModelsInterfaces.NonConformiteDemandeClientType>(this.baseUrl + "evapi/nonconformitedemandeclienttype/" + refNonConformiteDemandeClientType.toString(), {

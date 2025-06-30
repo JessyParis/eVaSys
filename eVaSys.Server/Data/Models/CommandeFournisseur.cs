@@ -275,9 +275,9 @@ namespace eVaSys.Data
             set => _utilisateurAnomalieOk = value;
         }
         public bool NonRepartissable { get; set; } = false;
-        public int? RefPrestataire { get; set; }
         public string RefExt { get; set; }
         private Entite _prestataire;
+        public int? RefPrestataire { get; set; }
         public Entite Prestataire
         {
             get => LazyLoader.Load(this, ref _prestataire);

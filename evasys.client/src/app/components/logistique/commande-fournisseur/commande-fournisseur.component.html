@@ -4,6 +4,7 @@
       <div class="ev-taskbar-left-container">
         <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
         <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationTooltipText()">info</mat-icon>
+        <aide-bouton (clicked)="visibleAide=true" *ngIf="hasAide"></aide-bouton>
         <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onSave('')" *ngIf="!(locked && saveLocked)"
                 [disabled]="!isFormValidForSave()">
           {{applicationUserContext.getCulturedRessourceText(6)}}
@@ -70,7 +71,7 @@
           {{applicationUserContext.getCulturedRessourceText(532)}}
         </button>
         <button mat-raised-button class="ev-button-left" type="button" (click)="onRepartition();"
-                *ngIf="commandeFournisseur.DChargement !== null && commandeFournisseur.ChargementEffectue && commandeFournisseur.RefCommandeFournisseur >0
+                *ngIf="form.get('DChargement').value !== null && form.get('ChargementEffectue').value && commandeFournisseur.RefCommandeFournisseur >0
                         && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
                             || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur'
                             || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'CentreDeTri')">
@@ -366,11 +367,13 @@
     <div class="boxNormalSize">
       <table class="cadre_primary">
         <tr>
-          <td class="cadre_header_primary">{{applicationUserContext.getCulturedRessourceText(17)}}
+          <td class="cadre_header_primary">
+            {{applicationUserContext.getCulturedRessourceText(17)}}
             <span *ngIf="commandeFournisseur.Prestataire">
               <br />
               {{getPrestataireInfo()}}
-            </span></td>
+            </span>
+          </td>
         </tr>
         <tr>
           <td class="cadre_body">
@@ -657,7 +660,7 @@
             <mat-form-field style="width:100%;">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(56)}}</mat-label>
               <input matInput formControlName="PoidsChargement" mask="separator" required [errorStateMatcher]="matcher"
-                     (change)="onPoidsChargementChange()"/>
+                     (change)="onPoidsChargementChange()" />
               <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
               <button *ngIf="form.get('PoidsChargement').value!=null && form.get('PoidsChargement').enabled
                                     && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur')" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('PoidsChargement').setValue(null)" tabindex="-1" type="button">
@@ -1072,7 +1075,7 @@
   <footer class="ev-footer"></footer>
 </div>
 <div class="k-elevation-4" *ngIf="cmtFournisseurVisible" [@fadeInOnEnter]
-         cdkDrag style="position:absolute; top:75px; right:50px;height:50%; width:30%; background-color:white; border:thin solid black;">
+     cdkDrag style="position:absolute; top:75px; right:50px;height:50%; width:30%; background-color:white; border:thin solid black;">
   <table class="table-no-pad-no-space" style="width: 100%; height: 100%; box-sizing: border-box;">
     <tr>
       <td class="background-color-accent">
@@ -1092,3 +1095,4 @@
     </tr>
   </table>
 </div>
+<aide-conteneur [safeValeurHTML]="safeValeurHTML" (askClose)="visibleAide=false" *ngIf="visibleAide"></aide-conteneur>

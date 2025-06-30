@@ -556,7 +556,9 @@ namespace eVaSys.Utils
             GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
             //Initialisations
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
-            CommandeFournisseur cf = dbContext.CommandeFournisseurs.Where(el => el.RefCommandeFournisseur == refCommandeFournisseur).FirstOrDefault();
+            CommandeFournisseur cf = dbContext.CommandeFournisseurs
+                .Include(i=>i.CommandeFournisseurContrat)
+                .Where(el => el.RefCommandeFournisseur == refCommandeFournisseur).FirstOrDefault();
             Entite client = dbContext.Entites.Where(el => el.RefEntite == cf.AdresseClient.RefEntite).FirstOrDefault();
             Adresse transporteurtAdresse = dbContext.Adresses.Where(el => el.RefAdresse == cf.TransporteurContactAdresse.RefAdresse).FirstOrDefault();
             ws.Cells[4, 3].SetValue(ws.Cells[4, 3].Value + cf.NumeroAffretement.ToString());
@@ -616,12 +618,14 @@ namespace eVaSys.Utils
                 ws.Cells[l, 2].SetValue(bl.NbBalleChargement);
                 ws.Cells[l, 3].SetValue(bl.Libelle);
                 ws.Cells[l, 4].SetValue(bl.Ville);
-                //Instanciation de la commande client mensuelle
+                int? refContrat = bl.CommandeFournisseurContrat?.RefContrat;
+                //Récupération de la commande client mensuelle
                 CommandeClient cmdC = dbContext.CommandeClients
                     .Include(rel => rel.CommandeClientMensuelles)
                     .Where(el =>
                   el.RefProduit == bl.RefProduit && el.D.Year == ((DateTime)bl.DMoisDechargementPrevu).Year
-                  && el.RefEntite == bl.AdresseClient.RefEntite && el.RefAdresse == bl.RefAdresseClient).FirstOrDefault();
+                  && el.RefEntite == bl.AdresseClient.RefEntite && el.RefAdresse == bl.RefAdresseClient
+                  && el.RefContrat==refContrat).FirstOrDefault();
                 CommandeClientMensuelle ccm = cmdC.CommandeClientMensuelles.Where(el => el.D.Month == ((DateTime)bl.DMoisDechargementPrevu).Month).FirstOrDefault();
                 //Instanciation du contactBL chez le client
                 ContactAdresse cbl = dbContext.ContactAdresses

@@ -322,7 +322,8 @@ namespace eVaSys.Utils
             Search,
             DeactivateUtilisateur,
             ContactModificationRequest,
-            ValidateRepartition
+            ValidateRepartition,
+            NonConformiteForIFClientFacture
         }
         //Enumération pour les noms de colonne
         public enum  DataColumnName

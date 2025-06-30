@@ -69,7 +69,10 @@
   <div>
     <mat-paginator #pagin [length]="this.dataSource.nbRow" [pageSize]="pageSize" [pageSizeOptions]="[10, 25, 50]"></mat-paginator>
   </div>
-  <div class="ev-taskbar-container" *ngIf="this.type==='AnnuaireAdresseInactive' || this.type==='AnnuaireContactAdresseInactive'">
+  <div class="ev-taskbar-container"
+       *ngIf="this.type==='AnnuaireAdresseInactive'
+        || this.type==='AnnuaireContactAdresseInactive'
+        || this.type==='NonConformiteForIFClientFacture'">
     <div class="ev-taskbar-right-container">
       <button mat-raised-button color="primary" (click)="disguardAdresseInactive()" *ngIf="this.type==='AnnuaireAdresseInactive'"
               class="ev-button-right" type="button">
@@ -78,6 +81,10 @@
       <button mat-raised-button color="primary" (click)="disguardContactAdresseInactive()" *ngIf="this.type==='AnnuaireContactAdresseInactive'"
               class="ev-button-right" type="button">
         {{applicationUserContext.getCulturedRessourceText(1191)}}
+      </button>
+      <button mat-raised-button color="primary" (click)="setNonConformiteIFClientFacture()" *ngIf="this.type==='NonConformiteForIFClientFacture'"
+              class="ev-button-right" type="button">
+        {{applicationUserContext.getCulturedRessourceText(1576)}}
       </button>
     </div>
   </div>
