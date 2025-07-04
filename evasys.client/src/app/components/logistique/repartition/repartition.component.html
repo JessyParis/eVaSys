@@ -79,7 +79,8 @@
                 </button>
                 <mat-error align="end" *ngIf="(form.get('CollectiviteList').touched || form.get('CollectiviteList').dirty) && form.get('CollectiviteList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               </mat-form-field>
-              <mat-form-field style="width:100%;" *ngIf="form.get('CollectiviteList').value===null">
+              <mat-form-field style="width:100%;" *ngIf="form.get('CollectiviteList').value===null
+                              && applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'">
                 <mat-label>{{applicationUserContext.getCulturedRessourceText(597)}}</mat-label>
                 <input type="text" matInput [matAutocomplete]="autoCollectiviteNA"
                        formControlName="CollectiviteNAList" (selectionChange)="onCollectiviteNASelected()" [required]="requiredCollectiviteNAList" [errorStateMatcher]="matcher">

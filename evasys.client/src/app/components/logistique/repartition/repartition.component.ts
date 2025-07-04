@@ -416,13 +416,14 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   //-----------------------------------------------------------------------------------
   //Get PrixReprise
   getPrixReprise() {
-    if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur) {
+    if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur
+      && this.repartition.CommandeFournisseur?.DDechargement) {
       //Get existing PrixReprise
       this.dataModelService.getPrixReprise(0, null
         , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
         , null
         , this.collectiviteListFC.value ? this.collectiviteListFC.value : this.collectiviteNAListFC.value
-        , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+        , moment(this.repartition.CommandeFournisseur.DDechargement)
       )
         .subscribe(result => {
           this.pUHTFC.setValue(result.PUHT - result.PUHTSurtri - result.PUHTTransport);
@@ -804,7 +805,8 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   //-----------------------------------------------------------------------------------
   //Get missing PrixReprise if applicable
   getMissingPrixReprises() {
-    if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur) {
+    if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur
+      && this.repartition.CommandeFournisseur?.DDechargement) {
       let missingPrixReprise: boolean = false;
       let missingPrixRepriseMsgCreated: boolean = false;
       let foundPrixReprise: boolean = false;
