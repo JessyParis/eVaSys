@@ -4,6 +4,7 @@
       <div class="ev-taskbar-left-container">
         <button mat-icon-button (click)="onBack()" type="button"><mat-icon aria-label="Retour" class="ev-button-left">navigate_before</mat-icon></button>
         <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
+        <aide-bouton (clicked)="visibleAide=true" *ngIf="hasAide"></aide-bouton>
         <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm"
                 [disabled]="formRepartitionCollectivite.get('RepartitionCollectivite').invalid || formRepartitionProduit.get('RepartitionProduit').invalid"
                 *ngIf="!(locked && saveLocked)" (click)="saveRepartition()">
@@ -92,7 +93,7 @@
                 <mat-option *ngFor="let collectiviteNA of collectiviteNAList | async " [value]="collectiviteNA">{{collectiviteNA.Libelle}}</mat-option>
               </mat-autocomplete>
               <mat-form-field style="width:50%;" *ngIf="enterModeFC.value=='kg'">
-                <input matInput formControlName="Poids" mask="separator" [errorStateMatcher]="matcher"/>
+                <input matInput formControlName="Poids" mask="separator" [errorStateMatcher]="matcher" />
                 <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(483)}}</span>
                 <button *ngIf="form.get('Poids').value!=null && form.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Poids').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
@@ -103,7 +104,7 @@
                 <mat-error align="end" *ngIf="(form.get('Poids').touched || form.get('Poids').dirty) && form.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               </mat-form-field>
               <mat-form-field style="width:50%;" *ngIf="enterModeFC.value=='percent'">
-                <input matInput formControlName="Percent"  mask="separator.4" [errorStateMatcher]="matcher"/>
+                <input matInput formControlName="Percent" mask="separator.4" [errorStateMatcher]="matcher" />
                 <span matTextSuffix>{{applicationUserContext.getCulturedRessourceText(203)}}</span>
                 <button *ngIf="form.get('Percent').value!=null && form.get('Percent').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Percent').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
@@ -282,4 +283,5 @@
   </div>
   <footer class="ev-footer"></footer>
 </div>
+<aide-conteneur [safeValeurHTML]="safeValeurHTML" (askClose)="visibleAide=false" *ngIf="visibleAide"></aide-conteneur>
 
