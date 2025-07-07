@@ -216,6 +216,7 @@ namespace eVaSys.Data
         public ICollection<ClientApplication> ClientApplicationModifs { get; set; }
         public ICollection<CommandeClient> CommandeClientCreations { get; set; }
         public ICollection<CommandeClient> CommandeClientModifs { get; set; }
+        public ICollection<CommandeClientMensuelle> CommandeClientMensuelleCertifs { get; set; }
         public ICollection<CommandeFournisseur> CommandeFournisseurUtilisateurChargementAnnules { get; set; }
         public ICollection<CommandeFournisseur> CommandeFournisseurUtilisateurBlocages { get; set; }
         public ICollection<CommandeFournisseur> CommandeFournisseurUtilisateurAnomalieOks { get; set; }
@@ -315,6 +316,7 @@ namespace eVaSys.Data
         public ICollection<Pays> PaysModifs { get; set; }
         public ICollection<PrixReprise> PrixRepriseCreations { get; set; }
         public ICollection<PrixReprise> PrixRepriseModifs { get; set; }
+        public ICollection<PrixReprise> PrixRepriseCertifs { get; set; }
         public ICollection<Produit> ProduitCreations { get; set; }
         public ICollection<Produit> ProduitModifs { get; set; }
         public ICollection<Process> ProcessCreations { get; set; }
@@ -483,6 +485,7 @@ namespace eVaSys.Data
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ClientApplicationModifs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeClientCreations).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeClientModifs).Query().Count();
+            nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeClientMensuelleCertifs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurUtilisateurChargementAnnules).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurUtilisateurBlocages).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.CommandeFournisseurUtilisateurAnomalieOks).Query().Count();
@@ -557,6 +560,7 @@ namespace eVaSys.Data
             nbLinkedData += DbContext.Entry(this).Collection(b => b.PaysModifs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.PrixRepriseCreations).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.PrixRepriseModifs).Query().Count();
+            nbLinkedData += DbContext.Entry(this).Collection(b => b.PrixRepriseCertifs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ProduitCreations).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ProduitModifs).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ProcessCreations).Query().Count();

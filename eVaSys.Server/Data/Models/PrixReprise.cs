@@ -73,6 +73,9 @@ namespace eVaSys.Data
         public Utilisateur UtilisateurCreation { get; set; }
         public int? RefUtilisateurModif { get; set; }
         public Utilisateur UtilisateurModif { get; set; }
+        public int? RefUtilisateurCertif { get; set; }
+        public Utilisateur UtilisateurCertif { get; set; }
+        public DateTime? DCertif { get; set; }
         public string CreationText
         {
             get
@@ -96,6 +99,19 @@ namespace eVaSys.Data
                 {
                     CulturedRessources cR = new(currentCulture, DbContext);
                     s = cR.GetTextRessource(389) + " " + ((DateTime)DModif).ToString("G", currentCulture) + " " + cR.GetTextRessource(390) + " " + UtilisateurModif.Nom;
+                }
+                return s;
+            }
+        }
+        public string CertificationText
+        {
+            get
+            {
+                string s = "";
+                if (UtilisateurCertif != null && DCertif != null)
+                {
+                    CulturedRessources cR = new(currentCulture, DbContext);
+                    s = cR.GetTextRessource(1578) + " " + ((DateTime)DCertif).ToString("G", currentCulture) + " " + cR.GetTextRessource(390) + " " + UtilisateurCertif.Nom;
                 }
                 return s;
             }

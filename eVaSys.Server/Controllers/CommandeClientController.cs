@@ -8,17 +8,18 @@
 /// Création : 22/05/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Org.BouncyCastle.Asn1.Pkcs;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Linq;
-using eVaSys.APIUtils;
 
 namespace eVaSys.Controllers
 {
@@ -194,11 +195,36 @@ namespace eVaSys.Controllers
                         }
                         if (cmdM != null)
                         {
-                            //Update data
-                            cmd.Cmt = cmdMF.Cmt;
-                            cmdM.Poids = (int)cmdMF.Poids;
-                            cmdM.PrixTonneHT = (decimal)(cmdMF.PrixTonneHT == null ? 0 : cmdMF.PrixTonneHT);
-                            cmdM.IdExt = cmdMF.IdExt;
+                            //Certification
+                            //If already certified, only current user can modifiy Poids or PrixTonneHT
+                            if (cmdM.RefUtilisateurCertif != null && cmd.RefUtilisateurCreation != CurrentContext.RefUtilisateur
+                                && (
+                                    cmdM.Poids != (int)cmdMF.Poids ||
+                                    cmdM.PrixTonneHT != (decimal)(cmdMF.PrixTonneHT == null ? 0 : cmdMF.PrixTonneHT)
+                                )
+                            )
+                            {
+                                errs += " -/- " + ((DateTime)cmdM.D).ToString("G", CurrentContext.CurrentCulture) + " -> " + CurrentContext.CulturedRessources.GetTextRessource(1579);
+                            }
+                            //Creator cannot certify
+                            else if (cmdM.RefCommandeClientMensuelle <= 0 && cmdMF.Certif)
+                            {
+                                errs += " -/- " + ((DateTime)cmdM.D).ToString("G", CurrentContext.CurrentCulture) + " -> " + CurrentContext.CulturedRessources.GetTextRessource(1580);
+                            }
+                            else
+                            {
+                                //Update data
+                                cmd.Cmt = cmdMF.Cmt;
+                                cmdM.Poids = (int)cmdMF.Poids;
+                                cmdM.PrixTonneHT = (decimal)(cmdMF.PrixTonneHT == null ? 0 : cmdMF.PrixTonneHT);
+                                cmdM.IdExt = cmdMF.IdExt;
+                            }
+                            if (cmdMF.Certif)
+                            {
+                                //Certification
+                                cmdM.RefUtilisateurCertif = CurrentContext.RefUtilisateur;
+                                cmdM.DCertif = DateTime.Now;
+                            }
                         }
                     }
                     string validError = cmd.IsValid() + " " + cmdM.IsValid();

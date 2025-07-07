@@ -11,6 +11,7 @@ using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
 
@@ -40,6 +41,22 @@ namespace eVaSys.Data
         public decimal PrixTonneHT { get; set; }
         public string IdExt { get; set; }
         public int? RefExt { get; set; }
+        public int? RefUtilisateurCertif { get; set; }
+        public Utilisateur UtilisateurCertif { get; set; }
+        public DateTime? DCertif { get; set; }
+        public string CertificationText
+        {
+            get
+            {
+                string s = "";
+                if (UtilisateurCertif != null && DCertif != null)
+                {
+                    CulturedRessources cR = new(currentCulture, DbContext);
+                    s = cR.GetTextRessource(1578) + " " + ((DateTime)DCertif).ToString("G", currentCulture) + " " + cR.GetTextRessource(390) + " " + UtilisateurCertif.Nom;
+                }
+                return s;
+            }
+        }
         //--------------------------------------------------------------------------------------------
         /// <summary>
         /// Checked if model is valid

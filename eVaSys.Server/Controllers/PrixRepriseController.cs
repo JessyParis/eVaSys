@@ -13,15 +13,9 @@ using eVaSys.Utils;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
-using System.Linq;
 using eVaSys.APIUtils;
-using System.ComponentModel;
-using Telerik.Windows.Documents.Media;
 
 namespace eVaSys.Controllers
 {
@@ -159,6 +153,12 @@ namespace eVaSys.Controllers
                         else
                         {
                             errs += validError;
+                        }
+                        //Certif
+                        if (prxR.Certif && prx.RefUtilisateurCreation != CurrentContext.RefUtilisateur)
+                        {
+                            prx.RefUtilisateurCertif = CurrentContext.RefUtilisateur;
+                            prx.DCertif = DateTime.Now;
                         }
                     }
                 }
