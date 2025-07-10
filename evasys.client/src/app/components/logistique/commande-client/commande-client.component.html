@@ -134,6 +134,12 @@
                       </button>
                     </mat-form-field>
                   </td>
+                  <td style="padding: 0px 5px 0px 5px;">
+                    <mat-icon class="material-symbols-outlined color-primary"
+                              *ngIf="!!(commandeClientMensuelles[i].CertificationText)" [matTooltip]="getCertificationTooltipText(i)">license</mat-icon>
+                    <mat-icon class="material-symbols-outlined color-grey"
+                              *ngIf="!(commandeClientMensuelles[i].CertificationText)">unlicense</mat-icon>
+                  </td>
                 </tr>
               </tbody>
             </table>

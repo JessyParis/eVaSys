@@ -96,9 +96,13 @@
          && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')">
       <div class="ev-taskbar-container">
         <div class="ev-taskbar-left-container">
-          <button mat-raised-button color="primary" (click)="certification()" class="ev-buttons-left">
-            {{applicationUserContext.getCulturedRessourceText(1583)}}
-          </button>
+          <form [formGroup]="formCertification">
+            <mat-slide-toggle formControlName="CertificationType" (change)="certificationTypeChange()"
+                              class="ev-buttons-left" style="margin:0 15px 0 0;">{{this.formCertification.get("CertificationType").value ? applicationUserContext.getCulturedRessourceText(1583) : applicationUserContext.getCulturedRessourceText(1587)}}</mat-slide-toggle>
+            <button mat-raised-button color="primary" (click)="certification()" class="ev-buttons-left">
+              {{applicationUserContext.getCulturedRessourceText(682)}}
+            </button>
+          </form>
         </div>
       </div>
     </div>

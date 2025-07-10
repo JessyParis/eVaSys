@@ -364,6 +364,9 @@ namespace eVaSys.Controllers
                                 + "     , tblContrat.RefContrat as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefContrat.ToString()].Name + "]"
                                 + "     , tblAdresse.RefAdresse as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefAdresse.ToString()].Name + "]"
                                 + "     , cast(case when tblCommandeClientMensuelle.DCertif is not null then 1 else 0 end as bit) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.Certifie.ToString()].Name + "]"
+                                + "     , tblCommandeClient.RefUtilisateurCreation as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefUtilisateurCreation.ToString()].Name + "]"
+                                + "     , tblCommandeClient.RefUtilisateurModif as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefUtilisateurModif.ToString()].Name + "]"
+                                + "     , tblCommandeClientMensuelle.RefUtilisateurCertif as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefUtilisateurCertif.ToString()].Name + "]"
                                 + " from tblCommandeClient"
                                 + "     left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
                                 + "     left join tblEntite on tblEntite.RefEntite = tblCommandeClient.RefEntite"
@@ -413,7 +416,8 @@ namespace eVaSys.Controllers
                                 + "     , case when tblAdresse.Adr1 is null then '' else tblAdresse.Adr1 + ' ' end + tblAdresse.CodePostal + ' ' + tblAdresse.Ville + ' (' + tbrAdresseType.Libelle + ')'"
                                 + "     , tblContrat.IdContrat, tblProduit.Libelle, tblCommandeClientMensuelle.Poids"
                                 + "     , tblEntite.RefEntite, tblContrat.RefContrat, tblAdresse.RefAdresse"
-                                + "     , cast(case when tblCommandeClientMensuelle.DCertif is not null then 1 else 0 end as bit)";
+                                + "     , cast(case when tblCommandeClientMensuelle.DCertif is not null then 1 else 0 end as bit)"
+                                + "     , tblCommandeClient.RefUtilisateurCreation, tblCommandeClient.RefUtilisateurModif, tblCommandeClientMensuelle.RefUtilisateurCertif";
                             break;
                         case "LogistiqueMenuCommandeFournisseur":
                         case "LogistiqueMenuTransportCommande":
@@ -1005,6 +1009,9 @@ namespace eVaSys.Controllers
                                 + "     , tbrPrixReprise.PUHTSurtri as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHTSurtri.ToString()].Name + "]"
                                 + "     , tbrPrixReprise.PUHTTransport as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PrixReprisePUHTTransport.ToString()].Name + "]"
                                 + "     , tbrPrixReprise.RefProcess as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefProcess.ToString()].Name + "]"
+                                + "     , tbrPrixReprise.RefUtilisateurCreation as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefUtilisateurCreation.ToString()].Name + "]"
+                                + "     , tbrPrixReprise.RefUtilisateurModif as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefUtilisateurModif.ToString()].Name + "]"
+                                + "     , tbrPrixReprise.RefUtilisateurCertif as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefUtilisateurCertif.ToString()].Name + "]"
                                 + " from tbrPrixReprise"
                                 + "     left join tbrProcess on tbrPrixReprise.RefProcess=tbrProcess.RefProcess"
                                 + "     left join tblProduit on tbrPrixReprise.RefProduit=tblProduit.RefProduit"
@@ -2213,7 +2220,8 @@ namespace eVaSys.Controllers
                         }
                     }
                     //Certify PrixReprise if needed
-                    if (menu == Enumerations.MenuName.LogistiqueMenuPrixReprise.ToString() && action == Enumerations.ActionName.CertificationPrixReprise.ToString())
+                    if (menu == Enumerations.MenuName.LogistiqueMenuPrixReprise.ToString() 
+                        && (action == Enumerations.ActionName.CertificationPrixReprise.ToString() ||action == Enumerations.ActionName.UnCertificationPrixReprise.ToString()))
                     {
                         string errs = "";
                         if (!string.IsNullOrEmpty(selectedItem))
@@ -2231,14 +2239,25 @@ namespace eVaSys.Controllers
                                     {
                                         //Create viewModel with certification asked
                                         PrixRepriseViewModel viewModel = _mapper.Map<PrixReprise, PrixRepriseViewModel>(prixReprise);
-                                        viewModel.Certif = true;
+                                        if (action == Enumerations.ActionName.CertificationPrixReprise.ToString()) { viewModel.Certif = true; }
+                                        if (action == Enumerations.ActionName.UnCertificationPrixReprise.ToString()) { viewModel.Certif = false; }
                                         //Check validity before updating
                                         string valid = prixReprise.IsPreValid(viewModel, CurrentContext.CurrentCulture, CurrentContext.RefUtilisateur);
                                         //continue if no errors
                                         if (valid == "")
                                         {
-                                            prixReprise.RefUtilisateurCertif = CurrentContext.RefUtilisateur;
-                                            prixReprise.DCertif = DateTime.Now;
+                                            if(viewModel.Certif ==true)
+                                            {
+                                                //Certify
+                                                prixReprise.DCertif = DateTime.Now;
+                                                prixReprise.RefUtilisateurCertif = CurrentContext.RefUtilisateur;
+                                            }
+                                            else if(viewModel.Certif == false)
+                                            {
+                                                //Uncertify
+                                                prixReprise.DCertif = null;
+                                                prixReprise.RefUtilisateurCertif = null;
+                                            }
                                             //Check validation after updating
                                             valid = prixReprise.IsValid();
                                             //Add error if applicable
@@ -2273,9 +2292,11 @@ namespace eVaSys.Controllers
                             //Response.Headers.Append("errors", errs.ToString());
                         }
                     }
-                    //Certify CommandeClient if needed
-                    if (menu == Enumerations.MenuName.LogistiqueMenuCommandeClient.ToString() && action == Enumerations.ActionName.CertificationCommandeClientMensuelle.ToString())
+                    //Certify CommandeClientMensuelle if needed
+                    if (menu == Enumerations.MenuName.LogistiqueMenuCommandeClient.ToString()
+                        && (action == Enumerations.ActionName.CertificationCommandeClientMensuelle.ToString() || action == Enumerations.ActionName.UnCertificationCommandeClientMensuelle.ToString()))
                     {
+                        string errs = "";
                         if (!string.IsNullOrEmpty(selectedItem))
                         {
                             var els = selectedItem.Split(',');
@@ -2289,15 +2310,59 @@ namespace eVaSys.Controllers
                                     var commandeClientMensuelle = DbContext.CommandeClientMensuelles.Find(refCommandeClientMensuelle);
                                     if (commandeClientMensuelle != null)
                                     {
-                                        commandeClientMensuelle.RefUtilisateurCertif = CurrentContext.RefUtilisateur;
-                                        commandeClientMensuelle.DCertif = DateTime.Now;
-                                        DbContext.SaveChanges();
-                                        res++;
+                                        //Create viewModel with certification asked
+                                        CommandeClientMensuelleViewModel viewModel = _mapper.Map<CommandeClientMensuelle, CommandeClientMensuelleViewModel>(commandeClientMensuelle);
+                                        if (action == Enumerations.ActionName.CertificationCommandeClientMensuelle.ToString()) { viewModel.Certif = true; }
+                                        if (action == Enumerations.ActionName.UnCertificationCommandeClientMensuelle.ToString()) { viewModel.Certif = false; }
+                                        //Check validity before updating
+                                        string valid = commandeClientMensuelle.IsPreValid(viewModel, CurrentContext.CurrentCulture, CurrentContext.RefUtilisateur);
+                                        //continue if no errors
+                                        if (valid == "")
+                                        {
+                                            if (viewModel.Certif == true)
+                                            {
+                                                //Certify
+                                                commandeClientMensuelle.DCertif = DateTime.Now;
+                                                commandeClientMensuelle.RefUtilisateurCertif = CurrentContext.RefUtilisateur;
+                                            }
+                                            else if (viewModel.Certif == false)
+                                            {
+                                                //Uncertify
+                                                commandeClientMensuelle.DCertif = null;
+                                                commandeClientMensuelle.RefUtilisateurCertif = null;
+                                            }
+                                            //Check validation after updating
+                                            valid = commandeClientMensuelle.IsValid();
+                                            //Add error if applicable
+                                            if (valid != "")
+                                            {
+                                                //Ignore modifications
+                                                DbContext.Entry(commandeClientMensuelle).State = EntityState.Detached;
+                                            }
+                                        }
+                                        if (valid == "")
+                                        {
+                                            //Save data
+                                            DbContext.SaveChanges();
+                                            //Next
+                                            res++;
+                                        }
+                                        else
+                                        {
+                                            //Ignore modifications
+                                            DbContext.Entry(commandeClientMensuelle).State = EntityState.Detached;
+                                            //Add error to list
+                                            if (errs != "") { errs += Environment.NewLine; }
+                                            errs += ">> " + commandeClientMensuelle.MonolineSummaryText + " - ";
+                                            errs += valid;
+                                        }
                                     }
                                 }
                             }
                             //Return nb of affected rows in header
                             Response.Headers.Append("nbCertificationCommandeClientMensuelle", res.ToString());
+                            //Returns errors
+                            //Response.Headers.Append("errors", errs.ToString());
                         }
                     }
                     //Delete prices if needed

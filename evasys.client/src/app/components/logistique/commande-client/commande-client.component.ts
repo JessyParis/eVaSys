@@ -13,7 +13,7 @@ import moment from "moment";
 import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
-import { getContratLabelMultiLine, getContratEntitesLabel, showErrorToUser } from "../../../globals/utils";
+import { getContratLabelMultiLine, getContratEntitesLabel, showErrorToUser, getCertficationTooltipText } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -414,5 +414,10 @@ export class CommandeClientComponent implements OnInit {
   //Back to list
   onBack() {
     this.router.navigate(["grid"]);
+  }
+  //-----------------------------------------------------------------------------------
+  //Format multiline tooltip text for certification
+  getCertificationTooltipText(i: number): string {
+    return getCertficationTooltipText(this.commandeClientMensuelles[i]);
   }
 }

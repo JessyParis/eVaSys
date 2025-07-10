@@ -890,7 +890,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataEntitePrixReprise(ref PrixReprise dataModel, PrixRepriseViewModel viewModel, int refUtilisateurContext)
+        public static bool UpdateDataPrixReprise(ref PrixReprise dataModel, PrixRepriseViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -923,14 +923,60 @@ namespace eVaSys.Utils
             {
                 dataModel.ApplyMarkModification = false; // Avoid mark modification if no data modified
             }
-            //Register certification
-            if (viewModel.Certif)
+            //Register certification/uncertification
+            if (viewModel.Certif == true)
             {
                 dataModel.RefUtilisateurCertif = refUtilisateurContext;
                 dataModel.DCertif = DateTime.Now;
             }
+            if (viewModel.Certif == false)
+            {
+                dataModel.RefUtilisateurCertif = null;
+                dataModel.DCertif = null;
+            }
             //Register session user
             dataModel.RefUtilisateurCourant = refUtilisateurContext;
+            return dirty;
+        }
+        //------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Save values for PrixReprise
+        /// <param name="dataModel">The dto object to write data to</param>
+        /// <param name="viewModel">The view model to read data from </param>
+        /// <returns>true if data are different (dirty)</returns>
+        /// </summary>
+        public static bool UpdateDataCommandeClientMensuelle(ref CommandeClientMensuelle dataModel, CommandeClientMensuelleFormViewModel viewModel, int refUtilisateurContext)
+        {
+            bool dirty = false;
+            //Mark as dirty if applicable
+            if (dataModel.Poids != viewModel.Poids
+                || dataModel.PrixTonneHT != viewModel.PrixTonneHT
+                || dataModel.IdExt != viewModel.IdExt
+                || dataModel.D != viewModel.D
+                )
+            {
+                dirty = true;
+            }
+            //Save data
+            if (dirty)
+            {
+                //Update data
+                dataModel.Poids = (int)viewModel.Poids;
+                dataModel.PrixTonneHT = (decimal)(viewModel.PrixTonneHT == null ? 0 : viewModel.PrixTonneHT);
+                dataModel.IdExt = viewModel.IdExt;
+                dataModel.D = viewModel.D;
+            }
+            //Register certification/uncertification
+            if (viewModel.Certif == true)
+            {
+                dataModel.RefUtilisateurCertif = refUtilisateurContext;
+                dataModel.DCertif = DateTime.Now;
+            }
+            if (viewModel.Certif == false)
+            {
+                dataModel.RefUtilisateurCertif = null;
+                dataModel.DCertif = null;
+            }
             return dirty;
         }
         /// <summary>

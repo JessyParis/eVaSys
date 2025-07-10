@@ -158,18 +158,18 @@ namespace eVaSys.Data
             CulturedRessources cR = new(cultureContext, DbContext);
             //Check certification
             //If certified, only previous certifier can modify or delete
-            if (RefUtilisateurCertif > 0)
+            if (RefUtilisateurCertif > 0 || viewModel.Certif == false)
             {
-                //Only previous certifier can modify or delete
+                //Only previous certifier can modify/delete or uncetifiy
                 if (refUtilisateurContext != RefUtilisateurCertif)
                 {
                     if (r == "") { r += Environment.NewLine; }
                     r += cR.GetTextRessource(1579);
                 }
             }
-            else if(viewModel.Certif)
+            else if (viewModel.Certif == true)
             {
-                //Creator or previous modifier can't certify
+                //Creator or previous modifier can't certify/uncertify
                 if (refUtilisateurContext == RefUtilisateurCreation || refUtilisateurContext == RefUtilisateurModif)
                 {
                     if (r == "") { r += Environment.NewLine; }

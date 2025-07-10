@@ -37,6 +37,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   //Form
   form: UntypedFormGroup;
   formAugmentation: UntypedFormGroup;
+  formCertification: UntypedFormGroup;
   formPrixRepriseCopy: UntypedFormGroup;
   //Filters
   filterText: string = "";
@@ -179,6 +180,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   //Misc
   refMessageVisualisations: number = 0;
   refTransportConcurrence: number = 0;
+  certificationType: boolean = true; //True= Certification, False = Uncertification
   //Functions
   shortenLongText = shortenLongText;
   // Subject that emits when the component has been destroyed.
@@ -279,6 +281,9 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       MonthListFrom: new UntypedFormControl(null, Validators.required),
       YearListTo: new UntypedFormControl(null, Validators.required),
       MonthListTo: new UntypedFormControl(null, Validators.required)
+    });
+    this.formCertification = new UntypedFormGroup({
+      CertificationType: new UntypedFormControl(true)
     });
     //Get existing client
     listService.getListClient(null, null, null, null, null, false).subscribe(result => {
@@ -1207,11 +1212,28 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     switch (this.applicationUserContext.currentMenu.name) {
       case MenuName.LogistiqueMenuPrixReprise:
       case MenuName.LogistiqueMenuCommandeClient:
-        if (item.Certifie == false) { r = false; }
+        if (this.certificationType) {
+          //Ask for certification
+          if (item.Certifie == false
+            && item.RefUtilisateurCreation != this.applicationUserContext.connectedUtilisateur.RefUtilisateur
+            && item.RefUtilisateurModif != this.applicationUserContext.connectedUtilisateur.RefUtilisateur
+          ) { r = false; }
+        }
+        else {
+          if (item.Certifie == true
+            && item.RefUtilisateurCertif == this.applicationUserContext.connectedUtilisateur.RefUtilisateur) { r = false; }
+        }
         //r = false;
         break;
     }
     return r;
+  }
+  //-----------------------------------------------------------------------------------
+  //Certification type
+  certificationTypeChange() {
+    this.selection.clear();
+    this.razSelection();
+    this.certificationType = this.formCertification.get("CertificationType").value;
   }
   //-----------------------------------------------------------------------------------
   //Row clicked
@@ -1631,12 +1653,24 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     let msg = "";
     let action = "";
     if (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuPrixReprise) {
-      msg = this.applicationUserContext.getCulturedRessourceText(1588);
-      action = ActionName.CertificationPrixReprise;
+      if (this.certificationType) {
+        msg = this.applicationUserContext.getCulturedRessourceText(1588);
+        action = ActionName.CertificationPrixReprise;
+      }
+      else {
+        msg = this.applicationUserContext.getCulturedRessourceText(1590);
+        action = ActionName.UnCertificationPrixReprise;
+      }
     }
     if (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeClient) {
-      msg = this.applicationUserContext.getCulturedRessourceText(1589);
-      action = ActionName.CertificationCommandeClientMensuelle;
+      if (this.certificationType) {
+        msg = this.applicationUserContext.getCulturedRessourceText(1589);
+        action = ActionName.CertificationCommandeClientMensuelle;
+      }
+      else {
+        msg = this.applicationUserContext.getCulturedRessourceText(1591);
+        action = ActionName.UnCertificationCommandeClientMensuelle;
+      }
     }
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
@@ -1671,7 +1705,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   }
   //-----------------------------------------------------------------------------------
   //Deactivate users
-  cert() {
+  cert_old() {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
       data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(1113) },

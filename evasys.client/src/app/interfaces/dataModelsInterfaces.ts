@@ -190,6 +190,8 @@ export interface CommandeClientMensuelleForm {
   Poids: number;
   PrixTonneHT: number;
   IdExt: number;
+  CertificationText: string;
+  Certif: boolean;
 }
 export interface CommandeFournisseur {
   RefCommandeFournisseur: number;

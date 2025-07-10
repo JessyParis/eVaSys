@@ -10,6 +10,7 @@
 using AutoMapper;
 using eVaSys.APIUtils;
 using eVaSys.Data;
+using eVaSys.Utils;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -69,10 +70,11 @@ namespace eVaSys.Controllers
                         .FirstOrDefault();
                     int refC = DbContext.CommandeFournisseurStatuts.Select(r=> new { refCt= ApplicationDbContext.GetRefContratType1(refE, refClient, dRef) }).FirstOrDefault().refCt;
                     //If contrat, take the CommandeClient with the Contrat
-                    if (refC>0)
+                    if (refC > 0)
                     {
                         commandeClient = DbContext.CommandeClients
                         .Include(r => r.CommandeClientMensuelles)
+                            .ThenInclude(r => r.UtilisateurCertif)
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
                         .Where(el => (el.RefAdresse == refA && el.RefProduit == refP
@@ -84,9 +86,10 @@ namespace eVaSys.Controllers
                     {
                         commandeClient = DbContext.CommandeClients
                         .Include(r => r.CommandeClientMensuelles)
+                            .ThenInclude(r => r.UtilisateurCertif)
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
-                        .Where(el => (el.RefAdresse == refA && el.RefProduit == refP 
+                        .Where(el => (el.RefAdresse == refA && el.RefProduit == refP
                             && el.RefContrat == null
                             && el.CommandeClientMensuelles.Any(r => (r.D.Month == dRef.Month && r.D.Year == dRef.Year))))
                         .FirstOrDefault();
@@ -102,6 +105,7 @@ namespace eVaSys.Controllers
             {
                 commandeClient = DbContext.CommandeClients
                     .Include(r => r.CommandeClientMensuelles)
+                        .ThenInclude(r => r.UtilisateurCertif)
                     .Include(r => r.UtilisateurCreation)
                     .Include(r => r.UtilisateurModif)
                     .Where(i => i.RefCommandeClient == id).FirstOrDefault();
@@ -195,35 +199,14 @@ namespace eVaSys.Controllers
                         }
                         if (cmdM != null)
                         {
-                            //Certification
-                            //If already certified, only current user can modifiy Poids or PrixTonneHT
-                            if (cmdM.RefUtilisateurCertif != null && cmd.RefUtilisateurCreation != CurrentContext.RefUtilisateur
-                                && (
-                                    cmdM.Poids != (int)cmdMF.Poids ||
-                                    cmdM.PrixTonneHT != (decimal)(cmdMF.PrixTonneHT == null ? 0 : cmdMF.PrixTonneHT)
-                                )
-                            )
-                            {
-                                errs += " -/- " + ((DateTime)cmdM.D).ToString("G", CurrentContext.CurrentCulture) + " -> " + CurrentContext.CulturedRessources.GetTextRessource(1579);
-                            }
-                            //Creator cannot certify
-                            else if (cmdM.RefCommandeClientMensuelle <= 0 && cmdMF.Certif)
-                            {
-                                errs += " -/- " + ((DateTime)cmdM.D).ToString("G", CurrentContext.CurrentCulture) + " -> " + CurrentContext.CulturedRessources.GetTextRessource(1580);
-                            }
-                            else
+                            //Check validity before updating
+                            CommandeClientMensuelleViewModel cmdMensuelle = _mapper.Map<CommandeClientMensuelleViewModel>(cmdM);
+                            string valid = cmdM.IsPreValid(cmdMensuelle, CurrentContext.CurrentCulture, CurrentContext.RefUtilisateur);
+                            //continue if no errors
+                            if (valid == "")
                             {
                                 //Update data
-                                cmd.Cmt = cmdMF.Cmt;
-                                cmdM.Poids = (int)cmdMF.Poids;
-                                cmdM.PrixTonneHT = (decimal)(cmdMF.PrixTonneHT == null ? 0 : cmdMF.PrixTonneHT);
-                                cmdM.IdExt = cmdMF.IdExt;
-                            }
-                            if (cmdMF.Certif)
-                            {
-                                //Certification
-                                cmdM.RefUtilisateurCertif = CurrentContext.RefUtilisateur;
-                                cmdM.DCertif = DateTime.Now;
+                                DataUtils.UpdateDataCommandeClientMensuelle(ref cmdM, cmdMF, CurrentContext.RefUtilisateur);
                             }
                         }
                     }
@@ -480,9 +463,10 @@ namespace eVaSys.Controllers
                 + " from tblProduit"
                 + "     inner join"
                 + "     (select isnull(entiteP.RefProduit, cmdM.Refproduit) as RefProduit"
-                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, null as RefContrat, cmdM.Cmt, cmdM.RefCommandeClient, cmdM.RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
+                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, null as RefContrat, cmdM.Cmt, cmdM.RefCommandeClient, cmdM.RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt, CertificationText"
                 + "     from"
                 + "         (select tblCommandeClient.RefEntite, tblCommandeClient.RefAdresse, tblCommandeClient.RefProduit, tblCommandeClient.Cmt, tblCommandeClientMensuelle.*"
+                + "             , case when RefUtilisateurCertif is not null then 'Certifié' else null end as CertificationText"
                 + "         from tblCommandeClient"
                 + "             left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
                 + "         where tblCommandeClient.RefEntite = @refEntite and tblCommandeClient.RefAdresse = @refAdresse and year(tblCommandeClientMensuelle.D) = year(@d) and month(tblCommandeClientMensuelle.D) = month(@d)"
@@ -498,10 +482,10 @@ namespace eVaSys.Controllers
                 + " from tblProduit"
                 + "     inner join"
                 + "     (select isnull(entiteP.RefProduit, cmdM.Refproduit) as RefProduit"
-                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, RefContrat, cmdM.Cmt, RefCommandeClient, RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt"
+                + "         , @refEntite as RefEntite, @refAdresse as RefAdresse, RefContrat, cmdM.Cmt, RefCommandeClient, RefCommandeClientMensuelle, @d as D, cmdM.Poids, cmdM.PrixTonneHT, cmdM.IdExt, CertificationText"
                 + "     from"
                 + "         (select tblCommandeClient.RefEntite, tblCommandeClient.RefAdresse, tblCommandeClient.RefContrat, tblCommandeClient.RefProduit, tblCommandeClient.Cmt"
-                + "             , tblCommandeClientMensuelle.*"
+                + "             , tblCommandeClientMensuelle.*, case when RefUtilisateurCertif is not null then 'Certifié' else null end as CertificationText"
                 + "         from tblCommandeClient"
                 + "             left join tblCommandeClientMensuelle on tblCommandeClientMensuelle.RefCommandeClient = tblCommandeClient.RefCommandeClient"
                 + "         where tblCommandeClient.RefEntite = @refEntite and tblCommandeClient.RefAdresse = @refAdresse"

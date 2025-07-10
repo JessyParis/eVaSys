@@ -35,7 +35,7 @@ namespace eVaSys.ViewModels
         public string CreationText { get; set;}
         public string ModificationText { get; set; }
         public string CertificationText { get; set; }
-        public bool Certif { get; set; } = false;
+        public bool? Certif { get; set; } = null;
         #endregion
     }
 }

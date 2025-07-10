@@ -456,7 +456,9 @@ namespace eVaSys.Utils
                     [ActionName.ContactModificationRequest.ToString()] = new EnvAction() { Name = ActionName.ContactModificationRequest.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] },
                     [ActionName.NonConformiteForIFClientFacture.ToString()] = new EnvAction() { Name = ActionName.NonConformiteForIFClientFacture.ToString(), Module = EnvModules[ModuleName.Qualite.ToString()] },
                     [ActionName.CertificationPrixReprise.ToString()] = new EnvAction() { Name = ActionName.CertificationPrixReprise.ToString(), Module = EnvModules[ModuleName.Logistique.ToString()] },
-                    [ActionName.CertificationCommandeClientMensuelle.ToString()] = new EnvAction() { Name = ActionName.CertificationCommandeClientMensuelle.ToString(), Module = EnvModules[ModuleName.Logistique.ToString()] }
+                    [ActionName.CertificationCommandeClientMensuelle.ToString()] = new EnvAction() { Name = ActionName.CertificationCommandeClientMensuelle.ToString(), Module = EnvModules[ModuleName.Logistique.ToString()] },
+                    [ActionName.UnCertificationPrixReprise.ToString()] = new EnvAction() { Name = ActionName.UnCertificationPrixReprise.ToString(), Module = EnvModules[ModuleName.Logistique.ToString()] },
+                    [ActionName.UnCertificationCommandeClientMensuelle.ToString()] = new EnvAction() { Name = ActionName.UnCertificationCommandeClientMensuelle.ToString(), Module = EnvModules[ModuleName.Logistique.ToString()] }
                 };
             }
         }
@@ -1052,6 +1054,9 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.RefRessource, 0, EnvDataColumnDataType.id, "RefRessource", "tblRessource.RefRessource");
                 CreateEnvDataColumn(cR, DataColumnName.RefSAGECodeTransport, 0, EnvDataColumnDataType.id, "RefSAGECodeTransport", "tbrSAGECodeTransport.RefSAGECodeTransport");
                 CreateEnvDataColumn(cR, DataColumnName.RefJourFerie, 0, EnvDataColumnDataType.id, "RefJourFerie", "tblJourFerie.RefJourFerie");
+                CreateEnvDataColumn(cR, DataColumnName.RefUtilisateurCreation, 0, EnvDataColumnDataType.id, "RefUtilisateurCreation", "");
+                CreateEnvDataColumn(cR, DataColumnName.RefUtilisateurModif, 0, EnvDataColumnDataType.id, "RefUtilisateurModif", "");
+                CreateEnvDataColumn(cR, DataColumnName.RefUtilisateurCertif, 0, EnvDataColumnDataType.id, "RefUtilisateurCertif", "");
                 //Special columns
                 CreateEnvDataColumn(cR, DataColumnName.CommandeFournisseurRefExt, 1289, EnvDataColumnDataType.text, "RefExt", "tblCommandeFournisseur.RefExt");
                 CreateEnvDataColumn(cR, DataColumnName.Pourcentage, 203, EnvDataColumnDataType.decimalNumber2, "", "");

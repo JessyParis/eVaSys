@@ -168,6 +168,8 @@ export enum ActionName {
   ValidateRepartition = "ValidateRepartition",
   CertificationPrixReprise = "CertificationPrixReprise",
   CertificationCommandeClientMensuelle = "CertificationCommandeClientMensuelle",
+  UnCertificationCommandeClientMensuelle = "UnCertificationCommandeClientMensuelle",
+  UnCertificationPrixReprise = "UnCertificationPrixReprise",
 }
 
 //Habilitations Module logistique
@@ -716,6 +718,9 @@ export enum DataColumnName {
   RefTitre = "RefTitre",
   RefTransport = "RefTransport",
   RefTransporteur = "RefTransporteur",
+  RefUtilateurCreation = "RefUtilisateurCreation",
+  RefUtilateurModif = "RefUtilisateurModif",
+  RefUtilateurCertif = "RefUtilisateurCertif",
   RepartitionD = "RepartitionD",
   SurcoutCarburantRatio = "SurcoutCarburantRatio",
   TransporteurLibelle = "TransporteurLibelle",

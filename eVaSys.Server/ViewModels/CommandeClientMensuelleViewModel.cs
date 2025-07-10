@@ -28,7 +28,7 @@ namespace eVaSys.ViewModels
         public int? RefExt { get; set; }
         public int RefProduit { get; set; }
         public string LibelleProduit { get; set; }
-        public bool Certif { get; set; } = false;
         public string CertificationText { get; set; }
+        public bool? Certif { get; set; } = null;
     }
 }

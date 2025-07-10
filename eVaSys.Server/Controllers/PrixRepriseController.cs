@@ -154,7 +154,7 @@ namespace eVaSys.Controllers
                     //continue if no errors
                     if (valid == "")
                     {
-                        DataUtils.UpdateDataEntitePrixReprise(ref prx, prxR, CurrentContext.RefUtilisateur);
+                        DataUtils.UpdateDataPrixReprise(ref prx, prxR, CurrentContext.RefUtilisateur);
                         //Check validation after updating
                         valid = prx.IsValid();
                         //Add error if applicable
@@ -216,7 +216,7 @@ namespace eVaSys.Controllers
             //continue if no errors
             if (valid == "")
             {
-                DataUtils.UpdateDataEntitePrixReprise(ref prixReprise, model, CurrentContext.RefUtilisateur);
+                DataUtils.UpdateDataPrixReprise(ref prixReprise, model, CurrentContext.RefUtilisateur);
                 //Check validation after updating
                 valid = prixReprise.IsValid();
                 //End
