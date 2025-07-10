@@ -218,6 +218,13 @@ export function getCreationModificationTooltipText<T extends { CreationText: str
   if (item?.ModificationText) { t += item?.ModificationText; }
   return t;
 }
+//----------------------------------------------------------------------------------------------------- 
+//Create tooltip certification text
+export function getCertficationTooltipText<T extends { CertificationText: string }>(item: T): string {
+  let t: string = "";
+  if (item?.CertificationText) { t = item?.CertificationText; }
+  return t;
+}
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 //Get cultured month name

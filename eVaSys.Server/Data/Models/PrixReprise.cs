@@ -8,6 +8,8 @@
 /// Création : 07/09/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
+using eVaSys.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -69,6 +71,8 @@ namespace eVaSys.Data
         public DateTime? DModif { get; set; }
         [NotMapped]
         public int RefUtilisateurCourant { get; set; }
+        [NotMapped]
+        public bool ApplyMarkModification { get; set; } = true;
         public int RefUtilisateurCreation { get; set; }
         public Utilisateur UtilisateurCreation { get; set; }
         public int? RefUtilisateurModif { get; set; }
@@ -116,6 +120,14 @@ namespace eVaSys.Data
                 return s;
             }
         }
+        public string MonolineSummaryText
+        {
+            get
+            {
+                string s = Produit.Libelle + " " + D.ToString("MM-YYYY");
+                return s;
+            }
+        }
         //--------------------------------------------------------------------------------------------
         /// <summary>
         /// Mark modifications
@@ -129,9 +141,42 @@ namespace eVaSys.Data
             }
             else
             {
-                RefUtilisateurModif = RefUtilisateurCourant;
-                DModif = DateTime.Now;
+                if (ApplyMarkModification)
+                {
+                    RefUtilisateurModif = RefUtilisateurCourant;
+                    DModif = DateTime.Now;
+                }
             }
+        }
+        //--------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Checked if asked modifications are valid
+        /// </summary>
+        public string IsPreValid(PrixRepriseViewModel viewModel, CultureInfo cultureContext, int refUtilisateurContext)
+        {
+            string r = "";
+            CulturedRessources cR = new(cultureContext, DbContext);
+            //Check certification
+            //If certified, only previous certifier can modify or delete
+            if (RefUtilisateurCertif > 0)
+            {
+                //Only previous certifier can modify or delete
+                if (refUtilisateurContext != RefUtilisateurCertif)
+                {
+                    if (r == "") { r += Environment.NewLine; }
+                    r += cR.GetTextRessource(1579);
+                }
+            }
+            else if(viewModel.Certif)
+            {
+                //Creator or previous modifier can't certify
+                if (refUtilisateurContext == RefUtilisateurCreation || refUtilisateurContext == RefUtilisateurModif)
+                {
+                    if (r == "") { r += Environment.NewLine; }
+                    r += cR.GetTextRessource(1580);
+                }
+            }
+            return r;
         }
         //--------------------------------------------------------------------------------------------
         /// <summary>
@@ -140,24 +185,44 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            //bool existsInDB = (Utils.Utils.DbScalar("select count(*) from tblTransport where RefTransport=" + RefTransport, DbContext.Database.GetDbConnection()) != "0");
-            //int c = DbContext.Transports.Where(q => (q.RefParcours == RefParcours && q.RefTransporteur == RefTransporteur && q.RefCamionType == RefCamionType)).Count();
-            //if ((!existsInDB && c > 0) || (existsInDB && c > 1)) { if (r == "") { r += Environment.NewLine; } r += "Un transport identique existe déjà."; }
+            //Check duplicates
+            int c = DbContext.PrixReprises.Where(q => q.D == D && q.RefProduit == RefProduit && q.RefContrat == RefContrat
+                && q.RefPrixReprise != RefPrixReprise).Count();
+            //Check certification
+
+            //Create error message if applicable
+            if (c > 0)
+            {
+                CulturedRessources cR = new(currentCulture, DbContext);
+                if (c > 0) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }
+            }
             return r;
         }
         //--------------------------------------------------------------------------------------------
         /// <summary>
         /// Checked if linked data exist.
         /// </summary>
-        public string IsDeletable()
+        public string IsDeletable(CultureInfo cultureContext, int refUtilisateurContext)
         {
             string r = "";
+            //Check linked data
             int nbLinkedData = 0;
             if (nbLinkedData != 0)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
                 if (r == "") { r += Environment.NewLine; }
                 r += cR.GetTextRessource(393);
+            }
+            //Check certification
+            //If certified, only previous certifier can delete
+            if (RefUtilisateurCertif > 0)
+            {
+                //Only previous certifier can delete
+                if (refUtilisateurContext != RefUtilisateurCertif)
+                {
+                    if (r == "") { r += Environment.NewLine; }
+                    r += new CulturedRessources(cultureContext, DbContext).GetTextRessource(1579);
+                }
             }
             return r;
         }

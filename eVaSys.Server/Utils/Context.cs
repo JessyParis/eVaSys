@@ -454,7 +454,9 @@ namespace eVaSys.Utils
                     [ActionName.EntiteForContrat.ToString()] = new EnvAction() { Name = ActionName.EntiteForContrat.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] },
                     [ActionName.DeactivateUtilisateur.ToString()] = new EnvAction() { Name = ActionName.DeactivateUtilisateur.ToString(), Module = EnvModules[ModuleName.Administration.ToString()] },
                     [ActionName.ContactModificationRequest.ToString()] = new EnvAction() { Name = ActionName.ContactModificationRequest.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] },
-                    [ActionName.NonConformiteForIFClientFacture.ToString()] = new EnvAction() { Name = ActionName.NonConformiteForIFClientFacture.ToString(), Module = EnvModules[ModuleName.Qualite.ToString()] }
+                    [ActionName.NonConformiteForIFClientFacture.ToString()] = new EnvAction() { Name = ActionName.NonConformiteForIFClientFacture.ToString(), Module = EnvModules[ModuleName.Qualite.ToString()] },
+                    [ActionName.CertificationPrixReprise.ToString()] = new EnvAction() { Name = ActionName.CertificationPrixReprise.ToString(), Module = EnvModules[ModuleName.Logistique.ToString()] },
+                    [ActionName.CertificationCommandeClientMensuelle.ToString()] = new EnvAction() { Name = ActionName.CertificationCommandeClientMensuelle.ToString(), Module = EnvModules[ModuleName.Logistique.ToString()] }
                 };
             }
         }
@@ -1056,6 +1058,7 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.EconomieCO2KgT, 1464, EnvDataColumnDataType.intNumber, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.AnneeTexte, 569, EnvDataColumnDataType.text, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.PUHTUnique, 1567, EnvDataColumnDataType.bit, "", "");
+                CreateEnvDataColumn(cR, DataColumnName.Certifie, 0, EnvDataColumnDataType.bit, "", "");
             }
         }
         private void CreateEnvDataColumn(CulturedRessources cR, DataColumnName col, int ress, EnvDataColumnDataType type,  string field, string fullfield, string cmt = "")

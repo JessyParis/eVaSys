@@ -55,6 +55,7 @@
                       <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(613)}}</th>
                       <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(614)}}</th>
                       <th style="padding:5px;"></th>
+                      <th style="padding:5px;"></th>
                     </tr>
                   </thead>
                   <tbody formArrayName="PrxReps">
@@ -107,6 +108,12 @@
                       </td>
                       <td style="padding: 0px 5px 0px 5px;">
                         <mat-icon class="ev-button-right color-tooltip-info-icon" [matTooltip]="getCreationTooltipText(i)">info</mat-icon>
+                      </td>
+                      <td style="padding: 0px 5px 0px 5px;">
+                        <mat-icon class="material-symbols-outlined color-primary"
+                                  *ngIf="!!(prixReprises[i].CertificationText)" [matTooltip]="getCertificationTooltipText(i)">license</mat-icon>
+                        <mat-icon class="material-symbols-outlined color-grey"
+                                  *ngIf="!(prixReprises[i].CertificationText)">unlicense</mat-icon>
                       </td>
                     </tr>
                   </tbody>

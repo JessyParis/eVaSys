@@ -198,7 +198,10 @@ namespace eVaSys.Controllers
                     var log = new Log();
                     if (!changeProfil)
                     {
-                        log = new Log() { RefUtilisateur = utilisateur.RefUtilisateur };
+                        log = new Log() { 
+                            RefUtilisateur = utilisateur.RefUtilisateur,
+                            DLogin= DateTime.Now
+                        };
                         DbContext.Logs.Add(log);
                     }
                     else
@@ -218,7 +221,8 @@ namespace eVaSys.Controllers
                             log = new Log()
                             {
                                 RefUtilisateur = utilisateur.RefUtilisateur,
-                                RefUtilisateurMaitre = CurrentContext.RefUtilisateurMaitre
+                                RefUtilisateurMaitre = CurrentContext.RefUtilisateurMaitre,
+                                DLogin = DateTime.Now
                             };
                             DbContext.Logs.Add(log);
                         }

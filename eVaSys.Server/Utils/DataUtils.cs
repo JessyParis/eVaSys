@@ -10,9 +10,6 @@
 
 using eVaSys.Data;
 using eVaSys.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace eVaSys.Utils
 {
@@ -34,7 +31,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataAdresse(ref Adresse dataModel, AdresseViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataAdresse(ref Adresse dataModel, AdresseViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -71,7 +68,7 @@ namespace eVaSys.Utils
                 dataModel.SiteWeb = Utils.SetEmptyStringToNull(viewModel.SiteWeb);
             }
             //Register session user
-            dataModel.RefUtilisateurCourant = refUtilisateurCourant;
+            dataModel.RefUtilisateurCourant = refUtilisateurContext;
             //End
             return dirty;
         }
@@ -82,7 +79,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataAction(ref Data.Action dataModel, ActionViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataAction(ref Data.Action dataModel, ActionViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -172,7 +169,7 @@ namespace eVaSys.Utils
                 }
             }
             //Register session user
-            dataModel.RefUtilisateurCourant = refUtilisateurCourant;
+            dataModel.RefUtilisateurCourant = refUtilisateurContext;
             return dirty;
         }
         //------------------------------------------------------------------------------------------------------------------
@@ -182,7 +179,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataProduit(ref Produit dataModel, ProduitViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataProduit(ref Produit dataModel, ProduitViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -345,7 +342,7 @@ namespace eVaSys.Utils
                 }
             }
             //Register session user
-            dataModel.RefUtilisateurCourant = refUtilisateurCourant;
+            dataModel.RefUtilisateurCourant = refUtilisateurContext;
             return dirty;
         }
         //------------------------------------------------------------------------------------------------------------------
@@ -355,7 +352,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataDocument(ref Document dataModel, DocumentViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataDocument(ref Document dataModel, DocumentViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -490,7 +487,7 @@ namespace eVaSys.Utils
                 }
             }
             //Register session user
-            dataModel.RefUtilisateurCourant = refUtilisateurCourant;
+            dataModel.RefUtilisateurCourant = refUtilisateurContext;
             return dirty;
         }
         //------------------------------------------------------------------------------------------------------------------
@@ -500,7 +497,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataContactAdresse(ref ContactAdresse dataModel, ContactAdresseViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataContactAdresse(ref ContactAdresse dataModel, ContactAdresseViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -646,8 +643,8 @@ namespace eVaSys.Utils
                 }
             }
             //Register session user
-            dataModel.RefUtilisateurCourant = refUtilisateurCourant;
-            dataModel.Contact.RefUtilisateurCourant = refUtilisateurCourant;
+            dataModel.RefUtilisateurCourant = refUtilisateurContext;
+            dataModel.Contact.RefUtilisateurCourant = refUtilisateurContext;
             return dirty;
         }
         //------------------------------------------------------------------------------------------------------------------
@@ -657,7 +654,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataContratIncitationQualite(ref ContratIncitationQualite dataModel, ContratIncitationQualiteViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataContratIncitationQualite(ref ContratIncitationQualite dataModel, ContratIncitationQualiteViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -680,7 +677,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataContrat(ref Contrat dataModel, ContratViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataContrat(ref Contrat dataModel, ContratViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -769,7 +766,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataContratCollectivite(ref ContratCollectivite dataModel, ContratCollectiviteViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataContratCollectivite(ref ContratCollectivite dataModel, ContratCollectiviteViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -796,7 +793,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataEntiteEntite(ref EntiteEntite dataModel, EntiteEntiteViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataEntiteEntite(ref EntiteEntite dataModel, EntiteEntiteViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -816,7 +813,7 @@ namespace eVaSys.Utils
                 //Register session user
                 if (dataModel.RefUtilisateurCreation == null && dataModel.RefEntiteEntite <= 0)
                 {
-                    dataModel.RefUtilisateurCreation = refUtilisateurCourant;
+                    dataModel.RefUtilisateurCreation = refUtilisateurContext;
                     dataModel.DCreation = System.DateTime.Now;
                 }
             }
@@ -829,7 +826,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataEntiteCamionType(ref EntiteCamionType dataModel, EntiteCamionTypeViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataEntiteCamionType(ref EntiteCamionType dataModel, EntiteCamionTypeViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -847,7 +844,7 @@ namespace eVaSys.Utils
                 //Register session user
                 if (dataModel.UtilisateurCreation == null && dataModel.RefEntiteCamionType <= 0)
                 {
-                    dataModel.RefUtilisateurCreation = refUtilisateurCourant;
+                    dataModel.RefUtilisateurCreation = refUtilisateurContext;
                     dataModel.DCreation = System.DateTime.Now;
                 }
             }
@@ -860,7 +857,7 @@ namespace eVaSys.Utils
         /// <param name="viewModel">The view model to read data from </param>
         /// <returns>true if data are different (dirty)</returns>
         /// </summary>
-        public static bool UpdateDataEntiteProduit(ref EntiteProduit dataModel, EntiteProduitViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataEntiteProduit(ref EntiteProduit dataModel, EntiteProduitViewModel viewModel, int refUtilisateurContext)
         {
             bool dirty = false;
             //Mark as dirty if applicable
@@ -880,16 +877,66 @@ namespace eVaSys.Utils
                 //Register session user
                 if (dataModel.UtilisateurCreation == null && dataModel.RefEntiteProduit <= 0)
                 {
-                    dataModel.RefUtilisateurCreation = refUtilisateurCourant;
+                    dataModel.RefUtilisateurCreation = refUtilisateurContext;
                     dataModel.DCreation = System.DateTime.Now;
                 }
             }
             return dirty;
         }
+        //------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Save values for PrixReprise
+        /// <param name="dataModel">The dto object to write data to</param>
+        /// <param name="viewModel">The view model to read data from </param>
+        /// <returns>true if data are different (dirty)</returns>
+        /// </summary>
+        public static bool UpdateDataEntitePrixReprise(ref PrixReprise dataModel, PrixRepriseViewModel viewModel, int refUtilisateurContext)
+        {
+            bool dirty = false;
+            //Mark as dirty if applicable
+            if (dataModel.RefProcess != viewModel.Process?.RefProcess
+                || dataModel.RefProduit != viewModel.Produit?.RefProduit
+                || dataModel.RefComposant != viewModel.Composant?.RefProduit
+                || dataModel.RefContrat != viewModel.Contrat?.RefContrat
+                || dataModel.D != viewModel.D
+                || dataModel.PUHT != (viewModel.PUHT ?? 0)
+                || dataModel.PUHTSurtri != (viewModel.PUHTSurtri ?? 0)
+                || dataModel.PUHTTransport != (viewModel.PUHTTransport ?? 0)
+                )
+            {
+                dirty = true;
+            }
+            //Save data
+            if (dirty)
+            {
+                //Update data
+                dataModel.RefProcess = viewModel.Process?.RefProcess;
+                dataModel.RefProduit = viewModel.Produit.RefProduit;
+                dataModel.RefComposant = viewModel.Composant?.RefProduit;
+                dataModel.RefContrat = viewModel.Contrat?.RefContrat;
+                dataModel.D = viewModel.D;
+                dataModel.PUHT = viewModel.PUHT ?? 0;
+                dataModel.PUHTSurtri = viewModel.PUHTSurtri ?? 0;
+                dataModel.PUHTTransport = viewModel.PUHTTransport ?? 0;
+            }
+            else
+            {
+                dataModel.ApplyMarkModification = false; // Avoid mark modification if no data modified
+            }
+            //Register certification
+            if (viewModel.Certif)
+            {
+                dataModel.RefUtilisateurCertif = refUtilisateurContext;
+                dataModel.DCertif = DateTime.Now;
+            }
+            //Register session user
+            dataModel.RefUtilisateurCourant = refUtilisateurContext;
+            return dirty;
+        }
         /// <summary>
         /// Write received data to dto
         /// </summary>
-        public static bool UpdateDataRepartition(ref Repartition dataModel, RepartitionViewModel viewModel, int refUtilisateurCourant)
+        public static bool UpdateDataRepartition(ref Repartition dataModel, RepartitionViewModel viewModel, int refUtilisateurContext)
         {
             //Update main data
             dataModel.RefFournisseur = (viewModel.CommandeFournisseur == null ? (int?)viewModel.Fournisseur.RefEntite : null);

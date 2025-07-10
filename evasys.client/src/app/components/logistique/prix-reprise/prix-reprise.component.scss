@@ -15,9 +15,9 @@
   }
 
   td:nth-child(2), th:nth-child(2) {
-    min-width: 240px;
-    max-width: 240px;
-    width: 240px;
+    min-width: 195px;
+    max-width: 195px;
+    width: 195px;
     box-sizing: border-box;
   }
 
@@ -43,6 +43,11 @@
   }
 
   td:nth-child(6), th:nth-child(6) {
+    min-width: 45px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(6), th:nth-child(7) {
     min-width: 45px;
     box-sizing: border-box;
   }

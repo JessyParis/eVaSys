@@ -27,54 +27,111 @@ namespace eVaSys.Data
         public override int SaveChanges()
         {
             HandleModificationMark();
-            HandleModificationAudit();
-            return base.SaveChanges();
+            var auditEntries = HandleModificationAudit();
+            int r = base.SaveChanges();
+            OnAfterSaveChanges(auditEntries);
+            return r;
         }
 
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            HandleModificationMark();
+            var auditEntries = HandleModificationAudit();
+            int r = base.SaveChanges(acceptAllChangesOnSuccess);
+            OnAfterSaveChanges(auditEntries);
+            return r;
+        }
+
+        //public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        //{
+        //    HandleModificationMark();
+        //    return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        //}
+
+        //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        //{
+        //    HandleModificationMark();
+        //    return base.SaveChangesAsync(cancellationToken);
+        //}
+
+        ///// <summary>
+        ///// Saves all changes made in this context to the underlying database.
+        ///// </summary>
+        ///// <remarks>This method handles modification marks and audits before saving changes, and triggers
+        ///// post-save actions.</remarks>
+        ///// <returns>The number of state entries written to the underlying database. This can include state entries for entities
+        ///// and relationships.</returns>
+        //public override int SaveChanges()
+        //{
+        //    HandleModificationMark();
+        //    return base.SaveChanges();
+        //}
+        ////public override int SaveChanges()
+        ////{
+        ////    HandleModificationMark();
+        ////    var auditEntries = HandleModificationAudit();
+        ////    int r = base.SaveChanges();
+        ////    OnAfterSaveChanges(auditEntries);
+        ////    return r;
+        ////}
+
+        ////public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        ////{
+        ////HandleModificationMark();
+        ////var auditEntries = HandleModificationAudit();
+        ////int r= base.SaveChanges();
+        ////OnAfterSaveChanges(auditEntries);
+        ////return r;
+        ////}
         //public override int SaveChanges(bool acceptAllChangesOnSuccess)
         //{
         //    HandleModificationMark();
-        //    HandleModificationAudit();
         //    return base.SaveChanges(acceptAllChangesOnSuccess);
         //}
 
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
-        {
-            HandleModificationMark();
-            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-        }
+        ///// <summary>
+        ///// Asynchronously saves all changes made in this context to the underlying database.
+        ///// </summary>
+        ///// <remarks>This method overrides the base implementation to include additional handling before
+        ///// changes are saved.</remarks>
+        ///// <param name="acceptAllChangesOnSuccess">A value indicating whether `AcceptAllChanges` is called after the changes have been sent successfully to the
+        ///// database. If <see langword="true"/>, all changes are accepted; otherwise, they are not.</param>
+        ///// <param name="cancellationToken">A token to monitor for cancellation requests. The default value is <see cref="CancellationToken.None"/>.</param>
+        ///// <returns>A task that represents the asynchronous save operation. The task result contains the number of state entries
+        ///// written to the database.</returns>
+        //public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        //{
+        //    HandleModificationMark();
+        //    return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        //}
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            HandleModificationMark();
-            return base.SaveChangesAsync(cancellationToken);
-        }
+        ///// <summary>
+        ///// Asynchronously saves all changes made in this context to the underlying database.
+        ///// </summary>
+        ///// <remarks>This method overrides the base implementation to include additional logic for
+        ///// handling modification marks before saving changes. It is important to ensure that any changes that need to
+        ///// be tracked are properly marked before calling this method.</remarks>
+        ///// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete. The default value is
+        ///// <see cref="CancellationToken.None"/>.</param>
+        ///// <returns>A task that represents the asynchronous save operation. The task result contains the number of state entries
+        ///// written to the database.</returns>
+        //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        //{
+        //    HandleModificationMark();
+        //    return base.SaveChangesAsync(cancellationToken);
+        //}
+
 
         //--------------------------------------------------------------------------------------------
         /// <summary>
-        /// Mark modifications (user and date)
+        /// Store data modifications for specified entities
         /// </summary>
-        private void HandleModificationMark()
-        {
-            foreach (var entry in ChangeTracker.Entries()
-                .Where(e => (e is IMarkModification)
-                 && (e.State == EntityState.Added || e.State == EntityState.Modified))
-                )
-            {
-                var tracked = entry.Entity as IMarkModification;
-                tracked?.MarkModification(entry.State == EntityState.Added);
-            }
-        }
-
-        //--------------------------------------------------------------------------------------------
-        /// <summary>
-        /// Store data modifications
-        /// </summary>
-        private void HandleModificationAudit()
+        private List<AuditEntry> HandleModificationAudit()
         {
             var auditEntries = OnBeforeSaveChanges();
             //var result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
             //await OnAfterSaveChanges(auditEntries);
+            return auditEntries;
         }
         private List<AuditEntry> OnBeforeSaveChanges()
         {
@@ -84,7 +141,7 @@ namespace eVaSys.Data
             {
                 if (entry.Entity is Audit || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged
                     || (
-                        !(entry.Entity is PrixReprise) 
+                        !(entry.Entity is PrixReprise)
                         && !(entry.Entity is CommandeClientMensuelle)
                         )
                     )
@@ -140,6 +197,41 @@ namespace eVaSys.Data
             // keep a list of entries where the value of some properties are unknown at this step
             return auditEntries.Where(_ => _.HasTemporaryProperties).ToList();
         }
+
+        /// <summary>
+        /// Processes a list of audit entries after changes have been saved to the database.
+        /// </summary>
+        /// <remarks>This method finalizes the values of temporary properties in each audit entry and 
+        /// saves the audit information to the database. It updates primary key values and  other new values in the
+        /// audit entries before persisting them.</remarks>
+        /// <param name="auditEntries">A list of <see cref="AuditEntry"/> objects representing the audited changes.  The list must not be
+        /// null or empty.</param>
+        private void OnAfterSaveChanges(List<AuditEntry> auditEntries)
+        {
+            if (auditEntries == null || auditEntries.Count == 0)
+                return;
+
+            foreach (var auditEntry in auditEntries)
+            {
+                // Get the final value of the temporary properties
+                foreach (var prop in auditEntry.TemporaryProperties)
+                {
+                    if (prop.Metadata.IsPrimaryKey())
+                    {
+                        auditEntry.KeyValues[prop.Metadata.Name] = prop.CurrentValue;
+                    }
+                    else
+                    {
+                        auditEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue;
+                    }
+                }
+
+                // Save the Audit entry
+                Audits.Add(auditEntry.ToAudit());
+            }
+            SaveChanges();
+            return;
+        }
         /// <summary>
         /// Class to manage Audit entities
         /// </summary>
@@ -162,14 +254,31 @@ namespace eVaSys.Data
             public Audit ToAudit()
             {
                 var audit = new Audit();
+                audit.RefUtilisateur = 0; // This should be set to the current user ID, e.g., from a service or context
                 audit.NomTable = TableName;
                 audit.D = DateTime.Now;
                 audit.Refs = JsonConvert.SerializeObject(KeyValues);
-                audit.AncienneValeur = OldValues.Count == 0 ? null : JsonConvert.SerializeObject(OldValues);
-                audit.NouvelleValeur = NewValues.Count == 0 ? null : JsonConvert.SerializeObject(NewValues);
+                audit.AncienneValeur = (OldValues.Count == 0 ? null : JsonConvert.SerializeObject(OldValues));
+                audit.NouvelleValeur = (NewValues.Count == 0 ? null : JsonConvert.SerializeObject(NewValues));
                 return audit;
             }
         }
+
+        //--------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Mark modifications (user and date)
+        /// </summary>
+        private void HandleModificationMark()
+        {
+            foreach (var entity in ChangeTracker.Entries()
+                .Where(e =>
+                e.State == EntityState.Added || e.State == EntityState.Modified))
+            {
+                var tracked = entity.Entity as IMarkModification;
+                tracked?.MarkModification(entity.State == EntityState.Added);
+            }
+        }
+
         public virtual DbSet<Action> Actions { get; set; }
         public virtual DbSet<ActionType> ActionTypes { get; set; }
         public virtual DbSet<ActionTypeEntiteType> ActionTypeEntiteTypes { get; set; }
