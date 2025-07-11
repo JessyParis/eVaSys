@@ -165,7 +165,11 @@ export enum ActionName {
   CopyPrixReprise = "CopyPrixReprise",
   CentreDeTriForUtilisateur = "CentreDeTriForUtilisateur",
   DeactivateUtilisateur = "DeactivateUtilisateur",
-  ValidateRepartition = "ValidateRepartition"
+  ValidateRepartition = "ValidateRepartition",
+  CertificationPrixReprise = "CertificationPrixReprise",
+  CertificationCommandeClientMensuelle = "CertificationCommandeClientMensuelle",
+  UnCertificationCommandeClientMensuelle = "UnCertificationCommandeClientMensuelle",
+  UnCertificationPrixReprise = "UnCertificationPrixReprise",
 }
 
 //Habilitations Module logistique
@@ -714,6 +718,9 @@ export enum DataColumnName {
   RefTitre = "RefTitre",
   RefTransport = "RefTransport",
   RefTransporteur = "RefTransporteur",
+  RefUtilateurCreation = "RefUtilisateurCreation",
+  RefUtilateurModif = "RefUtilisateurModif",
+  RefUtilateurCertif = "RefUtilisateurCertif",
   RepartitionD = "RepartitionD",
   SurcoutCarburantRatio = "SurcoutCarburantRatio",
   TransporteurLibelle = "TransporteurLibelle",
@@ -759,7 +766,8 @@ export enum DataColumnName {
   NovembreRegionPercent = "NovembreRegionPercent",
   DecembreRegionPercent = "DecembreRegionPercent",
   AnnuelPrecedentRegionPercent = "AnnuelPrecedentRegionPercent",
-  AnnuelRegionPercent = "AnnuelRegionPercent"
+  AnnuelRegionPercent = "AnnuelRegionPercent",
+  Certifie = "Certifie"
 }
 
 //Enumération pour les process de contact adresse

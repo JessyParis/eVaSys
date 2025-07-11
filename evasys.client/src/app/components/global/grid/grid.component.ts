@@ -24,6 +24,7 @@ import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { DataModelService } from "../../../services/data-model.service";
 import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
 import { UtilisateurList } from "../../../interfaces/dataModelsInterfaces";
+import { Dialog } from "@angular/cdk/dialog";
 
 @Component({
     selector: "grid",
@@ -36,6 +37,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   //Form
   form: UntypedFormGroup;
   formAugmentation: UntypedFormGroup;
+  formCertification: UntypedFormGroup;
   formPrixRepriseCopy: UntypedFormGroup;
   //Filters
   filterText: string = "";
@@ -178,6 +180,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   //Misc
   refMessageVisualisations: number = 0;
   refTransportConcurrence: number = 0;
+  certificationType: boolean = true; //True= Certification, False = Uncertification
   //Functions
   shortenLongText = shortenLongText;
   // Subject that emits when the component has been destroyed.
@@ -278,6 +281,9 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       MonthListFrom: new UntypedFormControl(null, Validators.required),
       YearListTo: new UntypedFormControl(null, Validators.required),
       MonthListTo: new UntypedFormControl(null, Validators.required)
+    });
+    this.formCertification = new UntypedFormGroup({
+      CertificationType: new UntypedFormControl(true)
     });
     //Get existing client
     listService.getListClient(null, null, null, null, null, false).subscribe(result => {
@@ -581,7 +587,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
           break;
       }
     }
-    this.dataSource = new GridDataSource(this.gridService, this.snackBarQueueService, this.applicationUserContext);
+    this.dataSource = new GridDataSource(this.gridService, this.snackBarQueueService, this.applicationUserContext, this.dialog);
     //Init filters
     switch (this.applicationUserContext.currentMenu.name) {
       case MenuName.LogistiqueMenuTransportDemandeEnlevement:
@@ -1122,7 +1128,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     //General styling
     switch (this.applicationUserContext.currentMenu.name) {
       case MenuName.AnnuaireMenuEntite:
-          if (!item[DataColumnName.EntiteActif] == true) { classes += " color-inactif"; }
+        if (!item[DataColumnName.EntiteActif] == true) { classes += " color-inactif"; }
         break;
       case MenuName.LogistiqueMenuCommandeFournisseur:
       case MenuName.ModulePrestataireMenuCommandeFournisseur:
@@ -1202,6 +1208,37 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
         break;
     }
     return classes;
+  }
+  //-----------------------------------------------------------------------------------
+  //Styling
+  selectDisabled(item: any): boolean {
+    let r: boolean = true;
+    //General styling
+    switch (this.applicationUserContext.currentMenu.name) {
+      case MenuName.LogistiqueMenuPrixReprise:
+      case MenuName.LogistiqueMenuCommandeClient:
+        if (this.certificationType) {
+          //Ask for certification
+          if (item.Certifie == false
+            && item.RefUtilisateurCreation != this.applicationUserContext.connectedUtilisateur.RefUtilisateur
+            && item.RefUtilisateurModif != this.applicationUserContext.connectedUtilisateur.RefUtilisateur
+          ) { r = false; }
+        }
+        else {
+          if (item.Certifie == true
+            && item.RefUtilisateurCertif == this.applicationUserContext.connectedUtilisateur.RefUtilisateur) { r = false; }
+        }
+        //r = false;
+        break;
+    }
+    return r;
+  }
+  //-----------------------------------------------------------------------------------
+  //Certification type
+  certificationTypeChange() {
+    this.selection.clear();
+    this.razSelection();
+    this.certificationType = this.formCertification.get("CertificationType").value;
   }
   //-----------------------------------------------------------------------------------
   //Row clicked
@@ -1361,7 +1398,11 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   // All rows are selected, or not
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.items.length;
+    let numRows = 0;
+    this.dataSource.items.forEach(row => {
+      if (!this.selectDisabled(row)) { numRows++; }
+    }
+    );
     return numSelected === numRows;
   }
 
@@ -1369,7 +1410,10 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.dataSource.items.forEach(row => this.selection.select(row));
+      this.dataSource.items.forEach(row => {
+        if (!this.selectDisabled(row)) { this.selection.select(row); }
+      }
+      );
   }
   //-----------------------------------------------------------------------------------
   //Save filters
@@ -1609,8 +1653,64 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     });
   }
   //-----------------------------------------------------------------------------------
+  //Certify data
+  certification() {
+    let msg = "";
+    let action = "";
+    if (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuPrixReprise) {
+      if (this.certificationType) {
+        msg = this.applicationUserContext.getCulturedRessourceText(1588);
+        action = ActionName.CertificationPrixReprise;
+      }
+      else {
+        msg = this.applicationUserContext.getCulturedRessourceText(1590);
+        action = ActionName.UnCertificationPrixReprise;
+      }
+    }
+    if (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeClient) {
+      if (this.certificationType) {
+        msg = this.applicationUserContext.getCulturedRessourceText(1589);
+        action = ActionName.CertificationCommandeClientMensuelle;
+      }
+      else {
+        msg = this.applicationUserContext.getCulturedRessourceText(1591);
+        action = ActionName.UnCertificationCommandeClientMensuelle;
+      }
+    }
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      width: "350px",
+      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: msg },
+      autoFocus: false,
+      restoreFocus: false
+    });
+    //Confirm
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === "yes") {
+        if (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuPrixReprise) {
+          this.applicationUserContext.selectedItem = Array.from(this.selection.selected, item => item.RefPrixReprise);
+        }
+        if (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeClient) {
+          this.applicationUserContext.selectedItem = Array.from(this.selection.selected, item => item.RefCommandeClientMensuelle);
+        }
+        //Get all selected data to certify
+        if (this.applicationUserContext.selectedItem && this.applicationUserContext.selectedItem.length > 0) {
+          this.selectedItem = Array.prototype.map.call(this.applicationUserContext.selectedItem, function (item: number) { return item.toString(); }).join(",");
+        }
+        else {
+          this.selectedItem = "";
+        }
+        //Reset pager
+        this.pagin.pageIndex = 0;
+        //Calculate and get rows back
+        this.loadPage(action);
+        //Reset selection
+        this.selection.clear();
+      }
+    });
+  }
+  //-----------------------------------------------------------------------------------
   //Deactivate users
-  deactivateUtilisateur() {
+  cert_old() {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: "350px",
       data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(1113) },
@@ -2356,6 +2456,7 @@ export class GridDataSource implements DataSource<any> {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
   public nbRow: number = 0; //Pager length
+  public errors: string = "";
   public nbAugmentation: string = "";
   public nbValidatedPrices: string = "";
   public nbRejectedPrices: string = "";
@@ -2364,6 +2465,8 @@ export class GridDataSource implements DataSource<any> {
   public nbChangeMoisDechargementPrevu: string = "";
   public nbCopyPrixReprise: string = "";
   public nbDeactivateUtilisateur: string = "";
+  public nbCertificationPrixReprise: string = "";
+  public nbCertificationCommandeClientMensuelle: string = "";
   public items: any[];
   public dMoisDechargementPrevuChangeList: { ref: number, m: appInterfaces.Month[] }[] = [];
   public columns: MatTableColumn[] = [];
@@ -2374,7 +2477,7 @@ export class GridDataSource implements DataSource<any> {
   constructor(private gridService: GridService
     , private snackBarQueueService: SnackBarQueueService
     , public applicationUserContext: ApplicationUserContext
-  ) { }
+    , public dialog: MatDialog  ) { }
   //Connect to table
   connect(collectionViewer: CollectionViewer): Observable<any[]> {
     return this.itemsSubject.asObservable();
@@ -2425,6 +2528,7 @@ export class GridDataSource implements DataSource<any> {
       .subscribe((resp: HttpResponse<any[]>) => {
         let n: number = parseInt(resp.headers.get("nbRow"), 10);
         if (!isNaN(n)) { this.nbRow = n };
+        this.errors = resp.headers.get("errors");
         this.nbAugmentation = resp.headers.get("nbAugmentation");
         this.nbValidatedPrices = resp.headers.get("nbValidatedPrices");
         this.nbRejectedPrices = resp.headers.get("nbRejectedPrices");
@@ -2433,6 +2537,8 @@ export class GridDataSource implements DataSource<any> {
         this.nbChangeMoisDechargementPrevu = resp.headers.get("nbChangeMoisDechargementPrevu");
         this.nbCopyPrixReprise = resp.headers.get("nbCopyPrixReprise");
         this.nbDeactivateUtilisateur = resp.headers.get("nbDeactivateUtilisateur");
+        this.nbCertificationPrixReprise = resp.headers.get("nbCertificationPrixReprise");
+        this.nbCertificationCommandeClientMensuelle = resp.headers.get("nbCertificationCommandeClientMensuelle");
         //Manage columns if data is present
         if (resp.body.length > 0) {
           let columnsTmp: MatTableColumn[] = [];
@@ -2467,6 +2573,12 @@ export class GridDataSource implements DataSource<any> {
             if (!this.displayedColumns.includes("infoMessageVisualisations"))
               this.displayedColumns.unshift("infoMessageVisualisations");
           }
+          if ((this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuPrixReprise && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
+            || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeClient && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
+          ) {
+            if (!this.displayedColumns.includes("certifie"))
+              this.displayedColumns.unshift("certifie");
+          }
           //Select column
           if ((this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTransportNonValide && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
             || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuSupprimerTransportEnMasse && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
@@ -2475,9 +2587,11 @@ export class GridDataSource implements DataSource<any> {
               && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
             || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuUtilisateurInactif
             || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuRepartition && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
+            || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuPrixReprise && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
+            || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeClient && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
           ) {
             if (!this.displayedColumns.includes("select"))
-            this.displayedColumns.unshift("select");
+              this.displayedColumns.unshift("select");
           }
           //moisDechargementPrevu column
           if (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur
@@ -2515,6 +2629,9 @@ export class GridDataSource implements DataSource<any> {
         //  })
         //}
         //Info
+        if (this.errors) {
+          showErrorToUser(this.dialog, { error: { error: { message: this.errors } } }, this.applicationUserContext);
+        }
         if (this.nbAugmentation) {
           this.snackBarQueueService.addMessage({ text: this.nbAugmentation + " " + this.applicationUserContext.getCulturedRessourceText(304), duration: 4000 } as appInterfaces.SnackbarMsg);
         }
@@ -2535,6 +2652,12 @@ export class GridDataSource implements DataSource<any> {
         }
         if (this.nbDeactivateUtilisateur) {
           this.snackBarQueueService.addMessage({ text: this.nbDeactivateUtilisateur + " " + this.applicationUserContext.getCulturedRessourceText(1114), duration: 4000 } as appInterfaces.SnackbarMsg);
+        }
+        if (this.nbCertificationPrixReprise) {
+          this.snackBarQueueService.addMessage({ text: this.nbCertificationPrixReprise + " " + this.applicationUserContext.getCulturedRessourceText(1584), duration: 4000 } as appInterfaces.SnackbarMsg);
+        }
+        if (this.nbCertificationCommandeClientMensuelle) {
+          this.snackBarQueueService.addMessage({ text: this.nbCertificationCommandeClientMensuelle + " " + this.applicationUserContext.getCulturedRessourceText(1585), duration: 4000 } as appInterfaces.SnackbarMsg);
         }
         if (action == ActionName.CopyPrixReprise) {
           if (resp.headers.has("nbCopyPrixReprise")) {

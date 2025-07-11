@@ -9,6 +9,7 @@
 /// ----------------------------------------------------------------------------------------------------- 
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eVaSys.ViewModels
 {
@@ -27,5 +28,7 @@ namespace eVaSys.ViewModels
         public int? RefExt { get; set; }
         public int RefProduit { get; set; }
         public string LibelleProduit { get; set; }
+        public string CertificationText { get; set; }
+        public bool? Certif { get; set; } = null;
     }
 }

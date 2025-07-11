@@ -8,9 +8,9 @@
   border-collapse: collapse;
 
   td:nth-child(1), th:nth-child(1) {
-    min-width: 280px;
-    max-width: 280px;
-    width: 280px;
+    min-width: 235px;
+    max-width: 235px;
+    width: 235px;
     box-sizing: border-box;
   }
 
@@ -39,6 +39,11 @@
     min-width: 305px;
     max-width: 305px;
     width: 305px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(6), th:nth-child(6) {
+    min-width: 45px;
     box-sizing: border-box;
   }
 

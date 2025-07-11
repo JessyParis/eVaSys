@@ -10,7 +10,7 @@ import { DataModelService } from "../../../services/data-model.service";
 import moment from "moment";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
-import { showErrorToUser, cmp, getCreationModificationTooltipText } from "../../../globals/utils";
+import { showErrorToUser, cmp, getCreationModificationTooltipText, getCertficationTooltipText } from "../../../globals/utils";
 import { HabilitationLogistique } from "../../../globals/enums";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 
@@ -324,5 +324,10 @@ export class PrixRepriseComponent implements OnInit {
   //Format multiline tooltip text for creation/modification
   getCreationTooltipText(i: number): string {
     return getCreationModificationTooltipText(this.prixReprises[i]);
+  }
+  //-----------------------------------------------------------------------------------
+  //Format multiline tooltip text for certification
+  getCertificationTooltipText(i: number): string {
+    return getCertficationTooltipText(this.prixReprises[i]);
   }
 }

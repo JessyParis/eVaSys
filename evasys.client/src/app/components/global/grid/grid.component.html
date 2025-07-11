@@ -90,6 +90,22 @@
         </div>
       </div>
     </div>
+    <div *ngIf="(this.applicationUserContext.currentMenu.name === 'LogistiqueMenuPrixReprise'
+         && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')
+         || (this.applicationUserContext.currentMenu.name === 'LogistiqueMenuCommandeClient'
+         && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur')">
+      <div class="ev-taskbar-container">
+        <div class="ev-taskbar-left-container">
+          <form [formGroup]="formCertification">
+            <mat-slide-toggle formControlName="CertificationType" (change)="certificationTypeChange()"
+                              class="ev-buttons-left" style="margin:0 15px 0 0;">{{this.formCertification.get("CertificationType").value ? applicationUserContext.getCulturedRessourceText(1583) : applicationUserContext.getCulturedRessourceText(1587)}}</mat-slide-toggle>
+            <button mat-raised-button color="primary" (click)="certification()" class="ev-buttons-left">
+              {{applicationUserContext.getCulturedRessourceText(682)}}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
     <div *ngIf="this.applicationUserContext.currentMenu.name==='AdministrationMenuUtilisateurInactif'">
       <div class="ev-taskbar-container">
         <div class="ev-taskbar-left-container">
@@ -543,21 +559,35 @@
           <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()" style="padding:10px !important">
             <mat-checkbox (click)="$event.stopPropagation()"
                           (change)="$event ? selection.toggle(row) : null"
-                          [checked]="selection.isSelected(row)">
+                          [checked]="selection.isSelected(row)"
+                          [disabled]="selectDisabled(row)">
             </mat-checkbox>
           </td>
         </ng-container>
         <ng-container matColumnDef="infoTransportConcurrence" sticky>
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()" style="padding:0px !important" [class]="setStyle(row, 'infoTransportConcurrence')">
-          <button *ngIf="row.RefTransport" mat-icon-button (click)="onTransportConcurrenceClicked(row)">
-            <mat-icon class="color-grey">info</mat-icon></button></td>
+            <button *ngIf="row.RefTransport" mat-icon-button (click)="onTransportConcurrenceClicked(row)">
+              <mat-icon class="color-grey">info</mat-icon>
+            </button>
+          </td>
         </ng-container>
         <ng-container matColumnDef="infoMessageVisualisations" sticky>
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()" style="padding:0px !important" [class]="setStyle(row, 'infoMessageVisualisations')">
-          <button mat-icon-button (click)="onMessageVisualisationsClicked(row)">
-            <mat-icon class="color-grey">info</mat-icon></button></td>
+            <button mat-icon-button (click)="onMessageVisualisationsClicked(row)">
+              <mat-icon class="color-grey">info</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="certifie" sticky>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <mat-icon class="material-symbols-outlined color-primary"
+                      *ngIf="row.Certifie==true">license</mat-icon>
+            <mat-icon class="material-symbols-outlined color-grey"
+                      *ngIf="!(row.Certifie==true)">unlicense</mat-icon>
+          </td>
         </ng-container>
         <ng-container matColumnDef="moisDechargementPrevu" stickyEnd>
           <th mat-header-cell *matHeaderCellDef class="ev-cell">{{applicationUserContext.getCulturedRessourceText(563)}}</th>
@@ -572,7 +602,9 @@
         <ng-container *ngFor="let column of dataSource.columns" [matColumnDef]="column.columnDef" [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">
           <th mat-header-cell *matHeaderCellDef mat-sort-header class="ev-cell">{{column.header}}</th>
           <td mat-cell *matCellDef="let item" [class]="setStyle(item, column)"
-              [matTooltip]="column.cell(item)?.toString()" [matTooltipDisabled]="column.cell(item)?.toString()?.length<100">{{shortenLongText(column.cell(item))}}</td>
+              [matTooltip]="column.cell(item)?.toString()" [matTooltipDisabled]="column.cell(item)?.toString()?.length<100">
+            {{shortenLongText(column.cell(item))}}
+          </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="dataSource.displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let item; columns: dataSource.displayedColumns;" (click)="onRowClicked(item)"></tr>

@@ -1697,6 +1697,22 @@ namespace eVaSys.Utils
             rowVals[0] = Enumerations.ActionName.NonConformiteForIFClientFacture.ToString();
             rowVals[1] = Enumerations.HabilitationQualite.Utilisateur.ToString();
             actionRights.Rows.Add(rowVals);
+            rowVals = new object[2];
+            rowVals[0] = Enumerations.ActionName.CertificationPrixReprise.ToString();
+            rowVals[1] = Enumerations.HabilitationLogistique.Administrateur.ToString();
+            actionRights.Rows.Add(rowVals);
+            rowVals = new object[2];
+            rowVals[0] = Enumerations.ActionName.CertificationCommandeClientMensuelle.ToString();
+            rowVals[1] = Enumerations.HabilitationLogistique.Administrateur.ToString();
+            actionRights.Rows.Add(rowVals);
+            rowVals = new object[2];
+            rowVals[0] = Enumerations.ActionName.UnCertificationPrixReprise.ToString();
+            rowVals[1] = Enumerations.HabilitationLogistique.Administrateur.ToString();
+            actionRights.Rows.Add(rowVals);
+            rowVals = new object[2];
+            rowVals[0] = Enumerations.ActionName.UnCertificationCommandeClientMensuelle.ToString();
+            rowVals[1] = Enumerations.HabilitationLogistique.Administrateur.ToString();
+            actionRights.Rows.Add(rowVals);
             #endregion
         }
         //--------------------------------------------------------------------------------------------

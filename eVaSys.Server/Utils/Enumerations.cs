@@ -323,7 +323,11 @@ namespace eVaSys.Utils
             DeactivateUtilisateur,
             ContactModificationRequest,
             ValidateRepartition,
-            NonConformiteForIFClientFacture
+            NonConformiteForIFClientFacture,
+            CertificationPrixReprise,
+            CertificationCommandeClientMensuelle,
+            UnCertificationPrixReprise,
+            UnCertificationCommandeClientMensuelle,
         }
         //Enumération pour les noms de colonne
         public enum  DataColumnName
@@ -886,7 +890,11 @@ namespace eVaSys.Utils
             NovembreRegionPercent,
             DecembreRegionPercent,
             AnnuelPrecedentRegionPercent,
-            AnnuelRegionPercent
+            AnnuelRegionPercent,
+            Certifie,
+            RefUtilisateurCreation,
+            RefUtilisateurModif,
+            RefUtilisateurCertif
         }
         //Enumération pour les types de notification
         public enum NotificationAppearance

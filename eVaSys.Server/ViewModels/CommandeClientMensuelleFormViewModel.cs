@@ -30,5 +30,7 @@ namespace eVaSys.ViewModels
         public int? Poids { get; set; }
         public decimal? PrixTonneHT { get; set; }
         public string IdExt { get; set; }
+        public string CertificationText { get; set; }
+        public bool? Certif { get; set; } = null;
     }
 }

@@ -8,20 +8,16 @@
 /// Création : 08/10/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.Utils;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Data;
 using Microsoft.Data.SqlClient;
-using System.Linq;
-using eVaSys.APIUtils;
-using System.ComponentModel;
-using Telerik.Windows.Documents.Media;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Org.BouncyCastle.Asn1.Pkcs;
+using System.Data;
 
 namespace eVaSys.Controllers
 {
@@ -122,43 +118,51 @@ namespace eVaSys.Controllers
             foreach (PrixRepriseViewModel prxR in model)
             {
                 PrixReprise prx = null;
-                //Delete PrixReprise if applicable
-                if (prxR.RefPrixReprise != null && prxR.PUHT == null)
+                //Get the corresponding PrixReprise
+                if (prxR.RefPrixReprise > 0)
                 {
-                    prx = DbContext.PrixReprises.Where(el => el.RefPrixReprise == prxR.RefPrixReprise).FirstOrDefault();
-                    if (prx != null) { DbContext.Remove(prx); }
+                    prx = DbContext.PrixReprises.Where(i => i.RefPrixReprise == prxR.RefPrixReprise).FirstOrDefault();
+                    if (prx == null)
+                    {
+                        return NotFound(new NotFoundError(CurrentContext.CulturedRessources.GetTextRessource(460)));
+                    }
+                }
+                //Only last certifyer can modify
+
+                //Delete PrixReprise if applicable
+                if (prxR.RefPrixReprise > 0 && prxR.PUHT == null)
+                {
+                    //Check if deletable
+                    string del = prx.IsDeletable(CurrentContext.CurrentCulture, CurrentContext.RefUtilisateur);
+                    if (del != "") { 
+                        errs += del;
+                        //Ignore modifications
+                        DbContext.Entry(prx).State = EntityState.Detached;
+                    }
+                    else { DbContext.Remove(prx); }
                 }
                 else if (prxR.PUHT != null)
                 {
                     //Get the corresponding PrixReprise
-                    if (prxR.RefPrixReprise > 0)
-                    {
-                        prx = DbContext.PrixReprises.Where(i => i.RefPrixReprise == prxR.RefPrixReprise).FirstOrDefault();
-                    }
-                    else
+                    if (prx == null)
                     {
                         prx = new PrixReprise();
-                        prx.RefProcess = prxR.Process?.RefProcess;
-                        prx.RefProduit = prxR.Produit.RefProduit;
-                        prx.RefComposant = prxR.Composant?.RefProduit;
-                        prx.RefContrat = prxR.Contrat?.RefContrat;
-                        prx.D = prxR.D;
                         DbContext.PrixReprises.Add(prx);
                     }
-                    if (prx != null)
+                    //Check validity before updating
+                    string valid = prx.IsPreValid(prxR, CurrentContext.CurrentCulture, CurrentContext.RefUtilisateur);
+                    //continue if no errors
+                    if (valid == "")
                     {
-                        prx.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
-                        prx.PUHT = prxR.PUHT ?? 0;
-                        prx.PUHTSurtri = prxR.PUHTSurtri ?? 0;
-                        prx.PUHTTransport = prxR.PUHTTransport ?? 0;
-                        string validError = prx.IsValid();
-                        if (validError == " ")
+                        DataUtils.UpdateDataPrixReprise(ref prx, prxR, CurrentContext.RefUtilisateur);
+                        //Check validation after updating
+                        valid = prx.IsValid();
+                        //Add error if applicable
+                        if (valid != "")
                         {
-                            DbContext.SaveChanges();
-                        }
-                        else
-                        {
-                            errs += validError;
+                            errs += valid;
+                            //Ignore modifications
+                            DbContext.Entry(prx).State = EntityState.Detached;
                         }
                     }
                 }
@@ -195,31 +199,40 @@ namespace eVaSys.Controllers
                 prixReprise = DbContext.PrixReprises
                         .Where(q => q.RefPrixReprise == model.RefPrixReprise)
                         .FirstOrDefault();
+                if (prixReprise == null)
+                {
+                    // handle requests asking for non-existing prixReprise
+                    return NotFound(new NotFoundError(CurrentContext.CulturedRessources.GetTextRessource(460)));
+                }
             }
             else
             {
                 prixReprise = new PrixReprise();
                 DbContext.PrixReprises.Add(prixReprise);
             }
-            // handle requests asking for non-existing prixReprisezes
-            if (prixReprise == null)
-            {
-                return NotFound(new NotFoundError(CurrentContext.CulturedRessources.GetTextRessource(460)));
-            }
 
-            //Set values
-            UpdateData(ref prixReprise, model);
-
-            //Register session user
-            prixReprise.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
-
-            //Check validation
-            string valid = prixReprise.IsValid();
-            //End
+            //Check validity before updating
+            string valid = prixReprise.IsPreValid(model, CurrentContext.CurrentCulture, CurrentContext.RefUtilisateur);
+            //continue if no errors
             if (valid == "")
             {
-                // persist the changes into the Database.
-                DbContext.SaveChanges();
+                DataUtils.UpdateDataPrixReprise(ref prixReprise, model, CurrentContext.RefUtilisateur);
+                //Check validation after updating
+                valid = prixReprise.IsValid();
+                //End
+                if (valid == "")
+                {
+                    // persist the changes into the Database.
+                    DbContext.SaveChanges();
+                }
+                else
+                {
+                    //Ignore modifications
+                    DbContext.Entry(prixReprise).State = EntityState.Detached;
+                }
+            }
+            if (valid == "")
+            {
                 //Return the updated PrixReprise to the client, or return the next Mixte if applicable
                 return new JsonResult(
                     _mapper.Map<PrixReprise, PrixRepriseViewModel>(prixReprise),
@@ -249,7 +262,7 @@ namespace eVaSys.Controllers
             }
 
             // remove the entity from the DbContext if applicable
-            string del = prixReprise.IsDeletable();
+            string del = prixReprise.IsDeletable(CurrentContext.CurrentCulture, CurrentContext.RefUtilisateur);
             if (del == "")
             {
                 DbContext.PrixReprises.Remove(prixReprise);
@@ -363,20 +376,6 @@ namespace eVaSys.Controllers
         #endregion
         #region Services
         /// <summary>
-        /// Write received data to dto
-        /// </summary>
-        private void UpdateData(ref PrixReprise dataModel, PrixRepriseViewModel viewModel)
-        {
-            dataModel.RefProcess = viewModel.Process.RefProcess;
-            dataModel.RefProduit = viewModel.Produit.RefProduit;
-            dataModel.RefComposant = viewModel.Composant.RefProduit;
-            dataModel.RefContrat = viewModel.Contrat?.RefContrat;
-            dataModel.D = viewModel.D;
-            dataModel.PUHT = viewModel.PUHT ?? 0;
-            dataModel.PUHTSurtri = viewModel.PUHTSurtri ?? 0;
-            dataModel.PUHTTransport = viewModel.PUHTTransport ?? 0;
-        }
-        /// <summary>
         /// find all possible/existing PrixReprise
         /// </summary>
         private List<PrixReprise> SelectPrixReprises(int? refP, DateTime dRef, string filterProduits, string filterComposants)
@@ -457,6 +456,7 @@ namespace eVaSys.Controllers
                     prx = DbContext.PrixReprises
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
+                        .Include(r => r.UtilisateurCertif)
                         .FirstOrDefault(el => el.RefPrixReprise == (int)dRow["RefPrixReprise"]);
                     if (prx != null) { prxList.Add(prx); }
                 }

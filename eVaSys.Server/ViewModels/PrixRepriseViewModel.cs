@@ -34,7 +34,8 @@ namespace eVaSys.ViewModels
         public decimal? PUHTTransport { get; set; }
         public string CreationText { get; set;}
         public string ModificationText { get; set; }
-
+        public string CertificationText { get; set; }
+        public bool? Certif { get; set; } = null;
         #endregion
     }
 }

@@ -174,6 +174,8 @@ export interface CommandeClientMensuelle {
   PrixTonneHT: number;
   IdExt: number;
   RefExt: number;
+  CertificationText: string;
+  Certif: boolean;
 }
 export interface CommandeClientMensuelleForm {
   RefCommandeClient: number;
@@ -188,6 +190,8 @@ export interface CommandeClientMensuelleForm {
   Poids: number;
   PrixTonneHT: number;
   IdExt: number;
+  CertificationText: string;
+  Certif: boolean;
 }
 export interface CommandeFournisseur {
   RefCommandeFournisseur: number;
@@ -1147,6 +1151,8 @@ export interface PrixReprise {
   PUHTTransport: number;
   CreationText: string;
   ModificationText: string;
+  CertificationText: string;
+  Certif: boolean;
 }
 export interface CollectivitePrixReprise {
   StandardLibelle: string;
