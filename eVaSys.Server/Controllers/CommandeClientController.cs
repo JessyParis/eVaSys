@@ -207,6 +207,7 @@ namespace eVaSys.Controllers
                             {
                                 //Update data
                                 DataUtils.UpdateDataCommandeClientMensuelle(ref cmdM, cmdMF, CurrentContext.RefUtilisateur);
+                                cmd.Cmt = cmdMF.Cmt;
                             }
                         }
                     }
