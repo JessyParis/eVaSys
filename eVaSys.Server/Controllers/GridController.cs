@@ -898,15 +898,13 @@ namespace eVaSys.Controllers
                             }
                             if (!string.IsNullOrEmpty(filterYears))
                             {
-                                refYears = Utils.Utils.CreateSQLParametersFromString("refAnnee", filterYears, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
-                                sqlStr += " and isnull(year(tblCommandeFournisseur.DChargement),year(tblRepartition.D)) in (";
+                                sqlStr += " and year(tblCommandeFournisseur.DChargement) in (";
                                 sqlStr += refYears;
                                 sqlStr += ")";
                             }
                             if (!string.IsNullOrEmpty(filterMonths))
                             {
-                                refMonths = Utils.Utils.CreateSQLParametersFromString("refMonth", filterMonths, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
-                                sqlStr += " and isnull(month(tblCommandeFournisseur.DChargement),month(tblRepartition.D)) in (";
+                                sqlStr += " and month(tblCommandeFournisseur.DChargement) in (";
                                 sqlStr += refMonths;
                                 sqlStr += ")";
                             }
@@ -975,13 +973,13 @@ namespace eVaSys.Controllers
                             }
                             if (!string.IsNullOrEmpty(filterYears))
                             {
-                                sqlStr += " and year(tblCommandeFournisseur.DDechargement) in (";
+                                sqlStr += " and year(tblCommandeFournisseur.DChargement) in (";
                                 sqlStr += refYears;
                                 sqlStr += ")";
                             }
                             if (!string.IsNullOrEmpty(filterMonths))
                             {
-                                sqlStr += " and month(tblCommandeFournisseur.DDechargement) in (";
+                                sqlStr += " and month(tblCommandeFournisseur.DChargement) in (";
                                 sqlStr += refMonths;
                                 sqlStr += ")";
                             }
