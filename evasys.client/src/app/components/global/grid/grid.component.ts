@@ -657,13 +657,13 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.pagin.page
       .pipe(
-        tap(() => { this.razSelection(); this.loadPage("") })
+        tap(() => { this.loadPage("") })
       )
       .subscribe();
 
     this.sort.sortChange
       .pipe(
-        tap(() => { this.razSelection(); this.loadPage("") })
+        tap(() => { this.loadPage("") })
       )
       .subscribe();
 
@@ -1230,6 +1230,23 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
         }
         //r = false;
         break;
+      case MenuName.LogistiqueMenuTransportNonValide:
+      case MenuName.LogistiqueMenuSupprimerTransportEnMasse:
+        if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur) {
+          r = false;
+        }
+        break;
+      case MenuName.LogistiqueMenuCommandeFournisseur:
+        if (this.applicationUserContext.filterEnvCommandeFournisseurStatuts
+          && this.applicationUserContext.filterEnvCommandeFournisseurStatuts[0].name === EnvCommandeFournisseurStatutName.DemandeEnlevement
+          && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur
+        ) {
+          r = false;
+        }
+        break;
+      case MenuName.AdministrationMenuUtilisateurInactif:
+        r = false;
+        break;
     }
     return r;
   }
@@ -1474,7 +1491,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   //-----------------------------------------------------------------------------------
   //Save filters
   razSelection() {
-    //Save filters
+    //Save selection
     this.applicationUserContext.selectedItem = [];
   }
   //-----------------------------------------------------------------------------------
@@ -1499,8 +1516,6 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   applyFilter() {
     //Save filters
     this.saveFilter();
-    //RAZ selection
-    this.razSelection();
     //Reset pager
     this.pagin.pageIndex = 0
     //Apply filters
@@ -1703,35 +1718,6 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
         this.pagin.pageIndex = 0;
         //Calculate and get rows back
         this.loadPage(action);
-        //Reset selection
-        this.selection.clear();
-      }
-    });
-  }
-  //-----------------------------------------------------------------------------------
-  //Deactivate users
-  cert_old() {
-    const dialogRef = this.dialog.open(ConfirmComponent, {
-      width: "350px",
-      data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(1113) },
-      autoFocus: false,
-      restoreFocus: false
-    });
-    //Confirm
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === "yes") {
-        this.applicationUserContext.selectedItem = Array.from(this.selection.selected, item => item.Id);
-        //Get all users to deactivate
-        if (this.applicationUserContext.selectedItem && this.applicationUserContext.selectedItem.length > 0) {
-          this.selectedItem = Array.prototype.map.call(this.applicationUserContext.selectedItem, function (item: number) { return item.toString(); }).join(",");
-        }
-        else {
-          this.selectedItem = "";
-        }
-        //Reset pager
-        this.pagin.pageIndex = 0;
-        //Calculate and get rows back
-        this.loadPage(ActionName.DeactivateUtilisateur);
         //Reset selection
         this.selection.clear();
       }
@@ -1989,6 +1975,10 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   //-----------------------------------------------------------------------------------
   //Load data
   loadPage(action: string) {
+    //RAZ MoisDechargementPrevu
+    this.moisDechargementPrevuItems = [];
+    //RAZ selections
+    this.razSelection();
     //Visibility
     if (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur
       && (this.applicationUserContext.filterEnvCommandeFournisseurStatuts.findIndex(x => x.name === EnvCommandeFournisseurStatutName.DemandeEnlevement) >= 0
@@ -2539,6 +2529,16 @@ export class GridDataSource implements DataSource<any> {
         this.nbDeactivateUtilisateur = resp.headers.get("nbDeactivateUtilisateur");
         this.nbCertificationPrixReprise = resp.headers.get("nbCertificationPrixReprise");
         this.nbCertificationCommandeClientMensuelle = resp.headers.get("nbCertificationCommandeClientMensuelle");
+        let index = this.displayedColumns.indexOf("infoTransportConcurrence", 0);
+        if (index > -1) { this.displayedColumns.splice(index, 1); }
+        index = this.displayedColumns.indexOf("infoMessageVisualisations", 0);
+        if (index > -1) { this.displayedColumns.splice(index, 1); }
+        index = this.displayedColumns.indexOf("certifie", 0);
+        if (index > -1) { this.displayedColumns.splice(index, 1); }
+        index = this.displayedColumns.indexOf("select", 0);
+        if (index > -1) { this.displayedColumns.splice(index, 1); }
+        index = this.displayedColumns.indexOf("moisDechargementPrevu", 0);
+        if (index > -1) { this.displayedColumns.splice(index, 1); }
         //Manage columns if data is present
         if (resp.body.length > 0) {
           let columnsTmp: MatTableColumn[] = [];
@@ -2586,7 +2586,6 @@ export class GridDataSource implements DataSource<any> {
               && (this.applicationUserContext.filterEnvCommandeFournisseurStatuts && this.applicationUserContext.filterEnvCommandeFournisseurStatuts.length === 1 && this.applicationUserContext.filterEnvCommandeFournisseurStatuts[0].name === EnvCommandeFournisseurStatutName.DemandeEnlevement)
               && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
             || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuUtilisateurInactif
-            || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuRepartition && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
             || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuPrixReprise && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
             || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeClient && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur))
           ) {
@@ -2604,12 +2603,6 @@ export class GridDataSource implements DataSource<any> {
           ) {
             if (!this.displayedColumns.includes("moisDechargementPrevu"))
               this.displayedColumns.push("moisDechargementPrevu");
-          }
-          else {
-            const index = this.displayedColumns.indexOf("moisDechargementPrevu", 0);
-            if (index > -1) {
-              this.displayedColumns.splice(index, 1);
-            }
           }
         }
         else {

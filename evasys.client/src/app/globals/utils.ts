@@ -380,15 +380,17 @@ export function removeAccents(s: string) {
 //Return the Nth first characters followed by '...'
 export function shortenLongText(s: string, nChar: number = 100, nLine: number = 5) {
   let r: string = s;
-  if (s) {
-    //Shorten charachter number if applicable
-    if (s.length > nChar - 3) {
-      s = s.substring(0, nChar - 4) + '...';
-    }
-    //Shorten line number if applicable
-    let lines = s.split("\n");
-    if (lines.length > nLine) {
-      s = lines.slice(0, nLine).join("\n") + '...';
+  if (typeof s == "string") {
+    if (s) {
+      //Shorten charachter number if applicable
+      if (s.length > nChar - 3) {
+        s = s.substring(0, nChar - 4) + '...';
+      }
+      //Shorten line number if applicable
+      let lines = s.split("\n");
+      if (lines.length > nLine) {
+        s = lines.slice(0, nLine).join("\n") + '...';
+      }
     }
   }
   return s;

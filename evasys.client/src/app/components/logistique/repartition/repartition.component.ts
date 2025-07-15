@@ -314,9 +314,11 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
     //Global lock
     if ((this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.Administrateur
       && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.CentreDeTri)
-      || this.repartition.CommandeFournisseur?.ExportSAGE === true
       || (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.CentreDeTri
-        && !this.repartition.CommandeFournisseur.Produit.Collecte)
+      && (
+        !this.repartition.CommandeFournisseur.Produit.Collecte
+        || this.repartition.CommandeFournisseur.ExportSAGE)
+      )
     ) {
       this.lockScreen();
     }

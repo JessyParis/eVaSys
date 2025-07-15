@@ -636,7 +636,7 @@ export class HomeComponent implements OnInit {
       this.applicationUserContext.razFilters();
       //Set filter
       this.applicationUserContext.filterEnvCommandeFournisseurStatuts = [];
-      this.applicationUserContext.filterEnvCommandeFournisseurStatuts.push(this.applicationUserContext.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Ouverte));
+      //this.applicationUserContext.filterEnvCommandeFournisseurStatuts.push(this.applicationUserContext.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Ouverte));
       this.applicationUserContext.filterValideDPrevues = true;
       //Navigate
       this.router.navigate(["grid"]);

@@ -827,7 +827,7 @@ namespace eVaSys.Controllers
                             }
                             if (filterValideDPrevues == true)
                             {
-                                sqlStr += " and tblCommandeFournisseur.ValideDPrevues = 1";
+                                sqlStr += " and (tblCommandeFournisseur.ValideDPrevues = 1 and tblCommandeFournisseur.RefCommandeFournisseurStatut is not null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.DDechargement is null)";
                             }
                             if (filterDChargementModif == true)
                             {
