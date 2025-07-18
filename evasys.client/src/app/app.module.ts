@@ -495,7 +495,10 @@ const progressModules = [
       { path: "upload-transport", component: UploadTransportComponent, data: { animation: "FadeIn" } },
       { path: "utilisateur/:id", component: UtilisateurComponent, data: { animation: "Item" } },
       { path: "**", redirectTo: "home", data: { animation: "FadeIn" } }
-    ], {})],
+    ],
+      {
+      }),
+  ],
   providers: [
     AuthService,
     DataModelService,

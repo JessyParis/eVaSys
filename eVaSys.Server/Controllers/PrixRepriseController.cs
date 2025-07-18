@@ -388,7 +388,7 @@ namespace eVaSys.Controllers
             string sqlStr = "";
             if (refP != null)
             {
-                sqlStr = "select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
+                sqlStr = "select distinct tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
                     + "     , tbrPrixReprise.RefContrat"
                     + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
                     + " from tblProduit"
@@ -397,7 +397,7 @@ namespace eVaSys.Controllers
                     + " 	left join (select * from tbrPrixReprise where D=@d and RefProcess=@refProcess and tbrPrixReprise.RefContrat is null) as tbrPrixReprise on tbrPrixReprise.RefProduit=tbmProduitComposant.RefProduit and tbrPrixReprise.RefComposant=tbmProduitComposant.RefComposant"
                     + " where ((composant.Actif=1 and tblProduit.Actif=1) or tbrPrixReprise.RefPrixReprise is not null)"
                     + " union all"
-                    + " select tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
+                    + " select distinct tbrPrixReprise.RefPrixReprise, @d as D, @refProcess as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, composant.RefProduit as RefComposant, composant.Libelle as Composant"
                     + " 	, tblContrat.RefContrat"
                     + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
                     + " from tblCommandeClient"
@@ -412,14 +412,14 @@ namespace eVaSys.Controllers
             }
             else
             {
-                sqlStr = "select tbrPrixReprise.RefPrixReprise, @d as D, null as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, null as RefComposant, null as Composant"
+                sqlStr = "select distinct tbrPrixReprise.RefPrixReprise, @d as D, null as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, null as RefComposant, null as Composant"
                     + "     , tbrPrixReprise.RefContrat"
                     + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
                     + " from tblProduit"
                     + " 	left join (select * from tbrPrixReprise where D=@d and tbrPrixReprise.RefContrat is null) as tbrPrixReprise on tbrPrixReprise.RefProduit=tblProduit.RefProduit"
                     + " where (tblProduit.Actif=1 or tbrPrixReprise.RefPrixReprise is not null)"
                     + " union all"
-                    + " select tbrPrixReprise.RefPrixReprise, @d as D, null as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, null as RefComposant, null as Composant"
+                    + " select distinct tbrPrixReprise.RefPrixReprise, @d as D, null as RefProcess, tblProduit.RefProduit, tblProduit.Libelle as Produit, null as RefComposant, null as Composant"
                     + " 	, tblContrat.RefContrat"
                     + "     , tbrPrixReprise.PUHT, tblProduit.PUHTSurtri as Surtri, tbrPrixReprise.PUHTSurtri, tblProduit.PUHTTransport as Transport, tbrPrixReprise.PUHTTransport"
                     + " from tblCommandeClient"
