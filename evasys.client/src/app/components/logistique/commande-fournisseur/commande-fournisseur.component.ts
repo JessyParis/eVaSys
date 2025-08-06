@@ -1927,7 +1927,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
           //Format dates
           this.dataModelService.setTextFromMomentCommandeFournisseur(result);
           //Update linked CommandeFournisseur
-          this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true)
+          this.dataModelService.postCommandeFournisseur(result, true)
             .subscribe(r => {
               this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
               //Manage screen

@@ -414,6 +414,7 @@ namespace eVaSys.Controllers
                 foreach (var cmdF in cmdFs)
                 {
                     cmdF.SurcoutCarburantHT = cmdF.PrixTransportHT * ((decimal)(viewModel.Ratio ?? 0) / 100);
+                    cmdF.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
                 }
             }
             //Update data

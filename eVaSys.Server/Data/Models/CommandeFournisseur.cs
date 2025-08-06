@@ -300,7 +300,7 @@ namespace eVaSys.Data
             get
             {
                 return DbContext.CommandeFournisseurs
-                    .Where(i => (i.NumeroAffretement == NumeroAffretement) && i.NumeroCommande!= NumeroCommande && (i.DChargementPrevue == null || i.DDechargementPrevue == null))
+                    .Where(i => (i.NumeroAffretement == NumeroAffretement) && i.NumeroCommande != NumeroCommande && (i.DChargementPrevue == null || i.DDechargementPrevue == null))
                     .Count() == 0;
             }
         }

@@ -33,7 +33,7 @@ namespace eVaSys.Utils
         /// </summary>
         public static MemoryStream ExportTransport(SqlCommand cmd, Context currentContext, ApplicationDbContext dbContext, string filterDptDeparts, string filterDptArrivees, string filterVilleDeparts, string filterVilleArrivees, string filterPayss, string filterCamionTypes)
         {
-            SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+            SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             MemoryStream mS = new();
             var eP = new GemBox.Spreadsheet.ExcelFile();
             //Init
@@ -268,7 +268,7 @@ namespace eVaSys.Utils
             try
             {
                 //Open the workbook and worksheet
-                SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+                SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
                 var excelFile = ExcelFile.Load(fS);            //Création de la feuille
                 var wS = excelFile.Worksheets[0];
                 //Check global format
@@ -438,7 +438,7 @@ namespace eVaSys.Utils
                 throw new Exception(currentContext.CulturedRessources.GetTextRessource(356));
             }
             //Traitements
-            SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+            SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             var excelFile = ExcelFile.Load(rootPath + @"\Assets\Templates\FicheRepartition.xlsx");            //Création de la feuille
             GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
             //Initialisations
@@ -550,7 +550,7 @@ namespace eVaSys.Utils
             //Instanciation de l'utilisateur connecté
             Utilisateur utilisateurConnecte = contexteCourant.ConnectedUtilisateur;
             int l = 0;      //Compteur de lignes
-            SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+            SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             var excelFile = ExcelFile.Load(rootPath + @"\Assets\Templates\CommandeAffretement.xlsx");            //Création de la feuille
             //var excelFile = ExcelFile.Load(@"c:\tmp\CommandeAffretement.xlsx");            //Création de la feuille
             GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
@@ -848,7 +848,7 @@ namespace eVaSys.Utils
             int l = 0;      //Compteur de lignes
             int f = 0;  //compteur de feuilles
             string sqlStr = "";
-            SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+            SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             var excelFile = ExcelFile.Load(rootPath + @"\Assets\Templates\EtatTrimestrielCollectiviteCS.xlsx");            //Création de la feuille
             GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
             //Initialisations
@@ -1087,7 +1087,7 @@ namespace eVaSys.Utils
             int l = 0;      //Compteur de lignes
             int f = 0;  //compteur de feuilles
             string sqlStr = "";
-            SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+            SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             var excelFile = ExcelFile.Load(rootPath + @"\Assets\Templates\EtatMensuelCollectiviteHCS.xlsx");            //Création de la feuille
             GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
             //Initialisations
@@ -1331,7 +1331,7 @@ namespace eVaSys.Utils
             int l = 0;      //Compteur de lignes
             int f = 0;  //compteur de feuilles
             string sqlStr = "";
-            SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+            SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             var excelFile = ExcelFile.Load(rootPath + @"\Assets\Templates\CertificatRecyclage.xlsx");            //Création de la feuille
             GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
             //Initialisations
@@ -1584,7 +1584,7 @@ namespace eVaSys.Utils
             int l = 0;      //Compteur de lignes
             int f = 0;  //compteur de feuilles
             string sqlStr = "";
-            SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+            SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             var excelFile = ExcelFile.Load(rootPath + @"\Assets\Templates\EtatMensuelReception.xlsx");            //Création de la feuille
             GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
             //Initialisations
@@ -2052,7 +2052,7 @@ namespace eVaSys.Utils
         {
             //Init
             MemoryStream ms = new();
-            SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+            SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             ExcelFile excelFile;
             //Chargement du document avec logo ou non
             if (name == Enumerations.StatType.DonneeCDT.ToString()
@@ -4308,7 +4308,7 @@ namespace eVaSys.Utils
             int i = 0;      //Compteur de lignes
             int c = 0;      //Marqueur de ligne
             int j = 0;      //Marqueur de colonne
-            SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+            SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             var excelFile = ExcelFile.Load(rootPath + @"\Assets\Templates\FicheDeControle.xlsx");            //Création de la feuille
             //var excelFile = ExcelFile.Load(@"c:\tmp\CommandeAffretement.xlsx");            //Création de la feuille
             GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
@@ -4752,7 +4752,7 @@ namespace eVaSys.Utils
             Utilisateur utilisateurConnecte = currentContext.ConnectedUtilisateur;
             int i = 0;      //Compteur de lignes
             int j = 0;      //Marqueur de colonne
-            SpreadsheetInfo.SetLicense("BN-2024Sep09-pNwXRNw9WzGg8OHqozr7u5JkUAqDS5lroRa7brKqDyWkv7vYJU1ROWlkXYneik2d9cxeJpqgguIwsP1BErD7LCAOjnw==A");
+            SpreadsheetInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             var excelFile = ExcelFile.Load(rootPath + @"\Assets\Templates\NonConformite.xlsx");            //Création de la feuille
             GemBox.Spreadsheet.ExcelWorksheet ws = excelFile.Worksheets[0];
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");

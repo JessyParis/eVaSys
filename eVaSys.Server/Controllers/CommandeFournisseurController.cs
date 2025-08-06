@@ -644,6 +644,7 @@ namespace eVaSys.Controllers
                         c.NumeroAffretement = c.NumeroCommande;
                         c.OrdreAffretement = 1;
                         c.Imprime = false;
+                        c.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
                     }
                     DbContext.SaveChanges();
                 }

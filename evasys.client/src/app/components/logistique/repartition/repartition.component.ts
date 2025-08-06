@@ -820,7 +820,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
               , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
               , null
               , e.Collectivite.RefEntite
-              , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+              , moment(this.repartition.CommandeFournisseur.DDechargement)
             )
               .subscribe(result => {
                 e.PUHT = result.PUHT - result.PUHTSurtri - result.PUHTTransport;
@@ -848,7 +848,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
               , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
               , null
               , e.Fournisseur?.RefEntite
-              , moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+              , moment(this.repartition.CommandeFournisseur.DDechargement)
             )
               .subscribe(result => {
                 e.PUHT = result.PUHT - result.PUHTSurtri - result.PUHTTransport;

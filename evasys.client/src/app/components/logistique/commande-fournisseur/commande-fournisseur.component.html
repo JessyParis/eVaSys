@@ -71,7 +71,7 @@
           {{applicationUserContext.getCulturedRessourceText(532)}}
         </button>
         <button mat-raised-button class="ev-button-left" type="button" (click)="onRepartition();"
-                *ngIf="form.get('DChargement').value !== null && form.get('ChargementEffectue').value && commandeFournisseur.RefCommandeFournisseur >0
+                *ngIf="form.get('DChargement').value !== null && form.get('ChargementEffectue').value && !(form.get('RefusCamion').value==true) && commandeFournisseur.RefCommandeFournisseur>0
                         && (applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'
                             || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Utilisateur'
                             || applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'CentreDeTri')">

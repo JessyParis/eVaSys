@@ -451,7 +451,7 @@ namespace eVaSys.Utils
                     response.EnsureSuccessStatusCode();
                     responseBody = response.Content.ReadAsStringAsync().Result;
                     //Log
-                    APIUtils.ApiUtils.LogAPICall(url, null, (int)response.StatusCode, responseBody, null, refUtilisateur, dbContext);
+                    APIUtils.ApiUtils.LogAPICall(urlGetLogisticsChain, null, (int)response.StatusCode, responseBody, null, refUtilisateur, dbContext);
                     var laserLogisticsChains = (LaserLogisticsChains)JsonSerializer.Deserialize(responseBody, typeof(LaserLogisticsChains));
                     //Exit if no client found
                     LaserLogisticsChain found = null;
