@@ -981,6 +981,9 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
         result.UtilisateurAnomalieOk = null;
         //Get data
         this.commandeFournisseur = result;
+        //Set original values
+        this.originalPoidsChargement = this.commandeFournisseur.PoidsChargement;
+        this.originalPoidsReparti = this.commandeFournisseur.PoidsReparti;
         //Update form
         this.updateForm();
         //Set CentreDeTri

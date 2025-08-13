@@ -60,6 +60,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   form: UntypedFormGroup;
   formRepartitionCollectivite: UntypedFormGroup;
   formRepartitionProduit: UntypedFormGroup;
+  exportSAGEFC: UntypedFormControl = new UntypedFormControl(null);
   enterTypeFC: UntypedFormControl = new UntypedFormControl(null);
   enterModeFC = new FormControl();
   infoTextFC: UntypedFormControl = new UntypedFormControl(null);
@@ -112,6 +113,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   //Form initial creation
   createForm() {
     this.form = this.fb.group({
+      ExportSAGE: this.exportSAGEFC,
       EnterType: this.enterTypeFC,
       InfoText: this.infoTextFC,
       CollectiviteList: this.collectiviteListFC,
@@ -237,6 +239,8 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   //-----------------------------------------------------------------------------------
   //Form creation when data model exists
   updateForm() {
+    this.exportSAGEFC.setValue(this.repartition.ExportSAGE);
+    this.infoTextFC.setValue(this.repartition.InfoText);
     this.repartitionCollectivite.clear();
     for (const repColl of this.repartition.RepartitionCollectivites) {
       const grp = this.fb.group({
@@ -253,7 +257,6 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
       });
       this.repartitionProduit.push(grp);
     }
-    this.infoTextFC.setValue(this.repartition.InfoText);
     //Calculate percentages
     this.calculatePercentages();
     //Message if 100% and Poids incorrect
@@ -288,6 +291,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   //Lock all controls
   lockScreen() {
     this.locked = true;
+    this.exportSAGEFC.disable();
     this.collectiviteListFC.disable();
     this.collectiviteNAListFC.disable();
     this.poidsFC.disable();
@@ -300,6 +304,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   //Unlock all controls
   unlockScreen() {
     this.locked = false;
+    this.exportSAGEFC.enable();
     this.collectiviteListFC.enable();
     this.collectiviteNAListFC.enable();
     this.poidsFC.enable();
@@ -312,15 +317,19 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   //Manage screen
   manageScreen() {
     //Global lock
-    if ((this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.Administrateur
-      && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.CentreDeTri)
-      || (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.CentreDeTri
-      && (
-        !this.repartition.CommandeFournisseur.Produit.Collecte
-        || this.repartition.CommandeFournisseur.ExportSAGE)
+    if (
+        (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.Administrateur
+          && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.CentreDeTri)
+        || (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.CentreDeTri
+          && !this.repartition.CommandeFournisseur.Produit.Collecte)
+        || this.repartition.ExportSAGE
       )
-    ) {
+    {
       this.lockScreen();
+      //Unlock ExportSAGE for admins
+      if( this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur) {
+        this.exportSAGEFC.enable();
+      }
     }
     else {
       //Init
@@ -335,6 +344,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
       if (this.collectiviteNAListFC.value) { this.collectiviteListFC.disable(); }
       //If CDT, no HCS
       if (this.applicationUserContext.connectedUtilisateur.CentreDeTri) {
+        this.exportSAGEFC.disable();
         this.formRepartitionProduit.disable();
         this.enterTypeFC.value == "Collectivite"
       }
@@ -462,6 +472,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   //-----------------------------------------------------------------------------------
   //Update the data model
   saveData() {
+    this.repartition.ExportSAGE = this.exportSAGEFC.value;
     for (let i in this.repartitionCollectivite.controls) {
       let fG: UntypedFormGroup = this.repartitionCollectivite.controls[i] as UntypedFormGroup;
       this.repartition.RepartitionCollectivites[i].Poids = fG.get("Poids").value;
@@ -675,7 +686,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
         });
       }
       else {
-        //Save repartition if valide or untouched
+        //Save repartition if valid and untouched
         if (!this.formRepartitionCollectivite.get('RepartitionCollectivite').touched
           && !this.formRepartitionProduit.get('RepartitionProduit').touched) {
           this.backToCommandeFournisseur();
@@ -869,6 +880,21 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
           }
         });
       }
+    }
+  }
+  //-----------------------------------------------------------------------------------
+  //ExportSAGE change
+  onExportSAGEChange() {
+    //Set values
+    this.repartition.ExportSAGE = this.exportSAGEFC.value;
+    this.manageScreen();
+    //Message to user
+    if (this.exportSAGEFC.value === false) {
+      const dialogRef = this.dialog.open(InformationComponent, {
+        width: "350px",
+        data: { title: this.applicationUserContext.getCulturedRessourceText(337), message: this.applicationUserContext.getCulturedRessourceText(1592) },
+        restoreFocus: false
+      });
     }
   }
   //-----------------------------------------------------------------------------------

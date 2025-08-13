@@ -31,8 +31,13 @@
           <tr>
             <td class="cadre_body">
               <mat-form-field style="width: 100%; margin: 10px 0 0 0;" appearance="outline">
-                <textarea matInput formControlName="InfoText" style="height:240px;" tabindex="-1" readonly></textarea>
+                <textarea matInput formControlName="InfoText" style="height:200px;" tabindex="-1" readonly></textarea>
               </mat-form-field>
+              <mat-checkbox formControlName="ExportSAGE" style="width:100%;" (change)="onExportSAGEChange()"
+                            [disabled]="applicationUserContext.connectedUtilisateur.HabilitationLogistique!=='Utilisateur'
+                              && applicationUserContext.connectedUtilisateur.HabilitationLogistique!=='Administrateur'">
+                {{applicationUserContext.getCulturedRessourceText(1593)}}
+              </mat-checkbox>
               <table class="fixed_headers_commande_fournisseurs table-no-pad-no-space" *ngIf="repartition.CommandeFournisseur===null">
                 <thead class="background-color-accent">
                   <tr>

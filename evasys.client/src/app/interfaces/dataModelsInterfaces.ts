@@ -1259,6 +1259,7 @@ export interface Repartition {
   CommandeFournisseur: CommandeFournisseur;
   Produit: Produit;
   D: string | moment.Moment;
+  ExportSAGE: boolean;
   RepartitionCollectivites: RepartitionCollectivite[];
   RepartitionProduits: RepartitionProduit[];
   PoidsReparti: number;

@@ -59,6 +59,7 @@ namespace eVaSys.Data
             set => _produit = value;
         }
         public DateTime? D { get; set; }
+        public bool ExportSAGE { get; set; } = false;
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
         public ICollection<RepartitionCollectivite> RepartitionCollectivites { get; set; }

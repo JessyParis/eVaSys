@@ -162,6 +162,7 @@ export class ApplicationUserContext {
   //Autologin
   //devLogin = ""; devPwd = "";
   devLogin = "jean-christian.nugues@enviromatic.fr"; devPwd = "evalo1rplast$";
+  //devLogin = "nugues.jean@wanadoo.fr"; devPwd = "Env1Valorplast$";
   //devLogin = "jean-christian.nugues@wanadoo.fr"; devPwd = "1Toto$aaaaaa";
   //devLogin = "j.decamas@valorplast.com"; devPwd = "1Toto$aaaaaa";
   //devLogin = "chantal.guerrero@suez.com"; devPwd = "1Toto$aaaaaa";      //CDT TRIVALOIRE

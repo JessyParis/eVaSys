@@ -924,9 +924,9 @@ namespace eVaSys.Controllers
                             {
                                 if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
                                 {
-                                    sqlStr += " and tblCommandeFournisseur.ExportSAGE=0 and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and p.Collecte = 1"
+                                    sqlStr += " and tblRepartition.ExportSAGE=0 and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and p.Collecte = 1"
                                         + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
-                                        + "     and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))";
+                                        + "     and (RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))";
                                 }
                                 else
                                 {
