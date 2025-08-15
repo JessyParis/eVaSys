@@ -16,7 +16,10 @@ Run `ng build --base-href /valorplast/ --configuration=production` to build the 
 
 ## Build dev
 Run `ng build --base-href /valorplastdev/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
-## Run `ng build --base-href /evasysdev/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Build restore
+Run `ng build --base-href /valorplastrestore/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Build before end repartitions mensuelles
+Run `ng build --base-href /valorplastrepmens/ --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Running unit tests
 

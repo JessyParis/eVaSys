@@ -270,9 +270,11 @@ namespace eVaSys.Controllers
             bool bDDProd = (Configuration.GetValue<string>("Data:DefaultConnection:ConnectionString").StartsWith("data source=EVAPROD;initial catalog=eValorplast;")
                 || Configuration.GetValue<string>("Data:DefaultConnection:ConnectionString").StartsWith("data source=EVASECOURS;initial catalog=eValorplast;"));
             bool bDDRestore = Configuration.GetValue<string>("Data:DefaultConnection:ConnectionString").StartsWith("data source=EVASECOURS;initial catalog=eValorplastRestore;");
+            bool bDDRepMens = Configuration.GetValue<string>("Data:DefaultConnection:ConnectionString").StartsWith("data source=EVASECOURS;initial catalog=eValorplastRepMens;");
             if (!bDDProd)
             {
                 if (bDDRestore) { r += " BDD restauration"; }
+                else if (bDDRepMens) { r += " BDD avant éclatement répartitions"; }
                 else { r += " BDD dév."; }
             }
             return new JsonResult(r, JsonSettings);
