@@ -953,7 +953,7 @@ namespace eVaSys.Controllers
                                     + " 	right join tblCommandeFournisseur on tblRepartition.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
                                     + " 	left join tblEntite as f on tblCommandeFournisseur.RefEntite=f.RefEntite"
                                     + " 	inner join tblProduit as p on tblCommandeFournisseur.RefProduit=p.RefProduit"
-                                    + " where tblRepartition.RefRepartition is null and tblCommandeFournisseur.ExportSAGE=0 and tblRepartition.RefRepartition is null and NonRepartissable=0 and p.Collecte=1 and tblCommandeFournisseur.NumeroCommande > 2025000000"
+                                    + " where tblRepartition.RefRepartition is null and NonRepartissable=0 and p.Collecte=1 and tblCommandeFournisseur.NumeroCommande > 2025000000"
                                     + "     and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1";
                             }
                             //Filter for current user
