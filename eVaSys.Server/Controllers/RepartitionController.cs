@@ -85,18 +85,7 @@ namespace eVaSys.Controllers
                     {
                         //Create new element
                         repartition = new Repartition();
-                        if (cmdF.Entite.RepartitionMensuelle)
-                        {
-                            //Monthly
-                            repartition.Fournisseur = cmdF.Entite;
-                            repartition.Produit = cmdF.Produit;
-                            repartition.D = new DateTime(((DateTime)cmdF.DDechargement).Year, ((DateTime)cmdF.DDechargement).Month, 1);
-                        }
-                        else
-                        {
-                            //Unit
-                            repartition.CommandeFournisseur = cmdF;
-                        }
+                        repartition.CommandeFournisseur = cmdF;
                         //Unit
                         //Add to context
                         DbContext.Repartitions.Add(repartition);

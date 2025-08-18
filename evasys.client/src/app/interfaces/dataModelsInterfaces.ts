@@ -631,7 +631,6 @@ export interface Entite {
   Horaires: string;
   Repreneur: Repreneur;
   RepriseType: RepriseType;
-  RepartitionMensuelle: boolean;
   ExportSAGE: boolean;
   VisibiliteAffretementCommun: boolean;
   AutoControle: boolean;
@@ -746,7 +745,6 @@ export interface EntiteType {
   ContratCollectivite: boolean;
   RefRepreneur: boolean;
   RefRepriseType: boolean;
-  RepartitionMensuelle: boolean;
   UtilisateurCollectivite: boolean;
   ExportSAGE: boolean;
   Process: boolean;

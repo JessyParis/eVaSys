@@ -50,7 +50,6 @@ namespace eVaSys.ViewModels
         public string Horaires { get; set; }
         public RepreneurViewModel Repreneur { get; set; }
         public RepriseTypeViewModel RepriseType { get; set; }
-        public bool? RepartitionMensuelle { get; set; }
         public bool? ExportSAGE { get; set; }
         public bool? VisibiliteAffretementCommun { get; set; }
         public bool? AutoControle { get; set; }

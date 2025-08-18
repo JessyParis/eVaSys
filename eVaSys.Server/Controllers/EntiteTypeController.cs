@@ -195,7 +195,6 @@ namespace eVaSys.Controllers
             dataModel.ContratCollectivite = viewModel.ContratCollectivite;
             dataModel.RefRepreneur = viewModel.RefRepreneur;
             dataModel.RefRepriseType = viewModel.RefRepriseType;
-            dataModel.RepartitionMensuelle = viewModel.RepartitionMensuelle;
             dataModel.ExportSAGE = viewModel.ExportSAGE;
             dataModel.UtilisateurCollectivite = viewModel.UtilisateurCollectivite;
             dataModel.Process = viewModel.Process;

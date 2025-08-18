@@ -52,7 +52,6 @@ namespace eVaSys.ViewModels
         public bool ContratCollectivite { get; set; }
         public bool RefRepreneur { get; set; }
         public bool RefRepriseType { get; set; }
-        public bool RepartitionMensuelle { get; set; }
         public bool UtilisateurCollectivite { get; set; }
         public bool ExportSAGE { get; set; }
         public bool Process { get; set; }

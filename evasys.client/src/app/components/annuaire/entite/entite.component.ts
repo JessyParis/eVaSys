@@ -211,7 +211,6 @@ export class EntiteComponent implements OnInit {
       PopulationContratN: this.populationContratNFC,
       CodeValorisation: this.codeValorisationFC,
       EcoOrganismeList: this.ecoOrganismeListFC,
-      RepartitionMensuelle: this.repartitionMensuelleFC,
       AssujettiTVA: this.assujettiTVAFC,
       CodeTVA: this.codeTVAFC,
       SAGECompteTiers: this.sAGECompteTiersFC,
@@ -485,7 +484,6 @@ export class EntiteComponent implements OnInit {
     this.populationContratNFC.setValue(this.entite.PopulationContratN);
     this.codeValorisationFC.setValue(this.entite.CodeValorisation);
     this.ecoOrganismeListFC.setValue(this.entite.EcoOrganisme?.RefEcoOrganisme);
-    this.repartitionMensuelleFC.setValue(this.entite.RepartitionMensuelle);
     this.assujettiTVAFC.setValue(this.entite.AssujettiTVA);
     this.codeTVAFC.setValue(this.entite.CodeTVA);
     this.sAGECodeComptableFC.setValue(this.entite.SAGECodeComptable);
@@ -528,7 +526,6 @@ export class EntiteComponent implements OnInit {
     this.entite.PopulationContratN = this.populationContratNFC.value;
     this.entite.CodeValorisation = this.codeValorisationFC.value;
     this.entite.EcoOrganisme = this.ecoOrganismeList.find(x => x.RefEcoOrganisme === this.ecoOrganismeListFC.value);
-    this.entite.RepartitionMensuelle = this.repartitionMensuelleFC.value;
     this.entite.AssujettiTVA = this.assujettiTVAFC.value;
     this.entite.CodeTVA = this.codeTVAFC.value;
     this.entite.SAGECodeComptable = this.sAGECodeComptableFC.value;

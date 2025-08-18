@@ -968,7 +968,6 @@ namespace eVaSys.Controllers
             dataModel.Horaires = Utils.Utils.SetEmptyStringToNull(viewModel.Horaires);
             dataModel.RefRepreneur = viewModel.Repreneur?.RefRepreneur;
             dataModel.RefRepriseType = viewModel.RepriseType?.RefRepriseType;
-            dataModel.RepartitionMensuelle = viewModel.RepartitionMensuelle ?? false;
             dataModel.ExportSAGE = viewModel.ExportSAGE ?? false;
             dataModel.VisibiliteAffretementCommun = viewModel.VisibiliteAffretementCommun ?? false;
             dataModel.AutoControle = viewModel.AutoControle ?? false;

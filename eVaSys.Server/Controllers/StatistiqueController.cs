@@ -3797,7 +3797,6 @@ namespace eVaSys.Controllers
                     + "     , tblEntite.Cmt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCmt.ToString()].Name + "]"
                     + "     , tblEntite.CodeValorisation as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeValorisation.ToString()].Name + "]"
                     + "     , tbrEcoOrganisme.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EcoOrganismeLibelle.ToString()].Name + "]"
-                    + "     , tblEntite.RepartitionMensuelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteRepartitionMensuelle.ToString()].Name + "]"
                     + "     , tblEntite.AssujettiTVA as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteAssujettiTVA.ToString()].Name + "]"
                     + "     , tblEntite.CodeTVA as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeTVA.ToString()].Name + "]"
                     + "     , tblEntite.IdNational as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteIdNational.ToString()].Name + "]"

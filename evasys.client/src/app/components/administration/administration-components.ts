@@ -244,7 +244,6 @@ export class EntiteTypeComponent extends AncestorComponent<dataModelsInterfaces.
     this.CreateBox(0);
     this.CreateControl("RefRepreneur", FormControlType.Checkbox, false, 1132);
     this.CreateControl("RefRepriseType", FormControlType.Checkbox, false, 1131);
-    this.CreateControl("RepartitionMensuelle", FormControlType.Checkbox, false, 591);
     this.CreateControl("UtilisateurCollectivite", FormControlType.Checkbox, false, 10093);
     this.CreateControl("Process", FormControlType.Checkbox, false, 583);
     this.CreateControl("AutoControle", FormControlType.Checkbox, false, 905);

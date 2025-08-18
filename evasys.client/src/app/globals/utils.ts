@@ -605,9 +605,6 @@ export function createContactAvailableColumns(globalContactAvailableColumns: Env
               case DataColumnName.EcoOrganismeLibelle:
                 if (entiteType.RefEcoOrganisme) { contactAvailableColumns.push(eDC); }
                 break;
-              case DataColumnName.EntiteRepartitionMensuelle:
-                if (entiteType.RepartitionMensuelle) { contactAvailableColumns.push(eDC); }
-                break;
               case DataColumnName.EntiteAssujettiTVA:
                 if (entiteType.AssujettiTVA) { contactAvailableColumns.push(eDC); }
                 break;

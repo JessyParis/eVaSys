@@ -25,7 +25,7 @@
         <table class="cadre_primary">
           <tr>
             <td class="cadre_header_primary">
-              {{repartition?.Fournisseur?.RepartitionMensuelle ? applicationUserContext.getCulturedRessourceText(591) : applicationUserContext.getCulturedRessourceText(590)}}
+              {{applicationUserContext.getCulturedRessourceText(590)}}
             </td>
           </tr>
           <tr>
@@ -38,22 +38,6 @@
                               && applicationUserContext.connectedUtilisateur.HabilitationLogistique!=='Administrateur'">
                 {{applicationUserContext.getCulturedRessourceText(1593)}}
               </mat-checkbox>
-              <table class="fixed_headers_commande_fournisseurs table-no-pad-no-space" *ngIf="repartition.CommandeFournisseur===null">
-                <thead class="background-color-accent">
-                  <tr>
-                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(14)}}</th>
-                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(480)}}</th>
-                    <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(229)}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let cmdF of commandeFournisseurs;">
-                    <td style="padding: 0px 5px 0px 5px;">{{cmdF.NumeroCommande}}</td>
-                    <td style="padding: 0px 5px 0px 5px;">{{cmdF.PoidsReparti}}</td>
-                    <td style="padding: 0px 5px 0px 5px;">{{cmdF.PoidsChargement}}</td>
-                  </tr>
-                </tbody>
-              </table>
             </td>
           </tr>
         </table>

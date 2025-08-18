@@ -146,7 +146,6 @@ namespace eVaSys.Data
             get => LazyLoader.Load(this, ref _repriseType);
             set => _repriseType = value;
         }
-        public bool RepartitionMensuelle { get; set; }
         public bool ExportSAGE { get; set; }
         public bool VisibiliteAffretementCommun { get; set; }
         public bool AutoControle { get; set; }
