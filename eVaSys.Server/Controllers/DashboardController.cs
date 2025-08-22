@@ -150,7 +150,6 @@ namespace eVaSys.Controllers
                             + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
                             + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
                             + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
-                            + "         or (tblUtilisateur.RefCentreDeTri is not null and tblRepartition.DValide is null)"
                             + "     )";
                         sqlStrUrgent = "select count(distinct RefRepartition) from tblRepartition"
                             + "     inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
@@ -161,7 +160,6 @@ namespace eVaSys.Controllers
                             + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
                             + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
                             + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
-                            + "         or (tblUtilisateur.RefCentreDeTri is not null and tblRepartition.DValide is null)"
                             + "     )";
                     }
                     if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
@@ -170,7 +168,7 @@ namespace eVaSys.Controllers
                             + "     left join tblRepartition on tblCommandeFournisseur.RefCommandeFournisseur = tblRepartition.RefCommandeFournisseur"
                             + "     inner join tblProduit on tblCommandeFournisseur.RefProduit = tblProduit.RefProduit"
                             + " where isnull(tblRepartition.ExportSAGE,0)=0 and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and tblProduit.Collecte = 1"
-                            + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
+                            + "     and tblCommandeFournisseur.RefusCamion = 0 and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
                             + "     and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))"
                             + "     and tblCommandeFournisseur.RefEntite = " + CurrentContext.ConnectedUtilisateur.RefCentreDeTri.ToString();
                         sqlStrUrgent = "select count(distinct tblCommandeFournisseur.RefCommandeFournisseur) from tblCommandeFournisseur"
@@ -178,7 +176,7 @@ namespace eVaSys.Controllers
                             + "     inner join tblProduit on tblCommandeFournisseur.RefProduit = tblProduit.RefProduit"
                             + " where isnull(tblRepartition.ExportSAGE,0)=0 and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and tblProduit.Collecte = 1"
                             + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
-                            + "     and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))"
+                            + "     and tblCommandeFournisseur.RefusCamion = 0 and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))"
                             + "     and tblCommandeFournisseur.RefEntite = " + CurrentContext.ConnectedUtilisateur.RefCentreDeTri.ToString()
                             + "     and month(tblCommandeFournisseur.DChargement)=month(getdate()) and year(tblCommandeFournisseur.DChargement)=year(getdate()) and day(getdate())>=25"
                             + "     and DChargement < DATEFROMPARTS(YEAR(getdate()), MONTH(getdate()), 1)";

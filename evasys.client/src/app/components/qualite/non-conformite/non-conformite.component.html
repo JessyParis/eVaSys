@@ -202,15 +202,15 @@
                 </button>
                 <mat-error align="end" *ngIf="formGroup2.get('NonConformiteNatureList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               </mat-form-field>
-              <mat-divider [vertical]="true"></mat-divider>
-              <div [class]="formGroup2Disabled ? 'mat-body k-text-disabled' : 'mat-body'">{{applicationUserContext.getCulturedRessourceText(804)}}<ng-container *ngIf="!formGroup2Disabled">*</ng-container></div>
-              <ng-container formArrayName="NonConformiteFamilles" *ngIf="!formGroup2Disabled">
+              <mat-divider [vertical]="true" *ngIf="visibleNonConformiteFamille"></mat-divider>
+              <div *ngIf="visibleNonConformiteFamille" [class]="formGroup2Disabled ? 'mat-body k-text-disabled' : 'mat-body'">{{applicationUserContext.getCulturedRessourceText(804)}}<ng-container *ngIf="!formGroup2Disabled">*</ng-container></div>
+              <ng-container formArrayName="NonConformiteFamilles" *ngIf="!formGroup2Disabled && visibleNonConformiteFamille">
                 <ng-container [formGroupName]="i" *ngFor="let group of getNonConformiteFamilles.controls; let i=index">
                   <mat-checkbox formControlName="Famille">{{nonConformiteFamilleList[i].Libelle}}</mat-checkbox>
                 </ng-container>
               </ng-container>
-              <div *ngIf="formGroup2.get('NonConformiteFamilles').errors?.nonConformiteFamilleNotSelected && !formGroup2Disabled" class="color-warn mat-caption">{{applicationUserContext.getCulturedRessourceText(293)}}</div>
-              <div class="mat-body" *ngIf="formGroup2Disabled">{{nonConformiteFamillesLabel()}}</div>
+              <div *ngIf="formGroup2.get('NonConformiteFamilles').errors?.nonConformiteFamilleNotSelected && !formGroup2Disabled && visibleNonConformiteFamille" class="color-warn mat-caption">{{applicationUserContext.getCulturedRessourceText(293)}}</div>
+              <div class="mat-body" *ngIf="formGroup2Disabled && visibleNonConformiteFamille">{{nonConformiteFamillesLabel()}}</div>
               <mat-divider style="margin:10px 0 0 0;"></mat-divider>
               <mat-checkbox formControlName="IFFournisseurRetourLot">{{applicationUserContext.getCulturedRessourceText(827)}}</mat-checkbox>
             </div>
@@ -702,7 +702,7 @@
                   <mat-icon>close</mat-icon>
                 </button>
                 <button matIconSuffix mat-icon-button aria-label="Reporter" (click)="chooseElement('NonConformiteForIFClientFacture');"
-                        tabindex="-1" type="button" *ngIf="formGroup7.get('IFClientFactureNro').value">
+                        tabindex="-1" type="button" *ngIf="formGroup7.get('IFClientFactureNro').value && formGroup7.get('IFClientDFacture').value">
                   <mat-icon>fork_right</mat-icon>
                 </button>
                 <mat-error align="end" *ngIf="formGroup7.get('IFClientFactureNro').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>

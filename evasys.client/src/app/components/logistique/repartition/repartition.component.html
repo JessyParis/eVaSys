@@ -88,10 +88,13 @@
                 <button *ngIf="form.get('Poids').value!=null && form.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Poids').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
                 </button>
-                <mat-error align="end" *ngIf="(form.get('Poids').touched || form.get('Poids').dirty) && form.get('Poids').errors?.max">
+                <mat-error align="end" *ngIf="form.get('Poids').errors?.max">
                   {{applicationUserContext.getCulturedRessourceText(573) + (form.get('Poids').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
                 </mat-error>
-                <mat-error align="end" *ngIf="(form.get('Poids').touched || form.get('Poids').dirty) && form.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                <mat-error align="end" *ngIf="form.get('Poids').errors?.min">
+                  {{applicationUserContext.getCulturedRessourceText(687) + (form.get('Poids').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                </mat-error>
+                <mat-error align="end" *ngIf="form.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               </mat-form-field>
               <mat-form-field style="width:50%;" *ngIf="enterModeFC.value=='percent'">
                 <input matInput formControlName="Percent" mask="separator.4" [errorStateMatcher]="matcher" />
@@ -99,10 +102,13 @@
                 <button *ngIf="form.get('Percent').value!=null && form.get('Percent').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('Percent').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
                 </button>
-                <mat-error align="end" *ngIf="(form.get('Percent').touched || form.get('Percent').dirty) && form.get('Percent').errors?.max">
+                <mat-error align="end" *ngIf="form.get('Percent').errors?.max">
                   {{applicationUserContext.getCulturedRessourceText(573) + (form.get('Percent').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
                 </mat-error>
-                <mat-error align="end" *ngIf="(form.get('Percent').touched || form.get('Percent').dirty) && form.get('Percent').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                <mat-error align="end" *ngIf="form.get('Percent').errors?.min">
+                  {{applicationUserContext.getCulturedRessourceText(687) + (form.get('Percent').errors?.min?.min?.toString() | number:'1.0-4':applicationUserContext.currentCultureName)}}
+                </mat-error>
+                <mat-error align="end" *ngIf="form.get('Percent').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               </mat-form-field>
               <mat-button-toggle-group [formControl]="enterModeFC" class="ev-button-right" hideSingleSelectionIndicator="true">
                 <mat-button-toggle value="kg" aria-label="Poids" (click)="manageScreen()">
@@ -166,10 +172,13 @@
                         <button *ngIf="group.get('Poids').value!=null && group.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Poids').setValue(null)" tabindex="-1" type="button">
                           <mat-icon>close</mat-icon>
                         </button>
-                        <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.max">
+                        <mat-error align="end" *ngIf="group.get('Poids').errors?.max">
                           {{applicationUserContext.getCulturedRessourceText(573) + (group.get('Poids').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
                         </mat-error>
-                        <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                        <mat-error align="end" *ngIf="group.get('Poids').errors?.min">
+                          {{applicationUserContext.getCulturedRessourceText(687) + (group.get('Poids').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                        </mat-error>
+                        <mat-error align="end" *ngIf="group.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
                       </mat-form-field>
                     </td>
                     <td style="padding: 0px 5px 0px 5px;" *ngIf="!applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite">
@@ -179,13 +188,13 @@
                         <button *ngIf="group.get('PUHT').value!=null && group.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHT').setValue(null)" tabindex="-1" type="button">
                           <mat-icon>close</mat-icon>
                         </button>
-                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.max">
+                        <mat-error align="end" *ngIf="group.get('PUHT').errors?.max">
                           {{applicationUserContext.getCulturedRessourceText(573) + (group.get('PUHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
                         </mat-error>
-                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.min">
+                        <mat-error align="end" *ngIf="group.get('PUHT').errors?.min">
                           {{applicationUserContext.getCulturedRessourceText(687) + (group.get('PUHT').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
                         </mat-error>
-                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                        <mat-error align="end" *ngIf="group.get('PUHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
                         <mat-hint class="color-accent-dark" align="end" *ngIf="!group.get('PUHT').errors?.max && !group.get('PUHT').errors?.min && group.get('PUHT').value<0">{{applicationUserContext.getCulturedRessourceText(800)}}</mat-hint>
                       </mat-form-field>
                     </td>
@@ -236,10 +245,13 @@
                         <button *ngIf="group.get('Poids').value!=null && group.get('Poids').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('Poids').setValue(null)" tabindex="-1" type="button">
                           <mat-icon>close</mat-icon>
                         </button>
-                        <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.max">
+                        <mat-error align="end" *ngIf="group.get('Poids').errors?.max">
                           {{applicationUserContext.getCulturedRessourceText(573) + (group.get('Poids').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
                         </mat-error>
-                        <mat-error align="end" *ngIf="(group.get('Poids').touched || group.get('Poids').dirty) && group.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                        <mat-error align="end" *ngIf="group.get('Poids').errors?.min">
+                          {{applicationUserContext.getCulturedRessourceText(687) + (group.get('Poids').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
+                        </mat-error>
+                        <mat-error align="end" *ngIf="group.get('Poids').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
                       </mat-form-field>
                     </td>
                     <td style="padding: 0px 5px 0px 5px;" *ngIf="!applicationUserContext.connectedUtilisateur.CentreDeTri?.RefEntite">
@@ -249,13 +261,13 @@
                         <button *ngIf="group.get('PUHT').value!=null && group.get('PUHT').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="group.get('PUHT').setValue(null)" tabindex="-1" type="button">
                           <mat-icon>close</mat-icon>
                         </button>
-                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.max">
+                        <mat-error align="end" *ngIf="group.get('PUHT').errors?.max">
                           {{applicationUserContext.getCulturedRessourceText(573) + (group.get('PUHT').errors?.max?.max?.toString() | number:'':applicationUserContext.currentCultureName)}}
                         </mat-error>
-                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.min">
+                        <mat-error align="end" *ngIf="group.get('PUHT').errors?.min">
                           {{applicationUserContext.getCulturedRessourceText(687) + (group.get('PUHT').errors?.min?.min?.toString() | number:'':applicationUserContext.currentCultureName)}}
                         </mat-error>
-                        <mat-error align="end" *ngIf="(group.get('PUHT').touched || group.get('PUHT').dirty) && group.get('PUHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+                        <mat-error align="end" *ngIf="group.get('PUHT').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
                         <mat-hint class="color-accent-dark" align="end" *ngIf="!group.get('PUHT').errors?.max && !group.get('PUHT').errors?.min && group.get('PUHT').value<0">{{applicationUserContext.getCulturedRessourceText(800)}}</mat-hint>
                       </mat-form-field>
                     </td>

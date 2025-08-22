@@ -656,7 +656,7 @@ namespace eVaSys.Utils
             catch (HttpRequestException e)
             {
                 //Log
-                APIUtils.ApiUtils.LogAPICall(url, null, (int?)(e.StatusCode), responseBody, refCmd + e.Message, refUtilisateur, dbContext);
+                APIUtils.ApiUtils.LogAPICall(url, null, (int?)(e.StatusCode), responseBody, refCmd + " - " + e.Message, refUtilisateur, dbContext);
                 //Création du message à l'usage des utilisateurs
                 CreateAPIErrorMessage(cmdF, e, "Erreur de réception des données de demande d\'enlèvement " + refExt, refUtilisateur, dbContext, configuration);
             }

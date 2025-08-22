@@ -92,6 +92,7 @@ namespace eVaSys.Controllers
             if (!r)
             {
                 err = Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1292);
+                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, jsonBody, (int?)HttpStatusCode.BadRequest, null, err, CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return BadRequest(new BadRequestError(err));
             }

@@ -303,6 +303,7 @@ namespace eVaSys.Controllers
                         //    .Select(i => new { CommandeFournisseurNumeroCommande = i.RefCommandeFournisseur })
                         //.Distinct();
                         sqlStr = "select distinct tblCommandeFournisseur.NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
+                            + "     , tblNonConformite.IFClientCmtFacturation as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteIFClientCmtFacturation.ToString()].Name + "]"
                             + " from tblCommandeFournisseur"
                             + "     inner join tblNonConformite on tblCommandeFournisseur.RefCommandeFournisseur = tblNonConformite.RefCommandeFournisseur"
                             + "     inner join tblAdresse on tblCommandeFournisseur.RefAdresseClient = tbladresse.RefAdresse"

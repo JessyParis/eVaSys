@@ -80,7 +80,7 @@ export class NonConformiteComponent extends BaseFormComponent<dataModelsInterfac
   nonConformiteDemandeClientTypeListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   descrValorplastFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   nonConformiteNatureListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
-  nonConformiteFamilles: UntypedFormArray = new UntypedFormArray([], nonConformiteFamillesValidator);
+  nonConformiteFamilles: UntypedFormArray = new UntypedFormArray([]);
   iFFournisseurFC: UntypedFormControl = new UntypedFormControl();
   iFFournisseurDescrFC: UntypedFormControl = new UntypedFormControl(null);
   iFFournisseurFactureMontantFC: UntypedFormControl = new UntypedFormControl(null, [Validators.max(10000)]);
@@ -129,6 +129,8 @@ export class NonConformiteComponent extends BaseFormComponent<dataModelsInterfac
   mode = "indeterminate" as ProgressBarMode;
   value = 50;
   displayProgressBar = false;
+  //Misc
+  visibleNonConformiteFamille: boolean = false;
   //DOM
   @ViewChild('stepper') stepper: MatStepper;
   @ViewChild(ProgressBarComponent) progressBar: ProgressBarComponent;
@@ -1069,6 +1071,8 @@ export class NonConformiteComponent extends BaseFormComponent<dataModelsInterfac
           .subscribe(result => {
             //Inform user
             this.snackBarQueueService.addMessage({ text: result + " " + this.applicationUserContext.getCulturedRessourceText(1577), duration: 4000 } as appInterfaces.SnackbarMsg);
+            //Validate step
+            this.validateStep(6);
           }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
       }
     });

@@ -984,6 +984,18 @@ namespace eVaSys.Utils
         /// </summary>
         public static bool UpdateDataRepartition(ref Repartition dataModel, RepartitionViewModel viewModel, int refUtilisateurContext)
         {
+            //Remove lines with Poids=0
+            //Remove lines with Poids=0
+            if (viewModel.RepartitionCollectivites != null)
+            {
+                var itemsToRemove = viewModel.RepartitionCollectivites.Where(r => r.Poids == 0).ToList();
+                foreach (var item in itemsToRemove) { viewModel.RepartitionCollectivites.Remove(item); }
+            }
+            if (viewModel.RepartitionProduits != null)
+            {
+                var itemsToRemove = viewModel.RepartitionProduits.Where(r => r.Poids == 0).ToList();
+                foreach (var item in itemsToRemove) { viewModel.RepartitionProduits.Remove(item); }
+            }
             //Update main data
             dataModel.RefFournisseur = (viewModel.CommandeFournisseur == null ? (int?)viewModel.Fournisseur.RefEntite : null);
             dataModel.RefCommandeFournisseur = viewModel.CommandeFournisseur?.RefCommandeFournisseur;

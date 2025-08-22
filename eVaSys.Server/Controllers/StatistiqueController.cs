@@ -1549,7 +1549,7 @@ namespace eVaSys.Controllers
                     + "         from"
                     + "             VueRepartitionUnitaireDetail"
                     + "         	left join VueCommandeFournisseurContrat on VueRepartitionUnitaireDetail.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
-                    + "         	left join tbrPrixReprise on tbrPrixReprise.RefProcess=VueRepartitionUnitaireDetail.RefProcess and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit "
+                    + "         	left join tbrPrixReprise on isnull(tbrPrixReprise.RefProcess,0)=isnull(VueRepartitionUnitaireDetail.RefProcess,0) and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit "
                     + "         		and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit"
                     + "         		and month(VueRepartitionUnitaireDetail.D)=month(tbrPrixReprise.D) and year(VueRepartitionUnitaireDetail.D)=year(tbrPrixReprise.D)"
                     + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
@@ -2007,6 +2007,77 @@ namespace eVaSys.Controllers
                 sqlStr += "     ) as SourceTable"
                     + " pivot(sum(Poids)"
                     + " for Produit in(" + s + ")) as PivotTable";
+                sqlStrCount = sqlStr;
+            }
+            if (menu == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit.ToString())
+            {
+                sqlStr = "select dbo.ListeDR(VueRepartitionUnitaireDetail.RefFournisseur) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ListeDR.ToString()].Name + "]"
+                    + " 	, tblProduit.Collecte as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.Collecte.ToString()].Name + "]"
+                    + " 	, coll.CodeEE as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCollectivite.ToString()].Name + "]"
+                    + " 	, coll.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CollectiviteLibelle.ToString()].Name + "]"
+                    + " 	, ee.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EcoOrganismeLibelle.ToString()].Name + "]"
+                    + " 	, tblEntite.CodeEE as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCITEO.ToString()].Name + "]"
+                    + " 	, tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriLibelle.ToString()].Name + "]"
+                    + " 	, tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
+                    + " 	, cast(sum(VueRepartitionUnitaireDetail.Poids) as decimal(20,3))/1000 as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.PoidsDeclareTonne.ToString()].Name + "]"
+                    + " from VueRepartitionUnitaireDetail"
+                    + "     inner join tblCommandeFournisseur on VueRepartitionUnitaireDetail.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
+                    + "     inner join tblProduit on tblProduit.RefProduit = tblCommandeFournisseur.RefProduit"
+                    + " 	inner join tblEntite on tblCommandeFournisseur.RefEntite=tblEntite.RefEntite"
+                    + " 	inner join tblEntite as coll on VueRepartitionUnitaireDetail.RefFournisseur=coll.RefEntite"
+                    + " 	left join tbrEcoOrganisme as ee on coll.RefEcoOrganisme=ee.RefEcoOrganisme"
+                    + " where tblCommandeFournisseur.DDechargement between @begin and @end";
+                //Filters
+                if (eSF.FilterBegin != "" && eSF.FilterEnd != "")
+                {
+                    DateTime begin = DateTime.MinValue;
+                    DateTime end = DateTime.MinValue;
+                    if (DateTime.TryParse(eSF.FilterBegin, out begin) && DateTime.TryParse(eSF.FilterEnd, out end))
+                    {
+                        cmd.Parameters.Add("@begin", SqlDbType.DateTime).Value = begin;
+                        cmd.Parameters.Add("@end", SqlDbType.DateTime).Value = end;
+                    }
+                }
+                if (eSF.FilterProduits != "")
+                {
+                    sqlStr += " and tblProduit.RefProduit in (";
+                    sqlStr += Utils.Utils.CreateSQLParametersFromString("refProduit", eSF.FilterProduits, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                    sqlStr += ")";
+                }
+                if (eSF.FilterCollecte == "Collecte")
+                {
+                    sqlStr += " and tblProduit.Collecte=1";
+                }
+                else if (eSF.FilterCollecte == "HorsCollecte")
+                {
+                    sqlStr += " and isnull(tblProduit.Collecte,0)=0";
+                }
+                if (eSF.FilterCollectivites != "")
+                {
+                    sqlStr += " and VueRepartitionUnitaireDetail.RefFournisseur in (";
+                    sqlStr += Utils.Utils.CreateSQLParametersFromString("refCollectivite", eSF.FilterCollectivites, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                    sqlStr += ")";
+                }
+                if (!string.IsNullOrEmpty(eSF.FilterDRs))
+                {
+                    sqlStr += " and coll.RefEntite in (select RefEntite from tbmEntiteDR where RefDR in(";
+                    sqlStr += Utils.Utils.CreateSQLParametersFromString("refDR", eSF.FilterDRs, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                    sqlStr += "))";
+                }
+                if (eSF.FilterCentreDeTris != "")
+                {
+                    sqlStr += " and tblCommandeFournisseur.RefEntite in (";
+                    sqlStr += Utils.Utils.CreateSQLParametersFromString("refCentreDeTri", eSF.FilterCentreDeTris, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                    sqlStr += ")";
+                }
+                if (eSF.FilterEcoOrganismes != "")
+                {
+                    sqlStr += " and coll.RefEcoOrganisme in (";
+                    sqlStr += Utils.Utils.CreateSQLParametersFromString("refEcoOrganisme", eSF.FilterEcoOrganismes, ref cmd, Enumerations.EnvDataColumnDataType.intNumber.ToString());
+                    sqlStr += ")";
+                }
+                //Finalize
+                sqlStr += " group by dbo.ListeDR(VueRepartitionUnitaireDetail.RefFournisseur), tblProduit.Collecte, coll.CodeEE, coll.Libelle, ee.Libelle, tblEntite.CodeEE, tblEntite.Libelle, tblProduit.Libelle";
                 sqlStrCount = sqlStr;
             }
             if (menu == Enumerations.MenuName.LogistiqueMenuTonnageCDTProduitComposant.ToString())
@@ -2524,7 +2595,9 @@ namespace eVaSys.Controllers
                     + "     , Reserve AS [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.FicheControleReserve.ToString()].Name + "]"
                     + "     , tblFicheControle.Cmt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.FicheControleCmt.ToString()].Name + "]"
                     + "     " + (string.IsNullOrEmpty(s) ? "" : ", " + s)
+                    + "     , cast(case when tblNonConformite.RefCommandeFournisseur is null then 0 else 1 end as bit) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNonConformite.ToString()].Name + "]"
                     + " from tblCommandeFournisseur"
+                    + "     left join tblNonConformite on tblCommandeFournisseur.RefCommandeFournisseur=tblNonConformite.RefCommandeFournisseur"
                     + "     inner join tblEntite as fournisseur on fournisseur.RefEntite=tblCommandeFournisseur.RefEntite"
                     + "     inner join tblAdresse on tblCommandeFournisseur.RefAdresseClient=tblAdresse.RefAdresse"
                     + "     inner join tblEntite as client on client.RefEntite=tblAdresse.RefEntite"
@@ -2705,9 +2778,11 @@ namespace eVaSys.Controllers
                     + "     , tot.PoidsTotal as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ControlePoidsTotal.ToString()].Name + "]"
                     + "     , tot.PoidsTotalIndesirable as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ControlePoidsTotalIndesirable.ToString()].Name + "]"
                     + "     , tot.PourcentageIndesirable as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ControlePourcentageIndesirable.ToString()].Name + "]"
+                    + "     , cast(case when tblNonConformite.RefCommandeFournisseur is null then 0 else 1 end as bit) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNonConformite.ToString()].Name + "]"
                     + " from tblControle"
                     + "     inner join tblFicheControle on tblFicheControle.RefFicheControle=tblControle.RefFicheControle"
                     + "     inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblFicheControle.RefCommandeFournisseur"
+                    + "     left join tblNonConformite on tblCommandeFournisseur.RefCommandeFournisseur=tblNonConformite.RefCommandeFournisseur"
                     + "     inner join tblProduit on tblProduit.RefProduit=tblCommandeFournisseur.RefProduit"
                     + "     inner join tblEntite as fournisseur on fournisseur.RefEntite=tblCommandeFournisseur.RefEntite"
                     + "     inner join tblAdresse on tblCommandeFournisseur.RefAdresseClient=tblAdresse.RefAdresse"
@@ -2815,7 +2890,7 @@ namespace eVaSys.Controllers
                     + "     , tbrNonConformiteDemandeClientType.Libelle" + (CurrentContext.CurrentCulture.Name == "en-GB" ? "ENGB" : "FRFR") + " as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteDemandeClientTypeLibelle.ToString()].Name + "]"
                     + "     , tblNonConformite.DescrValorplast as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteDescrValorplast.ToString()].Name + "]"
                     + "     , tbrNonConformiteNature.Libelle" + (CurrentContext.CurrentCulture.Name == "en-GB" ? "ENGB" : "FRFR") + " as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteNatureLibelle.ToString()].Name + "]"
-                    + "     , dbo.ListeNonConformiteFamille(tblNonConformite.RefNonConformite, '" + CurrentContext.CurrentCulture.Name + "') as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteListeFamille.ToString()].Name + "]"
+//                    + "     , dbo.ListeNonConformiteFamille(tblNonConformite.RefNonConformite, '" + CurrentContext.CurrentCulture.Name + "') as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteListeFamille.ToString()].Name + "]"
                     + "     , IFFournisseurRetourLot as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteIFFournisseurRetourLot.ToString()].Name + "]";
                 if (CurrentContext.ConnectedUtilisateur.RefClient == null)
                 {
@@ -2836,7 +2911,7 @@ namespace eVaSys.Controllers
                 }
                 sqlStr += "     , tbrNonConformiteReponseClientType.Libelle" + (CurrentContext.CurrentCulture.Name == "en-GB" ? "ENGB" : "FRFR") + " as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteReponseClientTypeLibelle.ToString()].Name + "]"
                     + "     , CmtReponseClient as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteCmtReponseClient.ToString()].Name + "]"
-                    + "     , ~PlanAction as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformitePlanActionNonConcerne.ToString()].Name + "]"
+                    + "     , PlanAction as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformitePlanActionNonConcerne.ToString()].Name + "]"
                     + "     , CmtOrigineAction as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformitePlanAction.ToString()].Name + "]";
                 if (CurrentContext.ConnectedUtilisateur.RefClient == null)
                 {
@@ -3051,9 +3126,11 @@ namespace eVaSys.Controllers
                     + "     , isnull(tblContact.Prenom,'') + ' ' + tblContact.Nom AS [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.FicheControleControleur.ToString()].Name + "]"
                     + "     , tblCVQ.Cmt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CVQCmt.ToString()].Name + "]"
                     + s
+                    + "     , cast(case when tblNonConformite.RefCommandeFournisseur is null then 0 else 1 end as bit) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNonConformite.ToString()].Name + "]"
                     + " from tblCVQ"
                     + "     inner join tblFicheControle on tblFicheControle.RefFicheControle=tblCVQ.RefFicheControle"
                     + "     inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblFicheControle.RefCommandeFournisseur"
+                    + "     left join tblNonConformite on tblCommandeFournisseur.RefCommandeFournisseur=tblNonConformite.RefCommandeFournisseur"
                     + "     inner join tblProduit on tblProduit.RefProduit=tblCommandeFournisseur.RefProduit"
                     + "     inner join tblEntite as fournisseur on fournisseur.RefEntite=tblCommandeFournisseur.RefEntite"
                     + "     inner join tblAdresse on tblCommandeFournisseur.RefAdresseClient=tblAdresse.RefAdresse"
@@ -3981,7 +4058,6 @@ namespace eVaSys.Controllers
                     + "     , tblEntite.Cmt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCmt.ToString()].Name + "]"
                     + "     , tblEntite.CodeValorisation as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeValorisation.ToString()].Name + "]"
                     + "     , tbrEcoOrganisme.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EcoOrganismeLibelle.ToString()].Name + "]"
-                    + "     , tblEntite.RepartitionMensuelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteRepartitionMensuelle.ToString()].Name + "]"
                     + "     , tblEntite.AssujettiTVA as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteAssujettiTVA.ToString()].Name + "]"
                     + "     , tblEntite.CodeTVA as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeTVA.ToString()].Name + "]"
                     + "     , tblEntite.IdNational as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteIdNational.ToString()].Name + "]"
@@ -6721,7 +6797,7 @@ namespace eVaSys.Controllers
                         // always prompt the user for downloading
                         Inline = false,
                     };
-                    Response.Headers.Add("Content-Disposition", cD.ToString());
+                    Response.Headers.Append("Content-Disposition", cD.ToString());
                     //Define statistique name
                     string statName = menu;
                     if (menu == Enumerations.MenuName.ModuleCollectiviteMenuStatistiques.ToString()
@@ -6731,7 +6807,7 @@ namespace eVaSys.Controllers
                     return new FileContentResult(ExcelFileManagement.CreateStatistique(statName, dS, eSF, CurrentContext, _dbContext, _env.ContentRootPath).ToArray(), "application /octet-stream");
                 }
                 //Return nb of row in header
-                Response.Headers.Add("nbRow", nbRow.ToString());
+                Response.Headers.Append("nbRow", nbRow.ToString());
                 //Return Json paged data
                 var pagedTable = dS.Tables[0];
                 if (pagedTable.Rows.Count > 0)

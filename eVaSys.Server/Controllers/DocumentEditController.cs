@@ -67,7 +67,7 @@ namespace eVaSys.Controllers
                     // always prompt the user for downloading
                     Inline = false,
                 };
-                Response.Headers.Add("Content-Disposition", cD.ToString());
+                Response.Headers.Append("Content-Disposition", cD.ToString());
                 return new FileContentResult(mS.ToArray(), "application/octet-stream");
             }
             else
@@ -104,7 +104,7 @@ namespace eVaSys.Controllers
                     // always prompt the user for downloading
                     Inline = false,
                 };
-                Response.Headers.Add("Content-Disposition", cD.ToString());
+                Response.Headers.Append("Content-Disposition", cD.ToString());
                 return new FileContentResult(mS.ToArray(), "application/octet-stream");
             }
             else
@@ -141,7 +141,7 @@ namespace eVaSys.Controllers
                     // always prompt the user for downloading
                     Inline = false,
                 };
-                Response.Headers.Add("Content-Disposition", cD.ToString());
+                Response.Headers.Append("Content-Disposition", cD.ToString());
                 return new FileContentResult(mS.ToArray(), "application/octet-stream");
             }
             else
@@ -177,7 +177,7 @@ namespace eVaSys.Controllers
                     // always prompt the user for downloading
                     Inline = false,
                 };
-                Response.Headers.Add("Content-Disposition", cD.ToString());
+                Response.Headers.Append("Content-Disposition", cD.ToString());
                 return new FileContentResult(mS.ToArray(), "application/octet-stream");
             }
             else

@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Telerik.Licensing.Model;
 using static eVaSys.Utils.Enumerations;
 
 namespace eVaSys.Utils
@@ -377,7 +378,7 @@ namespace eVaSys.Utils
                 SetMenuGrid(menu, DataColumnName.RefCommandeFournisseur, false, "", "");
 
                 menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuRepartition, 432, ModuleName.Logistique, "");
-                SetMenuGrid(menu, DataColumnName.RefRepartition, false, "", "");
+                SetMenuGrid(menu, DataColumnName.RefCommandeFournisseur, false, "", "");
 
                 menu = CreateEnvMenu(cR, MenuName.ModulePrestataireMenuCommandeFournisseur, 427, ModuleName.ModulePrestataire, "");
                 SetMenuGrid(menu, DataColumnName.RefCommandeFournisseur, false, "", "");
@@ -388,6 +389,7 @@ namespace eVaSys.Utils
                 menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExtractionLeko, 1434, ModuleName.Logistique, "");
                 menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatDesFluxDevLeko, 1438, ModuleName.Logistique, "");
                 menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExtractionOscar, 1549, ModuleName.Logistique, "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit, 1595, ModuleName.Logistique, "");
 
                 //ModuleCollectivite
                 menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuAccueil, 31, ModuleName.ModuleCollectivite, "");
@@ -926,6 +928,7 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.EntiteAssujettiTVA, 787, EnvDataColumnDataType.bit, "AssujettiTVA", "tblEntite.AssujettiTVA");
                 CreateEnvDataColumn(cR, DataColumnName.EntiteCapacite, 1135, EnvDataColumnDataType.intNumber, "Capacite", "tblEntite.Capacite");
                 CreateEnvDataColumn(cR, DataColumnName.EntiteCmt, 104, EnvDataColumnDataType.text, "Cmt", "tblEntite.Cmt");
+                CreateEnvDataColumn(cR, DataColumnName.EntiteCodeCollectivite, 1596, EnvDataColumnDataType.text, "CodeEE", "tblEntite.CodeEE");
                 CreateEnvDataColumn(cR, DataColumnName.EntiteContratCollectiviteActif, 1077, EnvDataColumnDataType.bit, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.EntiteCodeValorisation, 1137, EnvDataColumnDataType.text, "CodeValorisation", "tblEntite.CodeValorisation");
                 CreateEnvDataColumn(cR, DataColumnName.EntiteCodeTVA, 788, EnvDataColumnDataType.text, "CodeTVA", "tblEntite.CodeTVA");

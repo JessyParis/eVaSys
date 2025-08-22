@@ -151,6 +151,7 @@ export class AppComponent implements OnInit {
   logistiqueMenuEtatDestinationAnnuelleProduitClientStyle: string = "ev-menu";
   logistiqueMenuSuiviFacturationHCStyle: string = "ev-menu";
   logistiqueMenuTonnageCollectiviteProduitStyle: string = "ev-menu";
+  logistiqueMenuTonnageCollectiviteCDTProduitStyle: string = "ev-menu";
   logistiqueMenuTonnageCDTProduitComposantStyle: string = "ev-menu";
   logistiqueMenuTonnageCLSousContratStyle: string = "ev-menu";
   logistiqueMenuListeProduitStyle: string = "ev-menu";
@@ -622,6 +623,7 @@ export class AppComponent implements OnInit {
     this.logistiqueMenuEtatDestinationAnnuelleProduitClientStyle = "ev-menu";
     this.logistiqueMenuSuiviFacturationHCStyle = "ev-menu";
     this.logistiqueMenuTonnageCollectiviteProduitStyle = "ev-menu";
+    this.logistiqueMenuTonnageCollectiviteCDTProduitStyle = "ev-menu";
     this.logistiqueMenuTonnageCDTProduitComposantStyle = "ev-menu";
     this.logistiqueMenuTonnageCLSousContratStyle = "ev-menu";
     this.logistiqueMenuListeProduitStyle = "ev-menu";
@@ -1082,6 +1084,10 @@ export class AppComponent implements OnInit {
         this.logistiqueMenuTonnageCollectiviteProduitStyle = "ev-menu-selected";
         this.panelStatistiqueExpanded = true;
         break;
+      case "LogistiqueMenuTonnageCollectivitéCDTProduit":
+        this.logistiqueMenuTonnageCollectiviteCDTProduitStyle = "ev-menu-selected";
+        this.panelStatistiqueExpanded = true;
+        break;
       case "LogistiqueMenuTonnageCDTProduitComposant":
         this.logistiqueMenuTonnageCDTProduitComposantStyle = "ev-menu-selected";
         this.panelStatistiqueExpanded = true;
@@ -1453,6 +1459,7 @@ export class AppComponent implements OnInit {
         case MenuName.LogistiqueMenuEtatDestinationAnnuelleProduitClient:
         case MenuName.LogistiqueMenuSuiviFacturationHC:
         case MenuName.LogistiqueMenuTonnageCollectiviteProduit:
+        case MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit:
         case MenuName.LogistiqueMenuTonnageCDTProduitComposant:
         case MenuName.LogistiqueMenuTonnageCLSousContrat:
         case MenuName.LogistiqueMenuListeProduit:

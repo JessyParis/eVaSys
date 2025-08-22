@@ -954,7 +954,7 @@ namespace eVaSys.Controllers
                                     + " 	left join tblEntite as f on tblCommandeFournisseur.RefEntite=f.RefEntite"
                                     + " 	inner join tblProduit as p on tblCommandeFournisseur.RefProduit=p.RefProduit"
                                     + " where tblRepartition.RefRepartition is null and NonRepartissable=0 and p.Collecte=1 and tblCommandeFournisseur.NumeroCommande > 2025000000"
-                                    + "     and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1";
+                                    + "     and tblCommandeFournisseur.RefusCamion = 0 and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1";
                             }
                             //Filter for current user
                             if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
@@ -2153,7 +2153,7 @@ namespace eVaSys.Controllers
                                 cmd.Parameters.Add("@evolution", SqlDbType.Decimal).Value = (1 + augm / 100);
                                 int res = cmd.ExecuteNonQuery();
                                 //Return nb of row in header
-                                Response.Headers.Add("nbAugmentation", res.ToString());
+                                Response.Headers.Append("nbAugmentation", res.ToString());
                             }
                         }
                     }
@@ -2168,7 +2168,7 @@ namespace eVaSys.Controllers
                             cmd.CommandText += ")";
                             int res = cmd.ExecuteNonQuery();
                             //Return nb of affected rows in header
-                            Response.Headers.Add("nbDeactivateUtilisateur", res.ToString());
+                            Response.Headers.Append("nbDeactivateUtilisateur", res.ToString());
                         }
                     }
                     //Validate prices if needed
@@ -2192,7 +2192,7 @@ namespace eVaSys.Controllers
                             }
                             int res = cmd.ExecuteNonQuery();
                             //Return nb of affected rows in header
-                            Response.Headers.Add("nbValidatedPrices", res.ToString());
+                            Response.Headers.Append("nbValidatedPrices", res.ToString());
                         }
                     }
                     //Reject prices if needed
@@ -2216,7 +2216,7 @@ namespace eVaSys.Controllers
                             }
                             int res = cmd.ExecuteNonQuery();
                             //Return nb of affected rows in header
-                            Response.Headers.Add("nbRejectedPrices", res.ToString());
+                            Response.Headers.Append("nbRejectedPrices", res.ToString());
                         }
                     }
                     //Certify PrixReprise if needed
@@ -2387,7 +2387,7 @@ namespace eVaSys.Controllers
                             cmd.CommandText = "delete from tblParcours from tblParcours left join tblTransport on tblParcours.RefParcours = tblTransport.RefParcours where tblTransport.RefParcours is null";
                             cmd.ExecuteNonQuery();
                             //Return nb of affected rows in header
-                            Response.Headers.Add("nbDeletedPrices", res.ToString());
+                            Response.Headers.Append("nbDeletedPrices", res.ToString());
                         }
                     }
                     //Set EnAttente if needed
@@ -2401,7 +2401,7 @@ namespace eVaSys.Controllers
                             cmd.CommandText += ")";
                             int res = cmd.ExecuteNonQuery();
                             //Return nb of affected rows in header
-                            Response.Headers.Add("nbSetEnAttente", res.ToString());
+                            Response.Headers.Append("nbSetEnAttente", res.ToString());
                         }
                     }
                     //Change DMoisDechargementPrevu if needed
@@ -2434,7 +2434,7 @@ namespace eVaSys.Controllers
                             }
                             DbContext.SaveChanges();
                             //Return nb of affected rows in header
-                            Response.Headers.Add("nbChangeMoisDechargementPrevu", i.ToString());
+                            Response.Headers.Append("nbChangeMoisDechargementPrevu", i.ToString());
                         }
                     }
                     //Copy PrixReprise
@@ -2459,16 +2459,16 @@ namespace eVaSys.Controllers
                                     + " from tbrPrixReprise"
                                     + " where MONTH(D)=" + mFrom.ToString() + " and YEAR(D)=" + yFrom.ToString();
                                 i = Utils.Utils.DbExecute(sqlStrCopy, (SqlConnection)DbContext.Database.GetDbConnection());
-                                Response.Headers.Add("nbCopyPrixReprise", i.ToString());
+                                Response.Headers.Append("nbCopyPrixReprise", i.ToString());
                             }
                             else
                             {
-                                Response.Headers.Add("nbCopyPrixReprise", "-1");
+                                Response.Headers.Append("nbCopyPrixReprise", "-1");
                             }
                         }
                         else
                         {
-                            Response.Headers.Add("nbCopyPrixReprise", "");
+                            Response.Headers.Append("nbCopyPrixReprise", "");
                         }
                     }
                     //Validate Repartition if needed
@@ -2512,7 +2512,7 @@ namespace eVaSys.Controllers
                             // always prompt the user for downloading
                             Inline = false,
                         };
-                        Response.Headers.Add("Content-Disposition", cD.ToString());
+                        Response.Headers.Append("Content-Disposition", cD.ToString());
                         //Generate Excel file
                         return new FileContentResult(ExcelFileManagement.ExportTransport(cmd, CurrentContext, _dbContext, filterDptDeparts, filterDptArrivees, filterVilleDeparts, filterVilleArrivees, filterPayss, filterCamionTypes).ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                     }

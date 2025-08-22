@@ -286,14 +286,33 @@ namespace eVaSys.Controllers
                     {
                         var nC = DbContext.NonConformites
                             .Include(r => r.CommandeFournisseur)
+                            .Include(r => r.NonConformiteEtapes)
                             .Where(i => i.CommandeFournisseur.NumeroCommande == refNumeroCommande)
                             .FirstOrDefault();
-                        // handle requests asking for non-existing nonConformitezes
+                        //Process each NonConformite
                         if (nC != null)
                         {
+                            //Prpocess NonConformite
                             nC.IFClientFactureNro = iFClientFactureNro;
                             nC.IFClientDFacture = (dRef == DateTime.MinValue ? null : dRef);
                             nC.IFClientFactureEnAttente = false;
+                            //Process Etape
+                            var nCE = nC.NonConformiteEtapes.Where(el => el.RefNonConformiteEtapeType == 7).FirstOrDefault();
+                            if (nCE != null)
+                                {
+                                if (nCE.RefUtilisateurCreation == null)
+                                {
+                                    nCE.DCreation = DateTime.Now;
+                                    nCE.RefUtilisateurCreation = CurrentContext.RefUtilisateur;
+                                }
+                                else
+                                {
+                                    nCE.DModif = DateTime.Now;
+                                    nCE.RefUtilisateurModif = CurrentContext.RefUtilisateur;
+                                }
+                                nCE.DValide = DateTime.Now;
+                                nCE.RefUtilisateurValide = CurrentContext.RefUtilisateur;
+                            }
                             DbContext.SaveChanges();
                             nb++;
                         }

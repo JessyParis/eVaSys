@@ -238,7 +238,8 @@
             </mat-form-field>
             <mat-form-field style="width:100%;" *ngIf="entite?.EntiteType?.SAGECodeComptable">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(1130)}}</mat-label>
-              <input matInput formControlName="SAGECodeComptable" maxlength="17" />
+              <input matInput formControlName="SAGECodeComptable" maxlength="17"
+                      [matTooltip]="applicationUserContext.getCulturedRessourceText(1594)"/>
               <button *ngIf="form.get('SAGECodeComptable').value!=null && form.get('SAGECodeComptable').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('SAGECodeComptable').setValue(null)" tabindex="-1" type="button">
                 <mat-icon>close</mat-icon>
               </button>

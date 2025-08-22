@@ -1293,7 +1293,8 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     this.commandeFournisseur.DTraitementAnomalieTransporteur = (this.traitementAnomalieTransporteurFC.value === true ? moment() : null);
     //Handle PoidsChargement and PoidsReparti change
     if ((this.commandeFournisseur.PoidsChargement != this.originalPoidsChargement || this.commandeFournisseur.PoidsReparti != this.originalPoidsReparti)
-      && this.commandeFournisseur.Reparti && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Administrateur){
+      && !this.commandeFournisseur.RefusCamion
+      && this.commandeFournisseur.Reparti && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Administrateur) {
       const dialogRef = this.dialog.open(InformationComponent, {
         width: "350px",
         data: { title: this.applicationUserContext.getCulturedRessourceText(337), message: this.applicationUserContext.getCulturedRessourceText(1561) },

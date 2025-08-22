@@ -852,6 +852,11 @@
                 <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
                       && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
                       || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
+                  <td (click)="onMenu('LogistiqueMenuTonnageCollectiviteCDTProduit')" [class]="logistiqueMenuTonnageCollectiviteCDTProduitStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuTonnageCollectiviteCDTProduit')}}</td>
+                </tr>
+                <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'
+                      && (applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'
+                      || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur')">
                   <td (click)="onMenu('LogistiqueMenuTonnageCDTProduitComposant')" [class]="logistiqueMenuTonnageCDTProduitComposantStyle">{{applicationUserContext.getEnvMenuCulturedCaption('LogistiqueMenuTonnageCDTProduitComposant')}}</td>
                 </tr>
                 <tr *ngIf="applicationUserContext.currentModule.name==='Logistique'

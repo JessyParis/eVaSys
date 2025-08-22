@@ -524,10 +524,6 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
           this.sort.active = DataColumnName.CommandeFournisseurDDisponibilite;
           this.sort.direction = "asc";
           break;
-        case MenuName.LogistiqueMenuRepartition:
-          this.sort.active = DataColumnName.CommandeFournisseurNumeroCommande;
-          this.sort.direction = "desc";
-          break;
         case MenuName.LogistiqueMenuPrixReprise:
           this.sort.active = DataColumnName.RefPrixReprise;
           this.sort.direction = "desc";

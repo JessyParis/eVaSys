@@ -3514,6 +3514,7 @@ namespace eVaSys.Utils
                         || name == Enumerations.MenuName.LogistiqueMenuTonnageCLSousContrat.ToString()
                         || name == Enumerations.MenuName.AnnuaireMenuExtractionAction.ToString()
                         || name == Enumerations.MenuName.AnnuaireMenuExtractionAnnuaire.ToString()
+                        || name == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit.ToString()
                         )
                     )
                 {
@@ -3683,6 +3684,7 @@ namespace eVaSys.Utils
                         || name == Enumerations.MenuName.AnnuaireMenuEvolutionTonnage.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatDesFluxDev.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatDesFluxDevLeko.ToString()
+                        || name == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit.ToString()
                         )
                     )
                 {
@@ -3845,6 +3847,7 @@ namespace eVaSys.Utils
                 if (!string.IsNullOrEmpty(eSF.FilterEcoOrganismes)
                     && (
                         name == Enumerations.MenuName.LogistiqueMenuEtatDesPoids.ToString()
+                        || name == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit.ToString()
                         )
                     )
                 {
@@ -3869,8 +3872,10 @@ namespace eVaSys.Utils
                         || name == Enumerations.MenuName.LogistiqueMenuExtractionReception.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuExtractionCommande.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteProduit.ToString()
+                        || name == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit.ToString()
                         || name == Enumerations.StatType.DestinationTonnage.ToString()
                         || name == Enumerations.StatType.DeboucheBalle.ToString()
+                        || name == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit.ToString()
                         )
                     )
                 {
@@ -3889,6 +3894,7 @@ namespace eVaSys.Utils
                         || name == Enumerations.StatType.EvolutionTonnage.ToString()
                         || name == Enumerations.StatType.ExtractionPrixReprise.ToString()
                         || name == Enumerations.StatType.DeboucheBalle.ToString()
+                        || name == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit.ToString()
                         )
                     )
                 {
@@ -3966,6 +3972,7 @@ namespace eVaSys.Utils
                     || name == Enumerations.StatType.EvolutionTonnage.ToString()
                     || name == Enumerations.StatType.ExtractionPrixReprise.ToString()
                     || name == Enumerations.StatType.DeboucheBalle.ToString()
+                    || name == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit.ToString()
                     )
                 {
                     if (eSF.FilterCollecte == "Collecte") { ws.Cells[1, 0].Value = currentContext.CulturedRessources.GetTextRessource(603); }
@@ -4016,6 +4023,7 @@ namespace eVaSys.Utils
                         || name == Enumerations.MenuName.AdministrationMenuExtractionLogin.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatDesEnlevements.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuPoidsMoyenChargementProduit.ToString()
+                        || name == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit.ToString()
                         )
                     )
                 {

@@ -199,7 +199,7 @@
           <mat-form-field *ngIf="!this.applicationUserContext.connectedUtilisateur.Collectivite && visibleFilterCollectiviteList" class="ev-control-left">
             <mat-label>{{labelCollectiviteListFC}}</mat-label>
             <mat-select [multiple]="collectiviteListMultiple" formControlName="CollectiviteList"
-                        [compareWith]="compareFnCollectivite" (selectionChange)="onCollectiviteSelected()" required [errorStateMatcher]="matcher">
+                        [compareWith]="compareFnCollectivite" (selectionChange)="onCollectiviteSelected()"  [required]="requiredCollectiviteList" [errorStateMatcher]="matcher">
               <mat-option>
                 <ngx-mat-select-search formControlName="CollectiviteListFilter" placeholderLabel={{applicationUserContext.getCulturedRessourceText(440)}}
                                        noEntriesFoundLabel={{applicationUserContext.getCulturedRessourceText(730)}}></ngx-mat-select-search>

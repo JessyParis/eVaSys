@@ -275,7 +275,8 @@ namespace eVaSys.Utils
             QualiteMenuExtractionCVQ,
             QualiteMenuEtatIncitationQualite,
             QualiteMenuEtatControleReception,
-            AnnuaireMenuEvolutionTonnage
+            AnnuaireMenuEvolutionTonnage,
+            LogistiqueMenuTonnageCollectiviteCDTProduit
         }
         //Enumération pour les noms de CommandeFournisseur statuts
         public enum CommandeFournisseurStatutName
@@ -500,6 +501,7 @@ namespace eVaSys.Utils
             EntiteContratCollectiviteActif,
             EntiteDimensionBalle,
             EntiteCodeCITEO,
+            EntiteCodeCollectivite,
             EntiteCodeTVA,
             EntiteCodeValorisation,
             EntiteCmt,

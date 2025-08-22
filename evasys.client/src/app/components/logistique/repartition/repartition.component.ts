@@ -1,8 +1,7 @@
 import { Component } from "@angular/core";
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidationErrors, ValidatorFn, AbstractControl, FormGroupDirective, NgForm, UntypedFormArray, FormControl } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidationErrors, ValidatorFn, AbstractControl, UntypedFormArray, FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApplicationUserContext } from "../../../globals/globals";
-import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { InformationComponent } from "../../dialogs/information/information.component";
@@ -66,8 +65,8 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   infoTextFC: UntypedFormControl = new UntypedFormControl(null);
   collectiviteListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   collectiviteNAListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
-  poidsFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, Validators.max(400000)]);
-  percentFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, Validators.max(100)]);
+  poidsFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, Validators.max(400000), Validators.min(1)]);
+  percentFC: UntypedFormControl = new UntypedFormControl(null, [Validators.required, Validators.max(100), Validators.min(0.0001)]);
   pUHTFC: UntypedFormControl = new UntypedFormControl(null, [Validators.max(2500), Validators.min(-1500)]);
   repartitionCollectivite: UntypedFormArray = new UntypedFormArray([]);
   repartitionProduit: UntypedFormArray = new UntypedFormArray([]);
@@ -244,7 +243,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
     this.repartitionCollectivite.clear();
     for (const repColl of this.repartition.RepartitionCollectivites) {
       const grp = this.fb.group({
-        Poids: [repColl.Poids, [Validators.required, Validators.max(400000)]],
+        Poids: [repColl.Poids, [Validators.required, Validators.max(400000), Validators.min(1)]],
         PUHT: [repColl.PUHT, [Validators.max(2500), Validators.min(-1500)]],
       });
       this.repartitionCollectivite.push(grp);
@@ -252,7 +251,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
     this.repartitionProduit.clear();
     for (const repColl of this.repartition.RepartitionProduits) {
       const grp = this.fb.group({
-        Poids: [repColl.Poids, [Validators.required, Validators.max(400000)]],
+        Poids: [repColl.Poids, [Validators.required, Validators.max(400000), Validators.min(1)]],
         PUHT: [repColl.PUHT, [Validators.max(2500), Validators.min(-1500)]],
       });
       this.repartitionProduit.push(grp);

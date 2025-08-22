@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -248,7 +249,7 @@ namespace eVaSys.Controllers
                     // always prompt the user for downloading
                     Inline = false,
                 };
-                Response.Headers.Add("Content-Disposition", cD.ToString());
+                Response.Headers.Append("Content-Disposition", cD.ToString());
                 return new FileContentResult(mS.ToArray(), "application/octet-stream");
             }
             else
@@ -453,7 +454,7 @@ namespace eVaSys.Controllers
                     // always prompt the user for downloading
                     Inline = false,
                 };
-                Response.Headers.Add("Content-Disposition", cD.ToString());
+                Response.Headers.Append("Content-Disposition", cD.ToString());
                 return new FileContentResult(mS.ToArray(), "application/octet-stream");
             }
             else
@@ -495,31 +496,44 @@ namespace eVaSys.Controllers
                 using (SqlConnection sqlConn = new(Configuration["Data:DefaultConnection:ConnectionString"]))
                 {
                     SqlCommand cmd = new();
-                    string sqlStr = "select dbo.AdresseEnAd(tblEntite.RefEntite), tblEntite.SAGECodeComptable, sum(cast(Poids as decimal))/1000, sum(cast(Poids as decimal(10,2))*PUHT)/sum(cast(Poids as decimal)), max(rep.D)"
+                    sqlConn.Open();
+                    cmd.Connection = sqlConn;
+                    //Création de la table temporaire
+                    string sqlStr = "CREATE TABLE #rep (RefRepartition int)";
+                    cmd.CommandText = sqlStr;
+                    cmd.ExecuteNonQuery();
+                    //Remplissage de la table temporaire
+                    sqlStr = "INSERT INTO #rep"
+                        + " select distinct tblRepartition.RefRepartition"
+                        + " from tblRepartition"
+                        + "     inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur = tblRepartition.RefCommandeFournisseur"
+                        + "     inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition = tblRepartition.RefRepartition"
+                        + "     inner join tblEntite on tblRepartitionCollectivite.RefCollectivite = tblEntite.RefEntite"
+                        + " where tblRepartition.ExportSAGE = 0 and tblCommandeFournisseur.DDechargement between @debut and @fin and tblCommandeFournisseur.NumeroCommande > 2025000000"
+                        + "     and tblRepartition.RefRepartition not in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
+                        + "     and tblRepartition.RefRepartition not in (select distinct RefRepartition from RepartitionIncompletePoids)";
+                    cmd.Parameters.Add("@debut", SqlDbType.DateTime).Value = t.Begin;
+                    cmd.Parameters.Add("@fin", SqlDbType.DateTime).Value = t.End;
+                    cmd.CommandText = sqlStr;
+                    cmd.ExecuteNonQuery();
+                    //Chargement des données
+                    sqlStr = "select dbo.AdresseEnAd(tblEntite.RefEntite), tblEntite.SAGECodeComptable, sum(cast(Poids as decimal))/1000, sum(cast(Poids as decimal(10,2))*PUHT)/sum(cast(Poids as decimal)), max(rep.D)"
                         + " from"
                         + "     ("
                         + "         select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D "
                         + "         from tblRepartition "
                         + " 	        inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                        + "         union all"
-                        + "         select RefRepartition, RefFournisseur, RefProduit, D "
-                        + "         from tblRepartition"
-                        + "         where RefCommandeFournisseur is null"
+                        + "         where RefRepartition in (select RefRepartition from #rep)"
                         + "     ) as rep"
                         + "     inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition"
                         + "     inner join tblEntite on tblRepartitionCollectivite.RefCollectivite=tblEntite.RefEntite"
-                        + " where rep.D between @debut and @fin"
                         + " group by TblEntite.refEntite, TblEntite.SAGECodeComptable"
                         + " order by TblEntite.refEntite";
-                    cmd.Parameters.Add("@debut", SqlDbType.DateTime).Value = t.Begin; 
-                    cmd.Parameters.Add("@fin", SqlDbType.DateTime).Value = t.End; 
-                    sqlConn.Open();
-                    cmd.Connection = sqlConn;
                     cmd.CommandText = sqlStr;
                     SqlDataReader dr = cmd.ExecuteReader();
                     while (dr.Read())
                     {
-                        //Instanciation de l'adresse
+                        //Instanciation des données utiles
                         Adresse a = DbContext.Adresses.Where(el => el.RefAdresse == (int)dr.GetSqlInt32(0)).FirstOrDefault();
                         Entite e = DbContext.Entites.Where(el => el.RefEntite == a.RefEntite).FirstOrDefault();
                         string r = dr.GetSqlString(1).ToString();
@@ -639,6 +653,10 @@ namespace eVaSys.Controllers
                     sw.Flush();
                     //Fermeture de la source de données
                     dr.Close();
+                    //Mise à jour des répartitions
+                    sqlStr = "update tblRepartition set ExportSAGE=1 where RefRepartition in (select RefRepartition from #rep)";
+                    cmd.CommandText = sqlStr;
+                    cmd.ExecuteNonQuery();
                 }
                 //return file
                 var cD = new System.Net.Mime.ContentDisposition
@@ -647,7 +665,7 @@ namespace eVaSys.Controllers
                     // always prompt the user for downloading
                     Inline = false,
                 };
-                Response.Headers.Add("Content-Disposition", cD.ToString());
+                Response.Headers.Append("Content-Disposition", cD.ToString());
                 return new FileContentResult(mS.ToArray(), "application/octet-stream");
             }
             else
@@ -853,7 +871,7 @@ namespace eVaSys.Controllers
                     // always prompt the user for downloading
                     Inline = false,
                 };
-                Response.Headers.Add("Content-Disposition", cD.ToString());
+                Response.Headers.Append("Content-Disposition", cD.ToString());
                 return new FileContentResult(mS.ToArray(), "application/octet-stream");
             }
             else
@@ -1005,7 +1023,7 @@ namespace eVaSys.Controllers
                     // always prompt the user for downloading
                     Inline = false,
                 };
-                Response.Headers.Add("Content-Disposition", cD.ToString());
+                Response.Headers.Append("Content-Disposition", cD.ToString());
                 return new FileContentResult(mS.ToArray(), "application/octet-stream");
             }
             else
@@ -1156,7 +1174,7 @@ namespace eVaSys.Controllers
                     // always prompt the user for downloading
                     Inline = false,
                 };
-                Response.Headers.Add("Content-Disposition", cD.ToString());
+                Response.Headers.Append("Content-Disposition", cD.ToString());
                 return new FileContentResult(mS.ToArray(), "application/octet-stream");
             }
             else

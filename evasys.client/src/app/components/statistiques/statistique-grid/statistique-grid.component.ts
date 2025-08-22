@@ -173,6 +173,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
   visibleFilterDayWeekMonth: boolean = false;
   visibleStatistiqueCollectivite: boolean = false;
   requiredCentreDeTriList: boolean = false;
+  requiredCollectiviteList: boolean = false;
   requiredMonthList: boolean = false;
   monthListMultiple: boolean = true;
   yearListMultiple: boolean = true;
@@ -416,6 +417,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       case MenuName.LogistiqueMenuEtatTonnageParProcess:
       case MenuName.LogistiqueMenuSuiviFacturationHC:
       case MenuName.LogistiqueMenuTonnageCollectiviteProduit:
+      case MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit:
       case MenuName.LogistiqueMenuEtatDesEnlevements:
       case MenuName.LogistiqueMenuExtractionLeko:
       case MenuName.LogistiqueMenuPoidsMoyenChargementProduit:
@@ -749,6 +751,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuSuiviFacturationHC
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatDesPoids
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTonnageCollectiviteProduit
+      || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatTonnageParProcess
     ) {
       this.labelDBeginDEndFC = this.applicationUserContext.getCulturedRessourceText(894);
@@ -1086,6 +1089,21 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
         this.form.get("CentreDeTriList").setValidators(Validators.required);
         this.requiredCentreDeTriList = true;
         this.form.get("CentreDeTriList").updateValueAndValidity();
+        break;
+      case MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit:
+        this.visibleFilterDBegin = true;
+        this.form.get("DBegin").enable();
+        this.visibleFilterDEnd = true;
+        this.form.get("DEnd").enable();
+        this.visibleFilterCollecte = true;
+        this.visibleFilterCollectiviteList = true;
+        this.form.get("CollectiviteList").enable();
+        this.form.get("CollectiviteList").clearValidators();
+        this.form.get("CollectiviteList").updateValueAndValidity();
+        this.visibleFilterCentreDeTriList = true;
+        this.visibleFilterProduitList = true;
+        this.visibleFilterDRList = true;
+        this.visibleFilterEcoOrganismeList = true;
         break;
       case MenuName.LogistiqueMenuTonnageCDTProduitComposant:
         this.visibleFilterQuarterList = true;
