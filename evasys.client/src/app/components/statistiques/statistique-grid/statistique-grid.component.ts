@@ -417,13 +417,19 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       case MenuName.LogistiqueMenuEtatTonnageParProcess:
       case MenuName.LogistiqueMenuSuiviFacturationHC:
       case MenuName.LogistiqueMenuTonnageCollectiviteProduit:
-      case MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit:
       case MenuName.LogistiqueMenuEtatDesEnlevements:
       case MenuName.LogistiqueMenuExtractionLeko:
       case MenuName.LogistiqueMenuPoidsMoyenChargementProduit:
         if (this.applicationUserContext.filterBegin.isSame(moment([1, 0, 1, 0, 0, 0, 0])) || this.applicationUserContext.filterEnd.isSame(moment([1, 0, 1, 0, 0, 0, 0]))) {
           this.applicationUserContext.filterBegin = moment(new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0, 0));
           this.applicationUserContext.filterEnd = moment(new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0, 0)).add(1, "months").add(-1, "days");
+        }
+        break;
+      case MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit:
+        if (this.applicationUserContext.filterBegin.isSame(moment([1, 0, 1, 0, 0, 0, 0])) || this.applicationUserContext.filterEnd.isSame(moment([1, 0, 1, 0, 0, 0, 0]))) {
+          this.applicationUserContext.filterBegin = moment(new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0, 0));
+          this.applicationUserContext.filterEnd = moment(new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0, 0)).add(1, "months").add(-1, "days");
+          this.applicationUserContext.filterCollecte = "Collecte";
         }
         break;
       case MenuName.LogistiqueMenuLotDisponible:
@@ -1095,7 +1101,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
         this.form.get("DBegin").enable();
         this.visibleFilterDEnd = true;
         this.form.get("DEnd").enable();
-        this.visibleFilterCollecte = true;
+        //this.visibleFilterCollecte = true;
         this.visibleFilterCollectiviteList = true;
         this.form.get("CollectiviteList").enable();
         this.form.get("CollectiviteList").clearValidators();

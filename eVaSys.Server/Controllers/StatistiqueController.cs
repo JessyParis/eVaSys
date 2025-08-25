@@ -2024,7 +2024,7 @@ namespace eVaSys.Controllers
                     + "     inner join tblCommandeFournisseur on VueRepartitionUnitaireDetail.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
                     + "     inner join tblProduit on tblProduit.RefProduit = tblCommandeFournisseur.RefProduit"
                     + " 	inner join tblEntite on tblCommandeFournisseur.RefEntite=tblEntite.RefEntite"
-                    + " 	inner join tblEntite as coll on VueRepartitionUnitaireDetail.RefFournisseur=coll.RefEntite"
+                    + " 	left join tblEntite as coll on VueRepartitionUnitaireDetail.RefFournisseur=coll.RefEntite"
                     + " 	left join tbrEcoOrganisme as ee on coll.RefEcoOrganisme=ee.RefEcoOrganisme"
                     + " where tblCommandeFournisseur.DDechargement between @begin and @end";
                 //Filters
@@ -5241,6 +5241,10 @@ namespace eVaSys.Controllers
                     if (menu == Enumerations.MenuName.LogistiqueMenuSuiviFacturationHC.ToString())
                     {
                         sqlStrFinal += " ORDER BY isnull(c.Libelle, isnull(f.Libelle, fournisseur.Libelle)), isnull(p.Libelle, produit.Libelle), cli.Libelle, NumeroCommande";
+                    }
+                    if (menu == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit.ToString())
+                    {
+                        sqlStrFinal += " ORDER BY coll.CodeEE";
                     }
                     if (menu == Enumerations.MenuName.LogistiqueMenuTonnageCDTProduitComposant.ToString())
                     {
