@@ -1549,11 +1549,13 @@ namespace eVaSys.Controllers
                     + "         from"
                     + "             VueRepartitionUnitaireDetail"
                     + "         	left join VueCommandeFournisseurContrat on VueRepartitionUnitaireDetail.RefCommandeFournisseur=VueCommandeFournisseurContrat.RefCommandeFournisseur"
-                    + "         	left join tbrPrixReprise on isnull(tbrPrixReprise.RefProcess,0)=isnull(VueRepartitionUnitaireDetail.RefProcess,0) and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit "
+                    + "         	left join tbrPrixReprise on isnull(tbrPrixReprise.RefProcess,0)=isnull(VueRepartitionUnitaireDetail.RefProcess,0)"
                     + "         		and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit"
                     + "         		and month(VueRepartitionUnitaireDetail.D)=month(tbrPrixReprise.D) and year(VueRepartitionUnitaireDetail.D)=year(tbrPrixReprise.D)"
                     + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
-                    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=1";
+                    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=1" 
+                    + "                 and RefRepartition not in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
+                    + "                 and RefRepartition not in (select distinct RefRepartition from RepartitionIncompletePoids)";
                 if (eSF.FilterCollecte == "HorsCollecte")
                 {
                     sqlStr += " and 1!=1";
@@ -1564,7 +1566,9 @@ namespace eVaSys.Controllers
                     + "              , null as RefContrat"
                     + "         from"
                     + "             VueRepartitionUnitaireDetail"
-                    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=0";
+                    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=0" 
+                    + "                 and RefRepartition not in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
+                    + "                 and RefRepartition not in (select distinct RefRepartition from RepartitionIncompletePoids)";
                 if (eSF.FilterCollecte == "Collecte")
                 {
                     sqlStr += " and 1!=1";
@@ -1576,7 +1580,7 @@ namespace eVaSys.Controllers
                     + "      left join tblProduit as composant on composant.RefProduit = univers.RefComposant"
                     + "      left join tbrProcess on tbrProcess.RefProcess = univers.RefProcess"
                     + "      left join tblContrat on tblContrat.RefContrat=univers.RefContrat"
-                    + "     where 1=1";
+                    + " where 1=1";
                 //Détail par collectivité
                 //sqlStr = "select tbrProcess.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProcessLibelle.ToString()].Name + "]"
                 //    + "     , tblProduit.NomCommun as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"

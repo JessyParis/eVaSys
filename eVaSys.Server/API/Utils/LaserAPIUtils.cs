@@ -633,7 +633,7 @@ namespace eVaSys.Utils
             string responseBody = "";
             string url = configuration["AppResources:Laser:Url"] + "/api/transactions/" + refExt;
             CommandeFournisseur cmdF = new CommandeFournisseur() { RefExt = refExt };
-            string refCmd = cmdF?.NumeroCommande.ToString() ?? "NA" + " (" + cmdF?.RefExt ?? "NA" + ") - ";
+            string refCmd = (cmdF.NumeroCommande <= 0 ? "NA" : cmdF.NumeroCommande.ToString()) + " (" + (cmdF?.RefExt ?? "NA") + ")";
             //Process
             HttpClient client = new HttpClient();
             try

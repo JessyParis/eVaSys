@@ -4766,7 +4766,6 @@ namespace eVaSys.Utils
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
             //Process
             var nC = dbContext.NonConformites
-                .Include(l => l.NonConformiteNonConformiteFamilles)
                 .Include(l => l.NonConformiteEtapes)
                 .Include(l => l.NonConformiteFichiers)
                 .AsSplitQuery()
@@ -4916,9 +4915,6 @@ namespace eVaSys.Utils
             i++;
             ws.Cells[i, 0].Value = currentContext.CulturedRessources.GetTextRessource(830);
             ws.Cells[i, 2].Value = nC.NonConformiteNature?.Libelle;
-            i++;
-            ws.Cells[i, 0].Value = currentContext.CulturedRessources.GetTextRessource(816);
-            ws.Cells[i, 2].Value = nC.NonConformiteFamilles;
             i++;
             ws.Cells[i, 0].Value = currentContext.CulturedRessources.GetTextRessource(827);
             ws.Cells[i, 2].Value = (nC.IFFournisseurRetourLot ? currentContext.CulturedRessources.GetTextRessource(205) : currentContext.CulturedRessources.GetTextRessource(206));

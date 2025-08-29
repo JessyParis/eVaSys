@@ -48,12 +48,13 @@ namespace eVaSys.Controllers
         [HttpPost("PostRefExt")]
         public IActionResult PostRefExt([FromBody] APICommandeFournisseurRefExtViewModel model)
         {
+            string path = HttpContext.Request.Path;
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.
             if (model == null)
             {
                 //Log
-                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, null, (int?)HttpStatusCode.BadRequest, CurrentContext.CulturedRessources.GetTextRessource(711), "Contenu non reconnu", CurrentContext.RefUtilisateur, DbContext);
+                APIUtils.ApiUtils.LogAPICall(path, null, (int?)HttpStatusCode.BadRequest, CurrentContext.CulturedRessources.GetTextRessource(711), "Contenu non reconnu", CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711)));
             }
@@ -78,7 +79,7 @@ namespace eVaSys.Controllers
             {
                 err = CurrentContext.CulturedRessources.GetTextRessource(319) + err;
                 //Log
-                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, jsonBody, (int?)HttpStatusCode.BadRequest, null, err, CurrentContext.RefUtilisateur, DbContext);
+                APIUtils.ApiUtils.LogAPICall(path, jsonBody, (int?)HttpStatusCode.BadRequest, null, err, CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return BadRequest(new BadRequestError(err));
             }
@@ -92,7 +93,7 @@ namespace eVaSys.Controllers
             if (!r)
             {
                 err = Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1292);
-                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, jsonBody, (int?)HttpStatusCode.BadRequest, null, err, CurrentContext.RefUtilisateur, DbContext);
+                APIUtils.ApiUtils.LogAPICall(path, jsonBody, (int?)HttpStatusCode.BadRequest, null, err, CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return BadRequest(new BadRequestError(err));
             }
@@ -141,6 +142,19 @@ namespace eVaSys.Controllers
                 if (model.ActionCode != Enumerations.APICommandeFournisseurActionCode.Creation.ToString())
                 {
                     err = Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1291);
+                }
+                //Return error if Produit not found
+                if (cDT == null)
+                {
+                    err = Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1597)
+                        + " - sourceActor.code=" + laserTransaction.sourceActor.code;
+                }
+                //Return error if Produit not found
+                else if (refP == null)
+                {
+                    err = Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(358)
+                        + " - quality.code=" + laserTransaction.quality.code
+                        + " - quality.name=" + laserTransaction.quality.name;
                 }
                 //Check if Produit is allowed for CentreDeTri
                 else if (cDT != null && refP != null)
@@ -195,7 +209,7 @@ namespace eVaSys.Controllers
                 //Log error
                 err = CurrentContext.CulturedRessources.GetTextRessource(319) + err;
                 //Log
-                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, jsonBody, (int?)HttpStatusCode.BadRequest, null, err, CurrentContext.RefUtilisateur, DbContext);
+                APIUtils.ApiUtils.LogAPICall(path, jsonBody, (int?)HttpStatusCode.BadRequest, null, err, CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return BadRequest(new BadRequestError(err));
             }
@@ -243,14 +257,14 @@ namespace eVaSys.Controllers
                 // persist the changes into the Database.
                 DbContext.SaveChanges();
                 //Log
-                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, jsonBody, (int?)HttpStatusCode.OK, null, "", CurrentContext.RefUtilisateur, DbContext);
+                APIUtils.ApiUtils.LogAPICall(path, jsonBody, (int?)HttpStatusCode.OK, null, "", CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return new OkResult();
             }
             else
             {
                 //Log
-                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, jsonBody, (int?)HttpStatusCode.Conflict, null, valid, CurrentContext.RefUtilisateur, DbContext);
+                APIUtils.ApiUtils.LogAPICall(path, jsonBody, (int?)HttpStatusCode.Conflict, null, valid, CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return Conflict(new ConflictError(valid));
             }
@@ -263,12 +277,13 @@ namespace eVaSys.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] APICommandeFournisseurViewModel model)
         {
+            string path = HttpContext.Request.Path;
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.
             if (model == null)
             {
                 //Log
-                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, null, (int?)HttpStatusCode.BadRequest, CurrentContext.CulturedRessources.GetTextRessource(711), "Contenu non reconnu", CurrentContext.RefUtilisateur, DbContext);
+                APIUtils.ApiUtils.LogAPICall(path, null, (int?)HttpStatusCode.BadRequest, CurrentContext.CulturedRessources.GetTextRessource(711), "Contenu non reconnu", CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711)));
             }
@@ -397,7 +412,7 @@ namespace eVaSys.Controllers
             {
                 err = CurrentContext.CulturedRessources.GetTextRessource(711) + err;
                 //Log
-                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, jsonBody, (int?)HttpStatusCode.BadRequest, null, err, CurrentContext.RefUtilisateur, DbContext);
+                APIUtils.ApiUtils.LogAPICall(path, jsonBody, (int?)HttpStatusCode.BadRequest, null, err, CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return BadRequest(new BadRequestError(err));
             }
@@ -416,14 +431,14 @@ namespace eVaSys.Controllers
                 // persist the changes into the Database.
                 DbContext.SaveChanges();
                 //Log
-                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, jsonBody, (int?)HttpStatusCode.OK, null, "", CurrentContext.RefUtilisateur, DbContext);
+                APIUtils.ApiUtils.LogAPICall(path, jsonBody, (int?)HttpStatusCode.OK, null, "", CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return new OkResult();
             }
             else
             {
                 //Log
-                APIUtils.ApiUtils.LogAPICall(HttpContext.Request.Path, jsonBody, (int?)HttpStatusCode.Conflict, null, valid, CurrentContext.RefUtilisateur, DbContext);
+                APIUtils.ApiUtils.LogAPICall(path, jsonBody, (int?)HttpStatusCode.Conflict, null, valid, CurrentContext.RefUtilisateur, DbContext);
                 //End
                 return Conflict(new ConflictError(valid));
             }
