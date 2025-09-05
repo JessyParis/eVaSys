@@ -207,6 +207,17 @@
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(1598)}}</mat-label>
+              <mat-select formControlName="LaserTypeList">
+                <mat-option value="Quality">Quality</mat-option>
+                <mat-option value="Flow">Flow</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('LaserTypeList').value && form.get('LaserTypeList').enabled"
+                      matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('LaserTypeList').setValue(null)" tabindex="-1" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
           </td>
         </tr>
       </table>

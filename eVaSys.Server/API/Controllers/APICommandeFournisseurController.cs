@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net;
+using static eVaSys.Utils.Enumerations;
 
 namespace eVaSys.Controllers
 {
@@ -137,31 +138,48 @@ namespace eVaSys.Controllers
                 Entite cDT = DbContext.Entites
                     .Include(e => e.EntiteProduits)
                     .Where(e => e.CodeEE == laserTransaction.sourceActor.code).FirstOrDefault();
-                int? refP = DbContext.Produits.Where(e => e.Libelle == (laserTransaction.quality.code + " - " + laserTransaction.quality.name)).FirstOrDefault()?.RefProduit;
+                //Get Produit: quality or flow
+                int? refP= null;
+                if (!string.IsNullOrWhiteSpace(laserTransaction.quality?.code) && !string.IsNullOrWhiteSpace(laserTransaction.quality?.name))
+                {
+                    refP = DbContext.Produits
+                        .Where(e => e.Libelle == (laserTransaction.quality.code + " - " + laserTransaction.quality.name)
+                        && e.LaserType == LaserType.Quality.ToString()
+                    ).FirstOrDefault()?.RefProduit;
+                }
+                if (!string.IsNullOrWhiteSpace(laserTransaction.flow?.type) && !string.IsNullOrWhiteSpace(laserTransaction.flow?.name))
+                {
+                    refP = DbContext.Produits
+                        .Where(e => e.Libelle == (laserTransaction.flow.type + " - " + laserTransaction.flow.name)
+                        && e.LaserType == LaserType.Flow.ToString()
+                        ).FirstOrDefault()?.RefProduit;
+                }
                 //Return error if no exists and other than "Creation" asked
                 if (model.ActionCode != Enumerations.APICommandeFournisseurActionCode.Creation.ToString())
                 {
-                    err = Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1291);
+                    err += Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1291);
                 }
-                //Return error if Produit not found
+                //Return error if CDT not found
                 if (cDT == null)
                 {
-                    err = Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1597)
-                        + " - sourceActor.code=" + laserTransaction.sourceActor.code;
+                    err += Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1597)
+                        + Environment.NewLine + " - sourceActor.code=" + laserTransaction.sourceActor.code;
                 }
                 //Return error if Produit not found
                 else if (refP == null)
                 {
-                    err = Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(358)
-                        + " - quality.code=" + laserTransaction.quality.code
-                        + " - quality.name=" + laserTransaction.quality.name;
+                    err += Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(358)
+                        + Environment.NewLine + " - quality.code=" + laserTransaction.quality?.code
+                        + Environment.NewLine + " - quality.name=" + laserTransaction.quality?.name
+                        + Environment.NewLine + " - flow.type=" + laserTransaction.flow?.type
+                        + Environment.NewLine + " - flow.name=" + laserTransaction.flow?.name;
                 }
                 //Check if Produit is allowed for CentreDeTri
                 else if (cDT != null && refP != null)
                 {
                     if (cDT.EntiteProduits.Where(e => e.RefProduit == refP && e.Interdit == true).Any())
                     {
-                        err = Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1228);
+                        err += Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1228);
                     }
                 }
             }
@@ -170,42 +188,51 @@ namespace eVaSys.Controllers
             if (err != "")
             {
                 //Create message if rejcted for forbidden Produit
+                //Create message
+                string corps = "", corpsHTML = " ", titre = "Demande d'enlèvement rejetée";
                 if (err == Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1228))
                 {
-                    //Create message
-                    string corps = "", corpsHTML = " ", titre = "Demande d'enlèvement rejetée pour produit interdit";
+                    titre = "Demande d'enlèvement rejetée pour produit interdit";
                     corps = "La demande d'enlèvement " + laserTransaction.id.ToString() + " a été rejetée car elle concerne un produit interdit pour le Centre de Tri.";
-                    corps += Environment.NewLine + "Centre de Tri : " + laserTransaction.sourceActor.name;
-                    corps += Environment.NewLine + "Produit : " + laserTransaction.quality.code + " - " + laserTransaction.quality.name;
+                    corps += Environment.NewLine + "Centre de Tri : " + laserTransaction.sourceActor?.name;
+                    corps += Environment.NewLine + "Produit (quality) : " + laserTransaction.quality?.code + " - " + laserTransaction.quality?.name;
+                    corps += Environment.NewLine + "Produit (flow) : " + laserTransaction.flow?.type + " - " + laserTransaction.flow?.name;
                     corps += Environment.NewLine + "Quantité (kg) : " + laserTransaction.forecastedQuantity.ToString();
-                    corps += Environment.NewLine + "Date de disponibilité : " + laserTransaction.forecastedCollectionDate;
-                    corpsHTML = Utils.Utils.FormatHTMLNewLines(System.Net.WebUtility.HtmlEncode(corps));
-                    corpsHTML = "<span style=\"font-family:Roboto; font-size:11pt;\">" + corpsHTML + "</span>";
-                    var msg = new Message()
-                    {
-                        RefUtilisateurCourant = CurrentContext.RefUtilisateur,
-                        RefMessageType = 4,
-                        Libelle = titre,
-                        Titre = titre,
-                        Corps = corps,
-                        CorpsHTML = corpsHTML,
-                        DiffusionUnique = true,
-                        VisualisationConfirmeUnique = true,
-                        DDebut = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
-                        DFin = (new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)).AddDays(7),
-                        Actif = true,
-                        Important = true
-                    };
-                    DbContext.Messages.Add(msg);
-                    //Manage Diffusion
-                    msg.MessageDiffusions = new HashSet<MessageDiffusion>();
-                    msg.MessageDiffusions.Add(new MessageDiffusion()
-                    {
-                        RefModule = Enumerations.Module.Logistique.ToString(),
-                        RefHabilitation = Enumerations.HabilitationLogistique.Administrateur.ToString()
-                    });
-                    DbContext.SaveChanges();
+                    corps += Environment.NewLine + "Date de disponibilité : " + laserTransaction.sourceAvailabilityDate;
                 }
+                else
+                {
+                    titre = "Demande d'enlèvement rejetée";
+                    corps = "La demande d'enlèvement " + laserTransaction.id.ToString() + " a été rejetée pour la raison suivante.";
+                    corps += Environment.NewLine + err;
+                }
+                corps += Environment.NewLine + Environment.NewLine + "Le " + DateTime.Now.ToString("dd/MM/yyyy hh:mm");
+                corpsHTML = Utils.Utils.FormatHTMLNewLines(System.Net.WebUtility.HtmlEncode(corps));
+                corpsHTML = "<span style=\"font-family:Roboto; font-size:11pt;\">" + corpsHTML + "</span>";
+                var msg = new Message()
+                {
+                    RefUtilisateurCourant = CurrentContext.RefUtilisateur,
+                    RefMessageType = 4,
+                    Libelle = titre,
+                    Titre = titre,
+                    Corps = corps,
+                    CorpsHTML = corpsHTML,
+                    DiffusionUnique = true,
+                    VisualisationConfirmeUnique = true,
+                    DDebut = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
+                    DFin = (new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)).AddDays(7),
+                    Actif = true,
+                    Important = true
+                };
+                DbContext.Messages.Add(msg);
+                //Manage Diffusion
+                msg.MessageDiffusions = new HashSet<MessageDiffusion>();
+                msg.MessageDiffusions.Add(new MessageDiffusion()
+                {
+                    RefModule = Enumerations.Module.Logistique.ToString(),
+                    RefHabilitation = Enumerations.HabilitationLogistique.Administrateur.ToString()
+                });
+                DbContext.SaveChanges();
                 //Log error
                 err = CurrentContext.CulturedRessources.GetTextRessource(319) + err;
                 //Log
@@ -229,7 +256,11 @@ namespace eVaSys.Controllers
             viewModel.DDisponibilite = laserTransaction.sourceAvailabilityDate;
             viewModel.FournisseurLibelle = laserTransaction.sourceActor.name;
             viewModel.FournisseurCodeCITEO = laserTransaction.sourceActor.code;
-            viewModel.ProduitLibelle = laserTransaction.quality.code + " - " + laserTransaction.quality.name;
+            //Laser flow or quality
+            if (!string.IsNullOrWhiteSpace(laserTransaction.quality?.code) && !string.IsNullOrWhiteSpace(laserTransaction.quality?.name))
+            { viewModel.ProduitLibelle = laserTransaction.quality.code + " - " + laserTransaction.quality.name; }
+            if (!string.IsNullOrWhiteSpace(laserTransaction.flow?.type) && !string.IsNullOrWhiteSpace(laserTransaction.flow?.name))
+            { viewModel.ProduitLibelle = laserTransaction.flow.type + " - " + laserTransaction.flow.name; }
             viewModel.PoidsChargement = laserTransaction.forecastedQuantity;
             viewModel.NbBalleChargement = laserTransaction.forecastedBalesAmount;
             viewModel.ActionCode = model.ActionCode;

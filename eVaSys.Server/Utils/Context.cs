@@ -999,6 +999,7 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.ProduitCmtFournisseur, 1515, EnvDataColumnDataType.text, "CmtFournisseur", "tblProduit.CmtFournisseur");
                 CreateEnvDataColumn(cR, DataColumnName.ProduitCmtTransporteur, 1516, EnvDataColumnDataType.text, "CmtTransporteur", "tblProduit.CmtTransporteur");
                 CreateEnvDataColumn(cR, DataColumnName.ProduitCmtClient, 1517, EnvDataColumnDataType.text, "CmtClient", "tblProduit.CmtClient");
+                CreateEnvDataColumn(cR, DataColumnName.ProduitLaserType, 1598, EnvDataColumnDataType.text, "LaserType", "tblProduit.CmtClient");
                 CreateEnvDataColumn(cR, DataColumnName.Connexions,1330, EnvDataColumnDataType.text, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.RegionEELibelle, 1154, EnvDataColumnDataType.text, "Libelle", "tbrRegionEE.Libelle");
                 CreateEnvDataColumn(cR, DataColumnName.RepreneurLibelle, 1132, EnvDataColumnDataType.text, "Libelle", "tbrRepreneur.Libelle");

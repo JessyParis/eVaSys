@@ -4,7 +4,7 @@
       <div class="ev-taskbar-left-container">
         <mat-icon class="ev-button-left color-tooltip-info-icon" [matTooltip]="getCreationModificationTooltipText()">info</mat-icon>
         <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onSave()"
-                *ngIf="!locked">
+                 [disabled]="form.invalid" *ngIf="!locked">
           {{applicationUserContext.getCulturedRessourceText(45)}}
         </button>
       </div>

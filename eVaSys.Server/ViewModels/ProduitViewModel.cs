@@ -47,6 +47,8 @@ namespace eVaSys.ViewModels
         public string CmtFournisseur { get; set; }
         public string CmtTransporteur { get; set; }
         public string CmtClient { get; set; }
+        public string LaserType { get; set; }
+
         public ICollection<ProduitComposantViewModel> ProduitComposants { get; set; }
         public ICollection<ProduitStandardViewModel> ProduitStandards { get; set; }
         public DateTime DCreation { get; set; }

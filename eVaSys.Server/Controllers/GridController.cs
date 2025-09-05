@@ -1116,6 +1116,7 @@ namespace eVaSys.Controllers
                                 + "     , dbo.ListeComposant(tblProduit.RefProduit) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ListeComposant.ToString()].Name + "]"
                                 + "     , dbo.ListeProduitStandard(tblProduit.RefProduit) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ListeProduitStandard.ToString()].Name + "]"
                                 + "     , CodeEE as[" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitCodeEE.ToString()].Name + "]"
+                                + "     , LaserType as[" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLaserType.ToString()].Name + "]"
                                 + "     , cast(case when cVQ.RefProduit is null then 0 else 1 end as bit) as[" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurCVQ.ToString()].Name + "]"
                                 + "     , cast(case when cB.RefProduit is null then 0 else 1 end as bit) as[" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurCB.ToString()].Name + "]"
                                 + "     , left(Cmt,500) as[" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitCmt.ToString()].Name + "]"

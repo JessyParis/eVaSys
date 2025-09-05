@@ -19,6 +19,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Web;
+using static eVaSys.Utils.Enumerations;
 
 namespace eVaSys.Utils
 {
@@ -81,6 +82,7 @@ namespace eVaSys.Utils
         public LaserActor sourceActor { get; set; }
         public LaserLogisticsChain logisticsChain { get; set; } = null;
         public LaserQuality quality { get; set; } = null;
+        public LaserFlow flow { get; set; } = null;
         public int forecastedQuantity { get; set; }
         public int forecastedBalesAmount { get; set; }
         public DateTime sourceAvailabilityDate { get; set; }    //yyyy-MM-ddThh:mm:ss.FFFZ
@@ -95,6 +97,7 @@ namespace eVaSys.Utils
         public LaserActor sourceActor { get; set; }
         public LaserActor destinationActor { get; set; }
         public LaserQuality quality { get; set; } = null;
+        public LaserFlow flow { get; set; } = null;
     }
     public class LaserActor
     {
@@ -116,6 +119,11 @@ namespace eVaSys.Utils
     {
         public string name { get; set; }
         public string code { get; set; }
+    }
+    public class LaserFlow
+    {
+        public string name { get; set; }
+        public string type { get; set; }
     }
     public class LaserLogisticsChains
     {
@@ -431,7 +439,9 @@ namespace eVaSys.Utils
             string responseBody = "";
             string jsonBody = "";
             string urlGetLogisticsChain = configuration["AppResources:Laser:Url"] + "/api/logistics_chains?sourceActor.code="
-                + cmdF.Entite.CodeEE + "&quality.code=";
+                + cmdF.Entite.CodeEE;
+            if (cmdF.Produit?.LaserType == LaserType.Quality.ToString()) { urlGetLogisticsChain += "&quality.code="; }
+            if (cmdF.Produit?.LaserType == LaserType.Flow.ToString()) { urlGetLogisticsChain += "&flow.type="; }
             string url = configuration["AppResources:Laser:Url"] + "/api/transitions";
             //Process
             HttpClient client = new HttpClient();

@@ -203,6 +203,7 @@ namespace eVaSys.Utils
                 || dataModel.CmtFournisseur != Utils.SetEmptyStringToNull(viewModel.CmtFournisseur)
                 || dataModel.CmtTransporteur != Utils.SetEmptyStringToNull(viewModel.CmtTransporteur)
                 || dataModel.CmtClient != Utils.SetEmptyStringToNull(viewModel.CmtClient)
+                || dataModel.LaserType != Utils.SetEmptyStringToNull(viewModel.LaserType)
                 || dataModel.Co2KgParT != viewModel.Co2KgParT
                 )
             {
@@ -227,6 +228,7 @@ namespace eVaSys.Utils
                 dataModel.CmtFournisseur = Utils.SetEmptyStringToNull(viewModel.CmtFournisseur);
                 dataModel.CmtTransporteur = Utils.SetEmptyStringToNull(viewModel.CmtTransporteur);
                 dataModel.CmtClient = Utils.SetEmptyStringToNull(viewModel.CmtClient);
+                dataModel.LaserType = Utils.SetEmptyStringToNull(viewModel.LaserType);
                 dataModel.Co2KgParT = viewModel.Co2KgParT;
             }
             //-----------------------------------------------------------------------------------

@@ -675,6 +675,7 @@ namespace eVaSys.Utils
             ProduitCmtFournisseur,
             ProduitCmtTransporteur,
             ProduitCmtClient,
+            ProduitLaserType,
             ProduitGroupeReportingLibelle,
             ProduitGroupeReportingCouleur,
             ProduitGroupeReportingTypeLibelle,
@@ -1063,6 +1064,12 @@ namespace eVaSys.Utils
         public enum ContratType
         {
             RepriseIndividuelle = 1,
+        }
+        //Enum for LaserType
+        public enum LaserType
+        {
+            Quality,
+            Flow
         }
     }
 }

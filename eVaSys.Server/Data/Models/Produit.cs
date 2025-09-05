@@ -81,6 +81,7 @@ namespace eVaSys.Data
         public string CmtFournisseur { get; set; }
         public string CmtTransporteur { get; set; }
         public string CmtClient { get; set; }
+        public string LaserType { get; set; }
         public ICollection<ProduitComposant> Composants { get; set; }
         public ICollection<ProduitComposant> ProduitComposants { get; set; }
         public ICollection<ProduitStandard> ProduitStandards { get; set; }

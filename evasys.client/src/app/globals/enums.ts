@@ -550,6 +550,7 @@ export enum DataColumnName {
   ProduitCmtFournisseur = "ProduitCmtFournisseur",
   ProduitCmtTransporteur = "ProduitCmtTransporteur",
   ProduitCmtClient = "ProduitCmtClient",
+  ProduitLaserType = "ProduitLaserType",
   ProduitPUHTSurtri = "ProduitPUHTSurtri",
   ProduitPUHTTransport = "ProduitPUHTTransport",
   ProduitGroupeReportingLibelle = "ProduitGroupeReportingLibelle",

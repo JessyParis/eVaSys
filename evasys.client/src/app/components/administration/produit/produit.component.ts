@@ -56,6 +56,7 @@ export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Pro
   cmtFournisseurFC: UntypedFormControl = new UntypedFormControl(null);
   cmtTransporteurFC: UntypedFormControl = new UntypedFormControl(null);
   cmtClientFC: UntypedFormControl = new UntypedFormControl(null);
+  laserTypeListFC: UntypedFormControl = new UntypedFormControl(null);
   //Constructor
   constructor(protected activatedRoute: ActivatedRoute
     , protected router: Router
@@ -97,6 +98,7 @@ export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Pro
       CmtFournisseur: this.cmtFournisseurFC,
       CmtTransporteur: this.cmtTransporteurFC,
       CmtClient: this.cmtClientFC,
+      LaserTypeList: this.laserTypeListFC,
     });
   }
   //-----------------------------------------------------------------------------------
@@ -170,6 +172,7 @@ export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Pro
     this.cmtFournisseurFC.setValue(this.produit.CmtFournisseur);
     this.cmtTransporteurFC.setValue(this.produit.CmtTransporteur);
     this.cmtClientFC.setValue(this.produit.CmtClient);
+    this.laserTypeListFC.setValue(this.produit.LaserType);
     //Manage screen
     this.manageScreen();
   }
@@ -246,6 +249,7 @@ export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Pro
     this.produit.CmtFournisseur = this.cmtFournisseurFC.value;
     this.produit.CmtTransporteur = this.cmtTransporteurFC.value;
     this.produit.CmtClient = this.cmtClientFC.value;
+    this.produit.LaserType = this.laserTypeListFC.value;
     //manage screen
     this.manageScreen();
   }

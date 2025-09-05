@@ -1182,6 +1182,7 @@ export interface Produit {
   CmtFournisseur: string;
   CmtTransporteur: string;
   CmtClient: string;
+  LaserType: string;
   ProduitComposants: ProduitComposant[];
   ProduitStandards : ProduitStandard[]
   CreationText: string;
