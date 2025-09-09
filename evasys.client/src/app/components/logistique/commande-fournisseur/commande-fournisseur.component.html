@@ -112,7 +112,8 @@
         </button>
       </div>
       <div class="ev-taskbar-right-container">
-        <button *ngIf="!deleteLocked && commandeFournisseur.RefCommandeFournisseur" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
+        <button *ngIf="!deleteLocked && commandeFournisseur.RefCommandeFournisseur
+                 && applicationUserContext.connectedUtilisateur.HabilitationLogistique === 'Administrateur'" mat-raised-button color="warn" (click)="onDelete()" class="ev-button-right" type="button">{{applicationUserContext.getCulturedRessourceText(13)}}</button>
         <mat-icon class="ev-button-right color-accent" [matTooltip]="getLockByTooltipText()"
                   *ngIf="commandeFournisseur?.LockedBy?.RefUtilisateur && (commandeFournisseur?.LockedBy?.RefUtilisateur !== applicationUserContext.connectedUtilisateur.RefUtilisateur)">warning</mat-icon>
       </div>

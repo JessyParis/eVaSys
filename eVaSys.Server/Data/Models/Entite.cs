@@ -351,21 +351,19 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            if (Libelle?.Length > 50)
-            {
-                CulturedRessources cR = new(currentCulture, DbContext);
-                if (Libelle?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(394); }
-                if (CodeEE?.Length > 20) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(400); }
-                if (AncienCodeAdelphe?.Length > 15) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(401); }
-                if (CodeValorisation?.Length > 3) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(402); }
-                if (CodeTVA?.Length > 20) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(403); }
-                if (SAGECodeComptable?.Length > 17) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(404); }
-                if (SAGECompteTiers?.Length > 13) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(405); }
-                if (ActionnaireProprietaire?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(406); }
-                if (Exploitant?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(407); }
-                if (Demarrage?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(408); }
-                if (PresseSection?.Length > 20) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(409); }
-            }
+            CulturedRessources cR = new(currentCulture, DbContext);
+            if (string.IsNullOrWhiteSpace(Libelle)) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1599); }
+            if (Libelle?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(394); }
+            if (CodeEE?.Length > 20) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(400); }
+            if (AncienCodeAdelphe?.Length > 15) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(401); }
+            if (CodeValorisation?.Length > 3) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(402); }
+            if (CodeTVA?.Length > 20) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(403); }
+            if (SAGECodeComptable?.Length > 17) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(404); }
+            if (SAGECompteTiers?.Length > 13) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(405); }
+            if (ActionnaireProprietaire?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(406); }
+            if (Exploitant?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(407); }
+            if (Demarrage?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(408); }
+            if (PresseSection?.Length > 20) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(409); }
             return r;
         }
         //--------------------------------------------------------------------------------------------
