@@ -431,7 +431,7 @@ namespace eVaSys.Controllers
                                 sqlStr = "select tblCommandeFournisseur.RefCommandeFournisseur as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeFournisseur.ToString()].Name + "]"
                                     + "     , tblCommandeFournisseur.NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                     + "     , NumeroAffretement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement.ToString()].Name + "]"
-                                    + "     , case when (tblCommandeFournisseur.DDechargement < convert(datetime,'2012-01-01 00:00:00',120) or unitaire.RefCommandeFournisseur is not null or mensuelle.RefRepartition is not null) then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(545) + "'"
+                                    + "     , case when (tblCommandeFournisseur.DDechargement < convert(datetime,'2012-01-01 00:00:00',120) or tblRepartition.RefRepartition is not null) then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(545) + "'"
                                     + "         else case when DDechargement is not null then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(546) + "'"
                                     + "         else case when RefusCamion = 1 then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(551) + "'"
                                     + "         else case when tblCommandeFournisseur.RefCommandeFournisseurStatut is not null then (case when tbsCommandeFournisseurStatut.RefCommandeFournisseurStatut=1 then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(547) + "'"
@@ -472,7 +472,7 @@ namespace eVaSys.Controllers
                                 sqlStr = "select tblCommandeFournisseur.RefCommandeFournisseur as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.RefCommandeFournisseur.ToString()].Name + "]"
                                     + "     , tblCommandeFournisseur.NumeroCommande as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroCommande.ToString()].Name + "]"
                                     + "     , NumeroAffretement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement.ToString()].Name + "]"
-                                    + "     , case when (tblCommandeFournisseur.DDechargement < convert(datetime,'2012-01-01 00:00:00',120) or unitaire.RefCommandeFournisseur is not null or mensuelle.RefRepartition is not null) then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(545) + "'"
+                                    + "     , case when (tblCommandeFournisseur.DDechargement < convert(datetime,'2012-01-01 00:00:00',120) or tblRepartition.RefRepartition is not null) then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(545) + "'"
                                     + "         else case when DDechargement is not null then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(546) + "'"
                                     + "         else case when RefusCamion = 1 then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(551) + "'"
                                     + "         else case when tblCommandeFournisseur.RefCommandeFournisseurStatut is not null then (case when tbsCommandeFournisseurStatut.RefCommandeFournisseurStatut=1 then '" + CurrentContext.CulturedRessources.GetTextSQLRessource(547) + "'"
@@ -605,8 +605,7 @@ namespace eVaSys.Controllers
                              + "     left join tblProduit on tblProduit.RefProduit=tblCommandeFournisseur.RefProduit"
                              + "     left join tbrCamionType on tbrCamionType.RefCamionType=tblCommandeFournisseur.RefCamionType"
                              + "     left join tbsCommandeFournisseurStatut on tbsCommandeFournisseurStatut.RefCommandeFournisseurStatut=tblCommandeFournisseur.RefCommandeFournisseurStatut"
-                             + "     left join (select distinct RefCommandeFournisseur from tblRepartition) as unitaire on tblCommandeFournisseur.RefCommandeFournisseur=unitaire.RefCommandeFournisseur "
-                             + "     left join tblRepartition as mensuelle on tblCommandeFournisseur.RefEntite=mensuelle.RefFournisseur and year(tblCommandeFournisseur.DDechargement)=year(mensuelle.D) and month(tblCommandeFournisseur.DDechargement)=month(mensuelle.D) and tblCommandeFournisseur.RefProduit=mensuelle.RefProduit"
+                             + "     left join tblRepartition on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur "
                              + "     left join tblFicheControle on tblFicheControle.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
                              + "     left join (select distinct RefFicheControle from tblControle) as tblControle on tblFicheControle.RefFicheControle=tblControle.RefFicheControle"
                              + "     left join (select distinct RefFicheControle from tblCVQ) as tblCVQ on tblFicheControle.RefFicheControle=tblCVQ.RefFicheControle"
@@ -771,21 +770,21 @@ namespace eVaSys.Controllers
                                 sqlStr += " and (1!=1";
                                 if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Repartie.ToString()))
                                 {
-                                    sqlStr += " or (tblCommandeFournisseur.DDechargement < convert(datetime, '2012-01-01 00:00:00', 120) or unitaire.RefCommandeFournisseur is not null or mensuelle.RefRepartition is not null)";
+                                    sqlStr += " or (tblCommandeFournisseur.DDechargement < convert(datetime, '2012-01-01 00:00:00', 120) or tblRepartition.RefRepartition is not null)";
                                 }
                                 if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Receptionnee.ToString()))
                                 {
-                                    sqlStr += " or (year(tblCommandeFournisseur.DDechargement) >= 2012 and unitaire.RefCommandeFournisseur is null and mensuelle.RefRepartition is null)";
+                                    sqlStr += " or (year(tblCommandeFournisseur.DDechargement) >= 2012 and tblRepartition.RefRepartition is null)";
                                 }
                                 if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Refusee.ToString()))
                                 {
-                                    sqlStr += " or ((unitaire.RefCommandeFournisseur is null and mensuelle.RefRepartition is null) and DDechargement is null and RefusCamion = 1)";
+                                    sqlStr += " or (tblRepartition.RefRepartition is null and DDechargement is null and RefusCamion = 1)";
                                 }
                                 if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Ouverte.ToString())
                                     || filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.EnAttente.ToString())
                                     || filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Bloquee.ToString()))
                                 {
-                                    sqlStr += " or ((unitaire.RefCommandeFournisseur is null and mensuelle.RefRepartition is null) and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut in(";
+                                    sqlStr += " or (tblRepartition.RefRepartition is null and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut in(";
                                     if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Ouverte.ToString()))
                                     {
                                         sqlStr += " 1,";
@@ -804,7 +803,7 @@ namespace eVaSys.Controllers
                                 }
                                 if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.DemandeEnlevement.ToString()))
                                 {
-                                    sqlStr += " or ((unitaire.RefCommandeFournisseur is null and mensuelle.RefRepartition is null) and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut is null)";
+                                    sqlStr += " or (tblRepartition.RefRepartition is null and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut is null)";
                                 }
                                 sqlStr += ")";
                             }

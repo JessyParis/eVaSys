@@ -172,14 +172,13 @@ export class ApplicationUserContext {
   //devLogin = "nicolas.stasiak@sicovad.fr"; devPwd = "1Toto$aaaaaa";      //CDT SICOVAD
   //devLogin = "dechetterie_fmg@terrestouloises.com"; devPwd = "1Toto$aaaaaa";      //CDT CC DES TERRES TOULOISES
   //devLogin = "v.vauzelle@transport-ltr.com"; devPwd = "1Toto$aaaaaa";      //Transporteur
-  //devLogin = "laurent.roucoulet@wanadoo.fr"; devPwd = "AZF47LMJD";      //Transporteur
+  //devLogin = "laurent.roucoulet@wanadoo.fr"; devPwd = "1Toto$aaaaaa";      //Transporteur
   //devLogin = "n.cadue@valorplast.com"; devPwd = "1Toto$aaaaaa";      //DR
-  //devLogin = "lefebvre"; devPwd = "ELghd782LEF!";      //Client
-  //devLogin = "dla"; devPwd = "dla";      //Client Freudenberg
+  //devLogin = "lefebvre"; devPwd = "1Toto$aaaaaa!";      //Client
   //devLogin = "gregory.dilhuidy@nantesmetropole.fr"; devPwd = "1Toto$aaaaaa";      //Collectivité Nantes CS
   //devLogin = "AROUN@syctom-paris.fr"; devPwd = "1Toto$aaaaaa";      //Collectivité Paris HCS
   //devLogin = "tommy.nombalay@agglo2b.fr"; devPwd = "1Toto$aaaaaa";      //Collectivité Bocage Bressuirais CS+HCS
-  //devLogin = "CDST"; devPwd = "@15TyKUP9j$8";      //CITEO
+  //devLogin = "CDST"; devPwd = "1Toto$aaaaaa";      //CITEO
   //devLogin = "lydie.malioche@veolia.com"; devPwd = "1Toto$aaaaaa";      //CITEO
 
   parametres: dataModelsInterfaces.Parametre[] = [];

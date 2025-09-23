@@ -328,6 +328,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
       //Unlock ExportSAGE for admins
       if( this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur) {
         this.exportSAGEFC.enable();
+        this.saveLocked = false;
       }
     }
     else {

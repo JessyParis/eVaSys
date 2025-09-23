@@ -726,8 +726,7 @@ namespace eVaSys.Controllers
                         + "     	(select RefCommandeFournisseur, sum(Poids) as Poids"
                         + "     	from tblRepartition inner join tblRepartitionCollectivite on tblRepartition.RefRepartition=tblRepartitionCollectivite.RefRepartition"
                         + "     	group by RefCommandeFournisseur) as unitaire on tblCommandeFournisseur.RefCommandeFournisseur=unitaire.RefCommandeFournisseur      "
-                        + "     left join tblRepartition as mensuelle on tblCommandeFournisseur.RefEntite=mensuelle.RefFournisseur and year(tblCommandeFournisseur.DDechargement)=year(mensuelle.D) and month(tblCommandeFournisseur.DDechargement)=month(mensuelle.D) and tblCommandeFournisseur.RefProduit=mensuelle.RefProduit"
-                        + " where RefusCamion=0 and ((unitaire.RefCommandeFournisseur is null and mensuelle.RefRepartition is null) or (PoidsReparti<>unitaire.Poids and mensuelle.RefRepartition is null)) and tblProduit.Collecte=1"
+                        + " where RefusCamion=0 and (unitaire.RefCommandeFournisseur is null or PoidsReparti<>unitaire.Poids) and tblProduit.Collecte=1"
                         + "     and (RefTransporteur is not null and RefAdresseClient is not null and DChargementPrevue is not null and DDechargementPrevue is not null and DChargement is not null and DDechargement is not null and PoidsDechargement<>0 and NbBalleDechargement<>0 and PoidsReparti<>0 and NbBalleChargement<>0)"
                         + "     and DDechargement between convert(datetime, '" + t.Begin.ToString("dd/MM/yyyy") + "' ,103) and convert(datetime, '" + t.End.ToString("dd/MM/yyyy") + "' , 103)";
                     if (Utils.Utils.DbScalar(sqlStr, DbContext.Database.GetDbConnection()) == "0")
@@ -774,7 +773,7 @@ namespace eVaSys.Controllers
                     + " from  tblRepartitionProduit"
                     + " 	inner join tblRepartition on tblRepartition.RefRepartition=tblRepartitionProduit.RefRepartition"
                     + " 	left join tblCommandeFournisseur on tblRepartition.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
-                    + " where year(isnull(tblCommandeFournisseur.DDechargement,tblRepartition.D))=" + m.Year.ToString() + " and month(isnull(tblCommandeFournisseur.DDechargement,tblRepartition.D))=" + m.Nb.ToString()
+                    + " where year(tblCommandeFournisseur.DDechargement)=" + m.Year.ToString() + " and month(tblCommandeFournisseur.DDechargement)=" + m.Nb.ToString()
                     + " 	and tblRepartitionProduit.RefFournisseur=" + refEntite.ToString();
                 if (Utils.Utils.DbScalar(sqlStr, DbContext.Database.GetDbConnection()) != "0")
                 {
@@ -824,7 +823,7 @@ namespace eVaSys.Controllers
                     + " from  tblRepartitionCollectivite"
                     + " 	inner join tblRepartition on tblRepartition.RefRepartition=tblRepartitionCollectivite.RefRepartition"
                     + " 	left join tblCommandeFournisseur on tblRepartition.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
-                    + " where isnull(tblCommandeFournisseur.DDechargement,tblRepartition.D) between convert(datetime, '" + t.Begin.ToString("dd/MM/yyyy") + "' ,103) and convert(datetime, '" + t.End.ToString("dd/MM/yyyy") + "' , 103) "
+                    + " where tblCommandeFournisseur.DDechargement between convert(datetime, '" + t.Begin.ToString("dd/MM/yyyy") + "' ,103) and convert(datetime, '" + t.End.ToString("dd/MM/yyyy") + "' , 103) "
                     + " 	and RefCollectivite=" + refEntite.ToString();
                 if (Utils.Utils.DbScalar(sqlStr, DbContext.Database.GetDbConnection()) != "0")
                 {
@@ -874,7 +873,7 @@ namespace eVaSys.Controllers
                     + " from  tblRepartitionProduit"
                     + " 	inner join tblRepartition on tblRepartition.RefRepartition=tblRepartitionProduit.RefRepartition"
                     + " 	left join tblCommandeFournisseur on tblRepartition.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
-                    + " where isnull(tblCommandeFournisseur.DDechargement,tblRepartition.D) between convert(datetime, '" + t.Begin.ToString("dd/MM/yyyy") + "' ,103) and convert(datetime, '" + t.End.ToString("dd/MM/yyyy") + "' , 103) "
+                    + " where tblCommandeFournisseur.DDechargement between convert(datetime, '" + t.Begin.ToString("dd/MM/yyyy") + "' ,103) and convert(datetime, '" + t.End.ToString("dd/MM/yyyy") + "' , 103) "
                     + " 	and tblRepartitionProduit.RefFournisseur=" + refEntite.ToString();
                 if (Utils.Utils.DbScalar(sqlStr, DbContext.Database.GetDbConnection()) != "0")
                 {

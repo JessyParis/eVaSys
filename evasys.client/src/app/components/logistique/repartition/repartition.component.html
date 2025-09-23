@@ -7,7 +7,7 @@
         <aide-bouton (clicked)="visibleAide=true" *ngIf="hasAide"></aide-bouton>
         <button mat-raised-button color="primary" class="ev-button-left" type="button" form="MyForm"
                 [disabled]="formRepartitionCollectivite.get('RepartitionCollectivite').invalid || formRepartitionProduit.get('RepartitionProduit').invalid"
-                *ngIf="!(locked && saveLocked)" (click)="saveRepartition()">
+                *ngIf="!(saveLocked)" (click)="saveRepartition()">
           {{applicationUserContext.getCulturedRessourceText(6)}}
         </button>
         <button mat-raised-button class="ev-button-left" type="button" (click)="onCommandeFournisseur();" *ngIf="repartition.CommandeFournisseur">
@@ -42,7 +42,7 @@
           </tr>
         </table>
       </div>
-      <div class="boxNormalSizeHalfHeight">
+      <div class="boxNormalSizeHalfHeight" *ngIf="!(locked && saveLocked)">
         <table class="cadre_primary">
           <tr>
             <td class="cadre_header_primary">
@@ -51,9 +51,10 @@
           </tr>
           <tr>
             <td class="cadre_body">
-              <button mat-raised-button color="primary" type="submit" form="MyForm" *ngIf="!(locked && saveLocked)" [disabled]="form.invalid" style="width:100%; margin:0px 0px 10px 0px;">{{applicationUserContext.getCulturedRessourceText(598)}}</button>
+              <button mat-raised-button color="primary" type="submit" form="MyForm" *ngIf="!(locked || saveLocked)" [disabled]="form.invalid" style="width:100%; margin:0px 0px 10px 0px;">{{applicationUserContext.getCulturedRessourceText(598)}}</button>
               <mat-radio-group class="ev-radio-group-horizontal" formControlName="EnterType" (change)="onEnterTypeChange()"
-                               *ngIf="repartition?.PoidsChargement !== repartition?.PoidsReparti && repartition?.PoidsReparti>0">
+                               *ngIf="repartition?.PoidsChargement !== repartition?.PoidsReparti && repartition?.PoidsReparti>0
+                                && applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur'">
                 <mat-radio-button value="Collectivite" class="ev-radio-button">{{applicationUserContext.getCulturedRessourceText(603)}}</mat-radio-button>
                 <mat-radio-button value="Produit" class="ev-radio-button">{{applicationUserContext.getCulturedRessourceText(599)}}</mat-radio-button>
               </mat-radio-group>

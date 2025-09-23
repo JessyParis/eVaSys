@@ -519,7 +519,8 @@ namespace eVaSys.Utils
                 dirty = true;
                 //Update data
                 dataModel.RefContactAdresse = viewModel.RefContactAdresse;
-                dataModel.RefAdresse = viewModel.RefAdresse;
+                if (viewModel.RefAdresse <= 0) { dataModel.RefAdresse = null; }
+                else { dataModel.RefAdresse = viewModel.RefAdresse; }
                 dataModel.Actif = (viewModel.Actif ?? false);
                 dataModel.Contact.RefCivilite = viewModel.Contact.Civilite?.RefCivilite;
                 dataModel.RefTitre = viewModel.Titre?.RefTitre;

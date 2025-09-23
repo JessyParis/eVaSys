@@ -580,7 +580,7 @@ export class DataModelService {
   //-----------------------------------------------------------------------------------
   //Delete NonConformite
   deleteNonConformite(refNonConformite: number): Observable<any> {
-    return this.http.delete(this.baseUrl + "evapi/conconformite/" + refNonConformite.toString());
+    return this.http.delete(this.baseUrl + "evapi/nonconformite/" + refNonConformite.toString());
   }
   //-----------------------------------------------------------------------------------
   //Set facture data to NonConformites

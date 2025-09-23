@@ -7,4 +7,18 @@
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\evasys.client\</BuildOutputFolder>
   </PropertyGroup>
+  <ItemGroup>
+    <None Update="src\assets\Docs\CarteRecycleur.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="src\assets\Docs\eValorplastManuelUtilisationCollectivite.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="src\assets\Docs\Guide-RSE.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="src\assets\Docs\MentionsLegales.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
