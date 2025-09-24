@@ -93,7 +93,7 @@ var MenuName;
     MenuName["LogistiqueMenuEtatTonnageParProcess"] = "LogistiqueMenuEtatTonnageParProcess";
     MenuName["LogistiqueMenuEtatVenteAnnuelleProduitClient"] = "LogistiqueMenuEtatVenteAnnuelleProduitClient";
     MenuName["LogistiqueMenuEtatDestinationAnnuelleProduitClient"] = "LogistiqueMenuEtatDestinationAnnuelleProduitClient";
-    MenuName["LogistiqueMenuSuiviFacturationHC"] = "LogistiqueMenuSuiviFacturationHC";
+    MenuName["LogistiqueMenuSuiviFacturationHCS"] = "LogistiqueMenuSuiviFacturationHCS";
     MenuName["LogistiqueMenuTonnageCollectiviteProduit"] = "LogistiqueMenuTonnageCollectiviteProduit";
     MenuName["LogistiqueMenuTonnageCDTProduitComposant"] = "LogistiqueMenuTonnageCDTProduitComposant";
     MenuName["LogistiqueMenuTonnageCLSousContrat"] = "LogistiqueMenuTonnageCLSousContrat";

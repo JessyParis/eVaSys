@@ -868,9 +868,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTransportCommande
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTransportCommandeEnCours
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTransportCommandeModifiee
-      || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur)
-      || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Client)
-      || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.CentreDeTri)
+      || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur
       || this.applicationUserContext.currentMenu.name === MenuName.AdministrationMenuUtilisateurInactif
       || this.applicationUserContext.currentMenu.name === MenuName.ModulePrestataireMenuCommandeFournisseur
       || this.applicationUserContext.currentMenu.name === MenuName.MessagerieMenuVisualisation
@@ -881,9 +879,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTransportCommande
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTransportCommandeEnCours
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTransportCommandeModifiee
-      || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur)
-      || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Client)
-      || (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.CentreDeTri)
+      || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur
       || this.applicationUserContext.currentMenu.name === MenuName.ModulePrestataireMenuCommandeFournisseur
       || this.applicationUserContext.currentMenu.name === MenuName.MessagerieMenuVisualisation
       || this.applicationUserContext.currentMenu.name === MenuName.MessagerieMenuMessage

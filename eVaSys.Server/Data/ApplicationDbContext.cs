@@ -3791,7 +3791,7 @@ namespace eVaSys.Data
             });
             modelBuilder.Entity<RepartitionDetail>(entity =>
             {
-                entity.ToView("VueRepartitionDetail");
+                entity.ToView("VueRepartitionUnitaireDetail");
                 entity.HasNoKey();
                 entity.Property(e => e.PUHT)
                     .HasColumnType("decimal(10, 2)");

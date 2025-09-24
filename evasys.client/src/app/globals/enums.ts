@@ -127,7 +127,7 @@ export enum MenuName {
   LogistiqueMenuEtatTonnageParProcess = "LogistiqueMenuEtatTonnageParProcess",
   LogistiqueMenuEtatVenteAnnuelleProduitClient = "LogistiqueMenuEtatVenteAnnuelleProduitClient",
   LogistiqueMenuEtatDestinationAnnuelleProduitClient = "LogistiqueMenuEtatDestinationAnnuelleProduitClient",
-  LogistiqueMenuSuiviFacturationHC = "LogistiqueMenuSuiviFacturationHC",
+  LogistiqueMenuSuiviFacturationHCS = "LogistiqueMenuSuiviFacturationHCS",
   LogistiqueMenuTonnageCollectiviteProduit = "LogistiqueMenuTonnageCollectiviteProduit",
   LogistiqueMenuTonnageCollectiviteCDTProduit = "LogistiqueMenuTonnageCollectiviteCDTProduit",
   LogistiqueMenuTonnageCDTProduitComposant = "LogistiqueMenuTonnageCDTProduitComposant",

@@ -415,7 +415,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       case MenuName.LogistiqueMenuExtractionCommande:
       case MenuName.LogistiqueMenuEtatDesPoids:
       case MenuName.LogistiqueMenuEtatTonnageParProcess:
-      case MenuName.LogistiqueMenuSuiviFacturationHC:
+      case MenuName.LogistiqueMenuSuiviFacturationHCS:
       case MenuName.LogistiqueMenuTonnageCollectiviteProduit:
       case MenuName.LogistiqueMenuEtatDesEnlevements:
       case MenuName.LogistiqueMenuExtractionLeko:
@@ -754,7 +754,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatReceptionFournisseurChargement
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatReception
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatKmMoyen
-      || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuSuiviFacturationHC
+      || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuSuiviFacturationHCS
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatDesPoids
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTonnageCollectiviteProduit
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit
@@ -1080,7 +1080,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
         this.visibleFilterMonthList = true;
         this.form.get("MonthList").enable();
         break;
-      case MenuName.LogistiqueMenuSuiviFacturationHC:
+      case MenuName.LogistiqueMenuSuiviFacturationHCS:
         this.visibleFilterDBegin = true;
         this.form.get("DBegin").enable();
         this.visibleFilterDEnd = true;

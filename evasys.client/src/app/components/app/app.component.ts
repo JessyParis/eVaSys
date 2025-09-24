@@ -1076,7 +1076,7 @@ export class AppComponent implements OnInit {
         this.logistiqueMenuEtatDestinationAnnuelleProduitClientStyle = "ev-menu-selected";
         this.panelStatistiqueExpanded = true;
         break;
-      case "LogistiqueMenuSuiviFacturationHC":
+      case "LogistiqueMenuSuiviFacturationHCS":
         this.logistiqueMenuSuiviFacturationHCStyle = "ev-menu-selected";
         this.panelStatistiqueExpanded = true;
         break;
@@ -1457,7 +1457,7 @@ export class AppComponent implements OnInit {
         case MenuName.LogistiqueMenuEtatTonnageParProcess:
         case MenuName.LogistiqueMenuEtatVenteAnnuelleProduitClient:
         case MenuName.LogistiqueMenuEtatDestinationAnnuelleProduitClient:
-        case MenuName.LogistiqueMenuSuiviFacturationHC:
+        case MenuName.LogistiqueMenuSuiviFacturationHCS:
         case MenuName.LogistiqueMenuTonnageCollectiviteProduit:
         case MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit:
         case MenuName.LogistiqueMenuTonnageCDTProduitComposant:

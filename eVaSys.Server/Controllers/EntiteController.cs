@@ -705,7 +705,7 @@ namespace eVaSys.Controllers
                     + " from  tblRepartitionCollectivite"
                     + " 	inner join tblRepartition on tblRepartition.RefRepartition=tblRepartitionCollectivite.RefRepartition"
                     + " 	left join tblCommandeFournisseur on tblRepartition.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
-                    + " where isnull(tblCommandeFournisseur.DDechargement,tblRepartition.D) between convert(datetime, '" + t.Begin.ToString("dd/MM/yyyy") + "' ,103) and convert(datetime, '" + t.End.ToString("dd/MM/yyyy") + "' , 103) "
+                    + " where tblCommandeFournisseur.DDechargement between convert(datetime, '" + t.Begin.ToString("dd/MM/yyyy") + "' ,103) and convert(datetime, '" + t.End.ToString("dd/MM/yyyy") + "' , 103) "
                     + " 	and RefCollectivite=" + refEntite.ToString();
                 if (Utils.Utils.DbScalar(sqlStr, DbContext.Database.GetDbConnection()) != "0")
                 {

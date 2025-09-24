@@ -235,7 +235,7 @@ namespace eVaSys.Controllers
             {
                 int?[] refProduits = new int?[] { 0 };
                 refProduits = DbContext.RepartitionDetails
-                    .Where(e => e.RefCollectivite == refCollectivite)
+                    .Where(e => e.RefFournisseur == refCollectivite)
                     .Select(p => p.RefProduit).Distinct().ToArray();
                 req = req.Where(el => refProduits.Contains(el.RefProduit));
             }

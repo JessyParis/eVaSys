@@ -3975,7 +3975,7 @@ namespace eVaSys.Utils
                         || name == Enumerations.MenuName.LogistiqueMenuExtractionCommande.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatDesPoids.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuEtatTonnageParProcess.ToString()
-                        || name == Enumerations.MenuName.LogistiqueMenuSuiviFacturationHC.ToString()
+                        || name == Enumerations.MenuName.LogistiqueMenuSuiviFacturationHCS.ToString()
                         || name == Enumerations.MenuName.LogistiqueMenuTonnageCollectiviteProduit.ToString()
                         || name == Enumerations.MenuName.AnnuaireMenuSuiviEnvois.ToString()
                         || name == Enumerations.MenuName.AnnuaireMenuExtractionAction.ToString()

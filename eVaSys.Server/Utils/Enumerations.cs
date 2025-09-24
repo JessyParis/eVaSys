@@ -249,7 +249,7 @@ namespace eVaSys.Utils
             LogistiqueMenuEtatTonnageParProcess,
             LogistiqueMenuEtatVenteAnnuelleProduitClient,
             LogistiqueMenuEtatDestinationAnnuelleProduitClient,
-            LogistiqueMenuSuiviFacturationHC,
+            LogistiqueMenuSuiviFacturationHCS,
             LogistiqueMenuTonnageCollectiviteProduit,
             LogistiqueMenuTonnageCDTProduitComposant,
             LogistiqueMenuTonnageCLSousContrat,

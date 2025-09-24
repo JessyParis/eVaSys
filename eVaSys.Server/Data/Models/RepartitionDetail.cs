@@ -25,7 +25,7 @@ namespace eVaSys.Data
         #endregion
         protected ApplicationDbContext DbContext { get; private set; }
         public int RefRepartition { get; set; }
-        public int? RefCollectivite { get; set; }
+        public int? RefFournisseur { get; set; }
         public int? RefProduit { get; set; }
         public int? RefProcess { get; set; }
         public int? RefComposant { get; set; }
