@@ -1000,10 +1000,7 @@ namespace eVaSys.Utils
                 foreach (var item in itemsToRemove) { viewModel.RepartitionProduits.Remove(item); }
             }
             //Update main data
-            dataModel.RefFournisseur = (viewModel.CommandeFournisseur == null ? (int?)viewModel.Fournisseur.RefEntite : null);
             dataModel.RefCommandeFournisseur = viewModel.CommandeFournisseur?.RefCommandeFournisseur;
-            dataModel.RefProduit = (viewModel.CommandeFournisseur == null ? (int?)viewModel.Produit.RefProduit : null); ;
-            dataModel.D = (viewModel.CommandeFournisseur == null ? viewModel.D : null);
             dataModel.ExportSAGE = viewModel.ExportSAGE ?? false;
             //Dirty marker
             bool dirty = false;

@@ -1535,7 +1535,7 @@ namespace eVaSys.Controllers
                     + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
                     + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=1" 
                     + "                 and RefRepartition not in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
-                    + "                 and RefRepartition not in (select distinct RefRepartition from RepartitionIncompletePoids)";
+                    + "                 and RefRepartition not in (select distinct RefRepartition from VueRepartitionIncompletePoids)";
                 if (eSF.FilterCollecte == "HorsCollecte")
                 {
                     sqlStr += " and 1!=1";
@@ -1548,7 +1548,7 @@ namespace eVaSys.Controllers
                     + "             VueRepartitionUnitaireDetail"
                     + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=0" 
                     + "                 and RefRepartition not in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
-                    + "                 and RefRepartition not in (select distinct RefRepartition from RepartitionIncompletePoids)";
+                    + "                 and RefRepartition not in (select distinct RefRepartition from VueRepartitionIncompletePoids)";
                 if (eSF.FilterCollecte == "Collecte")
                 {
                     sqlStr += " and 1!=1";

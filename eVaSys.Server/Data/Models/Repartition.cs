@@ -37,13 +37,6 @@ namespace eVaSys.Data
         protected ApplicationDbContext DbContext { get; private set; }
         public CultureInfo currentCulture = new("fr-FR");
         public int RefRepartition { get; set; }
-        public int? RefFournisseur { get; set; }
-        private Entite _fournisseur;
-        public Entite Fournisseur
-        {
-            get => LazyLoader.Load(this, ref _fournisseur);
-            set => _fournisseur = value;
-        }
         public int? RefCommandeFournisseur { get; set; }
         private CommandeFournisseur _commandeFournisseur;
         public CommandeFournisseur CommandeFournisseur
@@ -51,14 +44,6 @@ namespace eVaSys.Data
             get => LazyLoader.Load(this, ref _commandeFournisseur);
             set => _commandeFournisseur = value;
         }
-        public int? RefProduit { get; set; }
-        private Produit _produit;
-        public Produit Produit
-        {
-            get => LazyLoader.Load(this, ref _produit);
-            set => _produit = value;
-        }
-        public DateTime? D { get; set; }
         public bool ExportSAGE { get; set; } = false;
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
@@ -79,12 +64,6 @@ namespace eVaSys.Data
                 {
                     p = CommandeFournisseur.PoidsReparti;
                 }
-                else
-                {
-                    p = DbContext.CommandeFournisseurs
-                        .Where(el => el.RefEntite == RefFournisseur && el.RefProduit == RefProduit && ((DateTime)D).Month == ((DateTime)el.DDechargement).Month && ((DateTime)D).Year == ((DateTime)el.DDechargement).Year)
-                        .Sum(el => el.PoidsReparti);
-                }
                 return p;
             }
         }
@@ -96,12 +75,6 @@ namespace eVaSys.Data
                 if (CommandeFournisseur != null)
                 {
                     p = CommandeFournisseur.PoidsChargement;
-                }
-                else
-                {
-                    p = DbContext.CommandeFournisseurs
-                        .Where(el => el.RefEntite == RefFournisseur && el.RefProduit == RefProduit && ((DateTime)D).Month == ((DateTime)el.DDechargement).Month && ((DateTime)D).Year == ((DateTime)el.DDechargement).Year)
-                        .Sum(el => el.PoidsChargement);
                 }
                 return p;
             }
@@ -128,16 +101,6 @@ namespace eVaSys.Data
                     }
                     s += Environment.NewLine + cR.GetTextRessource(229) + " - " + PoidsChargement.ToString()
                     + Environment.NewLine + cR.GetTextRessource(480) + " - " + PoidsReparti.ToString();
-                }
-                else
-                {
-                    //Monthly
-                    s = Fournisseur.Libelle + " (" + Fournisseur.CodeEE + ")"
-                        + Environment.NewLine + Produit.Libelle
-                        + Environment.NewLine + ((DateTime)D).ToString("MMMM yyyy", currentCulture)
-                        + Environment.NewLine + cR.GetTextRessource(229) + " - " + PoidsChargement.ToString()
-                        + Environment.NewLine + cR.GetTextRessource(480) + " - " + PoidsReparti.ToString();
-                    ;
                 }
                 return s;
             }
@@ -197,15 +160,6 @@ namespace eVaSys.Data
             if (RefCommandeFournisseur != null)
             {
                 if (DbContext.Repartitions.Where(e => e.RefCommandeFournisseur == RefCommandeFournisseur && e.RefRepartition != RefRepartition).Count() > 0)
-                {
-                    CulturedRessources cR = new(currentCulture, DbContext);
-                    r = cR.GetTextRessource(1477);
-                }
-            }
-            else
-            {
-                if (DbContext.Repartitions.Where(e => e.RefFournisseur == RefFournisseur && e.D == D
-                    && e.RefRepartition != RefRepartition).Count() > 0)
                 {
                     CulturedRessources cR = new(currentCulture, DbContext);
                     r = cR.GetTextRessource(1477);

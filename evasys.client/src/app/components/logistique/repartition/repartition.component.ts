@@ -158,14 +158,10 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
         }
         //Update form
         this.updateForm();
-        //Get other data
-        if (this.repartition.CommandeFournisseur == null) {
-          this.getCommandeFournisseurs();
-        }
         if (this.enterTypeFC.value === "Collectivite") {
           //Enter type = Collectivite
-          this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Entite.RefEntite : this.repartition.Fournisseur.RefEntite
-            , true, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+          this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur.Entite.RefEntite
+            , true, true, moment(this.repartition.CommandeFournisseur.DDechargement)
             , "", true)
             .subscribe(result => {
               this.collectiviteList = result;
@@ -177,8 +173,8 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
         }
         else {
-          this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Entite.RefEntite : this.repartition.Fournisseur.RefEntite
-            , true, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+          this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur.Entite.RefEntite
+            , true, true, moment(this.repartition.CommandeFournisseur.DDechargement)
             , "", true)
             .subscribe(result => {
               this.collectiviteList = result;
@@ -207,13 +203,10 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
         //Check similar
         this.checkSimilar();
         //Get other data
-        if (this.repartition.CommandeFournisseur == null) {
-          this.getCommandeFournisseurs();
-        }
         if (this.enterTypeFC.value === "Collectivite") {
           //Enter type = Collectivite
-          this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Entite.RefEntite : this.repartition.Fournisseur.RefEntite
-            , true, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+          this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur.Entite.RefEntite
+            , true, true, moment(this.repartition.CommandeFournisseur.DDechargement)
             , "", false)
             .subscribe(result => {
               this.collectiviteList = result;
@@ -225,8 +218,8 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
         }
         else {
-          this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Entite.RefEntite : this.repartition.Fournisseur.RefEntite
-            , true, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+          this.listService.getListCollectivite(null, this.repartition.CommandeFournisseur.Entite.RefEntite
+            , true, true, moment(this.repartition.CommandeFournisseur.DDechargement)
             , "", false)
             .subscribe(result => {
               this.collectiviteList = result;
@@ -368,23 +361,6 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
     }
   }
   //-----------------------------------------------------------------------------------
-  //Get commandeFournisseurs
-  getCommandeFournisseurs() {
-    this.commandeFournisseurs = [];
-    this.commandeFournisseurs.push({ NumeroCommande: null, PoidsReparti: null, PoidsChargement: null })
-    if (this.repartition.CommandeFournisseur == null
-      && this.repartition.D && this.repartition.Produit && this.repartition.Fournisseur) {
-      //Get data
-      this.dataModelService.getRepartitionCommandesFournisseurs(this.repartition.D
-        , this.repartition.Produit.RefProduit, this.repartition.Fournisseur.RefEntite.toString())
-        .subscribe(result => {
-        this.commandeFournisseurs = result;
-        this.sumPoidsChargement = this.commandeFournisseurs.reduce((sum, c) => sum + c.PoidsChargement, 0)
-        this.sumPoidsReparti = this.commandeFournisseurs.reduce((sum, c) => sum + c.PoidsReparti, 0)
-      }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
-    }
-  }
-  //-----------------------------------------------------------------------------------
   //Get sumRepartitionCollectivite
   getSumRepartitionCollectivite(): number {
     let r: number = 0;
@@ -417,7 +393,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   getCollectiviteNAList(value: string) {
     if (value && value.length > 1) {
       return this.listService.getListCollectivite(null, null
-        , null, true, moment(this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.DDechargement : this.repartition.D)
+        , null, true, moment(this.repartition.CommandeFournisseur.DDechargement)
         , value ? value : "", true);
     }
     else {
@@ -432,7 +408,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
       && this.repartition.CommandeFournisseur?.DDechargement) {
       //Get existing PrixReprise
       this.dataModelService.getPrixReprise(0, null
-        , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
+        , this.repartition.CommandeFournisseur.Produit.RefProduit
         , null
         , this.collectiviteListFC.value ? this.collectiviteListFC.value : this.collectiviteNAListFC.value
         , moment(this.repartition.CommandeFournisseur.DDechargement)
@@ -828,7 +804,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
         this.repartition.RepartitionCollectivites.forEach(e => {
           if (e.PUHT == null) {
             this.dataModelService.getPrixReprise(0, null
-              , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
+              , this.repartition.CommandeFournisseur.Produit.RefProduit
               , null
               , e.Collectivite.RefEntite
               , moment(this.repartition.CommandeFournisseur.DDechargement)
@@ -856,7 +832,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
         this.repartition.RepartitionProduits.forEach(e => {
           if (e.PUHT == null) {
             this.dataModelService.getPrixReprise(0, null
-              , this.repartition.CommandeFournisseur ? this.repartition.CommandeFournisseur.Produit.RefProduit : this.repartition.Produit.RefProduit
+              , this.repartition.CommandeFournisseur.Produit.RefProduit
               , null
               , e.Fournisseur?.RefEntite
               , moment(this.repartition.CommandeFournisseur.DDechargement)

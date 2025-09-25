@@ -149,7 +149,7 @@ namespace eVaSys.Controllers
                             + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
                             + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
                             + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
-                            + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
+                            + "         or RefRepartition in (select distinct RefRepartition from VueRepartitionIncompletePoids)"
                             + "     )";
                         sqlStrUrgent = "select count(distinct RefRepartition) from tblRepartition"
                             + "     inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
@@ -159,7 +159,7 @@ namespace eVaSys.Controllers
                             + "     and month(tblCommandeFournisseur.DChargement)=month(getdate()) and year(tblCommandeFournisseur.DChargement)=year(getdate()) and day(getdate())>=25"
                             + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
                             + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
-                            + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
+                            + "         or RefRepartition in (select distinct RefRepartition from VueRepartitionIncompletePoids)"
                             + "     )";
                     }
                     if (CurrentContext.ConnectedUtilisateur.RefCentreDeTri != null)
@@ -169,14 +169,14 @@ namespace eVaSys.Controllers
                             + "     inner join tblProduit on tblCommandeFournisseur.RefProduit = tblProduit.RefProduit"
                             + " where isnull(tblRepartition.ExportSAGE,0)=0 and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and tblProduit.Collecte = 1"
                             + "     and tblCommandeFournisseur.RefusCamion = 0 and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
-                            + "     and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))"
+                            + "     and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from VueRepartitionIncompletePoids))"
                             + "     and tblCommandeFournisseur.RefEntite = " + CurrentContext.ConnectedUtilisateur.RefCentreDeTri.ToString();
                         sqlStrUrgent = "select count(distinct tblCommandeFournisseur.RefCommandeFournisseur) from tblCommandeFournisseur"
                             + "     left join tblRepartition on tblCommandeFournisseur.RefCommandeFournisseur = tblRepartition.RefCommandeFournisseur"
                             + "     inner join tblProduit on tblCommandeFournisseur.RefProduit = tblProduit.RefProduit"
                             + " where isnull(tblRepartition.ExportSAGE,0)=0 and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and tblProduit.Collecte = 1"
                             + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
-                            + "     and tblCommandeFournisseur.RefusCamion = 0 and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))"
+                            + "     and tblCommandeFournisseur.RefusCamion = 0 and(RefRepartition is null or RefRepartition in (select distinct RefRepartition from VueRepartitionIncompletePoids))"
                             + "     and tblCommandeFournisseur.RefEntite = " + CurrentContext.ConnectedUtilisateur.RefCentreDeTri.ToString()
                             + "     and month(tblCommandeFournisseur.DChargement)=month(getdate()) and year(tblCommandeFournisseur.DChargement)=year(getdate()) and day(getdate())>=25"
                             + "     and DChargement < DATEFROMPARTS(YEAR(getdate()), MONTH(getdate()), 1)";
@@ -194,9 +194,8 @@ namespace eVaSys.Controllers
                     break;
                 case "NouvellesDemandesEnlevement":
                     sqlStr = "select count(*) from tblCommandeFournisseur"
-                        + "     left join (select RefCommandeFournisseur from tblRepartition) as unitaire on tblCommandeFournisseur.RefCommandeFournisseur=unitaire.RefCommandeFournisseur "
-                        + "     left join tblRepartition as mensuelle on tblCommandeFournisseur.RefEntite=mensuelle.RefFournisseur and year(tblCommandeFournisseur.DDechargement)=year(mensuelle.D) and month(tblCommandeFournisseur.DDechargement)=month(mensuelle.D) and tblCommandeFournisseur.RefProduit=mensuelle.RefProduit"
-                        + " where ((unitaire.RefCommandeFournisseur is null and mensuelle.RefRepartition is null) and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut is null)";
+                        + "     left join tblRepartition on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur "
+                        + " where (tblRepartition.RefCommandeFournisseur is null and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut is null)";
                     if (CurrentContext.ConnectedUtilisateur.RefPrestataire != null)
                     {
                         sqlStr += " and tblCommandeFournisseur.RefPrestataire=" + CurrentContext.ConnectedUtilisateur.RefPrestataire;

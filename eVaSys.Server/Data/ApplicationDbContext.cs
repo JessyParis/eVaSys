@@ -3717,12 +3717,6 @@ namespace eVaSys.Data
 
                 entity.HasIndex(e => e.RefCommandeFournisseur);
 
-                entity.HasIndex(e => e.RefFournisseur);
-
-                entity.HasIndex(e => e.RefProduit);
-
-                entity.Property(e => e.D).HasColumnType("datetime");
-
                 entity.Property(e => e.DCreation)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -3740,19 +3734,9 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefRepartition)
                     .OnDelete(DeleteBehavior.ClientCascade);
 
-                entity.HasOne(d => d.Fournisseur)
-                    .WithMany(p => p.Repartitions)
-                    .HasForeignKey(d => d.RefFournisseur)
-                    .OnDelete(DeleteBehavior.Restrict);
-
                 entity.HasOne(d => d.CommandeFournisseur)
                     .WithMany(p => p.Repartitions)
                     .HasForeignKey(d => d.RefCommandeFournisseur)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(d => d.Produit)
-                    .WithMany(p => p.Repartitions)
-                    .HasForeignKey(d => d.RefProduit)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.UtilisateurCreation)

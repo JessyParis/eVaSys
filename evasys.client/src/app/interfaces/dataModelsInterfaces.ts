@@ -1254,10 +1254,7 @@ export interface RegionReporting {
 }
 export interface Repartition {
   RefRepartition: number;
-  Fournisseur: Entite;
   CommandeFournisseur: CommandeFournisseur;
-  Produit: Produit;
-  D: string | moment.Moment;
   ExportSAGE: boolean;
   RepartitionCollectivites: RepartitionCollectivite[];
   RepartitionProduits: RepartitionProduit[];

@@ -511,7 +511,7 @@ namespace eVaSys.Controllers
                         + "     inner join tblEntite on tblRepartitionCollectivite.RefCollectivite = tblEntite.RefEntite"
                         + " where tblRepartition.ExportSAGE = 0 and tblCommandeFournisseur.DDechargement between @debut and @fin and tblCommandeFournisseur.NumeroCommande > 2025000000"
                         + "     and tblRepartition.RefRepartition not in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
-                        + "     and tblRepartition.RefRepartition not in (select distinct RefRepartition from RepartitionIncompletePoids)";
+                        + "     and tblRepartition.RefRepartition not in (select distinct RefRepartition from VueRepartitionIncompletePoids)";
                     cmd.Parameters.Add("@debut", SqlDbType.DateTime).Value = t.Begin;
                     cmd.Parameters.Add("@fin", SqlDbType.DateTime).Value = t.End;
                     cmd.CommandText = sqlStr;

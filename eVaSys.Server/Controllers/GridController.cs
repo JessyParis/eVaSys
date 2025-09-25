@@ -923,7 +923,7 @@ namespace eVaSys.Controllers
                                 {
                                     sqlStr += " and tblRepartition.ExportSAGE=0 and tblCommandeFournisseur.DChargement is not null and tblCommandeFournisseur.ChargementEffectue = 1 and p.Collecte = 1"
                                         + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
-                                        + "     and (RefRepartition is null or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids))";
+                                        + "     and (RefRepartition is null or RefRepartition in (select distinct RefRepartition from VueRepartitionIncompletePoids))";
                                 }
                                 else
                                 {
@@ -931,7 +931,7 @@ namespace eVaSys.Controllers
                                         + "     and tblCommandeFournisseur.NonRepartissable = 0 and tblCommandeFournisseur.NumeroCommande > 2025000000"
                                         + "     and (RefRepartition in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
                                         + "         or RefRepartition in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
-                                        + "         or RefRepartition in (select distinct RefRepartition from RepartitionIncompletePoids)"
+                                        + "         or RefRepartition in (select distinct RefRepartition from VueRepartitionIncompletePoids)"
                                         + "         or (tblUtilisateur.RefCentreDeTri is not null and tblRepartition.DValide is null)"
                                         + "     )";
                                 }

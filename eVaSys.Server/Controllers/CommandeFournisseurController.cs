@@ -526,8 +526,7 @@ namespace eVaSys.Controllers
                 if (cF != null && cF.DDechargement != null)
                 {
                     r = (DbContext.Repartitions
-                        .Where(i => (i.RefCommandeFournisseur == cF.RefCommandeFournisseur
-                            || (i.RefFournisseur == cF.RefEntite && i.RefProduit == cF.RefProduit && i.D.Value.Month == cF.DDechargement.Value.Month && i.D.Value.Year == cF.DDechargement.Value.Year)))
+                        .Where(i => i.RefCommandeFournisseur == cF.RefCommandeFournisseur)
                         .Any());
                 }
                 //Return Json

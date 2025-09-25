@@ -20,10 +20,7 @@ namespace eVaSys.ViewModels
         {
         }
         public int RefRepartition { get; set; }
-        public EntiteViewModel Fournisseur { get; set; }
         public CommandeFournisseurViewModel CommandeFournisseur { get; set; }
-        public ProduitViewModel Produit { get; set; }
-        public DateTime? D { get; set; }
         public bool? ExportSAGE { get; set; }
         public ICollection<RepartitionCollectiviteViewModel> RepartitionCollectivites { get; set; }
         public ICollection<RepartitionProduitViewModel> RepartitionProduits { get; set; }

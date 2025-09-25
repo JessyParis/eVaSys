@@ -75,10 +75,7 @@ namespace eVaSys.Controllers
                         .Include(r => r.RepartitionCollectivites)
                         .Include(r => r.RepartitionProduits)
                         .AsSplitQuery()
-                        .Where(q => (q.RefCommandeFournisseur == refCommandeFournisseur
-                        || (q.RefProduit == cmdF.RefProduit && q.RefFournisseur == cmdF.RefEntite
-                        && (q.D ?? DateTime.MinValue).Month == (cmdF.DDechargement ?? DateTime.MinValue).Month
-                        && (q.D ?? DateTime.MinValue).Year == (cmdF.DDechargement ?? DateTime.MinValue).Year)))
+                        .Where(q => q.RefCommandeFournisseur == refCommandeFournisseur)
                         .FirstOrDefault();
                     //Open existing or create new one
                     if (repartition == null)

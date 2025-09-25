@@ -13,7 +13,7 @@ using System;
 namespace eVaSys.Data
 {
     /// <summary>
-    /// Class for VueRepartitionDetail
+    /// Class for VueRepartitionUnitaireDetail
     /// </summary>
     public class RepartitionDetail
     {
