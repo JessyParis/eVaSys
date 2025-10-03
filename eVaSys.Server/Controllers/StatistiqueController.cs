@@ -4848,7 +4848,7 @@ namespace eVaSys.Controllers
                             dr.Close();
                         }
                         //Main query
-                        sqlStr = "select cast(month(VueRepartitionUnitaireDetail.D) as nvarchar) + '/' + cast(year(isnull(tblRepartition.D,tblCommandeFournisseur.DDechargement)) as nvarchar) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.MoisAnnee.ToString()].Name + "]";
+                        sqlStr = "select cast(month(VueRepartitionUnitaireDetail.D) as nvarchar) + '/' + cast(year(VueRepartitionUnitaireDetail.D) as nvarchar) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.MoisAnnee.ToString()].Name + "]";
                         if (eSF.FilterProduits != "")
                         {
                             sqlStr += s1;

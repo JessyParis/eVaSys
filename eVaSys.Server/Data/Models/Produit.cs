@@ -93,7 +93,6 @@ namespace eVaSys.Data
         public ICollection<FicheControle> FicheControles { get; set; }
         public ICollection<PrixReprise> PrixRepriseComposants { get; set; }
         public ICollection<PrixReprise> PrixReprises { get; set; }
-        public ICollection<Repartition> Repartitions { get; set; }
         public ICollection<RepartitionCollectivite> RepartitionCollectivites { get; set; }
         public ICollection<RepartitionProduit> RepartitionProduits { get; set; }
         public DateTime DCreation { get; set; }
@@ -182,7 +181,6 @@ namespace eVaSys.Data
             nbLinkedData += DbContext.Entry(this).Collection(b => b.FicheControles).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.PrixReprises).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.PrixRepriseComposants).Query().Count();
-            nbLinkedData += DbContext.Entry(this).Collection(b => b.Repartitions).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.RepartitionCollectivites).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.RepartitionProduits).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ProduitComposants).Query().Count();

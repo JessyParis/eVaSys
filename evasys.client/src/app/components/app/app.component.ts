@@ -1084,7 +1084,7 @@ export class AppComponent implements OnInit {
         this.logistiqueMenuTonnageCollectiviteProduitStyle = "ev-menu-selected";
         this.panelStatistiqueExpanded = true;
         break;
-      case "LogistiqueMenuTonnageCollectivitéCDTProduit":
+      case "LogistiqueMenuTonnageCollectiviteCDTProduit":
         this.logistiqueMenuTonnageCollectiviteCDTProduitStyle = "ev-menu-selected";
         this.panelStatistiqueExpanded = true;
         break;

@@ -1331,6 +1331,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
             this.visibleFilterCentreDeTriList = true;
             break;
           case "DeboucheBalle":
+            this.visibleFilterCollecteChip = false;
             this.showResultType = true;
             this.ResultType.setValue("chart");
             this.visibleFilterYearList = true;

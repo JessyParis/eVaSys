@@ -1573,19 +1573,15 @@ namespace eVaSys.Utils
             }
             else
             {
-                sqlStr = "select distinct RefFournisseur, Libelle"
+                sqlStr = "select distinct RefFournisseur, Libelle, CodeEE"
                     + " from ("
                     + " 	select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D "
                     + " 	from tblRepartition "
                     + " 		inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                    + " 	union all"
-                    + " 	select RefRepartition, RefFournisseur, RefProduit, D "
-                    + " 	from tblRepartition"
-                    + " 	where RefCommandeFournisseur is null"
                     + " 	) as rep "
                     + " inner join tblEntite on RefFournisseur=RefEntite"
                     + " where D between  @debut and @fin"
-                    + " order By CodeEE";
+                    + " order By CodeEE, Libelle";
             }
             //Chargement des données
             using (SqlConnection sqlConn = (SqlConnection)dbContext.Database.GetDbConnection())
@@ -1733,13 +1729,9 @@ namespace eVaSys.Utils
                         + " 	("
                         + " 		select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D"
                         + " 		from tblRepartition"
-                        + " 			inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                        + " 		union all"
-                        + " 		select RefRepartition, RefFournisseur, RefProduit, D"
-                        + " 		from tblRepartition"
-                        + " 		where RefCommandeFournisseur is null) as rep	   "
+                        + " 			inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur) as rep	   "
                         + "     inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition 	"
-                        + " where RefFournisseur=" + cDT.RefEntite + " and D between  @debut and @fin";
+                        + " where rep.RefFournisseur=" + cDT.RefEntite + " and D between  @debut and @fin";
                     cmd.CommandText = sqlStr;
                     exist = (cmd.ExecuteScalar().ToString() != "0");
                     if (!exist)
@@ -1778,13 +1770,10 @@ namespace eVaSys.Utils
                             + "  		select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D"
                             + "   		from tblRepartition"
                             + "   			inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                            + "  		union all"
-                            + "  		select RefRepartition, RefFournisseur, RefProduit, D"
-                            + "   		from tblRepartition"
-                            + "  		where RefCommandeFournisseur is null 		) as rep on rep.RefProduit=tblProduit.RefProduit 	   "
+                            + "  		) as rep on rep.RefProduit=tblProduit.RefProduit 	   "
                             + "     inner join tblRepartitionCollectivite on tblRepartitionCollectivite.RefRepartition=rep.RefRepartition 	"
                             + "     inner join tblEntite as collectivite on tblRepartitionCollectivite.RefCollectivite=collectivite.RefEntite "
-                            + " where RefFournisseur=" + cDT.RefEntite + " and D between  @debut and @fin"
+                            + " where rep.RefFournisseur=" + cDT.RefEntite + " and D between  @debut and @fin"
                             + " group by '('+isnull(collectivite.CodeEE,'NR')+') '+collectivite.Libelle, tblProduit.NomCommun"
                             + " order by '('+isnull(collectivite.CodeEE,'NR')+') '+collectivite.Libelle, tblProduit.NomCommun";
                         //Chargement des données
@@ -1871,10 +1860,7 @@ namespace eVaSys.Utils
                         + "  		select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D, tblCommandeFournisseur.RefCommandeFournisseur"
                         + "   		from tblRepartition"
                         + "   			inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                        + "  		union all"
-                        + "  		select RefRepartition, RefFournisseur, RefProduit, D, null as RefCommandeFournisseur"
-                        + "   		from tblRepartition"
-                        + "  		where RefCommandeFournisseur is null 		) as rep"
+                        + "  		) as rep"
                         + " 	inner join tblRepartitionProduit on tblRepartitionProduit.RefRepartition=rep.RefRepartition"
                         + "     left join tblEntite on tblRepartitionProduit.RefFournisseur=tblEntite.RefEntite"
                         + " where tblEntite.RefEntite is null and rep.RefFournisseur=" + cDT.RefEntite + " and rep.D between  @debut and @fin";
@@ -1916,10 +1902,7 @@ namespace eVaSys.Utils
                             + "  			select RefRepartition, tblCommandeFournisseur.RefEntite as RefFournisseur, tblCommandeFournisseur.RefProduit, tblCommandeFournisseur.DDechargement as D, tblCommandeFournisseur.RefCommandeFournisseur"
                             + "   			from tblRepartition"
                             + "   				inner join tblCommandeFournisseur on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur"
-                            + "  			union all"
-                            + "  			select RefRepartition, RefFournisseur, RefProduit, D, null as RefCommandeFournisseur"
-                            + "   			from tblRepartition"
-                            + "  			where RefCommandeFournisseur is null 		) as rep on rep.RefProduit=tblProduit.RefProduit 	   "
+                            + "  			) as rep on rep.RefProduit=tblProduit.RefProduit 	   "
                             + " 	inner join tblRepartitionProduit on tblRepartitionProduit.RefRepartition=rep.RefRepartition 	"
                             + " 	left join tblCommandeFournisseur on rep.RefCommandeFournisseur=tblCommandeFournisseur.RefCommandeFournisseur"
                             + "     left join tblEntite on tblRepartitionProduit.RefFournisseur=tblEntite.RefEntite"

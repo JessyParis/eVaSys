@@ -58,7 +58,6 @@ namespace eVaSys.Controllers
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
                         .Include(r => r.RepartitionCollectivites)
-                        .Include(r => r.RepartitionProduits)
                         .AsSplitQuery()
                     .Where(i => i.RefRepartition == id).FirstOrDefault();
             }
@@ -73,7 +72,6 @@ namespace eVaSys.Controllers
                         .Include(r => r.UtilisateurCreation)
                         .Include(r => r.UtilisateurModif)
                         .Include(r => r.RepartitionCollectivites)
-                        .Include(r => r.RepartitionProduits)
                         .AsSplitQuery()
                         .Where(q => q.RefCommandeFournisseur == refCommandeFournisseur)
                         .FirstOrDefault();
@@ -168,7 +166,6 @@ namespace eVaSys.Controllers
             // retrieve the repartition from the Database
             var repartition = DbContext.Repartitions
                 .Include(r => r.RepartitionCollectivites)
-                .Include(r => r.RepartitionProduits)
                 .Where(i => i.RefRepartition == id)
                 .FirstOrDefault();
 
