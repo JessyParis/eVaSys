@@ -674,7 +674,7 @@ namespace eVaSys.Utils
                     sbl.Cells[22, 0].SetValue(sbl.Cells[22, 0].Value + bl.Prenom + " " + bl.Nom);
                     sbl.Cells[23, 0].SetValue(bl.GetTelsOrEmail);
                     sbl.Cells[24, 0].SetValue(sbl.Cells[24, 0].Value + bl.Horaires);
-                    sbl.Cells[25, 0].SetValue(sbl.Cells[25, 0].Value + (!string.IsNullOrWhiteSpace(bl.RefExt) ? ("Ref. CITEO - " + bl.RefExt) : bl.CmtFournisseur));
+                    sbl.Cells[25, 0].SetValue(sbl.Cells[25, 0].Value + (!string.IsNullOrWhiteSpace(bl.LibExt) ? ("Ref. CITEO - " + bl.LibExt) : bl.CmtFournisseur));
                     sbl.Cells[26, 0].SetValue(sbl.Cells[26, 0].Value + ((DateTime)bl.D).ToString("dd/MM/yyyy"));
                     sbl.Cells[27, 0].SetValue(sbl.Cells[27, 0].Value + bl.NbBalleChargement.ToString());
                     sbl.Cells[28, 0].SetValue(sbl.Cells[28, 0].Value + (bl.DChargementPrevue == null ? "" : ((DateTime)bl.DChargementPrevue).ToString("dd/MM/yyyy") + " " + bl.HoraireChargementPrevu));
@@ -761,7 +761,7 @@ namespace eVaSys.Utils
                     sbl.Cells[30, 0].SetValue(bl.GetFirstTelOrEmail);
                     sbl.Cells[31, 0].SetValue(bl.GetSecondTelOrEmail);
                     sbl.Cells[32, 0].SetValue(sbl.Cells[32, 0].Value + bl.Horaires);
-                    sbl.Cells[33, 0].SetValue(sbl.Cells[33, 0].Value + (!string.IsNullOrWhiteSpace(bl.RefExt) ? ("Ref. CITEO - " + bl.RefExt) : bl.CmtFournisseur));
+                    sbl.Cells[33, 0].SetValue(sbl.Cells[33, 0].Value + (!string.IsNullOrWhiteSpace(bl.LibExt) ? ("Ref. CITEO - " + bl.LibExt) : bl.CmtFournisseur));
                     sbl.Cells[34, 0].SetValue(sbl.Cells[34, 0].Value + ((DateTime)bl.D).ToString("dd/MM/yyyy"));
                     sbl.Cells[34, 1].SetValue(sbl.Cells[34, 1].Value + bl.NbBalleChargement.ToString());
                     sbl.Cells[31, 3].SetValue(bl.Produit.NomCommercial);

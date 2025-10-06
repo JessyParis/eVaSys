@@ -428,6 +428,7 @@ namespace eVaSys.Utils
             CommandeFournisseurPrixTonneHT,
             CommandeFournisseurPrixTransportHT,
             CommandeFournisseurPrixTransportSupplementHT,
+            CommandeFournisseurLibExt,
             CommandeFournisseurRefExt,
             CommandeFournisseurSurcoutCarburantHT,
             CommandeFournisseurNonConformite,

@@ -276,6 +276,7 @@ namespace eVaSys.Data
         }
         public bool NonRepartissable { get; set; } = false;
         public string RefExt { get; set; }
+        public string LibExt { get; set; }
         private Entite _prestataire;
         public int? RefPrestataire { get; set; }
         public Entite Prestataire

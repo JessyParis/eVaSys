@@ -459,7 +459,7 @@ namespace eVaSys.Controllers
                                     + "     , tblProduit.Libelle + case when tblContrat.RefContrat is null then '' else ' (' + tblContrat.IdContrat + ')' end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                     + "     , dbo.CommandeMixte(NumeroAffretement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMixte.ToString()].Name + "]"
                                     + "     , dbo.ProchainJourTravaille(DAffretement,2) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurLimiteExclusivite.ToString()].Name + "]"
-                                    + "     , tblCommandeFournisseur.RefExt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurRefExt.ToString()].Name + "]";
+                                    + "     , tblCommandeFournisseur.LibExt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurLibExt.ToString()].Name + "]";
                                 if (menu == Enumerations.MenuName.LogistiqueMenuCommandeFournisseur.ToString() || menu == Enumerations.MenuName.ModulePrestataireMenuCommandeFournisseur.ToString())
                                 {
                                     sqlStr += "     , case when tblFicheControle.RefFicheControle is null then '' else '" + CurrentContext.CulturedRessources.GetTextSQLRessource(766) + " ' end"
@@ -501,7 +501,7 @@ namespace eVaSys.Controllers
                                     + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                     + "     , dbo.CommandeMixte(NumeroAffretement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMixte.ToString()].Name + "]"
                                     + "     , dbo.ProchainJourTravaille(DAffretement,2) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurLimiteExclusivite.ToString()].Name + "]"
-                                    + "     , tblCommandeFournisseur.RefExt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurRefExt.ToString()].Name + "]";
+                                    + "     , tblCommandeFournisseur.LibExt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurLibExt.ToString()].Name + "]";
                                 if (menu == Enumerations.MenuName.LogistiqueMenuCommandeFournisseur.ToString() || menu == Enumerations.MenuName.ModulePrestataireMenuCommandeFournisseur.ToString())
                                 {
                                     sqlStr += "     , case when tblFicheControle.RefFicheControle is null then '' else '" + CurrentContext.CulturedRessources.GetTextSQLRessource(766) + " ' end"
@@ -535,7 +535,7 @@ namespace eVaSys.Controllers
                                     + "     , tblProduit.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                     + "     , dbo.CommandeMixte(NumeroAffretement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMixte.ToString()].Name + "]"
                                     + "     , dbo.ProchainJourTravaille(DAffretement,2) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurLimiteExclusivite.ToString()].Name + "]"
-                                    + "     , tblCommandeFournisseur.RefExt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurRefExt.ToString()].Name + "]";
+                                    + "     , tblCommandeFournisseur.LibExt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurLibExt.ToString()].Name + "]";
                                 if (menu == Enumerations.MenuName.LogistiqueMenuCommandeFournisseur.ToString() || menu == Enumerations.MenuName.ModulePrestataireMenuCommandeFournisseur.ToString())
                                 {
                                     sqlStr += "     , case when tblFicheControle.RefFicheControle is null then '' else '" + CurrentContext.CulturedRessources.GetTextSQLRessource(766) + " ' end"
@@ -559,7 +559,7 @@ namespace eVaSys.Controllers
                                     + "     , HoraireDechargementPrevu as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurHoraireDechargementPrevu.ToString()].Name + "]"
                                     + "     , tblProduit.Libelle + case when tblContrat.RefContrat is null then '' else ' (' + tblContrat.IdContrat + ')' end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ProduitLibelle.ToString()].Name + "]"
                                     + "     , dbo.CommandeMixte(NumeroAffretement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMixte.ToString()].Name + "]"
-                                    + "     , tblCommandeFournisseur.RefExt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurRefExt.ToString()].Name + "]";
+                                    + "     , tblCommandeFournisseur.LibExt as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurLibExt.ToString()].Name + "]";
                                 if (menu == Enumerations.MenuName.LogistiqueMenuCommandeFournisseur.ToString() || menu == Enumerations.MenuName.ModulePrestataireMenuCommandeFournisseur.ToString())
                                 {
                                     sqlStr += "     , case when tblFicheControle.RefFicheControle is null then '' else '" + CurrentContext.CulturedRessources.GetTextSQLRessource(766) + " ' end"
@@ -632,7 +632,9 @@ namespace eVaSys.Controllers
                             //General Filters
                             sqlStr = Utils.Utils.CreateSQLTextFilter(CurrentContext, cmd, sqlStr, filterText
                                 , null
-                                , new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.CommandeFournisseurNumeroCommande, Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement, Enumerations.DataColumnName.CommandeFournisseurRefExt }
+                                , new List<Enumerations.DataColumnName> { Enumerations.DataColumnName.CommandeFournisseurNumeroCommande
+                                    , Enumerations.DataColumnName.CommandeFournisseurNumeroAffretement
+                                    , Enumerations.DataColumnName.CommandeFournisseurLibExt }
                                 );
                             if (menu == Enumerations.MenuName.LogistiqueMenuTransportCommande.ToString())
                             {

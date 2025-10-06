@@ -278,6 +278,7 @@ export interface CommandeFournisseur {
   NonRepartissable: boolean;
   Reparti: boolean;
   RefExt: string;
+  LibExt: string;
   Prestataire: Entite;
   CommandeFournisseurFichiers: CommandeFournisseurFichier[];
   Mixte: boolean;

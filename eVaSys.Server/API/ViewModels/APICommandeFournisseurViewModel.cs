@@ -19,6 +19,7 @@ namespace eVaSys.ViewModels
         {
         }
         public string RefExt { get; set; }
+        public string LibExt { get; set; }
         public string FournisseurCodeCITEO { get; set; }
         public string FournisseurLibelle { get; set; }
         public string ProduitLibelle { get; set; }

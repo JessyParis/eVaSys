@@ -174,6 +174,11 @@ namespace eVaSys.Controllers
                         + Environment.NewLine + " - flow.type=" + laserTransaction.flow?.type
                         + Environment.NewLine + " - flow.name=" + laserTransaction.flow?.name;
                 }
+                //Return error if businessId not found
+                else if (string .IsNullOrWhiteSpace(laserTransaction.businessId))
+                {
+                    err += Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1601);
+                }
                 //Check if Produit is allowed for CentreDeTri
                 else if (cDT != null && refP != null)
                 {
@@ -252,6 +257,7 @@ namespace eVaSys.Controllers
             //Creating viewModel for update
             var viewModel = new APICommandeFournisseurViewModel();
             viewModel.RefExt = laserTransaction.id.ToString();
+            viewModel.LibExt = laserTransaction.businessId;
             viewModel.RefPrestataire = CurrentContext.ConnectedUtilisateur.Prestataire?.RefEntite;
             viewModel.DDisponibilite = laserTransaction.sourceAvailabilityDate;
             viewModel.FournisseurLibelle = laserTransaction.sourceActor.name;
@@ -324,6 +330,10 @@ namespace eVaSys.Controllers
             if (string.IsNullOrWhiteSpace(model.RefExt) || model.RefExt?.Length > 50)
             {
                 err += Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1257) + " RefExt";
+            }
+            if (string.IsNullOrWhiteSpace(model.LibExt) || model.LibExt?.Length > 50)
+            {
+                err += Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1257) + " LibExt";
             }
             if (string.IsNullOrWhiteSpace(model.FournisseurCodeCITEO) || model.FournisseurCodeCITEO.Length > 100)
             {
@@ -489,6 +499,7 @@ namespace eVaSys.Controllers
                 dataModel.NumeroCommande = 0;
                 dataModel.NumeroAffretement = 0;
                 dataModel.RefExt = viewModel.RefExt;
+                dataModel.LibExt = viewModel.LibExt;
                 dataModel.RefPrestataire = viewModel.RefPrestataire;
                 //Search for Entite
                 int? refEntite = DbContext.Entites.Where(e => e.CodeEE == viewModel.FournisseurCodeCITEO).FirstOrDefault()?.RefEntite;
@@ -536,7 +547,8 @@ namespace eVaSys.Controllers
                 //Create Cmt
                 dataModel.CmtFournisseur += Environment.NewLine
                     + "*** Demande d'enlèvement " + CurrentContext.ConnectedUtilisateur.Nom + " ***"
-                    + Environment.NewLine + "Référence externe : " + viewModel.RefExt;
+                    + Environment.NewLine + "Réf. ext. : " + viewModel.LibExt
+                    + Environment.NewLine + "Id ext : " + viewModel.RefExt;
                 dataModel.CmtFournisseur += Environment.NewLine
                     + viewModel.FournisseurCodeCITEO.Trim() + " - " + viewModel.FournisseurLibelle.Trim();
                 dataModel.CmtFournisseur += Environment.NewLine + "Dispo. : ";
@@ -639,11 +651,11 @@ namespace eVaSys.Controllers
                 {
                     if (dataModel.ValideDPrevues)
                     {
-                        corps = "La demande d'enlèvement " + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (" + (dataModel?.RefExt.ToString() ?? "NA") + ") a été annulée."
+                        corps = "La demande d'enlèvement " + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (Réf. ext. " + (dataModel?.LibExt ?? "NA") + ", Id ext. " + (dataModel?.RefExt ?? "NA") + ") a été annulée."
                             + Environment.NewLine
                             + "Veuillez consulter le commentaire dans la commande pour plus de détails.";
                         corpsHTML = System.Net.WebUtility.HtmlEncode("La demande d'enlèvement ")
-                            + "<a href=\"/*appLink=commande-fournisseur/" + dataModel.RefCommandeFournisseur.ToString() + "\">" + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (" + (dataModel?.RefExt.ToString() ?? "NA") + ")" + " </a>"
+                            + "<a href=\"/*appLink=commande-fournisseur/" + dataModel.RefCommandeFournisseur.ToString() + "\">" + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (Réf. ext. " + (dataModel?.LibExt ?? "NA") + ", Id ext. " + (dataModel?.RefExt ?? "NA") + ")" + " </a>"
                             + System.Net.WebUtility.HtmlEncode(" a été annulée.")
                             + "<br/>"
                             + System.Net.WebUtility.HtmlEncode("Veuillez consulter le commentaire dans la commande pour plus de détails.")
@@ -652,7 +664,7 @@ namespace eVaSys.Controllers
                     }
                     else
                     {
-                        corps = "La demande d'enlèvement " + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (" + (dataModel?.RefExt.ToString() ?? "NA") + ") a été annulée et supprimée.";
+                        corps = "La demande d'enlèvement " + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (Réf. ext. " + (dataModel?.LibExt ?? "NA") + ", Id ext. " + (dataModel?.RefExt ?? "NA") + ") a été annulée et supprimée.";
                         corps += Environment.NewLine + dataModel.Entite.Libelle;
                         corps += Environment.NewLine + "Date de disponibilité : " + ((DateTime)dataModel.D).ToString("dd/MM/yyyy");
                         corps += Environment.NewLine;
@@ -676,11 +688,11 @@ namespace eVaSys.Controllers
                     || viewModel.ActionCode == Enumerations.APICommandeFournisseurActionCode.RefusDocumentationRecycleur.ToString())
                 {
                     //Create message and save data
-                    corps = "La demande d'enlèvement " + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (" + (dataModel?.RefExt.ToString() ?? "NA") + ") a fait l'objet d'un refus de documentation."
+                    corps = "La demande d'enlèvement " + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (Réf. ext. " + (dataModel?.LibExt ?? "NA") + ", Id ext. " + (dataModel?.RefExt ?? "NA") + ") a fait l'objet d'un refus de documentation."
                     + Environment.NewLine
                     + "Veuillez consulter le commentaire dans la commande pour plus de détails.";
                     corpsHTML = System.Net.WebUtility.HtmlEncode("La demande d'enlèvement ")
-                        + "<a href=\"/*appLink=commande-fournisseur/" + dataModel.RefCommandeFournisseur.ToString() + "\">" + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (" + (dataModel?.RefExt.ToString() ?? "NA") + ")" + " </a>"
+                        + "<a href=\"/*appLink=commande-fournisseur/" + dataModel.RefCommandeFournisseur.ToString() + "\">" + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (Réf. ext. " + (dataModel?.LibExt ?? "NA") + ", Id ext. " + (dataModel?.RefExt ?? "NA") + ")" + " </a>"
                         + System.Net.WebUtility.HtmlEncode(" a fait l'objet d'un refus de documentation.")
                         + "<br/>"
                         + System.Net.WebUtility.HtmlEncode("Veuillez consulter le commentaire dans la commande pour plus de détails.")
@@ -690,11 +702,11 @@ namespace eVaSys.Controllers
                 else
                 {
                     //Create message and save data
-                    corps = "La demande d'enlèvement " + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (" + (dataModel?.RefExt.ToString() ?? "NA") + ") a été modifiée."
+                    corps = "La demande d'enlèvement " + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (Réf. ext. " + (dataModel?.LibExt ?? "NA") + ", Id ext. " + (dataModel?.RefExt ?? "NA") + ") a été modifiée."
                     + Environment.NewLine
                     + "Veuillez consulter le commentaire dans la commande pour plus de détails.";
                     corpsHTML = System.Net.WebUtility.HtmlEncode("La demande d'enlèvement ")
-                        + "<a href=\"/*appLink=commande-fournisseur/" + dataModel.RefCommandeFournisseur.ToString() + "\">" + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (" + (dataModel?.RefExt.ToString() ?? "NA") + ")" + " </a>"
+                        + "<a href=\"/*appLink=commande-fournisseur/" + dataModel.RefCommandeFournisseur.ToString() + "\">" + (Utils.Utils.FormatNumeroCommande(dataModel?.NumeroCommande.ToString()) ?? "NA") + " (Réf. ext. " + (dataModel?.LibExt ?? "NA") + ", Id ext. " + (dataModel?.RefExt ?? "NA") + ")" + " </a>"
                         + System.Net.WebUtility.HtmlEncode(" a été modifiée.")
                         + "<br/>"
                         + System.Net.WebUtility.HtmlEncode("Veuillez consulter le commentaire dans la commande pour plus de détails.")

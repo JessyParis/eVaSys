@@ -307,6 +307,7 @@ export enum DataColumnName {
   CommandeFournisseurPrixTransportSupplementHT = "CommandeFournisseurPrixTransportSupplementHT",
   CommandeFournisseurStatut = "CommandeFournisseurStatut",
   CommandeFournisseurPrixTonneHT = "CommandeFournisseurPrixTonneHT",
+  CommandeFournisseurLibExt = "CommandeFournisseurLibExt",
   CommandeFournisseurRefExt = "CommandeFournisseurRefExt",
   CommandeFournisseurSurcoutCarburantHT = "CommandeFournisseurSurcoutCarburantHT",
   CommandeFournisseurNonConformite = "CommandeFournisseurNonConformite",

@@ -2929,8 +2929,8 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
   getPrestataireInfo(): string {
     let r: string = this.applicationUserContext.getCulturedRessourceText(1251) + " - " + this.commandeFournisseur.Prestataire.Libelle;
     //RefExt
-    if (this.commandeFournisseur.RefExt) {
-      r += " (" + this.commandeFournisseur.RefExt + ")";
+    if (this.commandeFournisseur.LibExt) {
+      r += " (" + this.commandeFournisseur.LibExt + ")";
     }
     else if (this.commandeFournisseur.DDechargement !== null) {
       r = this.applicationUserContext.getCulturedRessourceText(546);

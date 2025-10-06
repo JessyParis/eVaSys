@@ -1062,7 +1062,8 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.RefUtilisateurModif, 0, EnvDataColumnDataType.id, "RefUtilisateurModif", "");
                 CreateEnvDataColumn(cR, DataColumnName.RefUtilisateurCertif, 0, EnvDataColumnDataType.id, "RefUtilisateurCertif", "");
                 //Special columns
-                CreateEnvDataColumn(cR, DataColumnName.CommandeFournisseurRefExt, 1289, EnvDataColumnDataType.text, "RefExt", "tblCommandeFournisseur.RefExt");
+                CreateEnvDataColumn(cR, DataColumnName.CommandeFournisseurLibExt, 1289, EnvDataColumnDataType.text, "LibExt", "tblCommandeFournisseur.LibExt");
+                CreateEnvDataColumn(cR, DataColumnName.CommandeFournisseurRefExt, 1600, EnvDataColumnDataType.text, "RefExt", "tblCommandeFournisseur.RefExt");
                 CreateEnvDataColumn(cR, DataColumnName.Pourcentage, 203, EnvDataColumnDataType.decimalNumber2, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.EconomieCO2KgT, 1464, EnvDataColumnDataType.intNumber, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.AnneeTexte, 569, EnvDataColumnDataType.text, "", "");

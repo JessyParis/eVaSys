@@ -79,6 +79,7 @@ namespace eVaSys.Utils
     public class LaserTransaction
     {
         public int id { get; set; }
+        public string businessId { get; set; }
         public LaserActor sourceActor { get; set; }
         public LaserLogisticsChain logisticsChain { get; set; } = null;
         public LaserQuality quality { get; set; } = null;
@@ -159,7 +160,7 @@ namespace eVaSys.Utils
             string responseBody = "";
             string jsonBody = "";
             string url = configuration["AppResources:Laser:Url"] + "/api/auth/jwt/create";
-            string refCmd = (cmdF?.NumeroCommande.ToString() ?? "NA") + " (" + (cmdF?.RefExt ?? "NA") + ") - ";
+            string refCmd = (cmdF?.NumeroCommande.ToString() ?? "NA") + " (" + (cmdF?.RefExt ?? "NA") + "-" + (cmdF?.LibExt ?? "NA") + ") - ";
             //Process
             try
             {
@@ -205,7 +206,7 @@ namespace eVaSys.Utils
             string responseBody = "";
             string jsonBody = "";
             string url = configuration["AppResources:Laser:Url"] + "/api/auth/jwt/create";
-            string refCmd = cmdF?.NumeroCommande.ToString() ?? "NA" + " (" + cmdF?.RefExt ?? "NA" + ") - ";
+            string refCmd = cmdF?.NumeroCommande.ToString() ?? "NA" + " (" + (cmdF?.RefExt ?? "NA") + "-" + (cmdF?.LibExt ?? "NA") + ") - ";
             //Process
             try
             {
@@ -353,7 +354,7 @@ namespace eVaSys.Utils
             string responseBody = "";
             string jsonBody = "";
             string url = configuration["AppResources:Laser:Url"] + "/api/transitions";
-            string urlTransaction = configuration["AppResources:Laser:Url"] + "/api/transactions/" + cmdF.RefExt.ToString();
+            string urlTransaction = configuration["AppResources:Laser:Url"] + "/api/transactions/" + cmdF.RefExt;
             //Process
             HttpClient client = new HttpClient();
             try
@@ -643,7 +644,7 @@ namespace eVaSys.Utils
             string responseBody = "";
             string url = configuration["AppResources:Laser:Url"] + "/api/transactions/" + refExt;
             CommandeFournisseur cmdF = new CommandeFournisseur() { RefExt = refExt };
-            string refCmd = (cmdF.NumeroCommande <= 0 ? "NA" : cmdF.NumeroCommande.ToString()) + " (" + (cmdF?.RefExt ?? "NA") + ")";
+            string refCmd = (cmdF.NumeroCommande <= 0 ? "NA" : cmdF.NumeroCommande.ToString()) + " (" + (cmdF?.RefExt ?? "NA") + "-" + (cmdF?.LibExt ?? "NA") + ")";
             //Process
             HttpClient client = new HttpClient();
             try
@@ -668,7 +669,7 @@ namespace eVaSys.Utils
                 //Log
                 APIUtils.ApiUtils.LogAPICall(url, null, (int?)(e.StatusCode), responseBody, refCmd + " - " + e.Message, refUtilisateur, dbContext);
                 //Création du message à l'usage des utilisateurs
-                CreateAPIErrorMessage(cmdF, e, "Erreur de réception des données de demande d\'enlèvement " + refExt, refUtilisateur, dbContext, configuration);
+                CreateAPIErrorMessage(cmdF, e, "Erreur de réception des données de demande d\'enlèvement " + refCmd, refUtilisateur, dbContext, configuration);
             }
             //End
             return r;
@@ -691,12 +692,14 @@ namespace eVaSys.Utils
                 string corps, corpsHTML;
                 if (cmdF != null)
                 {
-                    corps = "Une erreur d'API s'est produite le " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + " concernant la demande d'enlèvement " + (Utils.FormatNumeroCommande(cmdF?.NumeroCommande.ToString()) ?? "NA") + " (" + (cmdF?.RefExt.ToString() ?? "NA") + ")"
+                    corps = "Une erreur d'API s'est produite le " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") 
+                        + " concernant la demande d'enlèvement " 
+                        + (Utils.FormatNumeroCommande(cmdF?.NumeroCommande.ToString()) ?? "NA") + " (Réf. ext. " + (cmdF?.LibExt ?? "NA") + ", Id ext. " + (cmdF?.RefExt ?? "NA") + ")"
                         + Environment.NewLine + message
                         + Environment.NewLine + e.Message
                         + Environment.NewLine + e.StackTrace;
                     corpsHTML = HttpUtility.HtmlEncode("Une erreur d'API s'est produite le " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + " concernant la demande d'enlèvement ")
-                        + "<a href=\"/*appLink=commande-fournisseur/" + cmdF.RefCommandeFournisseur.ToString() + "\">" + (Utils.FormatNumeroCommande(cmdF?.NumeroCommande.ToString()) ?? "NA") + " (" + (cmdF?.RefExt.ToString() ?? "NA") + ")" + "</a>"
+                        + "<a href=\"/*appLink=commande-fournisseur/" + cmdF.RefCommandeFournisseur.ToString() + "\">" + (Utils.FormatNumeroCommande(cmdF?.NumeroCommande.ToString()) ?? "NA") + " (Réf. ext. " + (cmdF?.LibExt ?? "NA") + ", Id ext. " + (cmdF?.RefExt ?? "NA") + ")" + "</a>"
                         + "<BR/>" + HttpUtility.HtmlEncode(message)
                         + "<BR/>" + HttpUtility.HtmlEncode(e.Message)
                         + "<BR/>" + HttpUtility.HtmlEncode(e.StackTrace);
