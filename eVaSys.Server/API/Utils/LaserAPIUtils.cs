@@ -746,7 +746,7 @@ namespace eVaSys.Utils
                     + Environment.NewLine + ex.Message
                     + Environment.NewLine + ex.StackTrace;
                 txt = txt.Substring(0, 800);
-                Utils.DebugPrint("Erreur création de message erreur API: " + Environment.NewLine + ex.StackTrace + Environment.NewLine + ex.StackTrace,
+                Utils.DebugPrint("Erreur création de message erreur API: " + Environment.NewLine + ex.StackTrace,
                     configuration["Data:DefaultConnection:ConnectionString"]);
             }
 
