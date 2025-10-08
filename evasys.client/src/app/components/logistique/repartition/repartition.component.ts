@@ -296,6 +296,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   //Unlock all controls
   unlockScreen() {
     this.locked = false;
+    this.saveLocked = false;
     this.exportSAGEFC.enable();
     this.collectiviteListFC.enable();
     this.collectiviteNAListFC.enable();

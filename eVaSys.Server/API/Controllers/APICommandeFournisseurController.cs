@@ -198,7 +198,7 @@ namespace eVaSys.Controllers
                 if (err == Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1228))
                 {
                     titre = "Demande d'enlèvement rejetée pour produit interdit";
-                    corps = "La demande d'enlèvement " + laserTransaction.id.ToString() + " a été rejetée car elle concerne un produit interdit pour le Centre de Tri.";
+                    corps = "La demande d'enlèvement " + laserTransaction.businessId + " (" + laserTransaction.id.ToString() + ") a été rejetée car elle concerne un produit interdit pour le Centre de Tri.";
                     corps += Environment.NewLine + "Centre de Tri : " + laserTransaction.sourceActor?.name;
                     corps += Environment.NewLine + "Produit (quality) : " + laserTransaction.quality?.code + " - " + laserTransaction.quality?.name;
                     corps += Environment.NewLine + "Produit (flow) : " + laserTransaction.flow?.type + " - " + laserTransaction.flow?.name;
@@ -208,7 +208,7 @@ namespace eVaSys.Controllers
                 else
                 {
                     titre = "Demande d'enlèvement rejetée";
-                    corps = "La demande d'enlèvement " + laserTransaction.id.ToString() + " a été rejetée pour la raison suivante.";
+                    corps = "La demande d'enlèvement " + laserTransaction.businessId + " (" + laserTransaction.id.ToString() + ") a été rejetée pour la raison suivante.";
                     corps += Environment.NewLine + err;
                 }
                 corps += Environment.NewLine + Environment.NewLine + "Le " + DateTime.Now.ToString("dd/MM/yyyy hh:mm");
