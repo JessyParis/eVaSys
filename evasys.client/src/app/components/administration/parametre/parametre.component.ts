@@ -12,7 +12,7 @@ import { cmp, getAttachmentFilename, getCreationModificationTooltipText, showErr
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { UploadComponent } from "../../dialogs/upload/upload.component";
 import { DownloadService } from "../../../services/download.service";
-import { DocumentType } from "../../../globals/enums";
+import { DocumentType, SnackbarMsgType } from "../../../globals/enums";
 import { kendoFontData } from "../../../globals/kendo-utils";
 import { DomSanitizer } from "@angular/platform-browser";
 import { UtilsService } from "../../../services/utils.service";
@@ -138,7 +138,7 @@ export class ParametreComponent extends BaseFormComponent<dataModelsInterfaces.P
         //Reload data
         this.parametre = result;
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         //Next action if applicable or return to man grid
         if (next == "UploadFile") {
           //open pop-up
@@ -173,11 +173,11 @@ export class ParametreComponent extends BaseFormComponent<dataModelsInterfaces.P
       this.lastUploadResut = result;
       if (!this.lastUploadResut) {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else if (this.lastUploadResut.error != "") {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(631), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(631), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else {
         //Reload data
@@ -188,7 +188,7 @@ export class ParametreComponent extends BaseFormComponent<dataModelsInterfaces.P
           this.updateForm();
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
       }
     });
   }

@@ -13,7 +13,7 @@ import { debounceTime, switchMap } from "rxjs/operators";import moment from "mom
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { showErrorToUser, setOriginalMenu, getCreationModificationTooltipText, toFixed, getFormattedNumeroCommande, cmp } from "../../../globals/utils";
-import { HabilitationLogistique } from "../../../globals/enums";
+import { HabilitationLogistique, SnackbarMsgType } from "../../../globals/enums";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { BaseFormComponent } from "../../_ancestors/base-form.component";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -684,7 +684,7 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
     this.dataModelService.postRepartition(this.repartition)
       .subscribe(result => {
         this.repartition = result;
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         //Next action
         switch (action) {
           case "save":

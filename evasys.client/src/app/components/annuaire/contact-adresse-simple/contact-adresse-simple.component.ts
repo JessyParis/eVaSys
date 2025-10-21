@@ -8,7 +8,7 @@ import { ListService } from "../../../services/list.service";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
-import { HabilitationLogistique } from "../../../globals/enums";
+import { HabilitationLogistique, SnackbarMsgType } from "../../../globals/enums";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 @Component({
     selector: "contact-adresse-simple",
@@ -114,7 +114,7 @@ export class ContactAdresseSimpleComponent implements OnInit {
       .post<dataModelsInterfaces.ContactAdresse>(url, this.contactAdresse)
       .subscribe(result => {
         this.contactAdresse = result;
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         //Emit event for dialog closing
         this.askClose.emit({ type: this.type, ref: this.refContactAdresse });
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));

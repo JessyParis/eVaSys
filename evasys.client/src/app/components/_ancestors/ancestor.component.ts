@@ -12,7 +12,7 @@ import { ConfirmComponent } from "../dialogs/confirm/confirm.component";
 import { getCreationModificationTooltipText, showErrorToUser } from "../../globals/utils";
 import { SnackBarQueueService } from "../../services/snackbar-queue.service";
 import { EnvComponentControl, EnvBox } from "../../classes/appClasses";
-import { FormControlType, ListContentType } from "../../globals/enums";
+import { FormControlType, ListContentType, SnackbarMsgType } from "../../globals/enums";
 import { SafeHtml, DomSanitizer } from "@angular/platform-browser";
 import { UtilsService } from "../../services/utils.service";
 
@@ -239,7 +239,7 @@ export abstract class AncestorComponent<T extends { AllowStandardCRUD: string }>
     this.dataModelService.postDataModel<T>(this.sourceObj, this.componentName)
       .subscribe(result => {
         //Redirect to grid and inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
@@ -263,7 +263,7 @@ export abstract class AncestorComponent<T extends { AllowStandardCRUD: string }>
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
     this.dataModelService.deleteDataModel<T>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

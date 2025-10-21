@@ -13,6 +13,7 @@ import { UploadComponent } from "../../dialogs/upload/upload.component";
 import { DownloadService } from "../../../services/download.service";
 import { HttpResponse } from "@angular/common/http";
 import { pdf } from "@progress/kendo-drawing";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -190,11 +191,11 @@ export class ActionComponent implements OnInit {
       this.lastUploadResut = result;
       if (!this.lastUploadResut) {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else if (this.lastUploadResut.error != "") {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(631), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(631), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else {
         //Reload data, from database or from dialog depending on existence of Action in db or not
@@ -208,7 +209,7 @@ export class ActionComponent implements OnInit {
           this.action.ActionFichierNoFiles = this.action.ActionFichierNoFiles.concat(this.lastUploadResut.uploadedFiles);
         }
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
       }
     });
   }

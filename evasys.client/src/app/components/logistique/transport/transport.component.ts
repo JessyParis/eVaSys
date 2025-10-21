@@ -9,7 +9,7 @@ import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
-import { HabilitationLogistique } from "../../../globals/enums";
+import { HabilitationLogistique, SnackbarMsgType } from "../../../globals/enums";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -166,7 +166,7 @@ export class TransportComponent implements OnInit {
       .post<dataModelsInterfaces.Transport>(url, this.transport)
       .subscribe(result => {
         this.transport = result;
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

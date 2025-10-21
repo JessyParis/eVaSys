@@ -6,7 +6,7 @@ import { ApplicationUserContext } from "../../../globals/globals";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { InformationComponent } from "../../dialogs/information/information.component";
-import { ContratType, HabilitationLogistique } from "../../../globals/enums";
+import { ContratType, HabilitationLogistique, SnackbarMsgType } from "../../../globals/enums";
 import { ListService } from "../../../services/list.service";
 import { DataModelService } from "../../../services/data-model.service";
 import moment from "moment";
@@ -291,7 +291,7 @@ export class CommandeClientComponent implements OnInit {
       .post<dataModelsInterfaces.CommandeClientMensuelleForm[]>(url, this.commandeClientMensuelles)
       .subscribe(result => {
         //Redirect to grid and inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

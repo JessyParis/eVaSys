@@ -19,6 +19,7 @@ import { TicketsComponent } from "../dialogs/ticket/tickets.component";
 import { showErrorToUser } from "../../globals/utils";
 import { SnackBarQueueService } from "../../services/snackbar-queue.service";
 import { kendoFontData } from "../../globals/kendo-utils";
+import { SnackbarMsgType } from "../../globals/enums";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
     //Constructor
@@ -256,11 +257,11 @@ export class EmailComponent implements OnInit {
           this.lastUploadResut = result;
           if (!this.lastUploadResut) {
             //Inform user
-            this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000 } as appInterfaces.SnackbarMsg);
+            this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
           }
           else if (this.lastUploadResut.error != "") {
             //Inform user
-            this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(342), duration: 4000 } as appInterfaces.SnackbarMsg);
+            this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(342), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
           }
           else {
             //Reload data
@@ -271,7 +272,7 @@ export class EmailComponent implements OnInit {
               //Update form
               this.updateForm();
               //Inform user
-              this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000 } as appInterfaces.SnackbarMsg);
+              this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
           }
         });

@@ -11,6 +11,7 @@ import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -126,7 +127,7 @@ export class NonConformiteReponseFournisseurTypeComponent implements OnInit {
       .post<dataModelsInterfaces.NonConformiteReponseFournisseurType>(url, this.nonConformiteReponseFournisseurType)
       .subscribe(result => {
         //Redirect to grid and inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

@@ -13,6 +13,7 @@ import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { cmp, showErrorToUser, clearFormArray, getCreationModificationTooltipText } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -227,7 +228,7 @@ export class SurcoutCarburantComponent implements OnInit {
       .post<dataModelsInterfaces.SurcoutCarburant[]>(url, this.surcoutCarburants)
       .subscribe(result => {
         //Redirect to grid and inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

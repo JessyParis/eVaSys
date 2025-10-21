@@ -11,7 +11,7 @@ import moment from "moment";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { showErrorToUser, cmp, getCreationModificationTooltipText, getCertficationTooltipText } from "../../../globals/utils";
-import { HabilitationLogistique } from "../../../globals/enums";
+import { HabilitationLogistique, SnackbarMsgType } from "../../../globals/enums";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -264,7 +264,7 @@ export class PrixRepriseComponent implements OnInit {
       .post<dataModelsInterfaces.PrixReprise[]>(url, this.prixReprises)
       .subscribe(result => {
         //Redirect to grid and inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

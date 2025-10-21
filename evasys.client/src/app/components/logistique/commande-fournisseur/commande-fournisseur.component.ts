@@ -3002,11 +3002,11 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
       this.lastUploadResut = result;
       if (!this.lastUploadResut) {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else if (this.lastUploadResut.error != "") {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(342), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(342), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else {
         //Reload data
@@ -3017,7 +3017,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
           this.updateForm();
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
       }
     });
   }

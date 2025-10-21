@@ -5,7 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { ApplicationUserContext } from "../../../globals/globals";
 import { MatDialog } from "@angular/material/dialog";
 import { ListService } from "../../../services/list.service";
-import { HabilitationLogistique } from "../../../globals/enums";
+import { HabilitationLogistique, SnackbarMsgType } from "../../../globals/enums";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
@@ -117,7 +117,7 @@ export class AdresseSimpleComponent implements OnInit {
     this.dataModelService.postAdresse(this.adresse)
       .subscribe(result => {
         this.adresse = result;
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         //Emit event for dialog closing
         this.askClose.emit({ type: this.type, ref: this.refAdresse });
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));

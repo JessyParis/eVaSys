@@ -4,6 +4,7 @@ import { UploadComponent } from "../../dialogs/upload/upload.component";
 import { ApplicationUserContext } from "../../../globals/globals";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 @Component({
     selector: "upload-transport",
@@ -34,10 +35,10 @@ export class UploadTransportComponent {
     dialogRef.afterClosed().subscribe(result => {
       this.lastUploadResut = result;
       if (!this.lastUploadResut) {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else if (this.lastUploadResut.error != "") {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(342), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(342), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else {
         this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(343), duration: 4000 } as appInterfaces.SnackbarMsg);

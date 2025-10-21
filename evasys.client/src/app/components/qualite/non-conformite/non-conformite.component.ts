@@ -16,7 +16,7 @@ import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { showErrorToUser, setOriginalMenu, getAttachmentFilename, shortenLongText } from "../../../globals/utils";
 import { UploadComponent } from "../../dialogs/upload/upload.component";
 import { DownloadService } from "../../../services/download.service";
-import { ModuleName, MenuName, HabilitationQualite, InputFormComponentElementType } from "../../../globals/enums";
+import { ModuleName, MenuName, HabilitationQualite, InputFormComponentElementType, SnackbarMsgType } from "../../../globals/enums";
 import { EventEmitterService } from "../../../services/event-emitter.service";
 import { InputFormComponent } from "../../dialogs/input-form/input-form.component";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
@@ -618,11 +618,11 @@ export class NonConformiteComponent extends BaseFormComponent<dataModelsInterfac
       this.lastUploadResut = result;
       if (!this.lastUploadResut) {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else if (this.lastUploadResut.error != "") {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(631), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(631), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else {
         //Reload data
@@ -636,7 +636,7 @@ export class NonConformiteComponent extends BaseFormComponent<dataModelsInterfac
           //this.updateForm();
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
       }
     });
   }
@@ -1173,7 +1173,7 @@ export class NonConformiteComponent extends BaseFormComponent<dataModelsInterfac
         //Update form
         this.updateForm();
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         if (this.nextAction !== "") {
           switch (this.nextAction) {
             case "CommandeFournisseur":

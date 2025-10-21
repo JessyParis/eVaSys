@@ -11,6 +11,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UtilsService } from "../../../services/utils.service";
 import { BaseFormComponent } from "../../_ancestors/base-form.component";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 /** 0 or 90 to 365  for delaiAvantDesactivationUtilisateurFC*/
 const delaiAvantDesactivationUtilisateurRange: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -92,7 +93,7 @@ export class SecuriteComponent extends BaseFormComponent<dataModelsInterfaces.Se
     this.dataModelService.postSecurite(this.securite)
       .subscribe(result => {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
 }

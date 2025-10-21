@@ -14,7 +14,7 @@ import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { getCreationModificationTooltipText, showErrorToUser, cmp, GetUtilisateurTypeLocalizedLabel, removeAccents } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { ListService } from "../../../services/list.service";
-import { HabilitationAnnuaire, HabilitationLogistique, HabilitationModuleCentreDeTri, HabilitationModuleCollectivite, HabilitationModulePrestataire, HabilitationQualite, UtilisateurType } from "../../../globals/enums";
+import { HabilitationAnnuaire, HabilitationLogistique, HabilitationModuleCentreDeTri, HabilitationModuleCollectivite, HabilitationModulePrestataire, HabilitationQualite, SnackbarMsgType, UtilisateurType } from "../../../globals/enums";
 import { kendoFontData } from "../../../globals/kendo-utils";
 import { UtilisateurList } from "../../../interfaces/dataModelsInterfaces";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -759,7 +759,7 @@ export class UtilisateurComponent extends BaseFormComponent<dataModelsInterfaces
     this.dataModelService.postDataModel<dataModelsInterfaces.Utilisateur>(this.utilisateur, this.componentName)
       .subscribe(result => {
         //Redirect to grid and inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
         //Next action if applicable
         switch (nextAction) {
@@ -810,7 +810,7 @@ export class UtilisateurComponent extends BaseFormComponent<dataModelsInterfaces
   delete() {
     this.dataModelService.deleteDataModel<dataModelsInterfaces.Utilisateur>(this.utilisateur.RefUtilisateur, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

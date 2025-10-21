@@ -13,6 +13,7 @@ import { BaseFormComponent } from "../../_ancestors/base-form.component";
 import { UtilsService } from "../../../services/utils.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ListService } from "../../../services/list.service";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 @Component({
     selector: "action-type",
@@ -103,7 +104,7 @@ export class ActionTypeComponent extends BaseFormComponent<dataModelsInterfaces.
     this.dataModelService.postDataModel<dataModelsInterfaces.ActionType>(this.actionType, this.componentName)
       .subscribe(result => {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
@@ -127,7 +128,7 @@ export class ActionTypeComponent extends BaseFormComponent<dataModelsInterfaces.
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
     this.dataModelService.deleteDataModel<dataModelsInterfaces.ActionType>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

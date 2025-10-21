@@ -5,7 +5,7 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { ApplicationUserContext } from "../../../globals/globals";
 import { ErrorStateMatcher, ThemePalette } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ContactAdresseProcess, ModuleName, MenuName, HabilitationQualite } from "../../../globals/enums";
+import { ContactAdresseProcess, ModuleName, MenuName, HabilitationQualite, SnackbarMsgType } from "../../../globals/enums";
 import { ListService } from "../../../services/list.service";
 import { DataModelService } from "../../../services/data-model.service";
 import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
@@ -150,7 +150,7 @@ export class FicheControleComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         if (res) {
           //Inform user
-          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
           //Next action if applicable
           if (this.nextAction !== "") {
             switch (this.nextAction) {

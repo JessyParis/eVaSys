@@ -14,6 +14,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { BaseFormComponent } from "../../_ancestors/base-form.component";
 import { ListService } from "../../../services/list.service";
 import { MatCheckboxChange } from "@angular/material/checkbox";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 @Component({
     selector: "produit",
@@ -267,7 +268,7 @@ export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Pro
     this.dataModelService.postDataModel<dataModelsInterfaces.Produit>(this.produit, this.componentName)
       .subscribe(result => {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
@@ -291,7 +292,7 @@ export class ProduitComponent extends BaseFormComponent<dataModelsInterfaces.Pro
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
     this.dataModelService.deleteDataModel<dataModelsInterfaces.Produit>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

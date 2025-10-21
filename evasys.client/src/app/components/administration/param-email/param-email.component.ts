@@ -13,6 +13,7 @@ import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { kendoFontData } from "../../../globals/kendo-utils";
 import { DomSanitizer } from "@angular/platform-browser";
 import { BaseFormComponent } from "../../_ancestors/base-form.component";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 @Component({
     selector: "param-email",
@@ -181,7 +182,7 @@ export class ParamEmailComponent extends BaseFormComponent<dataModelsInterfaces.
     this.dataModelService.postDataModel<dataModelsInterfaces.ParamEmail>(this.paramEmail, this.componentName)
       .subscribe(result => {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
@@ -205,7 +206,7 @@ export class ParamEmailComponent extends BaseFormComponent<dataModelsInterfaces.
     let id = Number.parseInt(this.activatedRoute.snapshot.params["id"], 10);
     this.dataModelService.deleteDataModel<dataModelsInterfaces.ParamEmail>(id, this.componentName)
       .subscribe(result => {
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(this.ressAfterDel), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }

@@ -11,6 +11,7 @@ import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -164,7 +165,7 @@ export class DescriptionCVQComponent implements OnInit {
       .post<dataModelsInterfaces.DescriptionCVQ>(url, this.descriptionCVQ)
       .subscribe(result => {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         //back to pristine
         this.form.markAsPristine();
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));

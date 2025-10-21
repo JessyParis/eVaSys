@@ -8,7 +8,7 @@ import { ListService } from "../../../services/list.service";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { getCreationModificationTooltipText, showErrorToUser } from "../../../globals/utils";
-import { HabilitationLogistique } from "../../../globals/enums";
+import { HabilitationLogistique, SnackbarMsgType } from "../../../globals/enums";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { ErrorStateMatcher } from "@angular/material/core";
 
@@ -110,7 +110,7 @@ export class TransportSimpleComponent implements OnInit {
       .post<dataModelsInterfaces.Transport>(url, this.transport)
       .subscribe(result => {
         this.transport = result;
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         //Emit event for dialog closing
         this.askClose.emit({ type: this.type, ref: this.transport.RefTransport });
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));

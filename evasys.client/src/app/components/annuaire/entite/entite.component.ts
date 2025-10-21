@@ -17,7 +17,7 @@ import {
 } from "../../../globals/utils";
 import { getAdresseListText, getContactAdresseListText } from "../../../globals/data-model-utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
-import { DataColumnName, HabilitationAnnuaire, HabilitationQualite, MenuName, ModuleName, SearchElementType } from "../../../globals/enums";
+import { DataColumnName, HabilitationAnnuaire, HabilitationQualite, MenuName, ModuleName, SearchElementType, SnackbarMsgType } from "../../../globals/enums";
 import moment from "moment";
 import { initialConfig } from "ngx-mask";
 import { UploadComponent } from "../../dialogs/upload/upload.component";
@@ -561,7 +561,7 @@ export class EntiteComponent implements OnInit {
     this.dataModelService.postEntite(this.entite)
       .subscribe(result => {
         //Redirect to grid and inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         this.router.navigate(["grid"]);
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
@@ -1449,11 +1449,11 @@ ${cC.Cmt}`;
       this.lastUploadResut = result;
       if (!this.lastUploadResut) {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(341), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else if (this.lastUploadResut.error != "") {
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(631), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(631), duration: 4000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
       }
       else {
         //Reload data
@@ -1470,7 +1470,7 @@ ${cC.Cmt}`;
           this.entite.DocumentEntites.sort(function (a, b) { return cmpDesc(a.DocumentNoFile.DCreation, b.DocumentNoFile.DCreation); });
         }
         //Inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(628), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
       }
     });
   }
@@ -1634,7 +1634,7 @@ ${cC.Cmt}`;
     this.dataModelService.postEntite(this.entite)
       .subscribe(result => {
         //Redirect to grid and inform user
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         //Set the corresponding Entite filter
         this.applicationUserContext.filterCollectivites = [];
         this.applicationUserContext.filterCollectivites.push({ RefEntite: this.entite.RefEntite } as dataModelsInterfaces.Entite)

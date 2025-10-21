@@ -11,6 +11,7 @@ import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { DataModelService } from "../../../services/data-model.service";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { AuthService } from "../../../services/auth.service";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -226,7 +227,7 @@ export class UtilisateurSimpleComponent implements OnInit {
         .post<dataModelsInterfaces.Utilisateur>(url, this.utilisateur)
         .subscribe(result => {
           this.utilisateur = result;
-          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
           //Emit event for dialog closing
           this.askClose.emit({ type: this.type, ref: this.refUtilisateur });
         }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
