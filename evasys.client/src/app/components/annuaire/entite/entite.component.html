@@ -850,13 +850,14 @@
                 </button>
               </div>
             </div>
-            <table class="table-no-pad-no-space" style="width:100%; margin: 10px 0 0 0;" *ngIf="entite.DocumentEntites?.length>0">
+            <table class="table-no-pad-no-space" style="width: 100%; margin: 10px 0 0 0; height: 600px; max-height: 600px; overflow-y: auto; display: block; "
+                   *ngIf="entite.DocumentEntites?.length>0">
               <tr *ngFor="let dE of entite.DocumentEntites | callback: filterEntiteDocuments: true: 0: false">
-                <td style="padding: 0px 5px 0px 5px; cursor: pointer; overflow-wrap: break-word; max-width: 200px;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
+                <td style="padding: 0px 5px 0px 15px; cursor: pointer; overflow-wrap: break-word; width: 100%;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
                     (click)="getFile('Document', dE.RefDocument); ">
                   {{dE.DocumentNoFile.Libelle}}
                 </td>
-                <td style="padding: 0px 5px 0px 5px; width: 40px; text-align: center;">
+                <td style="padding: 0px 5px 0px 5px; min-width: 40px; text-align: center;">
                   <button mat-icon-button (click)="onDeleteDocumentEntite(dE.RefDocumentEntite)" type="button"
                           *ngIf="dE.RefDocumentEntite>0" [disabled]="locked">
                     <mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon>
@@ -886,13 +887,14 @@
                 </button>
               </div>
             </div>
-            <table class="table-no-pad-no-space" style="width: 100%; max-width: 100%; margin: 10px 0 0 0; " *ngIf="entite.DocumentEntites?.length>0">
+            <table class="table-no-pad-no-space" style="width: 100%; margin: 10px 0 0 0; height: 600px; max-height: 600px; overflow-y: auto; display: block; "
+                   *ngIf="entite.DocumentEntites?.length>0">
               <tr *ngFor="let dE of entite.DocumentEntites | callback: filterEntiteDocuments: true: 0: true">
-                <td style="padding: 0px 5px 0px 5px; cursor: pointer; overflow-wrap: break-word; max-width:200px;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
+                <td style="padding: 0px 5px 0px 15px; cursor: pointer; overflow-wrap: break-word; width:100%;" matTooltip={{applicationUserContext.getCulturedRessourceText(1391)}}
                     (click)="getFile('Document', dE.RefDocument); ">
                   {{dE.DocumentNoFile.Libelle}}
                 </td>
-                <td style="padding: 0px 5px 0px 5px; width:40px; text-align:center;">
+                <td style="padding: 0px 5px 0px 5px; min-width:40px; text-align:center;">
                   <button mat-icon-button (click)="onDeleteDocumentEntite(dE.RefDocumentEntite)" type="button"
                           *ngIf="dE.RefDocumentEntite>0" [disabled]="locked">
                     <mat-icon aria-label="Delete" class="ev-button-left" color="warn">delete</mat-icon>

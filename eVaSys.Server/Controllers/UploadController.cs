@@ -31,29 +31,7 @@ namespace eVaSys.Controllers
             : base(context, configuration) { }
         #endregion Constructor
 
-        #region RESTful Conventions
-        ///// <summary>
-        ///// Get uploaded Transport prices file(s)
-        ///// </summary>
-        //[HttpPost("Transport")]
-        //public async Task<IActionResult> PostTransport(IFormFile file)
-        //{
-        //    //Chech authorization
-        //    if (!Rights.AuthorizedMenu(Enumerations.MenuName.LogistiqueMenuImporterTransport.ToString(), CurrentContext))
-        //    {
-        //        return Unauthorized(new UnauthorizedError(CurrentContext.CulturedRessources.GetTextRessource(345)));
-        //    }
-        //    //Process if Authorized
-        //    long size = file.Length;
-        //    //var stream = new FileStream("c:\\enviromatic\\temp\\test.xlsx", FileMode.Create);
-        //    var stream = new MemoryStream();
-        //    await file.CopyToAsync(stream);
-        //    //Process Excel file
-        //    string error = "";
-        //    string message = Utils.ExcelFileManagement.ImportTransport(stream, ref error, CurrentContext, DbContext);
-        //    //End
-        //    return Ok(new { error, message, file.FileName });
-        //}
+        #region Services
         /// <summary>
         /// Get uploaded Transport prices file(s)
         /// </summary>
@@ -405,9 +383,14 @@ namespace eVaSys.Controllers
         /// <summary>
         /// Get uploaded DocumentEntite file(s)
         /// </summary>
+
         [HttpPost("DocumentEntite")]
         public async Task<IActionResult> PostDocumentEntite(IFormFile file)
         {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(631)));
+            }
             //Chech authorization
             if (!Rights.AuthorizedMenu(Enumerations.MenuName.AnnuaireMenuEntite.ToString(), CurrentContext, Configuration)
                 )

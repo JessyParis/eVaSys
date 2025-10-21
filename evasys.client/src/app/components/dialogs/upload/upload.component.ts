@@ -14,6 +14,8 @@ import { UploadService } from "../../../services/upload.service";
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { ApplicationUserContext } from "../../../globals/globals";
 import { ActionFichier, ActionFichierNoFile, DocumentEntite, DocumentNoFile } from "../../../interfaces/dataModelsInterfaces";
+import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
+import { SnackbarMsgType } from "../../../globals/enums";
 
 @Component({
     selector: "upload",
@@ -23,6 +25,7 @@ import { ActionFichier, ActionFichierNoFile, DocumentEntite, DocumentNoFile } fr
 export class UploadComponent implements OnInit {
   @ViewChild("file") file: any;
   public files: Set<File> = new Set();
+  maxSize: number = 30000000; //30 MB
   //Progress bar
   color = "warn";
   mode = "indeterminate";
@@ -33,9 +36,14 @@ export class UploadComponent implements OnInit {
   //Constructor
   constructor(public dialogRef: MatDialogRef<UploadComponent>, @Inject(MAT_DIALOG_DATA) public data: any
     , public uploadService: UploadService
-    , public applicationUserContext: ApplicationUserContext) { }
+    , protected snackBarQueueService: SnackBarQueueService
+    , public applicationUserContext: ApplicationUserContext) {
+  }
 
   ngOnInit() {
+    if (this.applicationUserContext.parametres.find(r => r.RefParametre == 21).ValeurNumerique > 0) {
+      this.maxSize = this.applicationUserContext.parametres.find(r => r.RefParametre == 21).ValeurNumerique;
+    }
   }
 
   progress: any;
@@ -53,7 +61,15 @@ export class UploadComponent implements OnInit {
     const files: { [key: string]: File } = this.file.nativeElement.files;
     for (let key in files) {
       if (!isNaN(parseInt(key))) {
-        this.files.add(files[key]);
+        if (files[key].size < (this.maxSize*1000000)) {
+          this.files.add(files[key]);
+        }
+        else {
+          let s: string = files[key].name
+            + " - "
+            + this.applicationUserContext.getCulturedRessourceText(1602);
+          this.snackBarQueueService.addMessage({ text: s, duration: 5000, type: SnackbarMsgType.Error } as appInterfaces.SnackbarMsg);
+        }
       }
     }
   }
@@ -84,25 +100,28 @@ export class UploadComponent implements OnInit {
       this.uploadBodyResult[key].uploadBodyResult.subscribe((val: appInterfaces.UploadResponseBody) => {
         //Store last result
         this.lastUploadResut = val
-        //Store each file to be sent back to the data model
-        if (this.data.type == "actionfichier") {
-          (this.uploadedFiles as ActionFichierNoFile[]).push({
-            RefActionFichier: val.fileDbId,
-            RefAction: this.data.ref,
-            Nom: val.fileName
-          } as ActionFichierNoFile)
-        }
-        if (this.data.type == "documententite") {
-          (this.uploadedFiles as DocumentEntite[]).push({
-            RefDocumentEntite: val.fileDbId,
-            RefEntite: this.data.ref,
-            DocumentNoFile: {
-              Libelle: val.fileName,
-              Nom: val.fileName,
-              Actif: true,
-              VisibiliteTotale: this.data.fileType
-            } as DocumentNoFile
-          } as DocumentEntite)
+        //If no error
+        if (val.error != null && val.error != "") {
+          //Store each file to be sent back to the data model
+          if (this.data.type == "actionfichier") {
+            (this.uploadedFiles as ActionFichierNoFile[]).push({
+              RefActionFichier: val.fileDbId,
+              RefAction: this.data.ref,
+              Nom: val.fileName
+            } as ActionFichierNoFile)
+          }
+          if (this.data.type == "documententite") {
+            (this.uploadedFiles as DocumentEntite[]).push({
+              RefDocumentEntite: val.fileDbId,
+              RefEntite: this.data.ref,
+              DocumentNoFile: {
+                Libelle: val.fileName,
+                Nom: val.fileName,
+                Actif: true,
+                VisibiliteTotale: this.data.fileType
+              } as DocumentNoFile
+            } as DocumentEntite)
+          }
         }
       });
     }

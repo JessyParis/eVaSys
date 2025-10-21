@@ -100,6 +100,21 @@ export class ParametreComponent extends BaseFormComponent<dataModelsInterfaces.P
     this.valeurTexteFC.setValue(this.parametre.ValeurTexte);
     this.valeurHTMLFC.setValue(this.parametre.ValeurHTML);
     this.cmtFC.setValue(this.parametre.Cmt);
+    //Dynamic validation*
+    //Init : RAZ already added validators
+    const validators = [];
+    //For any concerned Parametre
+    if (this.parametre.RefParametre === 21) {
+      validators.push(Validators.min(1));
+      validators.push(Validators.max(500));
+    }
+    if (this.parametre.RefParametre === 6) {
+      validators.push(Validators.min(1));
+      validators.push(Validators.max(48));
+    }
+    this.valeurNumeriqueFC.setValidators(validators);
+    this.valeurNumeriqueFC.updateValueAndValidity();
+
     //Manage screen
     this.manageScreen();
   }

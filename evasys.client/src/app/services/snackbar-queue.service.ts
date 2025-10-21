@@ -11,6 +11,7 @@
 import { Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SnackbarMsg } from "../interfaces/appInterfaces";
+import { SnackbarComponent } from "../components/global/snackbar/snackbar.component";
 
 @Injectable({
   providedIn: "root"
@@ -33,8 +34,17 @@ export class SnackBarQueueService {
 
     this.processingMessage = true;
 
-    this.snackBar.open(nextMessage.text, undefined, { duration: nextMessage.duration })
-      .afterDismissed()
+    //this.snackBar.open(nextMessage.text, undefined, { duration: nextMessage.duration })
+    //  .afterDismissed()
+    //  .subscribe(() => {
+    //    this.displaySnackbar();
+    //  });
+    this.snackBar.openFromComponent(SnackbarComponent, {
+      data: nextMessage,
+      duration: nextMessage.duration || 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom'
+    }).afterDismissed()
       .subscribe(() => {
         this.displaySnackbar();
       });

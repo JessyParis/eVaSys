@@ -44,6 +44,12 @@
               <button *ngIf="form.get('ValeurNumerique').value!=null && form.get('ValeurNumerique').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('ValeurNumerique').setValue(null); manageScreen()" tabindex="-1" type="button">
                 <mat-icon>close</mat-icon>
               </button>
+              <mat-error align="end" *ngIf="form.get('ValeurNumerique').errors?.min">
+                {{applicationUserContext.getCulturedRessourceText(573)}}{{ form.get('ValeurNumerique').errors.min.min }}
+              </mat-error>
+              <mat-error align="end" *ngIf="form.get('ValeurNumerique').errors?.max">
+                {{applicationUserContext.getCulturedRessourceText(687)}}{{ form.get('ValeurNumerique').errors.max.max }}
+              </mat-error>
             </mat-form-field>
             <table>
               <tr>

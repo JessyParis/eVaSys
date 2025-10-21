@@ -903,7 +903,17 @@ export enum UtilisateurType {
   CentreDeTri = "CentreDeTri",
   Prestataire = "Prestataire"
 }
+
 //Enumération pour les types de contrats
 export enum ContratType {
   "RepriseIndividuelle" = 1,
+}
+
+//Enumération pour les types de message snackbar
+export enum SnackbarMsgType {
+  "None" = "None",
+  "Info" = "Info",
+  "Success" = "Success",
+  "Warning" = "Warning",
+  "Error" = "Error"
 }

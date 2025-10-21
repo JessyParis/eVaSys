@@ -8,7 +8,7 @@
 /// Création : 20/12/2018
 /// ----------------------------------------------------------------------------------------------------- 
 import { Injectable, Inject } from "@angular/core";
-import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpHeaders, HttpHeaderResponse } from "@angular/common/http";
 import { Subject } from "rxjs";
 import * as appInterfaces from "../interfaces/appInterfaces";
 
@@ -59,6 +59,22 @@ export class UploadService {
           uploadBodyResult.next(b);
           uploadBodyResult.complete();
 
+        } else if (event instanceof HttpHeaderResponse) {
+          if (event.status != 200) {
+            // Close the progress-stream if we get an answer form the API
+            // The upload is complete
+            progress.complete();
+            const b: appInterfaces.UploadResponseBody = {
+              error: "631",
+              message: "",
+              fileName: file.name,
+              fileDbId: 0,
+              uploadedFiles: undefined
+            };
+            uploadBodyResult.next(b);
+            uploadBodyResult.complete();
+
+          }
         }
       });
 

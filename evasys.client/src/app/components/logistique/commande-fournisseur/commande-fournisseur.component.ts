@@ -7,7 +7,7 @@ import { ErrorStateMatcher } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { InformationComponent } from "../../dialogs/information/information.component";
-import { HabilitationLogistique, ContactAdresseProcess, CommandeFournisseurStatut, ModuleName, MenuName, UtilisateurType } from "../../../globals/enums";
+import { HabilitationLogistique, ContactAdresseProcess, CommandeFournisseurStatut, ModuleName, MenuName, UtilisateurType, SnackbarMsgType } from "../../../globals/enums";
 import { ListService } from "../../../services/list.service";
 import { DataModelService } from "../../../services/data-model.service";
 import moment from "moment";
@@ -1404,7 +1404,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
         if (result.RefCommandeFournisseur === this.commandeFournisseur.RefCommandeFournisseur
           || this.commandeFournisseur.RefCommandeFournisseur <= 0) {
           this.commandeFournisseur = result;
-          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
           //Next action if applicable
           if (nextAction !== "") {
             switch (nextAction) {
@@ -1933,7 +1933,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
           //Update linked CommandeFournisseur
           this.dataModelService.postCommandeFournisseur(result, true)
             .subscribe(r => {
-              this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+              this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
               //Manage screen
               this.manageScreen();
               //Check Mixte
@@ -1965,10 +1965,10 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
           if (this.commandeFournisseur.RefCommandeFournisseur > 0) {
             this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true).subscribe(result => {
               this.commandeFournisseur = result;
-              this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+              this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
               //Copy
               this.copy();
-              this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(527), duration: 4000 } as appInterfaces.SnackbarMsg);
+              this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(527), duration: 4000, type: SnackbarMsgType.Info } as appInterfaces.SnackbarMsg);
             }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
           }
         }
@@ -2720,7 +2720,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
       if (this.commandeFournisseur.RefCommandeFournisseur > 0) {
         this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true).subscribe(result => {
           this.commandeFournisseur = result;
-          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
           //Save menu
           if (this.applicationUserContext.fromMenu == null) {
             this.applicationUserContext.fromMenu = this.applicationUserContext.currentMenu;
@@ -2749,7 +2749,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
       if (this.commandeFournisseur.RefCommandeFournisseur > 0) {
         this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true).subscribe(result => {
           this.commandeFournisseur = result;
-          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+          this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
           //Save menu
           if (this.applicationUserContext.fromMenu == null) {
             this.applicationUserContext.fromMenu = this.applicationUserContext.currentMenu;
@@ -2811,7 +2811,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     this.dataModelService.postCommandeFournisseur(this.commandeFournisseur, true)
       .subscribe(result => {
         this.commandeFournisseur = result;
-        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000 } as appInterfaces.SnackbarMsg);
+        this.snackBarQueueService.addMessage({ text: this.applicationUserContext.getCulturedRessourceText(120), duration: 4000, type: SnackbarMsgType.Success } as appInterfaces.SnackbarMsg);
         //Next action
         switch (action) {
           case "save":

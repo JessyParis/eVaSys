@@ -1,5 +1,5 @@
 <input type="file" #file style="display: none" (change)="onFilesAdded()" [multiple]="data.multiple" />
-<h1 mat-dialog-title>{{data.title}}</h1>
+<span mat-dialog-title>{{data.title}}<span class="color-accent-dark" style="font-size:smaller;">&nbsp;({{applicationUserContext.getCulturedRessourceText(1603) + ' = ' + maxSize + 'Mo'}})</span></span>
 <div class="ev-taskbar-container">
   <div class="ev-taskbar-left-container">
     <button [disabled]="uploading || uploadSuccessful || (this.files.size>0 && !data.multiple)" mat-raised-button color="primary" (click)="addFiles()"
@@ -22,17 +22,18 @@
       <mat-progress-spinner *ngIf="displayProgressBar" color="accent" mode="indeterminate"
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index:1000000; opacity:0.7"></mat-progress-spinner>
       <p *ngIf="this.files.size===0" class="mat-body-strong">{{data.message}}</p>
-      <mat-list>
-        <mat-list-item *ngFor="let file of files">
-          <h4 mat-line>{{file.name}}</h4>
-          <mat-progress-bar mat-line *ngIf="progress" mode="determinate" [value]="progress[file.name].progress | async"></mat-progress-bar>
-          <span class="mat-body" mat-line *ngIf="!uploadBodyResult">&nbsp;</span>
-          <span class="mat-body" mat-line *ngIf="uploadBodyResult && !(uploadBodyResult[file.name].uploadBodyResult | async)?.error">{{applicationUserContext.getCulturedRessourceText(335)}}&nbsp;-&nbsp;{{(uploadBodyResult[file.name].uploadBodyResult | async)?.error}}</span>
-          <span class="mat-body color-warn" mat-line *ngIf="uploadBodyResult && (uploadBodyResult[file.name].uploadBodyResult | async)?.error">{{applicationUserContext.getCulturedRessourceText(335)}}&nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(348)}}</span>
-          <span class="mat-body" mat-line *ngIf="uploadBodyResult">{{(uploadBodyResult[file.name].uploadBodyResult | async)?.message}}</span>
-          <mat-divider></mat-divider>
-        </mat-list-item>
-      </mat-list>
+      <table class="table-no-pad-no-space" style="width:100%;" mat-body>
+        <tr *ngFor="let file of files">
+          <td style="padding:0 0 20px 0;">
+            <span mat-line style="font-weight:700;">{{file.name}}</span>
+            <mat-progress-bar mat-line *ngIf="progress" mode="determinate" [value]="progress[file.name].progress | async"></mat-progress-bar>
+            <span mat-line *ngIf="!uploadBodyResult">&nbsp;</span>
+            <span mat-line *ngIf="uploadBodyResult && !(uploadBodyResult[file.name].uploadBodyResult | async)?.error">{{applicationUserContext.getCulturedRessourceText(335)}}&nbsp;-&nbsp;{{(uploadBodyResult[file.name].uploadBodyResult | async)?.error}}</span>
+            <span class="color-warn" mat-line *ngIf="uploadBodyResult && (uploadBodyResult[file.name].uploadBodyResult | async)?.error">{{applicationUserContext.getCulturedRessourceText(335)}}&nbsp;-&nbsp;{{applicationUserContext.getCulturedRessourceText(348)}}</span>
+            <span mat-line *ngIf="uploadBodyResult">{{(uploadBodyResult[file.name].uploadBodyResult | async)?.message}}</span>
+          </td>
+        </tr>
+      </table>
     </mat-dialog-content>
   </div>
 </div>

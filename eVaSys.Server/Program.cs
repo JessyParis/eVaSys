@@ -13,8 +13,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 //Session Managment
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -50,36 +48,38 @@ builder.Services.AddCors(options =>
 //AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Add Authentication with JWT Tokens
-builder.Services.AddAuthentication(opts =>
-{
-    opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(cfg =>
-{
-    cfg.RequireHttpsMetadata = false;
-    cfg.SaveToken = true;
-    cfg.TokenValidationParameters = new TokenValidationParameters()
+builder.Services
+    .AddAuthentication(opts =>
     {
-        // standard configuration
-        ValidIssuer = builder.Configuration["Auth:Jwt:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Auth:Jwt:Key"])),
-        ValidAudience = builder.Configuration["Auth:Jwt:Audience"],
-        ClockSkew = TimeSpan.Zero,
+        opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(cfg =>
+    {
+        cfg.RequireHttpsMetadata = false;
+        cfg.SaveToken = true;
+        cfg.TokenValidationParameters = new TokenValidationParameters()
+        {
+            // standard configuration
+            ValidIssuer = builder.Configuration["Auth:Jwt:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Auth:Jwt:Key"])),
+            ValidAudience = builder.Configuration["Auth:Jwt:Audience"],
+            ClockSkew = TimeSpan.Zero,
 
-        // security switches
-        RequireExpirationTime = true,
-        ValidateIssuer = true,
-        ValidateIssuerSigningKey = true,
-        ValidateAudience = true
-    };
-    cfg.IncludeErrorDetails = true;
-});
+            // security switches
+            RequireExpirationTime = true,
+            ValidateIssuer = true,
+            ValidateIssuerSigningKey = true,
+            ValidateAudience = true
+        };
+        cfg.IncludeErrorDetails = true;
+    });
 
 
 var app = builder.Build();
+app.UseMiddleware<DynamicRequestSizeLimitMiddleware>();
 IHostApplicationLifetime lifetime = app.Lifetime;
 lifetime.ApplicationStarted.Register(() =>OnAppStarted(builder.Configuration));
 app.UseSession();
@@ -104,6 +104,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseRouting();
 app.MapControllers();
 
 app.UseCors("AngularPolicy");

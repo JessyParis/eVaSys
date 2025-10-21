@@ -79,6 +79,7 @@ export interface MatTableColumn {
 export interface SnackbarMsg {
   text: string;
   duration: number;
+  type?: string;
 }
 export interface StringBody {
   val: string;

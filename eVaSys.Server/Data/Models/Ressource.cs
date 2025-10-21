@@ -54,12 +54,12 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            int c = DbContext.Ressources.Where(q => EF.Functions.Collate(q.LibelleFRFR, "SQL_Latin1_General_CP1_CS_AS") == LibelleFRFR && q.RefRessource != RefRessource ).Count();
-            if (c > 0)
-            {
-                CulturedRessources cR = new(currentCulture, DbContext);
-                if (c > 0) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }
-            }
+            //int c = DbContext.Ressources.Where(q => EF.Functions.Collate(q.LibelleFRFR, "SQL_Latin1_General_CP1_CS_AS") == LibelleFRFR && q.RefRessource != RefRessource ).Count();
+            //if (c > 0)
+            //{
+            //    CulturedRessources cR = new(currentCulture, DbContext);
+            //    if (c > 0) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }
+            //}
             return r;
         }
         //--------------------------------------------------------------------------------------------

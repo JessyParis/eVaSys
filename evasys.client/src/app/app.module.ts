@@ -183,6 +183,7 @@ import { PDFExportModule } from "@progress/kendo-angular-pdf-export";
 import { CallbackPipe } from "./pipes/callback.pipe";
 import { SafeHtmlPipe } from "./pipes/safehtml.pipe";
 import { BlockCopyPasteDirective } from "./directives/app-block-copy-paste.directive";
+import { SnackbarComponent } from "./components/global/snackbar/snackbar.component";
 import "hammerjs";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
@@ -396,6 +397,7 @@ const progressModules = [
     CallbackPipe,
     SafeHtmlPipe,
     BlockCopyPasteDirective,
+    SnackbarComponent,
   ],
   imports: [CommonModule,
     BrowserModule,

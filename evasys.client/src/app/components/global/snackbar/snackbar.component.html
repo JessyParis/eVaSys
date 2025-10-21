@@ -1,0 +1,13 @@
+<table class="table-no-pad-no-space">
+  <tr style="vertical-align:central;">
+    <td>
+      <mat-icon style="margin:0 10px 0 0" [ngClass]="{
+  'color-green': data.type === 'Success',
+  'color-warn': data.type === 'Error',
+  'color-accent': data.type === 'Warning',
+  'color-primary-medium': data.type === 'Info'
+}">{{getIcon(data.type)}}</mat-icon>
+    </td>
+    <td>{{data.text}}</td>
+  </tr>
+</table>
