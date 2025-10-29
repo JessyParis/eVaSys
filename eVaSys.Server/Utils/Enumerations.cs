@@ -279,7 +279,7 @@ namespace eVaSys.Utils
             LogistiqueMenuTonnageCollectiviteCDTProduit
         }
         //Enumération pour les noms de CommandeFournisseur statuts
-        public enum CommandeFournisseurStatutName
+        public enum EnvCommandeFournisseurStatutName
         {
             Repartie,
             Receptionnee,

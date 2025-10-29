@@ -171,7 +171,7 @@ export function showErrorToUser(dialog: MatDialog, error: any, applicationUserCo
 
 //-----------------------------------------------------------------------------------------------------
 //Open confirmation dialog and subscribe to closing
-export function showConfirmToUser(dialog: MatDialog, title: string, message: string, applicationUserContext: ApplicationUserContext):Observable<any> {
+export function showConfirmToUser(dialog: MatDialog, title: string, message: string, applicationUserContext: ApplicationUserContext): Observable<any> {
   if (title == "") { title = applicationUserContext.getCulturedRessourceText(300); }
   const dialogRef = dialog.open(ConfirmComponent, {
     width: "350px",
@@ -238,7 +238,7 @@ export function getCulturedMonthName(n: number, applicationUserContext: Applicat
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 //Globalization
-export function changeCulture(cultureName:string, applicationUserContext: ApplicationUserContext) {
+export function changeCulture(cultureName: string, applicationUserContext: ApplicationUserContext) {
   applicationUserContext.currentCultureName = cultureName;
   applicationUserContext.initCulturedRessources();
   applicationUserContext.initEnvModules();
@@ -354,7 +354,7 @@ export function newGUID() {
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 //Format date to standard day date
-export function formatDateToStandard(d: string|moment.Moment) {
+export function formatDateToStandard(d: string | moment.Moment) {
   return moment(d).format("L");
 };
 
@@ -418,8 +418,8 @@ export function GetContactAdresseProcessTooltipRessourceId(r: number) {
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 //Get UtilisateurType localized label
-export function GetUtilisateurTypeLocalizedLabel(r: string, applicationUserContext: ApplicationUserContext) : string {
-  let s: string= "";
+export function GetUtilisateurTypeLocalizedLabel(r: string, applicationUserContext: ApplicationUserContext): string {
+  let s: string = "";
   if (r) {
     switch (r) {
       case "Valorplast": s = applicationUserContext.getCulturedRessourceText(1501); break;
@@ -547,199 +547,199 @@ export function createMatTableColumn(dataColumnName: string, applicationUserCont
 
 //-----------------------------------------------------------------------------------------------------
 //Available columns for contact extraction utils for an EntiteType
-export function createContactAvailableColumns(globalContactAvailableColumns: EnvDataColumn[], entiteType : EntiteType, dataModelService: DataModelService): EnvDataColumn[] {
+export function createContactAvailableColumns(globalContactAvailableColumns: EnvDataColumn[], entiteType: EntiteType, dataModelService: DataModelService): EnvDataColumn[] {
   let contactAvailableColumns: EnvDataColumn[] = [];
   //If one EntiteType
   if (entiteType) {
-        globalContactAvailableColumns.forEach(
-          eDC => {
-            switch (eDC.name) {
-              case DataColumnName.AdresseHoraires:
-                if (entiteType.Horaires) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteCodeCITEO:
-                if (entiteType.CodeEE) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteSousContrat:
-                if (entiteType.SousContrat) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteCapacite:
-                if (entiteType.Capacite) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteActionnaireProprietaire:
-                if (entiteType.ActionnaireProprietaire) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteExploitant:
-                if (entiteType.Exploitant) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteDimensionBalle:
-                if (entiteType.DimensionBalle) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EquipementierLibelle:
-                if (entiteType.RefEquipementier) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.FournisseurTOLibelle:
-                if (entiteType.RefFournisseurTO) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntitePopulationContratN:
-                if (entiteType.PopulationContratN) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteVisibiliteAffretementCommun:
-                if (entiteType.VisibiliteAffretementCommun) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteSurcoutCarburant:
-                if (entiteType.SurcoutCarburant) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.ListeDR:
-                if (entiteType.LiaisonEntiteDR) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeProcesss:
-                if (entiteType.Process) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeStandards:
-                if (entiteType.LiaisonEntiteStandard) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteCodeValorisation:
-                if (entiteType.CodeValorisation) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EcoOrganismeLibelle:
-                if (entiteType.RefEcoOrganisme) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteAssujettiTVA:
-                if (entiteType.AssujettiTVA) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteCodeTVA:
-                if (entiteType.CodeTVA) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteIdNational:
-                if (entiteType.IdNational) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteSAGECodeComptable:
-                if (entiteType.SAGECodeComptable) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteSAGECompteTiers:
-                if (entiteType.SAGECompteTiers) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.SAGECategorieAchatLibelle:
-                if (entiteType.RefSAGECategorieAchat) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.SAGEConditionLivraisonLibelle:
-                if (entiteType.RefSAGEConditionLivraison) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.SAGEPeriodiciteLibelle:
-                if (entiteType.RefSAGEPeriodicite) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.SAGEModeReglementLibelle:
-                if (entiteType.RefSAGEModeReglement) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.SAGECategorieVenteLibelle:
-                if (entiteType.RefSAGECategorieVente) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteExportSAGE:
-                if (entiteType.ExportSAGE) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.MiseEnPlaceAutocontrole:
-                if (entiteType.AutoControle) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteReconductionIncitationQualite:
-                if (entiteType.IncitationQualite) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.RepriseTypeLibelle:
-                if (entiteType.RefRepriseType) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.RepreneurLibelle:
-                if (entiteType.RefRepreneur) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.ContratCollectiviteDebut:
-                if (entiteType.ContratCollectivite) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.ContratCollectiviteFin:
-                if (entiteType.ContratCollectivite) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteContratCollectiviteActif:
-                if (entiteType.ContratCollectivite) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeContratCollectivites:
-                if (entiteType.ContratCollectivite) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.SousContratIncitationQualite:
-                if (entiteType.IncitationQualite) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.ContratIncitationQualiteDebut:
-                if (entiteType.IncitationQualite) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.ContratIncitationQualiteFin:
-                if (entiteType.IncitationQualite) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeProduits:
-                if (entiteType.LiaisonEntiteProduit) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeProduitInterdits:
-                if (entiteType.LiaisonEntiteProduitInterdit) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeCollectiviteActifs:
-                if (entiteType.RefEntiteType == 3) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeCollectiviteInactifs:
-                if (entiteType.RefEntiteType == 3) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.CentreDeTriListeCamionTypes:
-                if (entiteType.LiaisonEntiteCamionType && entiteType.RefEntiteType == 3) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.TransporteurListeCamionTypes:
-                if (entiteType.LiaisonEntiteCamionType && entiteType.RefEntiteType == 2) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeCentreDeTriActifs:
-                if (entiteType.RefEntiteType == 1) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeCentreDeTriInactifs:
-                if (entiteType.RefEntiteType == 1) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeCentreDeTriActifInterdits:
-                if (entiteType.RefEntiteType == 4 || entiteType.RefEntiteType == 2) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteTransporteurActifInterdits:
-                if (entiteType.RefEntiteType == 3 || entiteType.RefEntiteType == 4) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeClientActifInterdits:
-                if (entiteType.RefEntiteType == 3 || entiteType.RefEntiteType == 2) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeIndustrielActifs:
-                if (entiteType.RefEntiteType == 4 || entiteType.RefEntiteType == 2) { contactAvailableColumns.push(eDC); }
-                break;
-              case DataColumnName.EntiteListeDocumentPublic:
-              case DataColumnName.EntiteListeDocumentValorplast:
-              case DataColumnName.Id:
-              case DataColumnName.EntiteLibelle:
-              case DataColumnName.EntiteTypeLibelle:
-              case DataColumnName.EntiteCmt:
-              case DataColumnName.AdresseTypeLibelle:
-              case DataColumnName.AdresseLibelle:
-              case DataColumnName.AdresseAdr1:
-              case DataColumnName.AdresseAdr2:
-              case DataColumnName.AdresseCodePostal:
-              case DataColumnName.AdresseVille:
-              case DataColumnName.AdresseSiteWeb:
-              case DataColumnName.PaysLibelle:
-              case DataColumnName.AdresseTel:
-              case DataColumnName.AdresseEmail:
-              case DataColumnName.TitreLibelle:
-              case DataColumnName.CiviliteLibelle:
-              case DataColumnName.ContactPrenom:
-              case DataColumnName.ContactNom:
-              case DataColumnName.ContactAdresseCmt:
-              case DataColumnName.ContactAdresseListeFonctionServices:
-              case DataColumnName.ContactAdresseCmtServiceFonction:
-              case DataColumnName.ContactAdresseTel:
-              case DataColumnName.ContactAdresseTelMobile:
-              case DataColumnName.ContactAdresseEmail:
-              case DataColumnName.ContactAdresseListeProcesss:
-              case DataColumnName.ContactAdresseIsUser:
-                contactAvailableColumns.push(eDC);
-                break;
-            }
-          }
-        )
+    globalContactAvailableColumns.forEach(
+      eDC => {
+        switch (eDC.name) {
+          case DataColumnName.AdresseHoraires:
+            if (entiteType.Horaires) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteCodeCITEO:
+            if (entiteType.CodeEE) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteSousContrat:
+            if (entiteType.SousContrat) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteCapacite:
+            if (entiteType.Capacite) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteActionnaireProprietaire:
+            if (entiteType.ActionnaireProprietaire) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteExploitant:
+            if (entiteType.Exploitant) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteDimensionBalle:
+            if (entiteType.DimensionBalle) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EquipementierLibelle:
+            if (entiteType.RefEquipementier) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.FournisseurTOLibelle:
+            if (entiteType.RefFournisseurTO) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntitePopulationContratN:
+            if (entiteType.PopulationContratN) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteVisibiliteAffretementCommun:
+            if (entiteType.VisibiliteAffretementCommun) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteSurcoutCarburant:
+            if (entiteType.SurcoutCarburant) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.ListeDR:
+            if (entiteType.LiaisonEntiteDR) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeProcesss:
+            if (entiteType.Process) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeStandards:
+            if (entiteType.LiaisonEntiteStandard) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteCodeValorisation:
+            if (entiteType.CodeValorisation) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EcoOrganismeLibelle:
+            if (entiteType.RefEcoOrganisme) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteAssujettiTVA:
+            if (entiteType.AssujettiTVA) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteCodeTVA:
+            if (entiteType.CodeTVA) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteIdNational:
+            if (entiteType.IdNational) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteSAGECodeComptable:
+            if (entiteType.SAGECodeComptable) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteSAGECompteTiers:
+            if (entiteType.SAGECompteTiers) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.SAGECategorieAchatLibelle:
+            if (entiteType.RefSAGECategorieAchat) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.SAGEConditionLivraisonLibelle:
+            if (entiteType.RefSAGEConditionLivraison) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.SAGEPeriodiciteLibelle:
+            if (entiteType.RefSAGEPeriodicite) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.SAGEModeReglementLibelle:
+            if (entiteType.RefSAGEModeReglement) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.SAGECategorieVenteLibelle:
+            if (entiteType.RefSAGECategorieVente) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteExportSAGE:
+            if (entiteType.ExportSAGE) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.MiseEnPlaceAutocontrole:
+            if (entiteType.AutoControle) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteReconductionIncitationQualite:
+            if (entiteType.IncitationQualite) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.RepriseTypeLibelle:
+            if (entiteType.RefRepriseType) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.RepreneurLibelle:
+            if (entiteType.RefRepreneur) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.ContratCollectiviteDebut:
+            if (entiteType.ContratCollectivite) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.ContratCollectiviteFin:
+            if (entiteType.ContratCollectivite) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteContratCollectiviteActif:
+            if (entiteType.ContratCollectivite) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeContratCollectivites:
+            if (entiteType.ContratCollectivite) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.SousContratIncitationQualite:
+            if (entiteType.IncitationQualite) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.ContratIncitationQualiteDebut:
+            if (entiteType.IncitationQualite) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.ContratIncitationQualiteFin:
+            if (entiteType.IncitationQualite) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeProduits:
+            if (entiteType.LiaisonEntiteProduit) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeProduitInterdits:
+            if (entiteType.LiaisonEntiteProduitInterdit) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeCollectiviteActifs:
+            if (entiteType.RefEntiteType == 3) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeCollectiviteInactifs:
+            if (entiteType.RefEntiteType == 3) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.CentreDeTriListeCamionTypes:
+            if (entiteType.LiaisonEntiteCamionType && entiteType.RefEntiteType == 3) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.TransporteurListeCamionTypes:
+            if (entiteType.LiaisonEntiteCamionType && entiteType.RefEntiteType == 2) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeCentreDeTriActifs:
+            if (entiteType.RefEntiteType == 1) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeCentreDeTriInactifs:
+            if (entiteType.RefEntiteType == 1) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeCentreDeTriActifInterdits:
+            if (entiteType.RefEntiteType == 4 || entiteType.RefEntiteType == 2) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteTransporteurActifInterdits:
+            if (entiteType.RefEntiteType == 3 || entiteType.RefEntiteType == 4) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeClientActifInterdits:
+            if (entiteType.RefEntiteType == 3 || entiteType.RefEntiteType == 2) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeIndustrielActifs:
+            if (entiteType.RefEntiteType == 4 || entiteType.RefEntiteType == 2) { contactAvailableColumns.push(eDC); }
+            break;
+          case DataColumnName.EntiteListeDocumentPublic:
+          case DataColumnName.EntiteListeDocumentValorplast:
+          case DataColumnName.Id:
+          case DataColumnName.EntiteLibelle:
+          case DataColumnName.EntiteTypeLibelle:
+          case DataColumnName.EntiteCmt:
+          case DataColumnName.AdresseTypeLibelle:
+          case DataColumnName.AdresseLibelle:
+          case DataColumnName.AdresseAdr1:
+          case DataColumnName.AdresseAdr2:
+          case DataColumnName.AdresseCodePostal:
+          case DataColumnName.AdresseVille:
+          case DataColumnName.AdresseSiteWeb:
+          case DataColumnName.PaysLibelle:
+          case DataColumnName.AdresseTel:
+          case DataColumnName.AdresseEmail:
+          case DataColumnName.TitreLibelle:
+          case DataColumnName.CiviliteLibelle:
+          case DataColumnName.ContactPrenom:
+          case DataColumnName.ContactNom:
+          case DataColumnName.ContactAdresseCmt:
+          case DataColumnName.ContactAdresseListeFonctionServices:
+          case DataColumnName.ContactAdresseCmtServiceFonction:
+          case DataColumnName.ContactAdresseTel:
+          case DataColumnName.ContactAdresseTelMobile:
+          case DataColumnName.ContactAdresseEmail:
+          case DataColumnName.ContactAdresseListeProcesss:
+          case DataColumnName.ContactAdresseIsUser:
+            contactAvailableColumns.push(eDC);
+            break;
+        }
+      }
+    )
   }
   //End
   return contactAvailableColumns;
@@ -789,7 +789,7 @@ export function pointColor(point: SeriesPoint) {
 //-----------------------------------------------------------------------------------------------------
 //Colors for serie's points
 export function getNextColor(i: number) {
-  let n : number = i % 14;
+  let n: number = i % 14;
   return chartSeriesColors[n];
 }
 //-----------------------------------------------------------------------------------------------------

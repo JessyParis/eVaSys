@@ -1015,10 +1015,16 @@ namespace eVaSys.Controllers
             DateTime? dAff = null;
             if (viewModel.DAffretement != null)
             {
-                if (viewModel.DAffretement != dataModel.DAffretement)
-                { dAff = DateTime.Now; }
+                if (dataModel.DAffretement == null)
+                {
+                    dAff = DateTime.Now.Date;
+                }
+                else if (viewModel.DAffretement.Value.Date != dataModel.DAffretement.Value.Date)
+                {
+                    dAff = DateTime.Now.Date;
+                }
                 else
-                { dAff = viewModel.DAffretement; }
+                { dAff = viewModel.DAffretement.Value.Date; }
             }
             dataModel.DAffretement = dAff;
             dataModel.RefCommandeFournisseurStatut = viewModel.CommandeFournisseurStatut?.RefCommandeFournisseurStatut;

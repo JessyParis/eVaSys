@@ -492,6 +492,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     this.traitementAnomalieTransporteurFC.disable();
     this.motifAnomalieTransporteurListFC.disable();
     this.cmtAnomalieTransporteurFC.disable();
+    this.dLimiteExclusiviteFC.disable();
   }
   //-----------------------------------------------------------------------------------
   //Unlock all controls
@@ -834,6 +835,11 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
       if (this.commandeFournisseur.DChargementPrevue == null || this.commandeFournisseur.DDechargementPrevue == null) {
         this.valideDPrevuesFC.disable();
       }
+      if (this.commandeFournisseur.ValideDPrevues === false
+        && this.commandeFournisseur.Transporteur) {
+        this.initDLimiteExclusiviteEnable = true;
+      }
+      else { this.initDLimiteExclusiviteEnable = false; }
       //Rights
       if (!(this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur)) {
         this.ordreAffretementFC.disable();

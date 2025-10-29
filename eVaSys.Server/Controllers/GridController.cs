@@ -15,7 +15,6 @@ using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Pkcs;
 using System.Data;
 
 namespace eVaSys.Controllers
@@ -770,32 +769,32 @@ namespace eVaSys.Controllers
                             if (!string.IsNullOrEmpty(filterEnvCommandeFournisseurStatuts))
                             {
                                 sqlStr += " and (1!=1";
-                                if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Repartie.ToString()))
+                                if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Repartie.ToString()))
                                 {
                                     sqlStr += " or (tblCommandeFournisseur.DDechargement < convert(datetime, '2012-01-01 00:00:00', 120) or tblRepartition.RefRepartition is not null)";
                                 }
-                                if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Receptionnee.ToString()))
+                                if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Receptionnee.ToString()))
                                 {
                                     sqlStr += " or (year(tblCommandeFournisseur.DDechargement) >= 2012 and tblRepartition.RefRepartition is null)";
                                 }
-                                if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Refusee.ToString()))
+                                if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Refusee.ToString()))
                                 {
                                     sqlStr += " or (tblRepartition.RefRepartition is null and DDechargement is null and RefusCamion = 1)";
                                 }
-                                if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Ouverte.ToString())
-                                    || filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.EnAttente.ToString())
-                                    || filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Bloquee.ToString()))
+                                if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Ouverte.ToString())
+                                    || filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.EnAttente.ToString())
+                                    || filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Bloquee.ToString()))
                                 {
                                     sqlStr += " or (tblRepartition.RefRepartition is null and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut in(";
-                                    if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Ouverte.ToString()))
+                                    if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Ouverte.ToString()))
                                     {
                                         sqlStr += " 1,";
                                     }
-                                    if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.EnAttente.ToString()))
+                                    if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.EnAttente.ToString()))
                                     {
                                         sqlStr += " 2,";
                                     }
-                                    if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.Bloquee.ToString()))
+                                    if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Bloquee.ToString()))
                                     {
                                         sqlStr += " 3,";
                                     }
@@ -803,7 +802,7 @@ namespace eVaSys.Controllers
                                     sqlStr += ")";
                                     sqlStr += ")";
                                 }
-                                if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.CommandeFournisseurStatutName.DemandeEnlevement.ToString()))
+                                if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.DemandeEnlevement.ToString()))
                                 {
                                     sqlStr += " or (tblRepartition.RefRepartition is null and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut is null)";
                                 }

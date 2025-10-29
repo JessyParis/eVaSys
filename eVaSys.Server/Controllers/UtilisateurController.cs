@@ -537,7 +537,7 @@ namespace eVaSys.Controllers
             if (!(utilisateur.RefUtilisateur > 0 && l.RefLien > 0
                 && l.DCreation.AddHours(1) > DateTime.Now && l.DUtilisation == null))
             {
-                return BadRequest(new BadRequestError(ctx.CulturedRessources.GetTextRessource(711)));
+                return BadRequest(new BadRequestError(ctx.CulturedRessources.GetTextRessource(1099)));
             }
             //Check if creation or reset
             string operationType = "CreationConfirmation";
