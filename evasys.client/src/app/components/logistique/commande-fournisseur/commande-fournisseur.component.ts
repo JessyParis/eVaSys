@@ -16,7 +16,7 @@ import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces"
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { UploadComponent } from "../../dialogs/upload/upload.component";
 import { DownloadService } from "../../../services/download.service";
-import { getAttachmentFilename, setOriginalMenu, showHtmlInformationToUser, showInformationToUser } from "../../../globals/utils";
+import { addTwoBusinessDays, getAttachmentFilename, setOriginalMenu, showHtmlInformationToUser, showInformationToUser } from "../../../globals/utils";
 import { EmailComponent } from "../../email/email.component";
 import { showErrorToUser } from "../../../globals/utils";
 import { EventEmitterService } from "../../../services/event-emitter.service";
@@ -249,6 +249,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
   traitementAnomalieTransporteurFC: UntypedFormControl = new UntypedFormControl(null);
   motifAnomalieTransporteurListFC: UntypedFormControl = new UntypedFormControl(null);
   cmtAnomalieTransporteurFC: UntypedFormControl = new UntypedFormControl(null);
+  dLimiteExclusiviteFC: UntypedFormControl = new UntypedFormControl(null);
   //Bloc visibility
   blocTransporteurVisible: boolean = false;
   blocContactAdresseVisible: boolean = false;
@@ -287,6 +288,8 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
   dMin = moment(new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0, 0)).add(-1, "years");
   originalPoidsChargement: number = 0;
   originalPoidsReparti: number = 0;
+  initDLimiteExclusiviteEnable: boolean = false;
+  addTwoBusinessDays = addTwoBusinessDays;
   // Subject that emits when the component has been destroyed.
   protected _onDestroy = new Subject<void>();
   //Constructor
@@ -413,6 +416,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
       TraitementAnomalieTransporteur: this.traitementAnomalieTransporteurFC,
       MotifAnomalieTransporteurList: this.motifAnomalieTransporteurListFC,
       CmtAnomalieTransporteur: this.cmtAnomalieTransporteurFC,
+      DLimiteExclusivite: this.dLimiteExclusiviteFC
     },
       formOptions);
     this.lockScreen();
@@ -1226,6 +1230,8 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     this.formattedDTraitementAnomalieClient = (this.commandeFournisseur.DTraitementAnomalieClient ? moment(this.commandeFournisseur.DTraitementAnomalieClient).format("LLL") : "");
     this.formattedDAnomalieTransporteur = (this.commandeFournisseur.DAnomalieTransporteur ? moment(this.commandeFournisseur.DAnomalieTransporteur).format("LLL") : "");
     this.formattedDTraitementAnomalieTransporteur = (this.commandeFournisseur.DTraitementAnomalieTransporteur ? moment(this.commandeFournisseur.DTraitementAnomalieTransporteur).format("LLL") : "");
+    //Update other data
+    this.dLimiteExclusiviteFC.setValue(addTwoBusinessDays(this.commandeFournisseur.DAffretement));
     //Manage screen
     this.manageScreen();
   }
@@ -1294,7 +1300,8 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     //Handle PoidsChargement and PoidsReparti change
     if ((this.commandeFournisseur.PoidsChargement != this.originalPoidsChargement || this.commandeFournisseur.PoidsReparti != this.originalPoidsReparti)
       && !this.commandeFournisseur.RefusCamion
-      && this.commandeFournisseur.Reparti && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Administrateur) {
+      && this.commandeFournisseur.Reparti
+      && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Administrateur) {
       const dialogRef = this.dialog.open(InformationComponent, {
         width: "350px",
         data: { title: this.applicationUserContext.getCulturedRessourceText(337), message: this.applicationUserContext.getCulturedRessourceText(1561) },
@@ -1657,7 +1664,8 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
                 this.commandeFournisseur.PrixTransportHT = newTransport.PUHT;
                 this.commandeFournisseur.Km = newTransport.Parcours.Km;
                 this.commandeFournisseur.CamionType = newTransport.CamionType;
-                this.commandeFournisseur.DAffretement = moment();
+                this.commandeFournisseur.DAffretement = moment().startOf('day');
+                this.dLimiteExclusiviteFC.setValue(addTwoBusinessDays(this.commandeFournisseur.DAffretement));
                 //Update form
                 this.updateForm();
                 //Get existing transporteur contactAdresse
@@ -1749,6 +1757,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     //Delete old data
     this.commandeFournisseur.NumeroAffretement = this.commandeFournisseur.NumeroCommande;
     this.commandeFournisseur.DAffretement = null;
+    this.dLimiteExclusiviteFC.setValue(null);
     this.commandeFournisseur.DChargement = null;
     this.commandeFournisseur.DChargementPrevue = null;
     this.commandeFournisseur.DDechargement = null;
@@ -3125,6 +3134,12 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     this.filteredCentreDeTriList.next(
       this.centreDeTriList.filter(e => e.Libelle.toLowerCase().indexOf(search) > -1)
     );
+  }
+  //-----------------------------------------------------------------------------------
+  //Set DAffretement to now so DLimiteExclusivite is calculated automatically
+  setDAffretement() {
+    this.commandeFournisseur.DAffretement = moment().startOf('day');
+    this.dLimiteExclusiviteFC.setValue(addTwoBusinessDays(this.commandeFournisseur.DAffretement));
   }
   //-----------------------------------------------------------------------------------
   //Format multiline tooltip text for creation/modification

@@ -813,3 +813,29 @@ export function clearFormArray(formArray: FormArray) {
 //    //End
 //    return s;
 //}
+
+/**
+ * Adds two business days to a given moment date, skipping weekends
+ * @param date The starting moment date
+ * @returns A moment date that is two business days later
+ */
+export function addTwoBusinessDays(date: string | moment.Moment): moment.Moment {
+  if (!date || !moment(date).isValid()) {
+    return null;
+  }
+
+  let result = moment(date);
+  let daysAdded = 0;
+
+  while (daysAdded < 2) {
+    result = result.add(1, 'days');
+
+    // Check if it's a weekday (Monday = 1, Friday = 5)
+    const dayOfWeek = result.day();
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Sunday, 6 = Saturday
+      daysAdded++;
+    }
+  }
+
+  return result;
+}

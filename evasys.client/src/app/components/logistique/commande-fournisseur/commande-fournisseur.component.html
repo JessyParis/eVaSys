@@ -357,6 +357,14 @@
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
+            <mat-form-field class="ev-date-picker" style="width:50%;" disabled *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(565)}}</mat-label>
+              <input matInput [matDatepicker]="pickerDLimiteExclusivite" formControlName="DLimiteExclusivite">
+            </mat-form-field>
+            <button mat-raised-button color="primary" class="ev-button-left" type="button" (click)="onInitDLimiteExclusivite('')" *ngIf="!(locked && saveLocked && initDLimiteExclusiviteEnable)"
+                    [disabled]="!initDLimiteExclusiviteEnable">
+              {{applicationUserContext.getCulturedRessourceText(6)}}
+            </button>
             <mat-checkbox formControlName="Imprime" style="width:100%;"
                           *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Utilisateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Administrateur' || applicationUserContext.connectedUtilisateur.HabilitationLogistique==='Transporteur')">
               {{applicationUserContext.getCulturedRessourceText(443)}}
