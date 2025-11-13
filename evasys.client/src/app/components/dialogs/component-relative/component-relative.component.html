@@ -12,7 +12,8 @@
     <contact-adresse-simple *ngIf="data.type=='CommandeFournisseurContactAdresse'
                                 || data.type=='CommandeFournisseurTransporteurContactAdresse'
                                 || data.type=='CommandeFournisseurClientContactAdresse'
-                                || data.type=='ControleControleur'|| data.type=='CVQControleur'"
+                                || data.type=='ControleControleur'|| data.type=='CVQControleur'
+                                || data.type=='FicheControleControleur'"
                             [refContactAdresse]="data.ref" [type]="data.type"
                             (askClose)="closeAsked($event)"></contact-adresse-simple>
     <action *ngIf="data.type=='AnnuaireAction'"

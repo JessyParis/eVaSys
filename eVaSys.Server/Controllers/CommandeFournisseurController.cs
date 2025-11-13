@@ -525,9 +525,57 @@ namespace eVaSys.Controllers
                 CommandeFournisseur cF = DbContext.CommandeFournisseurs.Where(i => i.RefCommandeFournisseur == refC).FirstOrDefault();
                 if (cF != null && cF.DDechargement != null)
                 {
-                    r = (DbContext.Repartitions
-                        .Where(i => i.RefCommandeFournisseur == cF.RefCommandeFournisseur)
-                        .Any());
+                    bool rC = DbContext.Repartitions
+                        .Include(i => i.RepartitionCollectivites)
+                        .Where(i => i.RefCommandeFournisseur == cF.RefCommandeFournisseur && i.RepartitionCollectivites.Sum(s => s.Poids) == cF.PoidsReparti)
+                        .Count() > 0;
+                    bool rP = DbContext.Repartitions
+                        .Include(i => i.RepartitionCollectivites)
+                        .Where(i => i.RefCommandeFournisseur == cF.RefCommandeFournisseur && i.RepartitionProduits.Sum(s => s.Poids) == (cF.PoidsChargement - cF.PoidsReparti))
+                        .Count() > 0;
+                    r = (rC && rP);
+                }
+                //Return Json
+                return new JsonResult(r, JsonSettings);
+            }
+            else
+            {
+                return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711)));
+            }
+        }
+        /// <summary>
+        /// GET: api/commandefournisseur/hasrepartitioncomplete
+        /// ROUTING TYPE: attribute-based
+        /// </summary>
+        /// <returns>Check if the CommandeFournisseur is linked to a Repartition</returns>
+        [HttpGet("hasrepartitioncomplete")]
+        public IActionResult HasRepartitionComplete()
+        {
+            string refCommandeFournisseur = Request.Headers["refCommandeFournisseur"].ToString();
+            bool r = false;
+            int refC = 0;
+            //Check mandatory parameters
+            if (int.TryParse(refCommandeFournisseur, out refC))
+            {
+                CommandeFournisseur cF = DbContext.CommandeFournisseurs.Where(i => i.RefCommandeFournisseur == refC).FirstOrDefault();
+                if (cF != null && cF.DDechargement != null)
+                {
+                    bool rC = DbContext.Repartitions
+                        .Include(i => i.RepartitionCollectivites)
+                        .Where(i => i.RefCommandeFournisseur == cF.RefCommandeFournisseur && i.RepartitionCollectivites.Sum(s => s.Poids) == cF.PoidsReparti)
+                        .Count() > 0;
+                    bool rP = DbContext.Repartitions
+                        .Include(i => i.RepartitionCollectivites)
+                        .Where(i => i.RefCommandeFournisseur == cF.RefCommandeFournisseur && i.RepartitionProduits.Sum(s => s.Poids) == (cF.PoidsChargement - cF.PoidsReparti))
+                        .Count() > 0;
+                    bool rPrix = DbContext.Repartitions
+                        .Include(i => i.RepartitionCollectivites)
+                        .Include(i => i.RepartitionProduits)
+                        .Where(i => i.RefCommandeFournisseur == cF.RefCommandeFournisseur
+                            && (i.RepartitionCollectivites.Any(a => a.PUHT == null) || i.RepartitionProduits.Any(a => a.PUHT == null))
+                            )
+                        .Count() == 0;
+                    r = (rC && rP && rPrix);
                 }
                 //Return Json
                 return new JsonResult(r, JsonSettings);

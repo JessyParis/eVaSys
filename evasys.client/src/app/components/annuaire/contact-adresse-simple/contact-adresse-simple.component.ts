@@ -85,7 +85,7 @@ export class ContactAdresseSimpleComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Form creation when data model exists
   updateForm() {
-    this.form.get("Civilite").setValue(this.contactAdresse.Contact.Civilite.RefCivilite);
+    this.form.get("Civilite").setValue(this.contactAdresse.Contact.Civilite?.RefCivilite);
     this.form.get("Prenom").setValue(this.contactAdresse.Contact.Prenom);
     this.form.get("Nom").setValue(this.contactAdresse.Contact.Nom, Validators.required);
     this.form.get("Email").setValue(this.contactAdresse.Email);

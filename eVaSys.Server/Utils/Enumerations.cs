@@ -281,7 +281,6 @@ namespace eVaSys.Utils
         //Enumération pour les noms de CommandeFournisseur statuts
         public enum EnvCommandeFournisseurStatutName
         {
-            Repartie,
             Receptionnee,
             Ouverte,
             EnAttente,
@@ -415,6 +414,7 @@ namespace eVaSys.Utils
             CommandeFournisseurKm,
             CommandeFournisseurLimiteExclusivite,
             CommandeFournisseurLotControle,
+            CommandeFournisseurNonRepartie,
             CommandeFournisseurMixte,
             CommandeFournisseurMoisDechargementPrevu,
             CommandeFournisseurNbBalleChargement,

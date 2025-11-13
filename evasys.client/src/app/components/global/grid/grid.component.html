@@ -360,6 +360,10 @@
                         formControlName="CommandesFournisseurNonChargees">
             {{applicationUserContext.getCulturedRessourceText(731)}}
           </mat-checkbox>
+          <mat-checkbox *ngIf="visibleFilterCommandesFournisseurNonReparties" class="ev-control-left"
+                        formControlName="CommandesFournisseurReparties">
+            {{applicationUserContext.getCulturedRessourceText(1605)}}
+          </mat-checkbox>
           <mat-checkbox *ngIf="visibleFilterValideDPrevues" class="ev-control-left"
                         formControlName="ValideDPrevues">
             {{applicationUserContext.getCulturedRessourceText(560)}}

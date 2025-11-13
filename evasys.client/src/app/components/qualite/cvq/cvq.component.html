@@ -43,7 +43,9 @@
                   <button *ngIf="form.get('CVQControleurList').value && form.get('CVQControleurList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('CVQControleurList').setValue(null)" tabindex="-1" type="button">
                     <mat-icon>close</mat-icon>
                   </button>
-                  <button *ngIf="form.get('CVQControleurList').value" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CVQControleur', form.get('CVQControleurList').value); " tabindex="-1" type="button">
+                  <button *ngIf="form.get('CVQControleurList').value" matIconSuffix mat-icon-button aria-label="Details"
+                          (click)="$event.stopPropagation(); showDetails('CVQControleur', form.get('CVQControleurList').value); " tabindex="-1" type="button"
+                           matTooltip={{applicationUserContext.getCulturedRessourceText(1606)}}>
                     <mat-icon>details</mat-icon>
                   </button>
                   <mat-error align="end" *ngIf="(form.get('CVQControleurList').touched || form.get('CVQControleurList').dirty) && form.get('CVQControleurList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>

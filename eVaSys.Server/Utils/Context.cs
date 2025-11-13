@@ -479,7 +479,6 @@ namespace eVaSys.Utils
                     [EnvCommandeFournisseurStatutName.EnAttente.ToString()] = new EnvCommandeFournisseurStatut() { Name = EnvCommandeFournisseurStatutName.EnAttente.ToString(), RefRessource = 548, CulturedCaption = cR.GetTextRessource(548) == "" ? "?EnAttente?" : cR.GetTextRessource(548) },
                     [EnvCommandeFournisseurStatutName.Ouverte.ToString()] = new EnvCommandeFournisseurStatut() { Name = EnvCommandeFournisseurStatutName.Ouverte.ToString(), RefRessource = 547, CulturedCaption = cR.GetTextRessource(547) == "" ? "?Ouverte?" : cR.GetTextRessource(547) },
                     [EnvCommandeFournisseurStatutName.Receptionnee.ToString()] = new EnvCommandeFournisseurStatut() { Name = EnvCommandeFournisseurStatutName.Receptionnee.ToString(), RefRessource = 546, CulturedCaption = cR.GetTextRessource(546) == "" ? "?Receptionnee?" : cR.GetTextRessource(546) },
-                    [EnvCommandeFournisseurStatutName.Repartie.ToString()] = new EnvCommandeFournisseurStatut() { Name = EnvCommandeFournisseurStatutName.Repartie.ToString(), RefRessource = 545, CulturedCaption = cR.GetTextRessource(545) == "" ? "?Repartie?" : cR.GetTextRessource(545) },
                     [EnvCommandeFournisseurStatutName.Bloquee.ToString()] = new EnvCommandeFournisseurStatut() { Name = EnvCommandeFournisseurStatutName.Bloquee.ToString(), RefRessource = 549, CulturedCaption = cR.GetTextRessource(549) == "" ? "?Bloquee?" : cR.GetTextRessource(549) },
                     [EnvCommandeFournisseurStatutName.Refusee.ToString()] = new EnvCommandeFournisseurStatut() { Name = EnvCommandeFournisseurStatutName.Refusee.ToString(), RefRessource = 551, CulturedCaption = cR.GetTextRessource(551) == "" ? "?Refusee?" : cR.GetTextRessource(551) },
                 };
@@ -905,6 +904,7 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.CommandeFournisseurDelaiCommande, 1268, EnvDataColumnDataType.intNumber, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.CommandeFournisseurDelaiChargement, 1269, EnvDataColumnDataType.intNumber, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.CommandeFournisseurLotControle, 498, EnvDataColumnDataType.bit, "LotControle", "tblCommandeFournisseur.LotControle");
+                CreateEnvDataColumn(cR, DataColumnName.CommandeFournisseurNonRepartie, 1607, EnvDataColumnDataType.bit, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.ContactAdresseIsUser, 1242, EnvDataColumnDataType.bit, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.ContactAdresseActif, 1151, EnvDataColumnDataType.bit, "Actif", "tbmContactAdresse.Actif");
                 CreateEnvDataColumn(cR, DataColumnName.ContactAdresseCmt, 1236, EnvDataColumnDataType.text, "Cmt", "tbmContactAdresse.Cmt");

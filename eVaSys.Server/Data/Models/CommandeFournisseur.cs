@@ -319,20 +319,6 @@ namespace eVaSys.Data
                 return Utils.Utils.IsLockedData(LockableData.RefCommandeFournisseur.ToString(), RefCommandeFournisseur, DbContext);
             }
         }
-        [NotMapped]
-        public bool Reparti
-        {
-            get
-            {
-                bool r = false;
-                if (Repartitions?.Count() > 0) { r = true; }
-                else
-                {
-                    r = (DbContext.Repartitions.Where(e => e.RefCommandeFournisseur == RefCommandeFournisseur).Count() > 0);
-                }
-                return r;
-            }
-        }
 
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }

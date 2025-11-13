@@ -103,7 +103,6 @@ namespace eVaSys.ViewModels
         public bool NonRepartissable { get; set; }
         public string RefExt { get; set; }
         public string LibExt { get; set; }
-        public bool Reparti { get; set; }
         public EntiteViewModel Prestataire { get; set; }
         public ICollection<CommandeFournisseurFichierLightViewModel> CommandeFournisseurFichiers { get; set; }
         public bool Mixte { get; set; }

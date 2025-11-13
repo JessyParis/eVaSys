@@ -48,7 +48,9 @@
                   <button *ngIf="form.get('ControleControleurList').value && form.get('ControleControleurList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('ControleControleurList').setValue(null)" tabindex="-1" type="button">
                     <mat-icon>close</mat-icon>
                   </button>
-                  <button *ngIf="form.get('ControleControleurList').value" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('ControleControleur', form.get('ControleControleurList').value); " tabindex="-1" type="button">
+                  <button *ngIf="form.get('ControleControleurList').value" matIconSuffix mat-icon-button aria-label="Details"
+                          (click)="$event.stopPropagation(); showDetails('ControleControleur', form.get('ControleControleurList').value); " tabindex="-1" type="button"
+                           matTooltip={{applicationUserContext.getCulturedRessourceText(1606)}}>
                     <mat-icon>details</mat-icon>
                   </button>
                   <mat-error align="end" *ngIf="(form.get('ControleControleurList').touched || form.get('ControleControleurList').dirty) && form.get('ControleControleurList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>

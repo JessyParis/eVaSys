@@ -80,6 +80,7 @@ export class ApplicationUserContext {
   public filterValideDPrevues: boolean = false;
   public filterCommandesFournisseurNonChargees: boolean = false;
   public filterCommandesFournisseurAttribuees: boolean = false;
+  public filterCommandesFournisseurNonReparties: boolean = false;
   public filterVilleArrivees: any[];
   public filterVilleDeparts: any[];
   public filterAdresseDestinations: any[];
@@ -240,7 +241,6 @@ export class ApplicationUserContext {
       this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Bloquee));
       this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Receptionnee));
       this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Refusee));
-      this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Repartie));
       this.filterBegin = moment([1, 0, 1, 0, 0, 0, 0]);
       this.filterEnd = moment([1, 0, 1, 0, 0, 0, 0]);
       this.filterClients = [];
@@ -262,7 +262,6 @@ export class ApplicationUserContext {
       this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Bloquee));
       this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Receptionnee));
       this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Refusee));
-      this.filterEnvCommandeFournisseurStatuts.push(this.envCommandeFournisseurStatuts.find(x => x.name === EnvCommandeFournisseurStatutName.Repartie));
       this.filterClients = [];
       this.filterClients.push(this.connectedUtilisateur.Client);
     }
@@ -475,6 +474,7 @@ export class ApplicationUserContext {
     this.filterValideDPrevues = false;
     this.filterCommandesFournisseurNonChargees = false;
     this.filterCommandesFournisseurAttribuees = false;
+    this.filterCommandesFournisseurNonReparties = false;
   }
   // -----------------------------------------------------------------------------------------------------
   //RAZ filters
@@ -522,6 +522,7 @@ export class ApplicationUserContext {
     this.filterValideDPrevues = false;
     this.filterCommandesFournisseurNonChargees = false;
     this.filterCommandesFournisseurAttribuees = false;
+    this.filterCommandesFournisseurNonReparties = false;
     this.filterVilleDeparts = [];
     this.filterAdresseDestinations = [];
     this.filterVilleArrivees = [];

@@ -311,6 +311,7 @@ export enum DataColumnName {
   CommandeFournisseurRefExt = "CommandeFournisseurRefExt",
   CommandeFournisseurSurcoutCarburantHT = "CommandeFournisseurSurcoutCarburantHT",
   CommandeFournisseurNonConformite = "CommandeFournisseurNonConformite",
+  CommandeFournisseurNonRepartie = "CommandeFournisseurNonRepartie", 
   CommandeFournisseurNonConformiteInvisible = "CommandeFournisseurNonConformiteInvisible",
   CommandeFournisseurNbTotalLivraison = "CommandeFournisseurNbTotalLivraison",
   CommandeFournisseurNbTotalLivraisonAControler = "CommandeFournisseurNbTotalLivraisonAControler",
@@ -796,7 +797,6 @@ export enum CommandeFournisseurStatut {
 
 //Enumération for CommandeFournisseurStatut
 export enum EnvCommandeFournisseurStatutName {
-  Repartie = "Repartie",
   Receptionnee = "Receptionnee",
   Ouverte = "Ouverte",
   EnAttente = "EnAttente",

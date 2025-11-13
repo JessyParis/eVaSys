@@ -306,6 +306,16 @@ export class DataModelService {
     });
   }
   //-----------------------------------------------------------------------------------
+  //Check if CommandeFournisseur is linked to a completed Repartition
+  hasRepartitionComplete(refCommandeFournisseur: number): Observable<boolean> {
+    var url = this.baseUrl + "evapi/commandefournisseur/hasrepartitioncomplete";
+    return this.http.get<boolean>(url, {
+      headers: new HttpHeaders()
+        .set("refCommandeFournisseur", refCommandeFournisseur.toString()),
+      responseType: "json"
+    });
+  }
+  //-----------------------------------------------------------------------------------
   //Check if CommandeFournisseur is linked to a FicheControle
   hasFicheControle(refCommandeFournisseur: number): Observable<boolean> {
     var url = this.baseUrl + "evapi/commandefournisseur/hasfichecontrole";

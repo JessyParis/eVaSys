@@ -32,7 +32,7 @@
           <td [class]="'cadre_header_' + (ficheControle.CommandeFournisseur?.CommandeFournisseurStatut ? ('statut_' + ficheControle.CommandeFournisseur.CommandeFournisseurStatut.RefCommandeFournisseurStatut.toString()) : 'primary')">
             {{applicationUserContext.getCulturedRessourceText(14)}}&nbsp;{{getFormattedNumeroCommande(ficheControle.CommandeFournisseur?.NumeroCommande)}}
             <br />
-            {{getEnvCommandeFournisseurStatut(ficheControle?.CommandeFournisseur)}}
+            {{getEnvCommandeFournisseurStatut(ficheControle?.CommandeFournisseur, applicationUserContext)}}
           </td>
         </tr>
         <tr>
@@ -78,7 +78,9 @@
               <button *ngIf="form.get('FicheControleControleurList').value && form.get('FicheControleControleurList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('FicheControleControleurList').setValue(null)" tabindex="-1" type="button">
                 <mat-icon>close</mat-icon>
               </button>
-              <button *ngIf="form.get('FicheControleControleurList').value" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('FicheControleControleur', form.get('FicheControleControleurList').value); " tabindex="-1" type="button">
+              <button *ngIf="form.get('FicheControleControleurList').value" matIconSuffix mat-icon-button aria-label="Details"
+                      (click)="$event.stopPropagation(); showDetails('FicheControleControleur', form.get('FicheControleControleurList').value); " tabindex="-1" type="button"
+                       matTooltip={{applicationUserContext.getCulturedRessourceText(1606)}}>
                 <mat-icon>details</mat-icon>
               </button>
               <mat-error align="end" *ngIf="form.get('FicheControleControleurList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>

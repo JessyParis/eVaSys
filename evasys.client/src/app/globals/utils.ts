@@ -248,32 +248,31 @@ export function changeCulture(cultureName: string, applicationUserContext: Appli
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 //Get EnvCommandeFournisseurStatut
-export function getEnvCommandeFournisseurStatut(cmdF: CommandeFournisseur): string {
+export function getEnvCommandeFournisseurStatut(cmdF: CommandeFournisseur, applicationUserContext: ApplicationUserContext): string {
   let r: string = "";
-  if (cmdF) {
+  if (cmdF.RefCommandeFournisseur) {
     //Process
-    if ((cmdF.DDechargement && moment(cmdF.DDechargement).year() < 2012) || this.reparti) {
-      r = this.applicationUserContext.getCulturedRessourceText(545);
-    }
-    else if (cmdF.DDechargement !== null) {
-      r = this.applicationUserContext.getCulturedRessourceText(546);
+    if (cmdF.DDechargement !== null) {
+      console.log("statut - " + applicationUserContext.getCulturedRessourceText(546));
+      r = applicationUserContext.getCulturedRessourceText(546);
+      console.log("r - " + r);
     }
     else if (cmdF.RefusCamion === true) {
-      r = this.applicationUserContext.getCulturedRessourceText(551);
+      r = applicationUserContext.getCulturedRessourceText(551);
     }
     else if (cmdF.CommandeFournisseurStatut !== null) {
       if (cmdF.CommandeFournisseurStatut.RefCommandeFournisseurStatut === 1) {
-        r = this.applicationUserContext.getCulturedRessourceText(547);
+        r = applicationUserContext.getCulturedRessourceText(547);
       }
       else if (cmdF.CommandeFournisseurStatut.RefCommandeFournisseurStatut === 2) {
-        r = this.applicationUserContext.getCulturedRessourceText(548);
+        r = applicationUserContext.getCulturedRessourceText(548);
       }
       else {
-        r = this.applicationUserContext.getCulturedRessourceText(549);
+        r = applicationUserContext.getCulturedRessourceText(549);
       }
     }
     else {
-      r = this.applicationUserContext.getCulturedRessourceText(550);
+      r = applicationUserContext.getCulturedRessourceText(550);
     }
   }
   //End

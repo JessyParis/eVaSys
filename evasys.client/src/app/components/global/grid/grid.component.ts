@@ -177,6 +177,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   visibleFilterValideDPrevues: boolean = false;
   visibleFilterYearList: boolean = false;
   visibleFilterRepartitionAFinaliser: boolean = false;
+  visibleFilterCommandesFournisseurNonReparties: boolean = false;
   //Misc
   refMessageVisualisations: number = 0;
   refTransportConcurrence: number = 0;
@@ -272,6 +273,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       RepartitionAFinaliser: new UntypedFormControl(this.applicationUserContext.filterRepartitionAFinaliser),
       NonRepartissable: new UntypedFormControl(
         this.applicationUserContext.filterNonRepartissable ? "1" : (this.applicationUserContext.filterNonRepartissable == false ? "0" : ""))
+      , CommandesFournisseurReparties: new UntypedFormControl(this.applicationUserContext.filterCommandesFournisseurNonReparties),
     });
     this.formAugmentation = new UntypedFormGroup({
       Augmentation: new UntypedFormControl("", Validators.required)
@@ -693,15 +695,10 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     }
     if (
       this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuControle
+      || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuRepartition
     ) {
       this.labelMonthListFC = this.applicationUserContext.getCulturedRessourceText(1010);
       this.labelYearListFC = this.applicationUserContext.getCulturedRessourceText(1011);
-    }
-    if (
-      this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuRepartition
-    ) {
-      this.labelMonthListFC = this.applicationUserContext.getCulturedRessourceText(1581);
-      this.labelYearListFC = this.applicationUserContext.getCulturedRessourceText(1582);
     }
     if (
       this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Client
@@ -1056,6 +1053,10 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       (this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur
         && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Client))
       || (this.applicationUserContext.currentMenu.name === MenuName.ModulePrestataireMenuCommandeFournisseur)
+    );
+    this.visibleFilterCommandesFournisseurNonReparties = (
+      this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur
+      && (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur)
     );
     this.visibleFilterVilleArriveeList = (
       !this.applicationUserContext.connectedUtilisateur.CentreDeTri
@@ -1452,6 +1453,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     this.applicationUserContext.filterIFClientFactureEnAttente = this.form.get("IFClientFactureEnAttente").value;
     this.applicationUserContext.filterIFFournisseurRetourLot = this.form.get("IFFournisseurRetourLot").value;
     this.applicationUserContext.filterIFFournisseurFacture = this.form.get("IFFournisseurFacture").value;
+    this.applicationUserContext.filterIFFournisseurAttenteBonCommande = this.form.get("IFFournisseurAttenteBonCommande").value;
     this.applicationUserContext.filterIFFournisseurTransmissionFacturation = this.form.get("IFFournisseurTransmissionFacturation").value;
     this.applicationUserContext.filterNonConformitesATraiter = this.form.get("NonConformitesATraiter").value;
     this.applicationUserContext.filterNonConformitesATransmettre = this.form.get("NonConformitesATransmettre").value;
@@ -1471,6 +1473,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     this.applicationUserContext.filterEnvCommandeFournisseurStatuts = this.form.get("EnvCommandeFournisseurStatutList").value;
     this.applicationUserContext.filterCommandesFournisseurNonChargees = this.form.get("CommandesFournisseurNonChargees").value;
     this.applicationUserContext.filterCommandesFournisseurAttribuees = this.form.get("CommandesFournisseurAttribuees").value;
+    this.applicationUserContext.filterCommandesFournisseurNonReparties = this.form.get("CommandesFournisseurReparties").value;
     this.applicationUserContext.filterValideDPrevues = this.form.get("ValideDPrevues").value;
     this.applicationUserContext.filterDChargementModif = this.form.get("DChargementModif").value;
     this.applicationUserContext.filterIFFournisseurAttenteBonCommande = this.form.get("IFFournisseurAttenteBonCommande").value;
@@ -2014,7 +2017,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       , this.formPrixRepriseCopy.get("YearListFrom").value ? this.formPrixRepriseCopy.get("YearListFrom").value.toString() : "", this.formPrixRepriseCopy.get("MonthListFrom").value ? this.formPrixRepriseCopy.get("MonthListFrom").value : ""
       , this.formPrixRepriseCopy.get("YearListTo").value ? this.formPrixRepriseCopy.get("YearListTo").value.toString() : "", this.formPrixRepriseCopy.get("MonthListTo").value ? this.formPrixRepriseCopy.get("MonthListTo").value : ""
       , this.filterEcoOrganismes, this.filterEntiteTypes, this.filterMessageTypes, this.filterApplicationProduitOrigines, this.applicationUserContext.filterActif, this.applicationUserContext.filterNonRepartissable, this.applicationUserContext.filterCollecte
-      , this.applicationUserContext.filterDonneeEntiteSage, this.filterUtilisateurMaitres, this.applicationUserContext.filterRepartitionAFinaliser
+      , this.applicationUserContext.filterDonneeEntiteSage, this.filterUtilisateurMaitres, this.applicationUserContext.filterRepartitionAFinaliser, this.applicationUserContext.filterCommandesFournisseurNonReparties
     )
   }
   //-----------------------------------------------------------------------------------
@@ -2288,6 +2291,7 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
     this.form.get("CamionTypeList").setValue(this.applicationUserContext.filterCamionTypes);
     this.form.get("EnvCommandeFournisseurStatutList").setValue(this.applicationUserContext.filterEnvCommandeFournisseurStatuts);
     this.form.get("CommandesFournisseurNonChargees").setValue(this.applicationUserContext.filterCommandesFournisseurNonChargees);
+    this.form.get("CommandesFournisseurReparties").setValue(this.applicationUserContext.filterCommandesFournisseurNonReparties);
     this.form.get("CommandesFournisseurAttribuees").setValue(this.applicationUserContext.filterCommandesFournisseurAttribuees);
     this.form.get("ValideDPrevues").setValue(this.applicationUserContext.filterValideDPrevues);
     this.form.get("DChargementModif").setValue(this.applicationUserContext.filterDChargementModif);
@@ -2485,7 +2489,7 @@ export class GridDataSource implements DataSource<any> {
     , augmentation = "0", selectedItem = "", moisDechargementPrevuItem = ""
     , yearFrom = "", monthFrom = "", yearTo = "", monthTo = ""
     , filterEcoOrganismes = "", filterEntiteTypes = "", filterMessageTypes = "", filterApplicationProduitOrigines = "", filterActif = false, filterNonRepartissable = true, filterCollecte = ""
-    , filterDonneeEntiteSage = false, filterUtilisateurMaitres = "", filterRepartitionAFinaliser = false
+    , filterDonneeEntiteSage = false, filterUtilisateurMaitres = "", filterRepartitionAFinaliser = false, filterCommandesFournisseurNonReparties = false
     ) {
     //Show loading indicator
     this.loadingSubject.next(true);
@@ -2503,7 +2507,7 @@ export class GridDataSource implements DataSource<any> {
       , augmentation, selectedItem, moisDechargementPrevuItem
       , yearFrom, monthFrom, yearTo, monthTo
       , filterEcoOrganismes, filterEntiteTypes, filterMessageTypes, filterApplicationProduitOrigines, filterActif, filterNonRepartissable
-      , filterCollecte, filterDonneeEntiteSage, filterUtilisateurMaitres, filterRepartitionAFinaliser).pipe<any, HttpResponse<any[]>>(
+      , filterCollecte, filterDonneeEntiteSage, filterUtilisateurMaitres, filterRepartitionAFinaliser, filterCommandesFournisseurNonReparties ).pipe<any, HttpResponse<any[]>>(
         catchError(() => of([])),
         finalize(() => { this.loadingSubject.next(false); })
       )

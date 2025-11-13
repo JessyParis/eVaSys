@@ -194,8 +194,7 @@ namespace eVaSys.Controllers
                     break;
                 case "NouvellesDemandesEnlevement":
                     sqlStr = "select count(*) from tblCommandeFournisseur"
-                        + "     left join tblRepartition on tblCommandeFournisseur.RefCommandeFournisseur=tblRepartition.RefCommandeFournisseur "
-                        + " where (tblRepartition.RefCommandeFournisseur is null and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut is null)";
+                        + " where (DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut is null)";
                     if (CurrentContext.ConnectedUtilisateur.RefPrestataire != null)
                     {
                         sqlStr += " and tblCommandeFournisseur.RefPrestataire=" + CurrentContext.ConnectedUtilisateur.RefPrestataire;

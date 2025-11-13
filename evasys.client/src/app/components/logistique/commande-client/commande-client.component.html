@@ -31,7 +31,8 @@
                           required [errorStateMatcher]="matcher" [disabled]="form.get('CmdMs').dirty">
                 <mat-option *ngFor="let adresse of adresseList" [value]="adresse.RefAdresse">{{adresse.TexteAdresseList}}</mat-option>
               </mat-select>
-              <button *ngIf="form.get('AdresseList').value" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeClientAdresse', form.get('AdresseList').value);" tabindex="-1" type="button">
+              <button *ngIf="form.get('AdresseList').value" matIconSuffix mat-icon-button aria-label="Details" (click)="$event.stopPropagation(); showDetails('CommandeClientAdresse', form.get('AdresseList').value);"
+                      tabindex="-1" type="button" matTooltip={{applicationUserContext.getCulturedRessourceText(1606)}}>
                 <mat-icon>details</mat-icon>
               </button>
               <mat-error align="end" *ngIf="(form.get('AdresseList').touched || form.get('AdresseList').dirty) && form.get('AdresseList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>

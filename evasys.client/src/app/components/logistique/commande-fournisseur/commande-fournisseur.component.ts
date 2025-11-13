@@ -16,7 +16,7 @@ import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces"
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { UploadComponent } from "../../dialogs/upload/upload.component";
 import { DownloadService } from "../../../services/download.service";
-import { addTwoBusinessDays, getAttachmentFilename, setOriginalMenu, showHtmlInformationToUser, showInformationToUser } from "../../../globals/utils";
+import { addTwoBusinessDays, getAttachmentFilename, getEnvCommandeFournisseurStatut, setOriginalMenu, showHtmlInformationToUser, showInformationToUser } from "../../../globals/utils";
 import { EmailComponent } from "../../email/email.component";
 import { showErrorToUser } from "../../../globals/utils";
 import { EventEmitterService } from "../../../services/event-emitter.service";
@@ -27,6 +27,7 @@ import { encode } from 'html-entities';
 import { DomSanitizer } from "@angular/platform-browser";
 import { UtilsService } from "../../../services/utils.service";
 import { BaseFormComponent } from "../../_ancestors/base-form.component";
+import { RepartitionComponent } from "../repartition/repartition.component";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -158,6 +159,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
   matcher = new MyErrorStateMatcher(this.applicationUserContext);
   //Variables
   reparti: boolean = false;
+  repartiComplete: boolean = false;
   commandeFournisseur: dataModelsInterfaces.CommandeFournisseur = {} as dataModelsInterfaces.CommandeFournisseur;
   //Form
   camionCompletList: appInterfaces.YesNo[];
@@ -250,6 +252,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
   motifAnomalieTransporteurListFC: UntypedFormControl = new UntypedFormControl(null);
   cmtAnomalieTransporteurFC: UntypedFormControl = new UntypedFormControl(null);
   dLimiteExclusiviteFC: UntypedFormControl = new UntypedFormControl(null);
+  repartiFC: UntypedFormControl = new UntypedFormControl(null);
   //Bloc visibility
   blocTransporteurVisible: boolean = false;
   blocContactAdresseVisible: boolean = false;
@@ -292,6 +295,8 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
   addTwoBusinessDays = addTwoBusinessDays;
   // Subject that emits when the component has been destroyed.
   protected _onDestroy = new Subject<void>();
+  //Functions
+  getEnvCommandeFournisseurStatut = getEnvCommandeFournisseurStatut;
   //Constructor
   constructor(protected activatedRoute: ActivatedRoute
     , protected router: Router
@@ -416,7 +421,8 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
       TraitementAnomalieTransporteur: this.traitementAnomalieTransporteurFC,
       MotifAnomalieTransporteurList: this.motifAnomalieTransporteurListFC,
       CmtAnomalieTransporteur: this.cmtAnomalieTransporteurFC,
-      DLimiteExclusivite: this.dLimiteExclusiviteFC
+      DLimiteExclusivite: this.dLimiteExclusiviteFC,
+      Reparti: this.repartiFC
     },
       formOptions);
     this.lockScreen();
@@ -493,6 +499,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     this.motifAnomalieTransporteurListFC.disable();
     this.cmtAnomalieTransporteurFC.disable();
     this.dLimiteExclusiviteFC.disable();
+    this.repartiFC.disable();
   }
   //-----------------------------------------------------------------------------------
   //Unlock all controls
@@ -569,6 +576,8 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
   //-----------------------------------------------------------------------------------
   //Manage screen
   manageScreen() {
+    //Always locked
+    this.repartiFC.disable();
     //Visibilities
     this.blocTransporteurVisible = (this.commandeFournisseur.Transporteur !== null);
     this.blocContactAdresseVisible = (this.commandeFournisseur.Entite
@@ -1145,6 +1154,15 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
         this.dataModelService.hasRepartition(this.commandeFournisseur.RefCommandeFournisseur)
           .subscribe((result: boolean) => {
             this.reparti = result;
+            //Update form
+            this.updateForm();
+          }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+        //Check if linked to a repartition completed
+        this.dataModelService.hasRepartitionComplete(this.commandeFournisseur.RefCommandeFournisseur)
+          .subscribe((result: boolean) => {
+            this.repartiComplete = result;
+            //Update form
+            this.updateForm();
           }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
         //Check similar
         this.checkSimilar();
@@ -1238,6 +1256,12 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     this.formattedDTraitementAnomalieTransporteur = (this.commandeFournisseur.DTraitementAnomalieTransporteur ? moment(this.commandeFournisseur.DTraitementAnomalieTransporteur).format("LLL") : "");
     //Update other data
     this.dLimiteExclusiviteFC.setValue(addTwoBusinessDays(this.commandeFournisseur.DAffretement));
+    if (this.applicationUserContext.connectedUtilisateur.CentreDeTri) {
+      this.repartiFC.setValue(this.reparti);
+    }
+    else {
+      this.repartiFC.setValue(this.repartiComplete);
+    }
     //Manage screen
     this.manageScreen();
   }
@@ -1306,7 +1330,7 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
     //Handle PoidsChargement and PoidsReparti change
     if ((this.commandeFournisseur.PoidsChargement != this.originalPoidsChargement || this.commandeFournisseur.PoidsReparti != this.originalPoidsReparti)
       && !this.commandeFournisseur.RefusCamion
-      && this.commandeFournisseur.Reparti
+      && this.reparti
       && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Administrateur) {
       const dialogRef = this.dialog.open(InformationComponent, {
         width: "350px",
@@ -2906,37 +2930,6 @@ export class CommandeFournisseurComponent extends BaseFormComponent<dataModelsIn
         r = r.substring(0, 4) + " " + r.substring(4, 6) + " " + r.substring(6, 10);
       }
     }
-    return r;
-  }
-  //------------------------------------------------------------------------------------------------------------------------------------------
-  //Get EnvCommandeFournisseurStatut
-  getEnvCommandeFournisseurStatut(): string {
-    let r: string = "";
-    //Process
-    if ((this.commandeFournisseur.DDechargement && moment(this.commandeFournisseur.DDechargement).year() < 2012) || this.reparti) {
-      r = this.applicationUserContext.getCulturedRessourceText(545);
-    }
-    else if (this.commandeFournisseur.DDechargement !== null) {
-      r = this.applicationUserContext.getCulturedRessourceText(546);
-    }
-    else if (this.commandeFournisseur.RefusCamion === true) {
-      r = this.applicationUserContext.getCulturedRessourceText(551);
-    }
-    else if (this.commandeFournisseur.CommandeFournisseurStatut !== null) {
-      if (this.commandeFournisseur.CommandeFournisseurStatut.RefCommandeFournisseurStatut === 1) {
-        r = this.applicationUserContext.getCulturedRessourceText(547);
-      }
-      else if (this.commandeFournisseur.CommandeFournisseurStatut.RefCommandeFournisseurStatut === 2) {
-        r = this.applicationUserContext.getCulturedRessourceText(548);
-      }
-      else {
-        r = this.applicationUserContext.getCulturedRessourceText(549);
-      }
-    }
-    else {
-      r = this.applicationUserContext.getCulturedRessourceText(550);
-    }
-    //End
     return r;
   }
   //------------------------------------------------------------------------------------------------------------------------------------------
