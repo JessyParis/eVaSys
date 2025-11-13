@@ -775,13 +775,13 @@ namespace eVaSys.Controllers
                                 }
                                 if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Refusee.ToString()))
                                 {
-                                    sqlStr += " or (tblRepartition.RefRepartition is null and DDechargement is null and RefusCamion = 1)";
+                                    sqlStr += " or (DDechargement is null and RefusCamion = 1)";
                                 }
                                 if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Ouverte.ToString())
                                     || filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.EnAttente.ToString())
                                     || filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Bloquee.ToString()))
                                 {
-                                    sqlStr += " or (tblRepartition.RefRepartition is null and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut in(";
+                                    sqlStr += " or (DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut in(";
                                     if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.Ouverte.ToString()))
                                     {
                                         sqlStr += " 1,";
@@ -800,7 +800,7 @@ namespace eVaSys.Controllers
                                 }
                                 if (filterEnvCommandeFournisseurStatuts.Contains(Enumerations.EnvCommandeFournisseurStatutName.DemandeEnlevement.ToString()))
                                 {
-                                    sqlStr += " or (tblRepartition.RefRepartition is null and DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut is null)";
+                                    sqlStr += " or (DDechargement is null and isnull(RefusCamion,0) = 0 and tblCommandeFournisseur.RefCommandeFournisseurStatut is null)";
                                 }
                                 sqlStr += ")";
                             }
