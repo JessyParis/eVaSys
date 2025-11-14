@@ -523,7 +523,7 @@ namespace eVaSys.Controllers
             if (int.TryParse(refCommandeFournisseur, out refC))
             {
                 CommandeFournisseur cF = DbContext.CommandeFournisseurs.Where(i => i.RefCommandeFournisseur == refC).FirstOrDefault();
-                if (cF != null && cF.DDechargement != null)
+                if (cF != null)
                 {
                     bool rC = DbContext.Repartitions
                         .Include(i => i.RepartitionCollectivites)
@@ -558,7 +558,7 @@ namespace eVaSys.Controllers
             if (int.TryParse(refCommandeFournisseur, out refC))
             {
                 CommandeFournisseur cF = DbContext.CommandeFournisseurs.Where(i => i.RefCommandeFournisseur == refC).FirstOrDefault();
-                if (cF != null && cF.DDechargement != null)
+                if (cF != null)
                 {
                     bool rC = DbContext.Repartitions
                         .Include(i => i.RepartitionCollectivites)
