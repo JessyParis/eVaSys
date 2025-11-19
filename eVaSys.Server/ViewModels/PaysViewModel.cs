@@ -24,10 +24,10 @@ namespace eVaSys.ViewModels
         #region Properties
         public int RefPays { get; set; }
         public bool? Actif { get; set; }
-        public int? RefRegionReporting {get;set; }
+        public int? RefRegionReporting { get; set; }
         public string Libelle { get; set; }
         public string LibelleCourt { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

@@ -7,12 +7,6 @@
 /// Projet : e-Valorplast
 /// Création : 26/01/2025
 /// ----------------------------------------------------------------------------------------------------- 
-using eVaSys.Utils;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
-
 namespace eVaSys.Data
 {
     /// <summary>

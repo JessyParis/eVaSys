@@ -15,8 +15,6 @@ using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Org.BouncyCastle.Asn1.Pkcs;
 using System.Data;
 
 namespace eVaSys.Controllers
@@ -134,7 +132,8 @@ namespace eVaSys.Controllers
                 {
                     //Check if deletable
                     string del = prx.IsDeletable(CurrentContext.CurrentCulture, CurrentContext.RefUtilisateur);
-                    if (del != "") { 
+                    if (del != "")
+                    {
                         errs += del;
                         //Ignore modifications
                         DbContext.Entry(prx).State = EntityState.Detached;

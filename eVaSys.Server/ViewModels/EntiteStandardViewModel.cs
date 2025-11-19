@@ -8,7 +8,6 @@
 /// Création : 15/11/2021
 /// ----------------------------------------------------------------------------------------------------- 
 using Newtonsoft.Json;
-using System;
 
 namespace eVaSys.ViewModels
 {
@@ -25,7 +24,7 @@ namespace eVaSys.ViewModels
         #region Properties
         public int RefEntiteStandard { get; set; }
         public int RefEntite { get; set; }
-        public StandardViewModel Standard{ get; set; }
+        public StandardViewModel Standard { get; set; }
         public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties

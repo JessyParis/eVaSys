@@ -10,15 +10,7 @@
 using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.Utils;
-using GemBox.Pdf;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using SkiaSharp;
-using System.IO;
-using System.Linq;
 using System.Web;
 
 namespace eVaSys.Controllers
@@ -268,7 +260,7 @@ namespace eVaSys.Controllers
                         // always prompt the user for downloading
                         Inline = false,
                     };
-                    string s=string.Format("attachment; filename=\"{0}\"", HttpUtility.UrlEncode(fileName));
+                    string s = string.Format("attachment; filename=\"{0}\"", HttpUtility.UrlEncode(fileName));
                     Response.Headers.Remove("Content-Disposition");
                     Response.Headers.Append("Content-Disposition", s);
                     //End

@@ -8,11 +8,8 @@
 /// Création : 15/01/2024
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {

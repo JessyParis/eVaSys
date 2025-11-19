@@ -11,10 +11,7 @@ using eVaSys.Utils;
 using eVaSys.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -68,7 +65,7 @@ namespace eVaSys.Data
                     .FirstOrDefault();
                 if (cmdC == null)
                 {
-                    s = cmdC.Adresse.Libelle + " - " + cmdC.Produit.Libelle  + " " + D.ToString("MM-YYYY");
+                    s = cmdC.Adresse.Libelle + " - " + cmdC.Produit.Libelle + " " + D.ToString("MM-YYYY");
                 }
                 return s;
             }
@@ -94,7 +91,7 @@ namespace eVaSys.Data
             }
             else if (viewModel.Certif == true)
             {
-                var cmdC=DbContext.CommandeClients
+                var cmdC = DbContext.CommandeClients
                     .Where(q => q.RefCommandeClient == RefCommandeClient)
                     .FirstOrDefault();
                 if (cmdC == null)

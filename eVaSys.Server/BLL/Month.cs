@@ -8,9 +8,7 @@
 /// Création : 04/12/2020
 /// ----------------------------------------------------------------------------------------------------- 
 /// </Propriété>
-using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 /// <summary>
 /// Classe for months
@@ -35,8 +33,8 @@ namespace eValorplast.BLL
         {
             _nb = d.Month;
             _year = d.Year;
-            _begin = new DateTime((int)_year, (int)_nb, 1, 0, 0, 0); 
-            _end = (new DateTime((int)_year, (int)_nb, 1, 23, 59, 59)).AddMonths(1).AddDays(-1); 
+            _begin = new DateTime((int)_year, (int)_nb, 1, 0, 0, 0);
+            _end = (new DateTime((int)_year, (int)_nb, 1, 23, 59, 59)).AddMonths(1).AddDays(-1);
             //_end = _end.AddMonths(1).AddDays(-1);
             Culture = culture;
             setName();
@@ -117,8 +115,10 @@ namespace eValorplast.BLL
         private string _name = "";
         public string Name
         {
-            get { 
-                return _name; }
+            get
+            {
+                return _name;
+            }
         }
         //Year
         private int? _year = null;

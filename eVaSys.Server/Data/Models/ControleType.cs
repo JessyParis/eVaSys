@@ -9,10 +9,7 @@
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -44,8 +41,8 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            int c = DbContext.ControleTypes.Where(q => (q.LibelleFRFR == LibelleFRFR || q.LibelleFRFR == LibelleFRFR) && q.RefControleType!=RefControleType).Count();
-            if (c > 0|| (LibelleFRFR?.Length > 50 || LibelleENGB?.Length > 50))
+            int c = DbContext.ControleTypes.Where(q => (q.LibelleFRFR == LibelleFRFR || q.LibelleFRFR == LibelleFRFR) && q.RefControleType != RefControleType).Count();
+            if (c > 0 || (LibelleFRFR?.Length > 50 || LibelleENGB?.Length > 50))
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
                 if (c > 0) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }

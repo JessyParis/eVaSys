@@ -12,11 +12,8 @@ using Limilabs.Mail;
 using Limilabs.Mail.Headers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.IO;
 
 namespace eVaSys.Data
 {
@@ -227,7 +224,7 @@ namespace eVaSys.Data
         /// </summary>
         public void setParamElail(ParamEmail pE)
         {
-            if(pE==null)
+            if (pE == null)
             {
 
             }

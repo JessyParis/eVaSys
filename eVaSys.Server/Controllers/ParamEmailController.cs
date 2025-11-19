@@ -13,10 +13,6 @@ using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using System;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -178,9 +174,9 @@ namespace eVaSys.Controllers
                 if (int.TryParse(refParamEmail, out r)) { req = req.Where(el => el.Actif == true || el.RefParamEmail == r); }
                 else { req = req.Where(el => el.Actif == true); }
             }
-            if (defaut )
+            if (defaut)
             {
-                req = req.Where(el => el.Defaut); 
+                req = req.Where(el => el.Defaut);
             }
             //Get data
             var all = req.OrderBy(el => el.EmailExpediteur).ToArray();

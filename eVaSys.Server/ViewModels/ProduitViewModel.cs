@@ -8,8 +8,6 @@
 /// Création : 20/03/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace eVaSys.ViewModels
 {
@@ -53,7 +51,7 @@ namespace eVaSys.ViewModels
         public ICollection<ProduitStandardViewModel> ProduitStandards { get; set; }
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
 
         #endregion

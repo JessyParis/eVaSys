@@ -12,9 +12,6 @@ using eVaSys.Data;
 using eVaSys.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
 using System.Web;
 
 namespace eVaSys.Controllers
@@ -45,8 +42,8 @@ namespace eVaSys.Controllers
                 {
                     var req = DbContext.Entites
                         .Include(i => i.Adresses)
-                        .Where(e => e.Libelle.Contains(EF.Functions.Collate(searchText, "SQL_Latin1_General_CP1_CI_AI")) 
-                            || e.CodeEE == searchText 
+                        .Where(e => e.Libelle.Contains(EF.Functions.Collate(searchText, "SQL_Latin1_General_CP1_CI_AI"))
+                            || e.CodeEE == searchText
                             || e.Adresses.Any(a => a.Ville.Contains(EF.Functions.Collate(searchText, "SQL_Latin1_General_CP1_CI_AI"))));
                     if (CurrentContext.filterGlobalActif)
                     {

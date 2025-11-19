@@ -8,13 +8,9 @@
 /// Création : 30/04/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -96,7 +92,7 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            int c = DbContext.JourFeries.Where(q => q.D == D && q.RefJourFerie!= RefJourFerie).Count();
+            int c = DbContext.JourFeries.Where(q => q.D == D && q.RefJourFerie != RefJourFerie).Count();
             if (c > 0)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);

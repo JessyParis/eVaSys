@@ -8,14 +8,10 @@
 /// Création : 23/07/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -128,7 +124,7 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            int c = DbContext.CommandeClients.Where(q => q.RefEntite == RefEntite && q.RefProduit == RefProduit 
+            int c = DbContext.CommandeClients.Where(q => q.RefEntite == RefEntite && q.RefProduit == RefProduit
                 && q.RefAdresse == RefAdresse && q.RefContrat == RefContrat && q.D == D
                 && q.RefCommandeClient != RefCommandeClient).Count();
             if (c > 0)

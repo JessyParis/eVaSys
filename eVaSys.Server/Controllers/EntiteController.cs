@@ -415,7 +415,7 @@ namespace eVaSys.Controllers
                 {
                     //Get Collectivite linked to the Fournisseur
                     List<int> refEntiteRtts = DbContext.EntiteEntites
-                        .Where(e => e.RefEntite == refEF && e.EntiteRtt.Actif == true  && e.Actif == true && e.EntiteRtt.RefEntiteType == 1).Select(p => p.RefEntiteRtt).ToList();
+                        .Where(e => e.RefEntite == refEF && e.EntiteRtt.Actif == true && e.Actif == true && e.EntiteRtt.RefEntiteType == 1).Select(p => p.RefEntiteRtt).ToList();
                     refEntiteRtts.AddRange(DbContext.EntiteEntites
                         .Where(e => e.RefEntiteRtt == refEF && e.Entite.Actif == true && e.Actif == true && e.Entite.RefEntiteType == 1).Select(p => p.RefEntite).ToList());
                     //Search for Contrat RI
@@ -460,11 +460,11 @@ namespace eVaSys.Controllers
                     if (dT != DateTime.MinValue) { dContrat = DateOnly.FromDateTime(dT); }
                     //Get idContrats for the Entite
                     List<int> refContrats = new List<int>();
-                    if (refCt>0) { refContrats.Add(refCt); }
+                    if (refCt > 0) { refContrats.Add(refCt); }
                     else
                     {
                         refContrats = DbContext.Contrats
-                        .Where(e => e.RefContratType == refCT && e.DDebut <= dContrat && e.DFin >= dContrat && e.ContratEntites.Any(i=>i.RefEntite == refEC))
+                        .Where(e => e.RefContratType == refCT && e.DDebut <= dContrat && e.DFin >= dContrat && e.ContratEntites.Any(i => i.RefEntite == refEC))
                         .Select(p => p.RefContrat).ToList();
                     }
                     //Process
@@ -528,14 +528,14 @@ namespace eVaSys.Controllers
             req = req.Include(i => i.ContratEntites)
                         .ThenInclude(i => i.Entite)
                         .Where(e => e.ContratEntites.Any(a => a.RefEntite == refE));
-            if(dRef != DateOnly.MinValue)
+            if (dRef != DateOnly.MinValue)
             {
                 req = req.Where(e => e.DDebut <= dRef && e.DFin >= dRef);
             }
             var contrats = req.ToArray();
             //End
             return new JsonResult(
-                _mapper.Map < Contrat[], ContratViewModel[]>(contrats),
+                _mapper.Map<Contrat[], ContratViewModel[]>(contrats),
                 JsonSettings);
         }
 
@@ -619,7 +619,8 @@ namespace eVaSys.Controllers
                 cmd.Connection = sqlConn;
                 cmd.CommandText = sqlStr;
                 SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read()) {
+                while (dr.Read())
+                {
                     docRefs.Add(
                         new DocumentEntite()
                         {
@@ -693,7 +694,7 @@ namespace eVaSys.Controllers
             //Recalage de la date de référence pour laisser du délai avant la présentation des états
             d = d.AddDays(-19);
             Quarter t = new Quarter(d, CurrentContext.CurrentCulture);
-            d=t.Begin;
+            d = t.Begin;
             string sqlStr = "";
             //Chargement des documents à télécharger
             for (int i = 1; i < 20; i++)
@@ -877,7 +878,7 @@ namespace eVaSys.Controllers
                     + " 	and tblRepartitionProduit.RefFournisseur=" + refEntite.ToString();
                 if (Utils.Utils.DbScalar(sqlStr, DbContext.Database.GetDbConnection()) != "0")
                 {
-                        docs.Add(t);
+                    docs.Add(t);
                 }
             }
             //End

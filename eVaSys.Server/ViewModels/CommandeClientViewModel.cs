@@ -8,8 +8,6 @@
 /// Création : 30/07/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace eVaSys.ViewModels
 {
@@ -28,7 +26,7 @@ namespace eVaSys.ViewModels
         public int Poids { get; set; }
         public string Cmt { get; set; }
         public ICollection<CommandeClientMensuelleViewModel> CommandeClientMensuelles { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
     }
 }

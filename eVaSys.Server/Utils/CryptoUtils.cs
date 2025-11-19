@@ -8,10 +8,7 @@
 /// Création : 08/07/2021
 /// ----------------------------------------------------------------------------------------------------- 
 
-using System;
 using System.Data;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -55,7 +52,7 @@ namespace eVaSys.Utils
 
             // Return the encrypted bytes from the memory stream.
             //return HttpUtility.UrlEncode(Convert.ToBase64String(encrypted));
-            return BitConverter.ToString(encrypted).Replace("-", string.Empty); 
+            return BitConverter.ToString(encrypted).Replace("-", string.Empty);
         }
 
         public static string DecryptAesHexa(string cipherText, string k, string v)

@@ -15,12 +15,7 @@ using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Org.BouncyCastle.Asn1.Pkcs;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -68,7 +63,7 @@ namespace eVaSys.Controllers
                     int refClient = DbContext.Adresses.Where(i => i.RefAdresse == refA)
                         .Select(r => r.RefEntite)
                         .FirstOrDefault();
-                    int refC = DbContext.CommandeFournisseurStatuts.Select(r=> new { refCt= ApplicationDbContext.GetRefContratType1(refE, refClient, dRef) }).FirstOrDefault().refCt;
+                    int refC = DbContext.CommandeFournisseurStatuts.Select(r => new { refCt = ApplicationDbContext.GetRefContratType1(refE, refClient, dRef) }).FirstOrDefault().refCt;
                     //If contrat, take the CommandeClient with the Contrat
                     if (refC > 0)
                     {

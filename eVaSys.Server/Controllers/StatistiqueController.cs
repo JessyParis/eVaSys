@@ -1,4 +1,5 @@
-﻿/// <Propriété>
+﻿using eVaSys.APIUtils;
+/// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
 /// 11 rue du Hainaut
@@ -10,10 +11,9 @@
 using eVaSys.Data;
 using eVaSys.Utils;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 using Microsoft.Data.SqlClient;
-using eVaSys.APIUtils;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace eVaSys.Controllers
 {
@@ -1311,7 +1311,7 @@ namespace eVaSys.Controllers
                     + "     , DDechargement as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurDDechargement.ToString()].Name + "]"
                     + "     , client.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ClientLibelle.ToString()].Name + "]"
                     + "     , dbo.CommandeMixte(NumeroAffretement) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurMixte.ToString()].Name + "]";
-                if (CurrentContext.ConnectedUtilisateur?.CentreDeTri?.AutoControle ==  true)
+                if (CurrentContext.ConnectedUtilisateur?.CentreDeTri?.AutoControle == true)
                 {
                     sqlStr += ", LotControle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CommandeFournisseurLotControle.ToString()].Name + "]";
                 }
@@ -1536,7 +1536,7 @@ namespace eVaSys.Controllers
                     + "         		and tbrPrixReprise.RefProduit=VueRepartitionUnitaireDetail.RefProduit"
                     + "         		and month(VueRepartitionUnitaireDetail.D)=month(tbrPrixReprise.D) and year(VueRepartitionUnitaireDetail.D)=year(tbrPrixReprise.D)"
                     + "         		and isnull(tbrPrixReprise.RefContrat,0)=isnull(VueCommandeFournisseurContrat.RefContrat,0)"
-                    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=1" 
+                    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=1"
                     + "                 and RefRepartition not in (select distinct RefRepartition from tblRepartitionCollectivite where PUHT is null)"
                     + "                 and RefRepartition not in (select distinct RefRepartition from VueRepartitionIncompletePoids)";
                 if (eSF.FilterCollecte == "HorsCollecte")
@@ -1549,7 +1549,7 @@ namespace eVaSys.Controllers
                     + "              , null as RefContrat"
                     + "         from"
                     + "             VueRepartitionUnitaireDetail"
-                    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=0" 
+                    + "             where VueRepartitionUnitaireDetail.D between @begin and @end and VueRepartitionUnitaireDetail.Collecte=0"
                     + "                 and RefRepartition not in (select distinct RefRepartition from tblRepartitionProduit where PUHT is null)"
                     + "                 and RefRepartition not in (select distinct RefRepartition from VueRepartitionIncompletePoids)";
                 if (eSF.FilterCollecte == "Collecte")
@@ -2782,7 +2782,7 @@ namespace eVaSys.Controllers
                     + "     , tbrNonConformiteDemandeClientType.Libelle" + (CurrentContext.CurrentCulture.Name == "en-GB" ? "ENGB" : "FRFR") + " as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteDemandeClientTypeLibelle.ToString()].Name + "]"
                     + "     , tblNonConformite.DescrValorplast as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteDescrValorplast.ToString()].Name + "]"
                     + "     , tbrNonConformiteNature.Libelle" + (CurrentContext.CurrentCulture.Name == "en-GB" ? "ENGB" : "FRFR") + " as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteNatureLibelle.ToString()].Name + "]"
-//                    + "     , dbo.ListeNonConformiteFamille(tblNonConformite.RefNonConformite, '" + CurrentContext.CurrentCulture.Name + "') as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteListeFamille.ToString()].Name + "]"
+                    //                    + "     , dbo.ListeNonConformiteFamille(tblNonConformite.RefNonConformite, '" + CurrentContext.CurrentCulture.Name + "') as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteListeFamille.ToString()].Name + "]"
                     + "     , IFFournisseurRetourLot as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.NonConformiteIFFournisseurRetourLot.ToString()].Name + "]";
                 if (CurrentContext.ConnectedUtilisateur.RefClient == null)
                 {
@@ -4578,9 +4578,9 @@ namespace eVaSys.Controllers
                         s = "";
                         //Fields
                         var eqs = DbContext.EquivalentCO2s.Where(e => e.Ratio != null).OrderBy(o => o.Ordre).AsNoTracking().ToList();
-                        foreach(var eq in eqs)
+                        foreach (var eq in eqs)
                         {
-                            s += ", cast(round((sum(Poids * cast(isnull(tblProduit.Co2KgParT,0) as bigint))/1000)*" + eq.Ratio.ToString().Replace(",",".") + ",0) as int) as [" + eq.Libelle + "]";
+                            s += ", cast(round((sum(Poids * cast(isnull(tblProduit.Co2KgParT,0) as bigint))/1000)*" + eq.Ratio.ToString().Replace(",", ".") + ",0) as int) as [" + eq.Libelle + "]";
                         }
                         //Base SQL statement
                         sqlStr = "select cast(YEAR(D) as char(4)) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AnneeTexte.ToString()].Name + "]"
@@ -6548,8 +6548,10 @@ namespace eVaSys.Controllers
                     //Define statistique name
                     string statName = menu;
                     if (menu == Enumerations.MenuName.ModuleCollectiviteMenuStatistiques.ToString()
-                        && !string.IsNullOrWhiteSpace(eSF.StatType)) { 
-                        statName = eSF.StatType; }
+                        && !string.IsNullOrWhiteSpace(eSF.StatType))
+                    {
+                        statName = eSF.StatType;
+                    }
                     //Generate Excel file
                     return new FileContentResult(ExcelFileManagement.CreateStatistique(statName, dS, eSF, CurrentContext, _dbContext, _env.ContentRootPath).ToArray(), "application /octet-stream");
                 }

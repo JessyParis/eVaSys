@@ -13,11 +13,7 @@ using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -302,7 +298,7 @@ namespace eVaSys.Controllers
                             mV.Confirme = true;
                             //Deacivate message if unique confirmed visualisation
                             var message = DbContext.Messages.Where(el => el.RefMessage == mV.RefMessage).FirstOrDefault();
-                            if(message != null)
+                            if (message != null)
                             {
                                 if (message.VisualisationConfirmeUnique == true)
                                 {

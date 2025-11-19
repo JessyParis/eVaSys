@@ -10,11 +10,8 @@
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -85,7 +82,8 @@ namespace eVaSys.Data
                 CulturedRessources cR = new(currentCulture, DbContext);
                 string s = cR.GetTextRessource(319);
                 Entite client = null;
-                try { 
+                try
+                {
                     client = DbContext.Entites.Find(CommandeFournisseur.AdresseClient.RefEntite);
                     s = cR.GetTextRessource(16) + " : " + client.Libelle;
                     if (!string.IsNullOrWhiteSpace(CommandeFournisseur.AdresseClient?.Adr1))
@@ -120,12 +118,12 @@ namespace eVaSys.Data
                     s += cR.GetTextRessource(17) + " : " + CommandeFournisseur.Entite.Libelle;
                     if (!string.IsNullOrWhiteSpace(CommandeFournisseur.Adr1))
                     {
-                        s += Environment.NewLine; 
+                        s += Environment.NewLine;
                         s += "  " + CommandeFournisseur.Adr1;
                     }
                     if (!string.IsNullOrWhiteSpace(CommandeFournisseur.CodePostal) || !string.IsNullOrWhiteSpace(CommandeFournisseur.Ville))
                     {
-                        s += Environment.NewLine + "  "; 
+                        s += Environment.NewLine + "  ";
                         if (!string.IsNullOrWhiteSpace(CommandeFournisseur.CodePostal))
                         {
                             s += CommandeFournisseur.CodePostal + " ";
@@ -140,7 +138,7 @@ namespace eVaSys.Data
                         }
                     }
                     s += Environment.NewLine;
-                    s += cR.GetTextRessource(277) + " : " + CommandeFournisseur.DDechargement?.ToString("dd/MM/yyyy")??cR.GetTextRessource(771);
+                    s += cR.GetTextRessource(277) + " : " + CommandeFournisseur.DDechargement?.ToString("dd/MM/yyyy") ?? cR.GetTextRessource(771);
                     s += Environment.NewLine;
                     s += cR.GetTextRessource(229) + " : " + (CommandeFournisseur.PoidsChargement != 0 ? CommandeFournisseur.PoidsChargement.ToString("# ##0") : cR.GetTextRessource(771));
                     s += Environment.NewLine;

@@ -8,10 +8,9 @@
 /// Création : 27/07/2018
 /// ----------------------------------------------------------------------------------------------------- 
 
-using System;
-using System.Web;
-using System.Globalization;
 using eVaSys.Data;
+using System.Globalization;
+using System.Web;
 
 namespace eVaSys.Utils
 {

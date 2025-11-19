@@ -13,9 +13,7 @@ using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.Data;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -87,8 +85,8 @@ namespace eVaSys.Controllers
             //Set values
             aide.Composant = Utils.Utils.SetEmptyStringToNull(model.Composant);
             aide.ValeurHTML = Utils.Utils.SetEmptyStringToNull(model.ValeurHTML);
-            aide.LibelleFRFR=DbContext.Ressources.Where(e=> e.RefRessource == model.RefRessource).FirstOrDefault()?.LibelleFRFR;
-            aide.LibelleENGB=DbContext.Ressources.Where(e=> e.RefRessource == model.RefRessource).FirstOrDefault()?.LibelleENGB;
+            aide.LibelleFRFR = DbContext.Ressources.Where(e => e.RefRessource == model.RefRessource).FirstOrDefault()?.LibelleFRFR;
+            aide.LibelleENGB = DbContext.Ressources.Where(e => e.RefRessource == model.RefRessource).FirstOrDefault()?.LibelleENGB;
             //Register session user
             aide.RefUtilisateurCourant = CurrentContext.RefUtilisateur;
             //Check validation

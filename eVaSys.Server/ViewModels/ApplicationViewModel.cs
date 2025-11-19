@@ -7,7 +7,6 @@
 /// Projet : e-Valorplast
 /// Création : 16/12/2019
 /// ----------------------------------------------------------------------------------------------------- 
-using System;
 using Newtonsoft.Json;
 
 namespace eVaSys.ViewModels
@@ -26,7 +25,7 @@ namespace eVaSys.ViewModels
         public string Libelle { get; set; }
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

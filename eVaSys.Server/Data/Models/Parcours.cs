@@ -1,4 +1,5 @@
-﻿/// <Propriété>
+﻿using eVaSys.Utils;
+/// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
 /// 11 rue du Hainaut
@@ -9,10 +10,6 @@
 /// ----------------------------------------------------------------------------------------------------- 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using eVaSys.Utils;
 using System.Globalization;
 
 namespace eVaSys.Data
@@ -61,7 +58,8 @@ namespace eVaSys.Data
             if ((!existsInDB && c > 0) || (existsInDB && c > 1))
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
-                if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410);
+                if (r == "") { r += Environment.NewLine; }
+                r += cR.GetTextRessource(410);
             }
             return r;
         }

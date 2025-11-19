@@ -8,17 +8,16 @@
 /// Création :08/01/2018
 /// ----------------------------------------------------------------------------------------------------- 
 
-using System.Data;
-using System.Text;
-using eVaSys.Data;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using GemBox.Spreadsheet;
 using eValorplast.BLL;
+using eVaSys.Data;
+using GemBox.Spreadsheet;
 using GemBox.Spreadsheet.Charts;
 using GemBox.Spreadsheet.Drawing;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Globalization;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using System.Text;
 
 namespace eVaSys.Utils
 {
@@ -235,12 +234,12 @@ namespace eVaSys.Utils
             wS.ProtectionSettings.AllowDeletingRows = false;
             wS.ProtectionSettings.AllowDeletingRows = false;
             wS.ProtectionSettings.AllowEditingObjects = false;
-            wS.ProtectionSettings.AllowEditingScenarios= false;
-            wS.ProtectionSettings.AllowFormattingCells= false;
-            wS.ProtectionSettings.AllowFormattingColumns= false;   
-            wS.ProtectionSettings.AllowFormattingRows= false;
-            wS.ProtectionSettings.AllowInsertingColumns= false;
-            wS.ProtectionSettings.AllowInsertingHyperlinks= false;
+            wS.ProtectionSettings.AllowEditingScenarios = false;
+            wS.ProtectionSettings.AllowFormattingCells = false;
+            wS.ProtectionSettings.AllowFormattingColumns = false;
+            wS.ProtectionSettings.AllowFormattingRows = false;
+            wS.ProtectionSettings.AllowInsertingColumns = false;
+            wS.ProtectionSettings.AllowInsertingHyperlinks = false;
             wS.ProtectionSettings.AllowSelectingUnlockedCells = true;
             wS.ProtectionSettings.SetPassword("eValorplastExcelLock");
 
@@ -557,7 +556,7 @@ namespace eVaSys.Utils
             //Initialisations
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
             CommandeFournisseur cf = dbContext.CommandeFournisseurs
-                .Include(i=>i.CommandeFournisseurContrat)
+                .Include(i => i.CommandeFournisseurContrat)
                 .Where(el => el.RefCommandeFournisseur == refCommandeFournisseur).FirstOrDefault();
             Entite client = dbContext.Entites.Where(el => el.RefEntite == cf.AdresseClient.RefEntite).FirstOrDefault();
             Adresse transporteurtAdresse = dbContext.Adresses.Where(el => el.RefAdresse == cf.TransporteurContactAdresse.RefAdresse).FirstOrDefault();
@@ -625,7 +624,7 @@ namespace eVaSys.Utils
                     .Where(el =>
                   el.RefProduit == bl.RefProduit && el.D.Year == ((DateTime)bl.DMoisDechargementPrevu).Year
                   && el.RefEntite == bl.AdresseClient.RefEntite && el.RefAdresse == bl.RefAdresseClient
-                  && el.RefContrat==refContrat).FirstOrDefault();
+                  && el.RefContrat == refContrat).FirstOrDefault();
                 CommandeClientMensuelle ccm = cmdC.CommandeClientMensuelles.Where(el => el.D.Month == ((DateTime)bl.DMoisDechargementPrevu).Month).FirstOrDefault();
                 //Instanciation du contactBL chez le client
                 ContactAdresse cbl = dbContext.ContactAdresses
@@ -732,7 +731,7 @@ namespace eVaSys.Utils
                     }
                     sbl.Cells[10, 3].SetValue(sbl.Cells[10, 3].Value + ad.CodePostal + " " + ad.Ville + " / " + ad.Pays.Libelle);
                     //Contact à l'adresse administrative
-                    ContactAdresse cad = dbContext.ContactAdresses.Where(el => el.RefAdresse == ad.RefAdresse && el.Actif==true).FirstOrDefault();
+                    ContactAdresse cad = dbContext.ContactAdresses.Where(el => el.RefAdresse == ad.RefAdresse && el.Actif == true).FirstOrDefault();
                     sbl.Cells[11, 3].SetValue(sbl.Cells[11, 3].Value + cad.Contact.Prenom + " " + cad.Contact.Nom);
                     sbl.Cells[12, 3].SetValue(cad.GetFirstTelOrEmail);
                     sbl.Cells[13, 3].SetValue(cad.GetSecondTelOrEmail);
@@ -1598,8 +1597,8 @@ namespace eVaSys.Utils
 
                     //Initialisations
                     Entite cDT = dbContext.Entites.Where(el => el.RefEntite == (int)dRow[0]).FirstOrDefault();
-                    Adresse adr = dbContext.Adresses.Where(el => el.RefEntite == cDT.RefEntite && el.Actif 
-                    && (el.RefAdresseType == 1 || el.RefAdresseType == 4)).OrderBy(o=>o.RefAdresseType).FirstOrDefault();
+                    Adresse adr = dbContext.Adresses.Where(el => el.RefEntite == cDT.RefEntite && el.Actif
+                    && (el.RefAdresseType == 1 || el.RefAdresseType == 4)).OrderBy(o => o.RefAdresseType).FirstOrDefault();
                     //Copie des feuilles
                     ws = excelFile.Worksheets[f];
                     ws.Name = ws.Name + cDT.RefEntite;
@@ -3370,7 +3369,7 @@ namespace eVaSys.Utils
                         {
                             if ((bool)dR[currentContext.EnvDataColumns[Enumerations.DataColumnName.PUHTUnique.ToString()].Name] == false)
                             {
-                                CellStyle style = ws.Cells[i, j-1].Style;
+                                CellStyle style = ws.Cells[i, j - 1].Style;
                                 style.FillPattern.SetSolid(System.Drawing.Color.FromArgb(int.Parse("C185F8", System.Globalization.NumberStyles.AllowHexSpecifier)));
                             }
                         }
@@ -4038,7 +4037,7 @@ namespace eVaSys.Utils
                 || name == Enumerations.MenuName.AdministrationMenuExtractionLogin.ToString()
                 )
             {
-                ws.Rows[0].Height =18 * 128;
+                ws.Rows[0].Height = 18 * 128;
             }
             if (name == Enumerations.MenuName.LogistiqueMenuEtatVenteAnnuelleProduitClient.ToString()
                 || name == Enumerations.MenuName.LogistiqueMenuEtatDestinationAnnuelleProduitClient.ToString())
@@ -4300,7 +4299,7 @@ namespace eVaSys.Utils
             ws.Rows[i].Height = 400;
             i++;
             string eAdr = "";
-            if (!string.IsNullOrWhiteSpace(fC.CommandeFournisseur.AdresseClient?.Adr1)) { eAdr += fC.CommandeFournisseur.AdresseClient.Adr1 + " - ";  }
+            if (!string.IsNullOrWhiteSpace(fC.CommandeFournisseur.AdresseClient?.Adr1)) { eAdr += fC.CommandeFournisseur.AdresseClient.Adr1 + " - "; }
             if (!string.IsNullOrWhiteSpace(fC.CommandeFournisseur.AdresseClient?.CodePostal)) { eAdr += fC.CommandeFournisseur.AdresseClient.CodePostal + " "; }
             if (!string.IsNullOrWhiteSpace(fC.CommandeFournisseur.AdresseClient?.Ville)) { eAdr += fC.CommandeFournisseur.AdresseClient.Ville + " "; }
             if (!string.IsNullOrWhiteSpace(fC.CommandeFournisseur.AdresseClient?.Pays?.LibelleCourt)) { eAdr += "(" + fC.CommandeFournisseur.AdresseClient.Pays.LibelleCourt + ")"; }
@@ -4742,7 +4741,7 @@ namespace eVaSys.Utils
             i++;
             if (docType == "Client")
             {
-                ws.Cells[i, 0].Value = client?.Libelle; 
+                ws.Cells[i, 0].Value = client?.Libelle;
                 i++;
                 eAdr = "";
                 if (!string.IsNullOrWhiteSpace(nC.CommandeFournisseur.AdresseClient?.Adr1)) { eAdr += nC.CommandeFournisseur.AdresseClient.Adr1 + " - "; }
@@ -4751,7 +4750,7 @@ namespace eVaSys.Utils
                 if (!string.IsNullOrWhiteSpace(nC.CommandeFournisseur.AdresseClient?.Pays?.LibelleCourt)) { eAdr += "(" + nC.CommandeFournisseur.AdresseClient.Pays.LibelleCourt + ")"; }
                 ws.Cells[i, 0].Value = eAdr;
             }
-            i = 4; 
+            i = 4;
             if (docType == "Fournisseur")
             {
                 eAdr = "";

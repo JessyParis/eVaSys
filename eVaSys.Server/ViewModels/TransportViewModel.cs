@@ -31,7 +31,7 @@ namespace eVaSys.ViewModels
         public CamionTypeViewModel CamionType { get; set; }
         public decimal? PUHT { get; set; }
         public decimal? PUHTDemande { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

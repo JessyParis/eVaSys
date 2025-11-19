@@ -12,14 +12,10 @@ using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.Utils;
 using eVaSys.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections;
 using System.Data;
 using System.Globalization;
-using System.Linq;
 using System.Resources;
 
 namespace eVaSys.Controllers
@@ -97,7 +93,7 @@ namespace eVaSys.Controllers
             {
                 foreach (DictionaryEntry entry in resxReader)
                 {
-                    if(entry.Value.GetType() == typeof(string))
+                    if (entry.Value.GetType() == typeof(string))
                     {
                         object[] rowVals = new object[2];
                         rowVals[0] = (string)entry.Key;

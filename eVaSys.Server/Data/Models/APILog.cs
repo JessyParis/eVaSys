@@ -8,7 +8,6 @@
 /// Création : 23/06/2022
 /// ----------------------------------------------------------------------------------------------------- 
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 
 namespace eVaSys.Data
 {

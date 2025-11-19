@@ -10,14 +10,9 @@
 using AutoMapper;
 using eVaSys.APIUtils;
 using eVaSys.Data;
-using eVaSys.Utils;
 using eVaSys.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {

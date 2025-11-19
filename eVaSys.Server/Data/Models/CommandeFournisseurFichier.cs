@@ -8,9 +8,7 @@
 /// Création : 16/10/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
-using System;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -39,14 +37,14 @@ namespace eVaSys.Data
         public string Nom { get; set; }
         public string Extension { get; set; }
         public byte[]? Vignette { get; set; }
-        public string VignetteBase64 
+        public string VignetteBase64
         {
             get
             {
                 string r = "";
-                if(Vignette != null) { r = Convert.ToBase64String(Vignette); }
+                if (Vignette != null) { r = Convert.ToBase64String(Vignette); }
                 return r;
-            } 
+            }
         }
         public byte[]? Miniature { get; set; }
         public string MiniatureBase64
@@ -65,7 +63,7 @@ namespace eVaSys.Data
         {
             string r = "";
             int c = DbContext.CommandeFournisseurFichiers.Where(q => q.Nom == Nom && q.RefCommandeFournisseur == RefCommandeFournisseur && q.RefCommandeFournisseurFichier != RefCommandeFournisseurFichier).Count();
-            if (c > 0 || Nom?.Length > 250 || Extension?.Length>50)
+            if (c > 0 || Nom?.Length > 250 || Extension?.Length > 50)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
                 if (c > 0) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }

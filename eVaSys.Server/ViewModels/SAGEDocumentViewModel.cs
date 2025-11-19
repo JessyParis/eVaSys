@@ -8,9 +8,6 @@
 /// Création : 28/09/2023
 /// ----------------------------------------------------------------------------------------------------- 
 
-using System;
-using System.Collections.Generic;
-
 namespace eVaSys.ViewModels
 {
     /// <summary>

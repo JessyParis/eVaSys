@@ -443,7 +443,7 @@ namespace eVaSys.Utils
                 if (colsLike != null)
                     criteria.AddRange(colsLike
                         .Select(x => ctxt.EnvDataColumns[x.ToString()])
-                        .Select(x => (x.DataType == EnvDataColumnDataType.text.ToString() ? 
+                        .Select(x => (x.DataType == EnvDataColumnDataType.text.ToString() ?
                             x.FullField + " COLLATE Latin1_general_CI_AI like '%'+@filterText+'%' COLLATE Latin1_general_CI_AI"
                             : "CAST (" + x.FullField + " as nvarchar) " + " like '%'+REPLACE(@filterText,' ','')+'%'")));
                 // Add the "Equals" criteria
@@ -460,7 +460,7 @@ namespace eVaSys.Utils
                         + String.Join(" OR ", criteria)
                         + ")";
                     // Add the associated query parameter if it does not exists
-                    if(!cmd.Parameters.Contains("@filterText"))
+                    if (!cmd.Parameters.Contains("@filterText"))
                     {
                         cmd.Parameters.Add("@filterText", SqlDbType.NVarChar).Value = searchStr;
                     }
@@ -991,7 +991,7 @@ namespace eVaSys.Utils
             //Try to get Parametre
             var p = dbContext.Parametres.Find(refParametre);
             //Set default if no parametre
-            if (p==null)
+            if (p == null)
             {
                 p = new Parametre() { Libelle = "N/A", Serveur = true, ValeurNumerique = 0, ValeurTexte = "N/A", ValeurHTML = "N/A", ValeurBinaire = null };
                 switch (refParametre)

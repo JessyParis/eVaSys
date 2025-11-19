@@ -10,7 +10,6 @@
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
@@ -118,7 +117,7 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            if (!(RefContratType > 0) || DDebut == null || DFin==null || string.IsNullOrWhiteSpace(IdContrat))
+            if (!(RefContratType > 0) || DDebut == null || DFin == null || string.IsNullOrWhiteSpace(IdContrat))
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
                 if (!(RefContratType > 0)) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(1543); }

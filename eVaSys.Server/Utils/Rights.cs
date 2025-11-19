@@ -8,13 +8,9 @@
 /// Création : 27/07/2018
 /// ----------------------------------------------------------------------------------------------------- 
 
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using eVaSys.Data;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore;
-using Telerik.Windows.Documents.Fixed.Model.Annotations;
+using System.Data;
 
 namespace eVaSys.Utils
 {
@@ -1901,8 +1897,8 @@ namespace eVaSys.Utils
                             else if (u.RefTransporteur != null && u.RefTransporteur == cmdF.RefTransporteur) { r = true; }
                             else if (u.RefClient != null && u.RefClient == cmdF.AdresseClient?.RefEntite) { r = true; }
                             else if (u.RefPrestataire != null && u.RefPrestataire == cmdF.RefPrestataire) { r = true; }
-                            else if (u.HabilitationLogistique==Enumerations.HabilitationLogistique.Administrateur.ToString()) { r = true; }
-                            else if (u.HabilitationLogistique== Enumerations.HabilitationLogistique.Utilisateur.ToString()) { r = true; }
+                            else if (u.HabilitationLogistique == Enumerations.HabilitationLogistique.Administrateur.ToString()) { r = true; }
+                            else if (u.HabilitationLogistique == Enumerations.HabilitationLogistique.Utilisateur.ToString()) { r = true; }
                         }
                         break;
                 }

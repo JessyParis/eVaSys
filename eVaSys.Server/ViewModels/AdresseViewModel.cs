@@ -7,7 +7,6 @@
 /// Projet : e-Valorplast
 /// Création : 28/09/2018
 /// ----------------------------------------------------------------------------------------------------- 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace eVaSys.ViewModels
@@ -43,7 +42,7 @@ namespace eVaSys.ViewModels
         public string Horaires { get; set; }
         public string Cmt { get; set; }
         public bool? Actif { get; set; } = false;
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         public string TexteAdresseList { get; set; }
         public string TexteAdresse { get; set; }

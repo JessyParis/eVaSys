@@ -8,16 +8,12 @@
 /// Création : 13/01/2020
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using eVaSys.APIUtils;
 
 namespace eVaSys.Controllers
 {

@@ -9,10 +9,8 @@
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -89,7 +87,7 @@ namespace eVaSys.Data
             if (c > 0)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
-                r += cR.GetTextRessource(410); 
+                r += cR.GetTextRessource(410);
             }
             return r;
         }

@@ -1,4 +1,5 @@
-﻿/// <Propriété>
+﻿using eVaSys.APIUtils;
+/// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
 /// 11 rue du Hainaut
@@ -8,23 +9,16 @@
 /// Création : 06/06/2018
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Data;
-using eVaSys.ViewModels;
 using eVaSys.Utils;
-using Microsoft.AspNetCore.Http;
+using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
-using System.Globalization;
-using eVaSys.APIUtils;
-using System.Net;
-using Microsoft.EntityFrameworkCore;
-using SkiaSharp;
-using Org.BouncyCastle.Crypto.Signers;
 
 namespace eVaSys.Controllers
 {
@@ -43,11 +37,11 @@ namespace eVaSys.Controllers
         #endregion
 
         [HttpPost("auth")]
-        public IActionResult Auth([FromBody]TokenRequestViewModel model)
+        public IActionResult Auth([FromBody] TokenRequestViewModel model)
         {
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.
-            if (model == null) return BadRequest(new BadRequestError(CurrentContext?.CulturedRessources.GetTextRessource(711)??"Bad request. Requête mal formattée"));
+            if (model == null) return BadRequest(new BadRequestError(CurrentContext?.CulturedRessources.GetTextRessource(711) ?? "Bad request. Requête mal formattée"));
             switch (model.grantType)
             {
                 case "password":
@@ -94,7 +88,7 @@ namespace eVaSys.Controllers
                     utilisateur = DbContext.Utilisateurs.Where(i => i.RefUtilisateur == refUtilisateur).FirstOrDefault();
                     if (utilisateur == null
                         || (utilisateur != null && !string.IsNullOrWhiteSpace(utilisateur.EMail) && identifiant == utilisateur.Login)
-                        || (utilisateur != null && utilisateur.RefUtilisateurMaitre!=null)
+                        || (utilisateur != null && utilisateur.RefUtilisateurMaitre != null)
                         )
                     {
                         response.token = "";
@@ -198,9 +192,10 @@ namespace eVaSys.Controllers
                     var log = new Log();
                     if (!changeProfil)
                     {
-                        log = new Log() { 
+                        log = new Log()
+                        {
                             RefUtilisateur = utilisateur.RefUtilisateur,
-                            DLogin= DateTime.Now
+                            DLogin = DateTime.Now
                         };
                         DbContext.Logs.Add(log);
                     }
@@ -333,10 +328,10 @@ namespace eVaSys.Controllers
                         }
                     }
                 }
-                if (ok) { return Json(response); } 
+                if (ok) { return Json(response); }
                 else { return StatusCode((int)HttpStatusCode.Forbidden, new ForbiddenError(CurrentContext?.CulturedRessources.GetTextRessource(723) ?? "Vous avez été déconnecté suite à une longue période d'inactivité. Veuillez vous reconnecter. \n You have been disconnected, please login again.")); }
             }
-            catch 
+            catch
             {
                 return StatusCode((int)HttpStatusCode.Forbidden, new ForbiddenError(CurrentContext?.CulturedRessources.GetTextRessource(345) ?? "Erreur inconnue. Unknown error."));
             }

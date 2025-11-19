@@ -9,11 +9,8 @@
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -96,7 +93,7 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            int c = DbContext.Equipementiers.Where(q => q.Libelle == Libelle && q.RefEquipementier!= RefEquipementier).Count();
+            int c = DbContext.Equipementiers.Where(q => q.Libelle == Libelle && q.RefEquipementier != RefEquipementier).Count();
             if (c > 0 || Libelle?.Length > 50)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);

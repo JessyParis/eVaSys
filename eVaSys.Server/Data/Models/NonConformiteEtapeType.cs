@@ -8,7 +8,6 @@
 /// Création : 22/07/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 

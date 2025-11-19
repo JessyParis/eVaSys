@@ -11,11 +11,7 @@ using eValorplast.BLL;
 using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.Utils;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace eVaSys.Controllers
 {
@@ -247,4 +243,4 @@ namespace eVaSys.Controllers
         #endregion
     }
 }
-    
+

@@ -12,9 +12,6 @@ using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -58,7 +55,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The RessourceViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]RessourceViewModel model)
+        public IActionResult Post([FromBody] RessourceViewModel model)
         {
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.

@@ -26,7 +26,7 @@ namespace eVaSys.ViewModels
         public string Libelle { get; set; }
         public string Couleur { get; set; }
         public int RefProduitGroupeReportingType { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

@@ -1,4 +1,7 @@
-﻿/// <Propriété>
+﻿using eVaSys.Utils;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+/// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
 /// 11 rue du Hainaut
@@ -7,14 +10,8 @@
 /// Projet : e-Valorplast
 /// Création : 04/07/2018
 /// ----------------------------------------------------------------------------------------------------- 
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using eVaSys.Utils;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace eVaSys.Data
 {
@@ -187,7 +184,7 @@ namespace eVaSys.Data
             get
             {
                 var r = DbContext.Utilisateurs
-                    .Where(e => e.RefUtilisateur!=RefUtilisateur && e.RefUtilisateurMaitre == RefUtilisateur && e.Actif)
+                    .Where(e => e.RefUtilisateur != RefUtilisateur && e.RefUtilisateurMaitre == RefUtilisateur && e.Actif)
                     .Count() > 0;
                 return r;
             }

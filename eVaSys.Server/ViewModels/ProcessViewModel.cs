@@ -19,7 +19,7 @@ namespace eVaSys.ViewModels
         }
         public int RefProcess { get; set; }
         public string Libelle { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
     }
 }

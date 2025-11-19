@@ -12,8 +12,6 @@ using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {

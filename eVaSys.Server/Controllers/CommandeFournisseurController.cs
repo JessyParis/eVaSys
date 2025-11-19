@@ -322,7 +322,7 @@ namespace eVaSys.Controllers
                     string sqlStr = "select RefContrat from VueCommandeFournisseurContrat where RefCommandeFournisseur=@refCommandeFournisseur";
                     cmd.CommandText = sqlStr;
                     var res = cmd.ExecuteScalar();
-                    if(res != null)
+                    if (res != null)
                     {
                         refContrat = (int)res;
                         cmd.Parameters.Add("@refContrat", SqlDbType.Int).Value = refContrat;
@@ -716,7 +716,7 @@ namespace eVaSys.Controllers
             //Check mandatory parameters
             if (int.TryParse(refCommandeFournisseur, out rCF))
             {
-                var r = DbContext.Verrouillages.Where(i => i.Donnee== "RefCommandeFournisseur" && i.RefDonnee == rCF).ExecuteDelete();
+                var r = DbContext.Verrouillages.Where(i => i.Donnee == "RefCommandeFournisseur" && i.RefDonnee == rCF).ExecuteDelete();
                 //Return Json
                 return new JsonResult(true, JsonSettings);
             }
@@ -1102,7 +1102,7 @@ namespace eVaSys.Controllers
                 dataModel.PrixTonneHT = 0;
             }
             //Delete Repartition on RefusCamion
-            if(refusCamionOr == false && dataModel.RefusCamion == true)
+            if (refusCamionOr == false && dataModel.RefusCamion == true)
             {
                 DbContext.Repartitions.Where(i => i.RefCommandeFournisseur == (int)viewModel.RefCommandeFournisseur).ExecuteDelete();
             }
@@ -1369,7 +1369,7 @@ namespace eVaSys.Controllers
                             body += WebUtility.HtmlEncode("Merci de vérifier que vous aurez le nombre de balles suffisant pour un chargement complet et que le chargement pourra bien être effectué dans les 2 heures maximum qui suivent l’arrivée du camion.") + "<br/><br/>";
                             body += WebUtility.HtmlEncode("Attention : toute annulation ou modification doit se faire 48 heures maximum avant la date de chargement annoncée, à l’adresse e-mail " + Utils.Utils.GetParametre(11, DbContext).ValeurTexte + ".") + "<br/><br/>";
                             //Ajout du commentaire spécifique produit, le cas échéant
-                            if(!string.IsNullOrWhiteSpace(cF.Produit.CmtFournisseur))
+                            if (!string.IsNullOrWhiteSpace(cF.Produit.CmtFournisseur))
                             {
                                 body += WebUtility.HtmlEncode("*** INFORMATIONS IMPORTANTES ***") + "<br/>";
                                 body += WebUtility.HtmlEncode(cF.Produit.CmtFournisseur) + "<br/><br/>";

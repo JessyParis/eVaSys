@@ -8,8 +8,6 @@
 /// Création : 22/05/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace eVaSys.ViewModels
 {

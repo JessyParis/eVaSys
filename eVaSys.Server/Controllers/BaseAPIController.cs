@@ -1,4 +1,7 @@
-﻿/// <Propriété>
+﻿using eVaSys.APIUtils;
+using eVaSys.Data;
+using eVaSys.Utils;
+/// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
 /// 11 rue du Hainaut
@@ -7,18 +10,11 @@
 /// Projet : e-Valorplast
 /// Création : 06/06/2018
 /// ----------------------------------------------------------------------------------------------------- 
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using eVaSys.Data;
-using eVaSys.Utils;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using System.IdentityModel.Tokens.Jwt;
-using eVaSys.APIUtils;
-using System.Net;
 using Newtonsoft.Json.Serialization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 
 namespace eVaSys.Controllers
 {
@@ -123,7 +119,7 @@ namespace eVaSys.Controllers
             {
                 if (!authenticated)
                 {
-                    ctx.Result = StatusCode((int)HttpStatusCode.Forbidden, new ForbiddenError(CurrentContext?.CulturedRessources.GetTextRessource(723)?? "Vous avez été déconnecté suite à une longue période d'inactivité. Veuillez vous reconnecter. \n You have been disconnected, please login again."));
+                    ctx.Result = StatusCode((int)HttpStatusCode.Forbidden, new ForbiddenError(CurrentContext?.CulturedRessources.GetTextRessource(723) ?? "Vous avez été déconnecté suite à une longue période d'inactivité. Veuillez vous reconnecter. \n You have been disconnected, please login again."));
                 }
                 else    //Not authorized
                 {

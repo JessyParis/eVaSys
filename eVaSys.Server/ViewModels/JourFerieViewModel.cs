@@ -8,7 +8,6 @@
 /// Création : 29/12/2021
 /// ----------------------------------------------------------------------------------------------------- 
 using Newtonsoft.Json;
-using System;
 
 namespace eVaSys.ViewModels
 {
@@ -25,7 +24,7 @@ namespace eVaSys.ViewModels
         #region Properties
         public int? RefJourFerie { get; set; }
         public DateTime D { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

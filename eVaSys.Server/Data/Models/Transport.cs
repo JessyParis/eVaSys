@@ -10,10 +10,8 @@
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -99,7 +97,7 @@ namespace eVaSys.Data
         /// </summary>
         public void MarkModification(bool add)
         {
-            if(add)
+            if (add)
             {
                 RefUtilisateurCreation = RefUtilisateurCourant;
                 DCreation = DateTime.Now;

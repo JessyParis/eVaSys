@@ -30,7 +30,7 @@ namespace eVaSys.ViewModels
         public string ValeurHTML { get; set; }
         public string ValeurBinaireBase64 { get; set; }
         public string Cmt { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

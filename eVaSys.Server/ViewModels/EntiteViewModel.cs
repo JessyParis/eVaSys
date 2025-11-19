@@ -9,7 +9,6 @@
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Data;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace eVaSys.ViewModels
 {
@@ -76,7 +75,7 @@ namespace eVaSys.ViewModels
         public ICollection<EntiteEntiteViewModel> EntiteEntites { get; set; }
         public ICollection<SAGEDocument> SAGEDocuments { get; set; }
         public string LibelleCode { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

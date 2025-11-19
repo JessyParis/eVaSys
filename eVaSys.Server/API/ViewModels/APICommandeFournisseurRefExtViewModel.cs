@@ -19,7 +19,7 @@ namespace eVaSys.ViewModels
         {
         }
         [Required]
-        [StringLength(50)] 
+        [StringLength(50)]
         public string RefExt { get; set; }
         [Required]
         [StringLength(50)]

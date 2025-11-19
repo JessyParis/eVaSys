@@ -10,12 +10,8 @@
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 using Microsoft.Data.SqlClient;
-using eVaSys.APIUtils;
-using eVaSys.Utils;
-using System.Linq;
+using System.Data;
 
 namespace eVaSys.Controllers
 {

@@ -25,7 +25,7 @@ namespace eVaSys.ViewModels
         public int RefRepreneur { get; set; }
         public string Libelle { get; set; }
         public bool? RepreneurContrat { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

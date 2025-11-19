@@ -27,7 +27,7 @@ namespace eVaSys.ViewModels
         public string Libelle { get; set; }
         public string TicketTexte { get; set; }
         public string TicketTexteHTMLFromText { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

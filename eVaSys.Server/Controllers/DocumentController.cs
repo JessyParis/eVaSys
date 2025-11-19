@@ -13,10 +13,6 @@ using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -48,7 +44,7 @@ namespace eVaSys.Controllers
         {
             var document = DbContext.Documents
                 .Include(i => i.DocumentEntites)
-                .ThenInclude(i=>i.Entite)
+                .ThenInclude(i => i.Entite)
                 .Include(i => i.DocumentEntiteTypes)
                 .Include(r => r.UtilisateurCreation)
                 .Include(r => r.UtilisateurModif)

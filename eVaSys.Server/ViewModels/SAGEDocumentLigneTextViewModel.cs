@@ -2,10 +2,6 @@
 
 using eVaSys.Data;
 
-
-
-using System.Collections.Generic;
-
 /// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)

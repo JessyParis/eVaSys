@@ -14,8 +14,6 @@ using eVaSys.Utils;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -80,7 +78,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The MontantIncitationQualiteViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]MontantIncitationQualiteViewModel model)
+        public IActionResult Post([FromBody] MontantIncitationQualiteViewModel model)
         {
             bool unLockData = Request.Headers["unLockData"].ToString() == "true" ? true : false;
             // return a generic HTTP Status 500 (Server Error)

@@ -13,9 +13,6 @@ using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -155,10 +152,10 @@ namespace eVaSys.Controllers
             System.Linq.IQueryable<eVaSys.Data.NonConformiteFamille> req = DbContext.NonConformiteFamilles;
             if (actif || CurrentContext.filterGlobalActif)
             {
-                if (refNonConformiteFamilles!="") 
+                if (refNonConformiteFamilles != "")
                 {
-                    List<int> ids = refNonConformiteFamilles.Split(',').Select(int.Parse).ToList(); 
-                    req = req.Where(el => el.Actif == true || ids.Contains(el.RefNonConformiteFamille)); 
+                    List<int> ids = refNonConformiteFamilles.Split(',').Select(int.Parse).ToList();
+                    req = req.Where(el => el.Actif == true || ids.Contains(el.RefNonConformiteFamille));
                 }
                 else { req = req.Where(el => el.Actif == true); }
             }

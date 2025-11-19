@@ -12,15 +12,10 @@ using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.Utils;
 using eVaSys.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Net;
 
 namespace eVaSys.Controllers
@@ -69,7 +64,7 @@ namespace eVaSys.Controllers
                 .ThenInclude(i => i.Entite)
                 .Include(i => i.AdresseClient)
                 .ThenInclude(i => i.ContactAdresses)
-                .ThenInclude(i=>i.ContactAdresseContactAdresseProcesss)
+                .ThenInclude(i => i.ContactAdresseContactAdresseProcesss)
                 .Where(e => e.AdresseClient.RefEntite == CurrentContext.ConnectedUtilisateur.RefClient
                  && e.ValideDPrevues && e.DDechargement == null).ToList();
             foreach (var c in cmds)

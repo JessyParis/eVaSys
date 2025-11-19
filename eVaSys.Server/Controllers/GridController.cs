@@ -869,7 +869,7 @@ namespace eVaSys.Controllers
                                 + " 	left join tblEntite as f on tblCommandeFournisseur.RefEntite=f.RefEntite"
                                 + " 	left join tblProduit as p on tblCommandeFournisseur.RefProduit=p.RefProduit"
                                 + "     left join tblUtilisateur on tblUtilisateur.RefUtilisateur=tblRepartition.RefUtilisateurCreation";
-                            if(CurrentContext.ConnectedUtilisateur.HabilitationLogistique == Enumerations.HabilitationLogistique.Administrateur.ToString())
+                            if (CurrentContext.ConnectedUtilisateur.HabilitationLogistique == Enumerations.HabilitationLogistique.Administrateur.ToString())
                             {
                                 sqlStr += "     left join (select RefCommandeFournisseur, case when count(distinct PUHT)>1 then null else max(PUHT) end as PUHT, case when count(distinct PUHT)>1 then 0 else 1 end as PUHTUnique"
                                      + "         from VueRepartitionUnitaireDetail"
@@ -2220,8 +2220,8 @@ namespace eVaSys.Controllers
                         }
                     }
                     //Certify PrixReprise if needed
-                    if (menu == Enumerations.MenuName.LogistiqueMenuPrixReprise.ToString() 
-                        && (action == Enumerations.ActionName.CertificationPrixReprise.ToString() ||action == Enumerations.ActionName.UnCertificationPrixReprise.ToString()))
+                    if (menu == Enumerations.MenuName.LogistiqueMenuPrixReprise.ToString()
+                        && (action == Enumerations.ActionName.CertificationPrixReprise.ToString() || action == Enumerations.ActionName.UnCertificationPrixReprise.ToString()))
                     {
                         string errs = "";
                         if (!string.IsNullOrEmpty(selectedItem))
@@ -2246,13 +2246,13 @@ namespace eVaSys.Controllers
                                         //continue if no errors
                                         if (valid == "")
                                         {
-                                            if(viewModel.Certif ==true)
+                                            if (viewModel.Certif == true)
                                             {
                                                 //Certify
                                                 prixReprise.DCertif = DateTime.Now;
                                                 prixReprise.RefUtilisateurCertif = CurrentContext.RefUtilisateur;
                                             }
-                                            else if(viewModel.Certif == false)
+                                            else if (viewModel.Certif == false)
                                             {
                                                 //Uncertify
                                                 prixReprise.DCertif = null;

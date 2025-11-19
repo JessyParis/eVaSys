@@ -68,7 +68,7 @@ namespace eVaSys.ViewModels
         public bool DimensionBalle { get; set; }
         public bool IdNational { get; set; }
         public bool LiaisonEntiteDR { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

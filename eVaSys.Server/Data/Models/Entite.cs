@@ -10,11 +10,8 @@
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -256,7 +253,7 @@ namespace eVaSys.Data
             }
             set { _entiteEntites = value; }
         }
-        private ICollection<Contrat> _contrats{ get; set; }
+        private ICollection<Contrat> _contrats { get; set; }
         [NotMapped]
         public ICollection<Contrat> Contrats
         {
@@ -267,7 +264,7 @@ namespace eVaSys.Data
                 {
                     _contrats = DbContext.Contrats
                         .Include(i => i.ContratEntites)
-                        .ThenInclude(i=>i.Entite)
+                        .ThenInclude(i => i.Entite)
                         .Where(e => e.ContratEntites.Any(a => a.RefEntite == RefEntite))
                         .ToHashSet();
                 }

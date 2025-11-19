@@ -8,8 +8,6 @@
 /// Création : 30/09/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace eVaSys.ViewModels
 {
@@ -28,7 +26,7 @@ namespace eVaSys.ViewModels
         public int? PoidsChargement { get; set; }
         public UtilisateurViewModel UtilisateurCreation { get; set; }
         public string InfoText { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
     }
 }

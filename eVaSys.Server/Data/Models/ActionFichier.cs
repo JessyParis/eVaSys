@@ -8,9 +8,7 @@
 /// Création : 16/10/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
-using System;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -45,7 +43,7 @@ namespace eVaSys.Data
         {
             string r = "";
             int c = DbContext.ActionFichiers.Where(q => q.Nom == Nom && q.RefAction != RefAction).Count();
-            if (c > 0 || Nom?.Length > 250 || Extension?.Length>50)
+            if (c > 0 || Nom?.Length > 250 || Extension?.Length > 50)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
                 if (c > 0) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }

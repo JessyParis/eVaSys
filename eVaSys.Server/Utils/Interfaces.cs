@@ -8,8 +8,6 @@
 /// Création : 01/01/2019
 /// ----------------------------------------------------------------------------------------------------- 
 
-using System;
-
 namespace eVaSys.Data
 {
     public interface IMarkModification

@@ -13,10 +13,6 @@ using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -196,7 +192,7 @@ namespace eVaSys.Controllers
                 else
                 {
                     req = req.Where(el => (el.EntiteProduits.Any(rel => rel.RefEntite == refEntite && !rel.Interdit) || el.RefProduit == refProduit));
-                } 
+                }
             }
             //Composants
             if (refProduitCompose != null)

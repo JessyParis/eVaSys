@@ -18,7 +18,7 @@ namespace eVaSys.Mappings
     {
         public MappingProfiles()
         {
-            CreateMap<ActionActionType, ActionActionTypeViewModel >().ReverseMap();
+            CreateMap<ActionActionType, ActionActionTypeViewModel>().ReverseMap();
             CreateMap<ActionDocumentType, ActionDocumentTypeViewModel>().ReverseMap();
             CreateMap<ActionTypeEntiteType, ActionTypeEntiteTypeViewModel>().ReverseMap();
             CreateMap<ActionType, ActionTypeViewModel>().ReverseMap();
@@ -116,7 +116,7 @@ namespace eVaSys.Mappings
             CreateMap<NonConformiteNature, NonConformiteNatureViewModel>().ReverseMap();
             CreateMap<NonConformiteNonConformiteFamille, NonConformiteNonConformiteFamilleViewModel>().ReverseMap();
             CreateMap<NonConformiteReponseClientType, NonConformiteReponseClientTypeViewModel>().ReverseMap();
-            CreateMap<NonConformiteReponseFournisseurType, NonConformiteReponseFournisseurTypeViewModel> ().ReverseMap();
+            CreateMap<NonConformiteReponseFournisseurType, NonConformiteReponseFournisseurTypeViewModel>().ReverseMap();
             CreateMap<ParamEmail, ParamEmailViewModel>().ReverseMap();
             CreateMap<ParamEmail, ParamEmailListViewModel>().ReverseMap();
             CreateMap<Parametre, ParametreViewModel>().ReverseMap();

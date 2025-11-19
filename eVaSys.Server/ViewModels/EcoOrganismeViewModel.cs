@@ -25,7 +25,7 @@ namespace eVaSys.ViewModels
         public int RefEcoOrganisme { get; set; }
         public string Libelle { get; set; }
         public bool? EcoOrganismeContrat { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

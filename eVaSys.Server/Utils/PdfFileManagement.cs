@@ -8,28 +8,23 @@
 /// Création :08/04/2021
 /// ----------------------------------------------------------------------------------------------------- 
 
-using System.Data;
-using System.IO;
-using System;
 using eVaSys.Data;
-using System.Linq;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using Telerik.Windows.Documents.Fixed.Model;
-using Telerik.Windows.Documents.Fixed.Model.Editing;
-using Telerik.Windows.Documents.Fixed.Model.Fonts;
-using Telerik.Documents.Primitives;
-using Telerik.Documents.Core.Fonts;
-using FontFamily = Telerik.Documents.Core.Fonts.FontFamily;
-using Telerik.Windows.Documents.Fixed.Model.Editing.Tables;
-using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf.Export;
-using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf;
-using Microsoft.Extensions.Configuration;
 using GemBox.Pdf;
 using GemBox.Pdf.Content;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
+using Telerik.Documents.Core.Fonts;
+using Telerik.Documents.Primitives;
+using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf;
+using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf.Export;
+using Telerik.Windows.Documents.Fixed.Model;
 using Telerik.Windows.Documents.Fixed.Model.ColorSpaces;
+using Telerik.Windows.Documents.Fixed.Model.Editing;
 using Telerik.Windows.Documents.Fixed.Model.Editing.Flow;
+using Telerik.Windows.Documents.Fixed.Model.Editing.Tables;
+using Telerik.Windows.Documents.Fixed.Model.Fonts;
+using FontFamily = Telerik.Documents.Core.Fonts.FontFamily;
 
 namespace eVaSys.Utils
 {
@@ -484,7 +479,7 @@ namespace eVaSys.Utils
                 blk.TextProperties.Font = arial;
                 blk.TextProperties.FontSize = normal.FontSize;
                 blk.HorizontalAlignment = HorizontalAlignment.Right;
-                blk.InsertText(((decimal)(sDL.Quantite??0)).ToString("### ##0.000"));
+                blk.InsertText(((decimal)(sDL.Quantite ?? 0)).ToString("### ##0.000"));
                 cell.Blocks.Add(blk);
                 cell = row.Cells.AddTableCell();
                 cell.Borders = new TableCellBorders(thinBorder, noBorder, thinBorder, noBorder);
@@ -569,19 +564,19 @@ namespace eVaSys.Utils
                 cell.Blocks.Add(blk);
             }
             //Last row
-                row = table.Rows.AddTableRow();
-                cell = row.Cells.AddTableCell();
-                cell.Borders = new TableCellBorders(mediumBorder, noBorder, thinBorder, mediumBorder);
-                cell = row.Cells.AddTableCell();
-                cell.Borders = new TableCellBorders(thinBorder, noBorder, thinBorder, mediumBorder);
-                cell = row.Cells.AddTableCell();
-                cell.Borders = new TableCellBorders(thinBorder, noBorder, thinBorder, mediumBorder);
-                cell = row.Cells.AddTableCell();
-                cell.Borders = new TableCellBorders(thinBorder, noBorder, thinBorder, mediumBorder);
-                cell = row.Cells.AddTableCell();
-                cell.Borders = new TableCellBorders(thinBorder, noBorder, thinBorder, mediumBorder);
-                cell = row.Cells.AddTableCell();
-                cell.Borders = new TableCellBorders(thinBorder, noBorder, mediumBorder, mediumBorder);
+            row = table.Rows.AddTableRow();
+            cell = row.Cells.AddTableCell();
+            cell.Borders = new TableCellBorders(mediumBorder, noBorder, thinBorder, mediumBorder);
+            cell = row.Cells.AddTableCell();
+            cell.Borders = new TableCellBorders(thinBorder, noBorder, thinBorder, mediumBorder);
+            cell = row.Cells.AddTableCell();
+            cell.Borders = new TableCellBorders(thinBorder, noBorder, thinBorder, mediumBorder);
+            cell = row.Cells.AddTableCell();
+            cell.Borders = new TableCellBorders(thinBorder, noBorder, thinBorder, mediumBorder);
+            cell = row.Cells.AddTableCell();
+            cell.Borders = new TableCellBorders(thinBorder, noBorder, thinBorder, mediumBorder);
+            cell = row.Cells.AddTableCell();
+            cell.Borders = new TableCellBorders(thinBorder, noBorder, mediumBorder, mediumBorder);
             //----------------------------------------------------
             //Tables totals
             //Calculate
@@ -775,7 +770,7 @@ namespace eVaSys.Utils
             blk = new();
             blk.TextProperties.Font = arial;
             blk.TextProperties.FontSize = normal.FontSize;
-            if(sAGEDocument.Type == "AVOIR")
+            if (sAGEDocument.Type == "AVOIR")
             {
                 blk.InsertText("Cet avoir sera déduit des prochains montants à vous devoir.");
             }

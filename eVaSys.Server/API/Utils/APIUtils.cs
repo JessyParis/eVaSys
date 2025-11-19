@@ -33,15 +33,16 @@ namespace eVaSys.APIUtils
                     RefUtilisateur = refUtilisateur,
                     URL = Utils.Utils.SetEmptyStringToNull(path),
                     Payload = Utils.Utils.SetEmptyStringToNull(jsonBody),
-                    StatusCode=statusCode,
-                    Response= Utils.Utils.SetEmptyStringToNull(response),
-                    Erreur= Utils.Utils.SetEmptyStringToNull(erreur),
+                    StatusCode = statusCode,
+                    Response = Utils.Utils.SetEmptyStringToNull(response),
+                    Erreur = Utils.Utils.SetEmptyStringToNull(erreur),
                 };
                 dbContext.APILogs.Add(aPILog);
                 dbContext.SaveChanges();
                 return true;
             }
-            catch {
+            catch
+            {
                 return false;
             }
         }

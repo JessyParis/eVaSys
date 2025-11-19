@@ -13,14 +13,9 @@ using Limilabs.Client.SMTP;
 using Limilabs.Mail;
 using Limilabs.Mail.Headers;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.Data;
-using System.Linq;
 using System.Net;
 using System.Security.Authentication;
-using System.Threading;
 
 namespace eVaSys.Utils
 {

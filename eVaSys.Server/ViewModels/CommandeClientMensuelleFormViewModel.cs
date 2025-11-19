@@ -8,7 +8,6 @@
 /// Création : 18/09/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using Newtonsoft.Json;
-using System;
 
 namespace eVaSys.ViewModels
 {
@@ -21,7 +20,7 @@ namespace eVaSys.ViewModels
         public int? RefCommandeClient { get; set; }
         public int? RefCommandeClientMensuelle { get; set; }
         public int? RefContrat { get; set; }
-        public int RefEntite{ get; set; }
+        public int RefEntite { get; set; }
         public int RefAdresse { get; set; }
         public int RefProduit { get; set; }
         public string LibelleProduit { get; set; }

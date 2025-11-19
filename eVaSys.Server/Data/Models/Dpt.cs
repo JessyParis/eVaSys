@@ -8,8 +8,6 @@
 /// Création : 07/12/2018
 /// ----------------------------------------------------------------------------------------------------- 
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace eVaSys.Data

@@ -1,11 +1,7 @@
 using eVaSys.Data;
 using eVaSys.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -39,7 +35,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddCors(options =>
     options.AddPolicy(name: "AngularPolicy",
-        cfg => {
+        cfg =>
+        {
             cfg.AllowAnyHeader();
             cfg.AllowAnyMethod();
             cfg.WithOrigins(builder.Configuration["AllowedCORS"]!);
@@ -81,7 +78,7 @@ builder.Services
 var app = builder.Build();
 app.UseMiddleware<DynamicRequestSizeLimitMiddleware>();
 IHostApplicationLifetime lifetime = app.Lifetime;
-lifetime.ApplicationStarted.Register(() =>OnAppStarted(builder.Configuration));
+lifetime.ApplicationStarted.Register(() => OnAppStarted(builder.Configuration));
 app.UseSession();
 app.UseDefaultFiles();
 app.MapStaticAssets();

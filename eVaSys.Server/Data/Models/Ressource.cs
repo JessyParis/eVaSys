@@ -7,12 +7,8 @@
 /// Projet : e-Valorplast
 /// Création : 19/10/2023
 /// ----------------------------------------------------------------------------------------------------- 
-using eVaSys.Utils;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 
 namespace eVaSys.Data
@@ -20,7 +16,7 @@ namespace eVaSys.Data
     /// <summary>
     /// Class for types de camion
     /// </summary>
-    public class Ressource 
+    public class Ressource
     {
         #region Constructor
         public Ressource()

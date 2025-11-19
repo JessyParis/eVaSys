@@ -10,11 +10,8 @@
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -159,7 +156,7 @@ namespace eVaSys.Data
                         s += Environment.NewLine;
                         s += "  " + CommandeFournisseur.AdresseClient.Adr1;
                     }
-                    if (!string.IsNullOrWhiteSpace(CommandeFournisseur.CodePostal) 
+                    if (!string.IsNullOrWhiteSpace(CommandeFournisseur.CodePostal)
                         || !string.IsNullOrWhiteSpace(CommandeFournisseur.Ville)
                         || !string.IsNullOrWhiteSpace(CommandeFournisseur.Pays?.LibelleCourt)
                         )
@@ -209,7 +206,7 @@ namespace eVaSys.Data
                         if (s != cR.GetTextRessource(319)) { s += Environment.NewLine; }
                         s += "  " + CommandeFournisseur.Adr1;
                     }
-                    if (!string.IsNullOrWhiteSpace(CommandeFournisseur.CodePostal) 
+                    if (!string.IsNullOrWhiteSpace(CommandeFournisseur.CodePostal)
                         || !string.IsNullOrWhiteSpace(CommandeFournisseur.Ville)
                         || !string.IsNullOrWhiteSpace(CommandeFournisseur.Pays?.LibelleCourt)
                         )

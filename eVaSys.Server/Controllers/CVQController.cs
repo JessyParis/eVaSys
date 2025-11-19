@@ -8,16 +8,12 @@
 /// Création : 20/05/2020
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.Data;
-using System.Linq;
-using eVaSys.APIUtils;
-using System.Collections.Generic;
-using System;
 
 namespace eVaSys.Controllers
 {
@@ -66,7 +62,7 @@ namespace eVaSys.Controllers
                                 Ordre = dC.Ordre,
                                 LimiteBasse = dC.LimiteBasse,
                                 LimiteHaute = dC.LimiteHaute
-                                
+
                             });
                     }
                 }
@@ -98,7 +94,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The CVQViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]CVQViewModel model)
+        public IActionResult Post([FromBody] CVQViewModel model)
         {
             string valid = null;
             // return a generic HTTP Status 500 (Server Error)
@@ -158,7 +154,7 @@ namespace eVaSys.Controllers
         {
             // retrieve the cVQ from the Database
             var cVQ = DbContext.CVQs
-                .Include(r=>r.CVQDescriptionCVQs)
+                .Include(r => r.CVQDescriptionCVQs)
                 .Where(i => i.RefCVQ == id)
                 .FirstOrDefault();
 

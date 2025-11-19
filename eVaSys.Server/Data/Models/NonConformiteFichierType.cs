@@ -9,10 +9,7 @@
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -34,7 +31,7 @@ namespace eVaSys.Data
         protected ApplicationDbContext DbContext { get; private set; }
         public CultureInfo currentCulture = new("fr-FR");
         public int RefNonConformiteFichierType { get; set; }
-        public string Libelle{ get; set; }
+        public string Libelle { get; set; }
         public ICollection<NonConformiteFichier> NonConformiteFichiers { get; set; }
         //--------------------------------------------------------------------------------------------
         /// <summary>
@@ -44,7 +41,7 @@ namespace eVaSys.Data
         {
             string r = "";
             int c = DbContext.NonConformiteFichierTypes.Where(q => (q.Libelle == Libelle) && q.RefNonConformiteFichierType != RefNonConformiteFichierType).Count();
-            if (c > 0 || (Libelle?.Length > 50 ))
+            if (c > 0 || (Libelle?.Length > 50))
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
                 if (c > 0) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }

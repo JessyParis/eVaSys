@@ -330,7 +330,7 @@ namespace eVaSys.Utils
             UnCertificationCommandeClientMensuelle,
         }
         //Enumération pour les noms de colonne
-        public enum  DataColumnName
+        public enum DataColumnName
         {
             ActionCmt,
             ActionDate,
@@ -800,7 +800,7 @@ namespace eVaSys.Utils
             RefDescriptionControle,
             RefDescriptionCVQ,
             RefDescriptionReception,
-            RefDocument, 
+            RefDocument,
             RefEntite,
             RefEntiteType,
             RefEquipementier,

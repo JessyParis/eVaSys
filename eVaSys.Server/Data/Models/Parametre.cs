@@ -8,10 +8,8 @@
 /// Création : 03/01/2024
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -104,7 +102,7 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            int c = DbContext.Parametres.Where(q => q.Libelle == Libelle && q.RefParametre!= RefParametre).Count();
+            int c = DbContext.Parametres.Where(q => q.Libelle == Libelle && q.RefParametre != RefParametre).Count();
             if (c > 0 || Libelle?.Length > 50 || Cmt?.Length > 500)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);

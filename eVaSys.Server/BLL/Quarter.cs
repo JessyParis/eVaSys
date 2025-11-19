@@ -8,7 +8,6 @@
 /// Création : 16/01/2018
 /// ----------------------------------------------------------------------------------------------------- 
 /// </Propriété>
-using System;
 using System.Globalization;
 
 /// <summary>
@@ -116,7 +115,8 @@ namespace eValorplast.BLL
         public CultureInfo Culture
         {
             get { return _culture; }
-            set { 
+            set
+            {
                 _culture = value;
                 setName();
             }

@@ -27,7 +27,7 @@ namespace eVaSys.ViewModels
         public string ValeurHTML { get; set; }
         public string LibelleFRFR { get; set; }
         public string LibelleENGB { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         public int RefRessource { get; set; }
         #endregion Properties

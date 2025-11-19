@@ -11,16 +11,10 @@ using eValorplast.BLL;
 using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace eVaSys.Controllers
@@ -68,7 +62,7 @@ namespace eVaSys.Controllers
             else
                 return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(617)));
         }
-        
+
         /// <summary>
         /// GET: api/exportsage/exportachat
         /// ROUTING TYPE: attribute-based
@@ -257,7 +251,7 @@ namespace eVaSys.Controllers
                 return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(617)));
             }
         }
-        
+
         /// <summary>
         /// GET: api/exportsage/exportvente
         /// ROUTING TYPE: attribute-based
@@ -1053,7 +1047,7 @@ namespace eVaSys.Controllers
                 MemoryStream mS = new();
                 Encoding sageEnc = Encoding.GetEncoding("ibm850");
                 StreamWriter sw = new(mS, sageEnc);
-                string fileName ="CentresDeTri" + DateTime.Now.ToString("yyMM") + ".txt";
+                string fileName = "CentresDeTri" + DateTime.Now.ToString("yyMM") + ".txt";
                 DateTime dDebut = new(y, 1, 1);
                 DateTime dFin = new(y, 12, 31);
                 //Initialisations
@@ -1185,4 +1179,4 @@ namespace eVaSys.Controllers
         #endregion
     }
 }
-    
+

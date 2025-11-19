@@ -25,7 +25,7 @@ namespace eVaSys.ViewModels
         public int RefMontantIncitationQualite { get; set; }
         public decimal Montant { get; set; }
         public int Annee { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

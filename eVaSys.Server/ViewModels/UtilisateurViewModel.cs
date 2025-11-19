@@ -1,5 +1,4 @@
-﻿using eVaSys.Data;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 /// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
@@ -9,7 +8,6 @@ using Newtonsoft.Json;
 /// Projet : e-Valorplast
 /// Création : 04/07/2018
 /// ----------------------------------------------------------------------------------------------------- 
-using System;
 
 namespace eVaSys.ViewModels
 {

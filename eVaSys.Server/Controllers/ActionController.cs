@@ -13,9 +13,6 @@ using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
 using Action = eVaSys.Data.Action;
 
 namespace eVaSys.Controllers
@@ -32,13 +29,13 @@ namespace eVaSys.Controllers
         }
         #endregion Constructor
 
-            #region RESTful Conventions
-            /// <summary>
-            /// GET: evapi/Action/{id}
-            /// Retrieves the Action with the given {id}
-            /// </summary>
-            /// <param name="id">The ID of an existing Action</param>
-            /// <returns>the Action with the given {id}</returns>
+        #region RESTful Conventions
+        /// <summary>
+        /// GET: evapi/Action/{id}
+        /// Retrieves the Action with the given {id}
+        /// </summary>
+        /// <param name="id">The ID of an existing Action</param>
+        /// <returns>the Action with the given {id}</returns>
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -78,7 +75,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The ActionViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]ActionViewModel model)
+        public IActionResult Post([FromBody] ActionViewModel model)
         {
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.
@@ -139,10 +136,10 @@ namespace eVaSys.Controllers
         {
             // retrieve the Action from the Database
             var action = DbContext.Actions.Where(i => i.RefAction == id)
-                .Include(r=>r.ActionActionTypes)
-                .Include(r=>r.ActionDocumentTypes)
-                .Include(r=>r.ActionFichierNoFiles)
-                .Include(r=>r.Emails)
+                .Include(r => r.ActionActionTypes)
+                .Include(r => r.ActionDocumentTypes)
+                .Include(r => r.ActionFichierNoFiles)
+                .Include(r => r.Emails)
                 .AsSplitQuery()
                 .FirstOrDefault();
 

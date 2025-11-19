@@ -1,7 +1,4 @@
-﻿using eVaSys.Utils;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-/// <Propriété>
+﻿/// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
 /// 11 rue du Hainaut
@@ -10,10 +7,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 /// Projet : e-Valorplast
 /// Création : 02/07/2019
 /// ----------------------------------------------------------------------------------------------------- 
-using System;
-using System.Globalization;
-using System.Xml;
-
 namespace eVaSys.Data
 {
     public class Audit

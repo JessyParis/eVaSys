@@ -10,11 +10,8 @@
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -112,7 +109,7 @@ namespace eVaSys.Data
         {
             string r = "";
             int c = DbContext.ClientApplications.Where(q => q.RefApplicationProduitOrigine == RefApplicationProduitOrigine
-            && q.RefEntite==RefEntite && q.D == D && q.RefClientApplication != RefClientApplication).Count();
+            && q.RefEntite == RefEntite && q.D == D && q.RefClientApplication != RefClientApplication).Count();
             if (c > 0)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);

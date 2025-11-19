@@ -9,14 +9,7 @@
 /// ----------------------------------------------------------------------------------------------------- 
 
 using eVaSys.Data;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Web;
 using static eVaSys.Utils.Enumerations;
@@ -692,8 +685,8 @@ namespace eVaSys.Utils
                 string corps, corpsHTML;
                 if (cmdF != null)
                 {
-                    corps = "Une erreur d'API s'est produite le " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") 
-                        + " concernant la demande d'enlèvement " 
+                    corps = "Une erreur d'API s'est produite le " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+                        + " concernant la demande d'enlèvement "
                         + (Utils.FormatNumeroCommande(cmdF?.NumeroCommande.ToString()) ?? "NA") + " (Réf. ext. " + (cmdF?.LibExt ?? "NA") + ", Id ext. " + (cmdF?.RefExt ?? "NA") + ")"
                         + Environment.NewLine + message
                         + Environment.NewLine + e.Message

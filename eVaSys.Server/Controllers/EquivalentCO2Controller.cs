@@ -13,8 +13,6 @@ using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -146,7 +144,7 @@ namespace eVaSys.Controllers
             System.Linq.IQueryable<eVaSys.Data.EquivalentCO2> req = DbContext.EquivalentCO2s;
             if (actif)
             {
-                req = req.Where(el => el.Actif == true && el.Actif == true); 
+                req = req.Where(el => el.Actif == true && el.Actif == true);
             }
             var all = req.OrderBy(el => el.Ordre).ToArray();
             //Return Json

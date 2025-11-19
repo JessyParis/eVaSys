@@ -43,7 +43,7 @@ namespace eVaSys.Controllers
             System.Linq.IQueryable<eVaSys.Data.ContactAdresseProcess> req = DbContext.ContactAdresseProcesss;
             //Get data
             var all = req
-                .Where(e=> e.RefContactAdresseProcess != (int)Enumerations.ContactAdresseProcess.DemandeEnlevement 
+                .Where(e => e.RefContactAdresseProcess != (int)Enumerations.ContactAdresseProcess.DemandeEnlevement
                     && e.RefContactAdresseProcess != (int)Enumerations.ContactAdresseProcess.InteressementCentreDeTri
                     && e.RefContactAdresseProcess != (int)Enumerations.ContactAdresseProcess.RepriseCollectivite
                     && e.RefContactAdresseProcess != (int)Enumerations.ContactAdresseProcess.IncitationQualite)

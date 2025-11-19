@@ -1,4 +1,5 @@
-﻿/// <Propriété>
+﻿using eVaSys.APIUtils;
+/// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
 /// 11 rue du Hainaut
@@ -10,13 +11,9 @@
 using eVaSys.Data;
 using eVaSys.Utils;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 using Microsoft.Data.SqlClient;
-using eVaSys.APIUtils;
-using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace eVaSys.Controllers
 {
@@ -291,7 +288,7 @@ namespace eVaSys.Controllers
                 case "NonConformiteForIFClientFacture":
                     var nC = DbContext.NonConformites
                         .Include(i => i.CommandeFournisseur)
-                        .Where(e=>e.RefNonConformite== System.Convert.ToInt32(filterText)).FirstOrDefault();
+                        .Where(e => e.RefNonConformite == System.Convert.ToInt32(filterText)).FirstOrDefault();
                     if (nC != null)
                     {
                         //var refCmds = DbContext.NonConformites

@@ -7,15 +7,11 @@
 /// Projet : e-Valorplast
 /// Création : 20/10/2022
 /// ----------------------------------------------------------------------------------------------------- 
-using AutoMapper;
 using eVaSys.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Data;
-using System.Linq;
-using System.Text.Json;
 
 namespace eVaSys.Controllers
 {

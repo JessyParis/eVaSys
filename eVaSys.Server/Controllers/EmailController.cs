@@ -8,20 +8,17 @@
 /// Création : 07/12/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eValorplast.BLL;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.Utils;
 using eVaSys.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Data;
-using System.Linq;
 using Limilabs.Mail;
 using Limilabs.Mail.Headers;
-using eVaSys.APIUtils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Net;
-using eValorplast.BLL;
 
 namespace eVaSys.Controllers
 {
@@ -78,7 +75,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The EmailViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]EmailViewModel model)
+        public IActionResult Post([FromBody] EmailViewModel model)
         {
             string send = Request.Headers["send"].ToString();
             string emailing = Request.Headers["emailing"].ToString();
@@ -138,7 +135,7 @@ namespace eVaSys.Controllers
                             DateTime dT = DateTime.MinValue;
                             DateTime.TryParse(d, out dT);
                             //End if incorrect parameter
-                            if (dT==DateTime.MinValue) { return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711))); }
+                            if (dT == DateTime.MinValue) { return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711))); }
                             //Process if everything ok
                             r = EmailUtils.SendEmailing(email, emailing, y, dT, DbContext, CurrentContext, Configuration);
                             int.TryParse(r, out nb);
@@ -280,8 +277,8 @@ namespace eVaSys.Controllers
                     body = "<span style=\"font-family:Gill Sans MT; font-size:11pt;\">"
                         + WebUtility.HtmlEncode("Bonjour,") + "<br/><br/>"
                         + WebUtility.HtmlEncode("Nous avons le plaisir de vous informer que les documents relatifs à la reprise des balles de plastiques pour le ") + q.NameHTML + WebUtility.HtmlEncode(" sont en ligne.") + "<br/><br/>"
-                        + WebUtility.HtmlEncode("Vous pouvez les télécharger en vous connectant sur la page d’accueil de notre site internet ") + "<a href='https://www.valorplast.com' target='_blank'>" + WebUtility.HtmlEncode("www.valorplast.com") + "</a>" + WebUtility.HtmlEncode(" / espace e-Valorplast") 
-                        + WebUtility.HtmlEncode(", ou directement via l'application ") + "<a href='https://app.e-valorplast.com/valorplast' target='_blank'>" + WebUtility.HtmlEncode("e-Valorplast") + "</a>" 
+                        + WebUtility.HtmlEncode("Vous pouvez les télécharger en vous connectant sur la page d’accueil de notre site internet ") + "<a href='https://www.valorplast.com' target='_blank'>" + WebUtility.HtmlEncode("www.valorplast.com") + "</a>" + WebUtility.HtmlEncode(" / espace e-Valorplast")
+                        + WebUtility.HtmlEncode(", ou directement via l'application ") + "<a href='https://app.e-valorplast.com/valorplast' target='_blank'>" + WebUtility.HtmlEncode("e-Valorplast") + "</a>"
                         + "<br/><br/>"
                         + WebUtility.HtmlEncode("Pensez à vous munir de votre identifiant et de votre mot de passe.") + "<br/><br/>"
                         + WebUtility.HtmlEncode("Vous en souhaitant bonne réception,") + "<br/><br/>"

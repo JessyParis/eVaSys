@@ -8,11 +8,9 @@
 /// Création :24/10/2019
 /// ----------------------------------------------------------------------------------------------------- 
 
-using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.IO;
 
 namespace eVaSys.Utils
 {
@@ -35,7 +33,7 @@ namespace eVaSys.Utils
             if (width == 0)
             {
                 //Resizing according to height
-                width =(int)(height * (Convert.ToDecimal(image.Width) / image.Height));
+                width = (int)(height * (Convert.ToDecimal(image.Width) / image.Height));
             }
             if (height == 0)
             {

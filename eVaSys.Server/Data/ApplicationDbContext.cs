@@ -8,16 +8,9 @@
 /// Création : 06/06/2018
 /// -----------------------------------------------------------------------------------------------------
 
-using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.VisualBasic.Devices;
 using Newtonsoft.Json;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Telerik.Windows.Documents.Media;
 
 namespace eVaSys.Data
 {
@@ -1948,7 +1941,7 @@ namespace eVaSys.Data
                     .WithMany(p => p.DocumentModifs)
                     .HasForeignKey(d => d.RefUtilisateurModif)
                     .OnDelete(DeleteBehavior.Restrict);
-                
+
             });
             modelBuilder.Entity<DocumentNoFile>(entity =>
             {
@@ -3371,8 +3364,8 @@ namespace eVaSys.Data
                 entity.ToTable("tblNonConformite");
 
                 entity.Property(e => e.PlanAction)
-                    .HasDefaultValueSql("((1))"); 
-                
+                    .HasDefaultValueSql("((1))");
+
                 entity.HasIndex(e => e.RefCommandeFournisseur);
 
                 entity.HasIndex(e => e.RefNonConformiteNature);

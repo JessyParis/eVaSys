@@ -10,11 +10,8 @@
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -177,7 +174,7 @@ namespace eVaSys.Data
                 {
                     if (!string.IsNullOrWhiteSpace(TelMobile))
                     {
-                        if(!string.IsNullOrWhiteSpace(Email)) { s += cR.GetTextRessource(419) + " : " + Email; }
+                        if (!string.IsNullOrWhiteSpace(Email)) { s += cR.GetTextRessource(419) + " : " + Email; }
                     }
                 }
                 return s;

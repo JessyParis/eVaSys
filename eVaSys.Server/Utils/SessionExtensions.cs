@@ -8,7 +8,6 @@
 /// Création : 27/07/2018
 /// ----------------------------------------------------------------------------------------------------- 
 
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
 namespace eVaSys.Utils

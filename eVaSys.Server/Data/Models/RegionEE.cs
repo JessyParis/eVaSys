@@ -8,11 +8,8 @@
 /// Création : 27/10/2021
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -96,10 +93,10 @@ namespace eVaSys.Data
             {
                 foreach (var rEEDpt in RegionEEDpts)
                 {
-                    if(DbContext.RegionEEDpts.Where(w=>w.RefRegionEE!=RefRegionEE && w.RefDpt == rEEDpt.RefDpt).Count() > 0)
+                    if (DbContext.RegionEEDpts.Where(w => w.RefRegionEE != RefRegionEE && w.RefDpt == rEEDpt.RefDpt).Count() > 0)
                     {
-                        regionEEDptDbl=true;
-                        break;  
+                        regionEEDptDbl = true;
+                        break;
                     }
                 }
             }

@@ -28,8 +28,8 @@ namespace eVaSys.ViewModels
         public int? Annee { get; set; }
         public int? Mois { get; set; }
         public decimal? Ratio { get; set; }
-        public bool AllPays { get; set;}
-        public string CreationText { get; set;}
+        public bool AllPays { get; set; }
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
 
         #endregion

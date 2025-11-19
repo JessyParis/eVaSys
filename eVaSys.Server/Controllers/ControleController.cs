@@ -8,16 +8,12 @@
 /// Création : 07/12/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.Data;
-using System.Linq;
-using eVaSys.APIUtils;
-using System.Collections.Generic;
-using System;
 
 namespace eVaSys.Controllers
 {
@@ -64,7 +60,7 @@ namespace eVaSys.Controllers
                                 LibelleFRFR = dC.LibelleFRFR,
                                 LibelleENGB = dC.LibelleENGB,
                                 Ordre = dC.Ordre,
-                                CalculLimiteConformite=dC.CalculLimiteConformite
+                                CalculLimiteConformite = dC.CalculLimiteConformite
                             });
                     }
                 }
@@ -95,7 +91,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The ControleViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]ControleViewModel model)
+        public IActionResult Post([FromBody] ControleViewModel model)
         {
             string valid = null;
             // return a generic HTTP Status 500 (Server Error)
@@ -155,7 +151,7 @@ namespace eVaSys.Controllers
         {
             // retrieve the controle from the Database
             var controle = DbContext.Controles
-                .Include(r=>r.ControleDescriptionControles)
+                .Include(r => r.ControleDescriptionControles)
                 .Where(i => i.RefControle == id)
                 .FirstOrDefault();
 

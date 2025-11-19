@@ -10,9 +10,7 @@
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -51,7 +49,7 @@ namespace eVaSys.Data
         {
             string r = "";
             int c = DbContext.ClientApplicationApplications.Where(q => q.RefClientApplication == RefClientApplication
-            && q.RefApplication==RefApplication && q.RefClientApplicationApplication != RefClientApplicationApplication).Count();
+            && q.RefApplication == RefApplication && q.RefClientApplicationApplication != RefClientApplicationApplication).Count();
             if (c > 0)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);

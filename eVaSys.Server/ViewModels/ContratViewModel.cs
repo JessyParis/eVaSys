@@ -7,8 +7,6 @@
 /// Projet : e-Valorplast
 /// Création : 18/12/2024
 /// ----------------------------------------------------------------------------------------------------- 
-using eVaSys.Data;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Newtonsoft.Json;
 
 namespace eVaSys.ViewModels

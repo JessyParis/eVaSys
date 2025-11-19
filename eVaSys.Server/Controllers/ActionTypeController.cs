@@ -8,16 +8,12 @@
 /// Création : 30/11/2022
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using eVaSys.APIUtils;
 
 namespace eVaSys.Controllers
 {
@@ -75,7 +71,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The ActionTypeViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]ActionTypeViewModel model)
+        public IActionResult Post([FromBody] ActionTypeViewModel model)
         {
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.

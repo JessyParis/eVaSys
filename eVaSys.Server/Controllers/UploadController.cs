@@ -12,14 +12,9 @@ using eVaSys.Data;
 using eVaSys.Utils;
 using Limilabs.Mail;
 using Limilabs.Mail.MIME;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace eVaSys.Controllers
 {

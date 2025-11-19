@@ -8,16 +8,12 @@
 /// Création : 01/07/2020
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.Data;
-using System.Linq;
-using eVaSys.APIUtils;
-using System.Collections.Generic;
-using System;
 
 namespace eVaSys.Controllers
 {
@@ -299,7 +295,7 @@ namespace eVaSys.Controllers
                             //Process Etape
                             var nCE = nC.NonConformiteEtapes.Where(el => el.RefNonConformiteEtapeType == 7).FirstOrDefault();
                             if (nCE != null)
-                                {
+                            {
                                 if (nCE.RefUtilisateurCreation == null)
                                 {
                                     nCE.DCreation = DateTime.Now;

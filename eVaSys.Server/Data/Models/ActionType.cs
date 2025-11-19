@@ -8,13 +8,9 @@
 /// Création : 30/04/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {

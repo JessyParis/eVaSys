@@ -83,7 +83,7 @@ namespace eVaSys.Utils
         }
         public string Cmt { get; set; }
     }
-    
+
     /// <summary>
     /// Class for modules
     /// </summary>
@@ -224,7 +224,8 @@ namespace eVaSys.Utils
         public string FilterEnd { get; set; }
         public bool FilterActif { get; set; }
         public string FilterClients { get; set; }
-        public string FilterClientsCaption {
+        public string FilterClientsCaption
+        {
             get
             {
                 string s = Utils.CreateFilterCaptionFromString(FilterClients, Enumerations.ObjectName.Entite.ToString(), DbContext, Culture);

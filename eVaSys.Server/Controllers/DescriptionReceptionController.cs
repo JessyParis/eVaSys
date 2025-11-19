@@ -8,15 +8,12 @@
 /// Création : 07/12/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.Data;
-using System.Linq;
-using eVaSys.APIUtils;
-using System.Collections.Generic;
 
 namespace eVaSys.Controllers
 {
@@ -73,7 +70,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The DescriptionReceptionViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]DescriptionReceptionViewModel model)
+        public IActionResult Post([FromBody] DescriptionReceptionViewModel model)
         {
             string valid = null;
             // return a generic HTTP Status 500 (Server Error)

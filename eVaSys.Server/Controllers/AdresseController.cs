@@ -14,10 +14,7 @@ using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.Data;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -76,7 +73,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The AdresseViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]AdresseViewModel model)
+        public IActionResult Post([FromBody] AdresseViewModel model)
         {
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.

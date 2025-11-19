@@ -7,8 +7,6 @@
 /// Projet : e-Valorplast
 /// Création : 16/12/2019
 /// ----------------------------------------------------------------------------------------------------- 
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace eVaSys.ViewModels
@@ -28,7 +26,7 @@ namespace eVaSys.ViewModels
         public ApplicationProduitOrigineViewModel ApplicationProduitOrigine { get; set; }
         public DateTime D { get; set; }
         public ICollection<ClientApplicationApplicationViewModel> ClientApplicationApplications { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

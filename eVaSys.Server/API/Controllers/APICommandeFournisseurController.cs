@@ -12,15 +12,10 @@ using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.Utils;
 using eVaSys.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Net;
 using static eVaSys.Utils.Enumerations;
 
@@ -139,7 +134,7 @@ namespace eVaSys.Controllers
                     .Include(e => e.EntiteProduits)
                     .Where(e => e.CodeEE == laserTransaction.sourceActor.code).FirstOrDefault();
                 //Get Produit: quality or flow
-                int? refP= null;
+                int? refP = null;
                 if (!string.IsNullOrWhiteSpace(laserTransaction.quality?.code) && !string.IsNullOrWhiteSpace(laserTransaction.quality?.name))
                 {
                     refP = DbContext.Produits
@@ -175,7 +170,7 @@ namespace eVaSys.Controllers
                         + Environment.NewLine + " - flow.name=" + laserTransaction.flow?.name;
                 }
                 //Return error if businessId not found
-                else if (string .IsNullOrWhiteSpace(laserTransaction.businessId))
+                else if (string.IsNullOrWhiteSpace(laserTransaction.businessId))
                 {
                     err += Environment.NewLine + CurrentContext.CulturedRessources.GetTextRessource(1601);
                 }

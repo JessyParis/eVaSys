@@ -10,11 +10,7 @@
 
 using eVaSys.Data;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using Telerik.Licensing.Model;
 using static eVaSys.Utils.Enumerations;
 
 namespace eVaSys.Utils
@@ -32,7 +28,7 @@ namespace eVaSys.Utils
         {
             DbContext = context;
             CurrentCulture = new CultureInfo("fr-FR");
-            if (DbContext != null) { CreateEnvDataColumns(); CreateEnvModules(); CreateEnvComponents(); CreateEnvActions() ; CreateEnvMenus(); CreateEnvCommandeFournisseurStatuts(); }
+            if (DbContext != null) { CreateEnvDataColumns(); CreateEnvModules(); CreateEnvComponents(); CreateEnvActions(); CreateEnvMenus(); CreateEnvCommandeFournisseurStatuts(); }
         }
         [JsonIgnore]
         public ApplicationDbContext DbContext { get; set; }
@@ -52,7 +48,7 @@ namespace eVaSys.Utils
             EnvModules.Clear();
             EnvMenus.Clear();
             EnvCommandeFournisseurStatuts.Clear();
-            if (DbContext != null) { CreateEnvDataColumns(); CreateEnvModules(); CreateEnvComponents(); CreateEnvActions() ; CreateEnvMenus(); CreateEnvCommandeFournisseurStatuts(); }
+            if (DbContext != null) { CreateEnvDataColumns(); CreateEnvModules(); CreateEnvComponents(); CreateEnvActions(); CreateEnvMenus(); CreateEnvCommandeFournisseurStatuts(); }
         }
         /// <summary>
         /// Create modules properties
@@ -266,7 +262,7 @@ namespace eVaSys.Utils
                 menu = CreateEnvMenu(cR, MenuName.AdministrationMenuCamionType, 10050, ModuleName.Administration, "");
                 SetMenuGrid(menu, DataColumnName.CamionTypeLibelle, true, "camion-type", "RefCamionType");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuCivilite, 10001, ModuleName.Administration,"");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuCivilite, 10001, ModuleName.Administration, "");
                 SetMenuGrid(menu, DataColumnName.CiviliteLibelle, true, "civilite", "RefCivilite");
 
                 menu = CreateEnvMenu(cR, MenuName.AdministrationMenuDocument, 1201, ModuleName.Administration, "");
@@ -990,9 +986,9 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.ParametreValeurTexte, 1409, EnvDataColumnDataType.text, "ValeurTexte", "tblParametre.ValeurTexte");
                 CreateEnvDataColumn(cR, DataColumnName.ParametreValeurHTML, 1410, EnvDataColumnDataType.text, "ValeurHTML", "tblParametre.ValeurHTML");
                 CreateEnvDataColumn(cR, DataColumnName.PaysActif, 651, EnvDataColumnDataType.bit, "Actif", "tbrPays.Actif");
-                CreateEnvDataColumn(cR, DataColumnName.Periode,1332, EnvDataColumnDataType.text, "", "");
-                CreateEnvDataColumn(cR, DataColumnName.PoidsRepartiCITEO,1435, EnvDataColumnDataType.intNumber, "", "");
-                CreateEnvDataColumn(cR, DataColumnName.PoidsRepartiAdelphe,1437, EnvDataColumnDataType.intNumber, "", "");
+                CreateEnvDataColumn(cR, DataColumnName.Periode, 1332, EnvDataColumnDataType.text, "", "");
+                CreateEnvDataColumn(cR, DataColumnName.PoidsRepartiCITEO, 1435, EnvDataColumnDataType.intNumber, "", "");
+                CreateEnvDataColumn(cR, DataColumnName.PoidsRepartiAdelphe, 1437, EnvDataColumnDataType.intNumber, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.PoidsRepartiLeko, 1436, EnvDataColumnDataType.intNumber, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.PremieresConnexions, 1329, EnvDataColumnDataType.text, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.ProduitComposant, 595, EnvDataColumnDataType.bit, "", "");
@@ -1000,7 +996,7 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.ProduitCmtTransporteur, 1516, EnvDataColumnDataType.text, "CmtTransporteur", "tblProduit.CmtTransporteur");
                 CreateEnvDataColumn(cR, DataColumnName.ProduitCmtClient, 1517, EnvDataColumnDataType.text, "CmtClient", "tblProduit.CmtClient");
                 CreateEnvDataColumn(cR, DataColumnName.ProduitLaserType, 1598, EnvDataColumnDataType.text, "LaserType", "tblProduit.CmtClient");
-                CreateEnvDataColumn(cR, DataColumnName.Connexions,1330, EnvDataColumnDataType.text, "", "");
+                CreateEnvDataColumn(cR, DataColumnName.Connexions, 1330, EnvDataColumnDataType.text, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.RegionEELibelle, 1154, EnvDataColumnDataType.text, "Libelle", "tbrRegionEE.Libelle");
                 CreateEnvDataColumn(cR, DataColumnName.RepreneurLibelle, 1132, EnvDataColumnDataType.text, "Libelle", "tbrRepreneur.Libelle");
                 CreateEnvDataColumn(cR, DataColumnName.RepreneurContrat, 1293, EnvDataColumnDataType.bit, "RepreneurContrat", "tbrRepreneur.RepreneurContrat");
@@ -1071,21 +1067,22 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.Certifie, 0, EnvDataColumnDataType.bit, "", "");
             }
         }
-        private void CreateEnvDataColumn(CulturedRessources cR, DataColumnName col, int ress, EnvDataColumnDataType type,  string field, string fullfield, string cmt = "")
+        private void CreateEnvDataColumn(CulturedRessources cR, DataColumnName col, int ress, EnvDataColumnDataType type, string field, string fullfield, string cmt = "")
         {
             // Check ressource availability
             string cultured = ress == 0 ? "" : cR.GetTextRessource(ress);
             if (cultured == "")
                 cultured = "?" + col.ToString() + "?";
             // Add the new column
-            EnvDataColumns[col.ToString()] = new EnvDataColumn() { 
-                Name = col.ToString(), 
-                Field = field, 
-                FullField = fullfield, 
-                RefRessource = ress, 
-                CulturedCaption = ress == 0 ? "" : cultured, 
-                Cmt = cmt, 
-                DataType = type.ToString() 
+            EnvDataColumns[col.ToString()] = new EnvDataColumn()
+            {
+                Name = col.ToString(),
+                Field = field,
+                FullField = fullfield,
+                RefRessource = ress,
+                CulturedCaption = ress == 0 ? "" : cultured,
+                Cmt = cmt,
+                DataType = type.ToString()
             };
         }
         public Dictionary<string, EnvDataColumn> EnvDataColumns { get; private set; } = new Dictionary<string, EnvDataColumn> { };

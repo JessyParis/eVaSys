@@ -25,7 +25,7 @@ namespace eVaSys.ViewModels
         public int RefSecurite { get; set; }
         public int DelaiAvantDesactivationUtilisateur { get; set; }
         public int DelaiAvantChangementMotDePasse { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

@@ -25,7 +25,7 @@ namespace eVaSys.ViewModels
         public int RefCivilite { get; set; }
         public string Libelle { get; set; }
         public PaysViewModel Pays { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

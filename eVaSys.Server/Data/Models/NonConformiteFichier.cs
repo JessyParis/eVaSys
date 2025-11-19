@@ -10,9 +10,7 @@
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 using System.Globalization;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -53,14 +51,14 @@ namespace eVaSys.Data
         public string Nom { get; set; }
         public string Extension { get; set; }
         public byte[]? Vignette { get; set; }
-        public string VignetteBase64 
+        public string VignetteBase64
         {
             get
             {
                 string r = "";
-                if(Vignette != null) { r = Convert.ToBase64String(Vignette); }
+                if (Vignette != null) { r = Convert.ToBase64String(Vignette); }
                 return r;
-            } 
+            }
         }
         public byte[]? Miniature { get; set; }
         public string MiniatureBase64

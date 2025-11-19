@@ -8,11 +8,8 @@
 /// Création : 28/09/2023
 /// ----------------------------------------------------------------------------------------------------- 
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
-using System.Linq;
 
 namespace eVaSys.Data
 {
@@ -125,7 +122,7 @@ namespace eVaSys.Data
             //Calcul des totaux HT et TTC
             foreach (var sDL in SAGEDocumentLignes)
             {
-                ht += sDL.TotalHT??0;
+                ht += sDL.TotalHT ?? 0;
                 ttc += sDL.TotalHT ?? 0;
             }
             rowVals[0] = "Total HT";
@@ -152,7 +149,7 @@ namespace eVaSys.Data
                         for (int i = 0; i < frl.Length; i++)
                         {
                             //Calcul du total de la taxe pour le taux de TVA en question
-                            ht += frl[i].TotalHT??0;
+                            ht += frl[i].TotalHT ?? 0;
                             taxe += frl[i].TVAMontant ?? 0;
                         }
                         //Ajout aux totaux avant le taux de TVA supérieur, recherhe de la bonne place

@@ -8,14 +8,12 @@
 /// Création : 07/12/2019
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.Data;
-using System.Linq;
-using eVaSys.APIUtils;
 
 namespace eVaSys.Controllers
 {
@@ -72,7 +70,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The TicketViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]TicketViewModel model)
+        public IActionResult Post([FromBody] TicketViewModel model)
         {
             string send = Request.Headers["send"].ToString();
             string valid = null;

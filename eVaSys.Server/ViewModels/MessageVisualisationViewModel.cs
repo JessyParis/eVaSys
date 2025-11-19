@@ -7,7 +7,6 @@
 /// Projet : e-Valorplast
 /// Création : 07/11/2019
 /// ----------------------------------------------------------------------------------------------------- 
-using System;
 using Newtonsoft.Json;
 
 namespace eVaSys.ViewModels
@@ -25,7 +24,7 @@ namespace eVaSys.ViewModels
         #region Properties
         public int RefMessageVisualisation { get; set; }
         public int RefMessage { get; set; }
-        public UtilisateurListViewModel  Utilisateur { get; set; }
+        public UtilisateurListViewModel Utilisateur { get; set; }
         public DateTime D { get; set; }
         public bool? Confirme { get; set; }
         #endregion Properties

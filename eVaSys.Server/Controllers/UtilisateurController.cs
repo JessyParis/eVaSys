@@ -1,4 +1,6 @@
-﻿/// <Propriété>
+﻿using AutoMapper;
+using eVaSys.APIUtils;
+/// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
 /// 11 rue du Hainaut
@@ -8,20 +10,14 @@
 /// Création : 04/07/2018
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Data;
+using eVaSys.Utils;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
-using System.IdentityModel.Tokens.Jwt;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using eVaSys.Utils;
-using eVaSys.APIUtils;
-using System.Globalization;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace eVaSys.Controllers
 {
@@ -272,7 +268,7 @@ namespace eVaSys.Controllers
             //Return only Maitre
             if (getMaitres)
             {
-                req = req.Where(el => el.UtilisateurMaitres.Count()>0);
+                req = req.Where(el => el.UtilisateurMaitres.Count() > 0);
             }
             var all = req.OrderBy(el => el.Nom).ToArray();
             //Return Json

@@ -8,7 +8,6 @@
 /// Création : 27/10/2021
 /// ----------------------------------------------------------------------------------------------------- 
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace eVaSys.ViewModels
 {
@@ -26,7 +25,7 @@ namespace eVaSys.ViewModels
         public int RefRegionEE { get; set; }
         public string Libelle { get; set; }
         public ICollection<RegionEEDptViewModel> RegionEEDpts { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

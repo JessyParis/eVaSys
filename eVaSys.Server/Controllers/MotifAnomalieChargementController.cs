@@ -13,8 +13,6 @@ using eVaSys.Data;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
 
 namespace eVaSys.Controllers
 {
@@ -30,13 +28,13 @@ namespace eVaSys.Controllers
         }
         #endregion Constructor
 
-            #region RESTful Conventions
-            /// <summary>
-            /// GET: evapi/MotifAnomalieChargement/{id}
-            /// Retrieves the MotifAnomalieChargement with the given {id}
-            /// </summary>
-            /// <param name="id">The ID of an existing MotifAnomalieChargement</param>
-            /// <returns>The MotifAnomalieChargement with the given {id}</returns>
+        #region RESTful Conventions
+        /// <summary>
+        /// GET: evapi/MotifAnomalieChargement/{id}
+        /// Retrieves the MotifAnomalieChargement with the given {id}
+        /// </summary>
+        /// <param name="id">The ID of an existing MotifAnomalieChargement</param>
+        /// <returns>The MotifAnomalieChargement with the given {id}</returns>
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -60,7 +58,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The MotifAnomalieChargementViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]MotifAnomalieChargementViewModel model)
+        public IActionResult Post([FromBody] MotifAnomalieChargementViewModel model)
         {
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.

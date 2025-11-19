@@ -7,10 +7,7 @@
 /// Projet : e-Valorplast
 /// Création : 08/12/2021
 /// ----------------------------------------------------------------------------------------------------- 
-using eVaSys.Data;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace eVaSys.ViewModels
 {

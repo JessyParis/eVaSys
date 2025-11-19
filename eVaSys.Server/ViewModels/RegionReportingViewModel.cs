@@ -24,7 +24,7 @@ namespace eVaSys.ViewModels
         #region Properties
         public int? RefRegionReporting { get; set; }
         public string Libelle { get; set; }
-        public string CreationText { get; set;}
+        public string CreationText { get; set; }
         public string ModificationText { get; set; }
         #endregion Properties
     }

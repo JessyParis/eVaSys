@@ -9,8 +9,6 @@
 /// ----------------------------------------------------------------------------------------------------- 
 using eVaSys.Utils;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 

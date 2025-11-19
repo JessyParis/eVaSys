@@ -1,6 +1,4 @@
-﻿
-using System.Collections.Generic;
-/// <Propriété>
+﻿/// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
 /// 11 rue du Hainaut

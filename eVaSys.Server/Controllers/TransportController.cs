@@ -8,17 +8,14 @@
 /// Création : 06/06/2018
 /// ----------------------------------------------------------------------------------------------------- 
 using AutoMapper;
+using eVaSys.APIUtils;
 using eVaSys.Data;
 using eVaSys.Utils;
 using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Data;
 using Microsoft.Data.SqlClient;
-using System.Linq;
-using eVaSys.APIUtils;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace eVaSys.Controllers
 {
@@ -114,7 +111,7 @@ namespace eVaSys.Controllers
         /// </summary>
         /// <param name="model">The TransportViewModel containing the data to update</param>
         [HttpPost]
-        public IActionResult Post([FromBody]TransportViewModel model)
+        public IActionResult Post([FromBody] TransportViewModel model)
         {
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.
@@ -249,7 +246,7 @@ namespace eVaSys.Controllers
                     SqlDataAdapter dA = new(cmd);
                     if (dS.Tables.Count > 0) { dS.Tables.Clear(); }
                     dA.Fill(dS);
-                    if(dS.Tables[0].Rows.Count==0)
+                    if (dS.Tables[0].Rows.Count == 0)
                     {
                         DataRow dRow = dS.Tables[0].NewRow();
                         dRow[1] = CurrentContext.CulturedRessources.GetTextRessource(299);

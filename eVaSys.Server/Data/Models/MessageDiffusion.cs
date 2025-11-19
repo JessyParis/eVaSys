@@ -1,4 +1,6 @@
-﻿/// <Propriété>
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+/// <Propriété>
 /// -----------------------------------------------------------------------------------------------------
 /// Société Enviromatic sarl (Copyright)
 /// 11 rue du Hainaut
@@ -8,8 +10,6 @@
 /// Création : 06/11/2018
 /// ----------------------------------------------------------------------------------------------------- 
 using System.Globalization;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace eVaSys.Data
 {
