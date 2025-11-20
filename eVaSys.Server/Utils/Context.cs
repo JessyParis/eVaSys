@@ -90,6 +90,7 @@ namespace eVaSys.Utils
                 CreateEnvComponent(typeof(ClientApplication), 425, 707, 708, true, true);
                 CreateEnvComponent(typeof(CommandeFournisseur), 1573, 772, 773, true, true);
                 CreateEnvComponent(typeof(Document), 1442, 1198, 1443, true, true);
+                CreateEnvComponent(typeof(Data.DocumentType), 722, 1609, 1610, true, true);
                 CreateEnvComponent(typeof(EcoOrganisme), 1416, 1417, 1418, true, true);
                 CreateEnvComponent(typeof(EntiteType), 646, 10067, 10068, true, false).GetId0 = true;
                 CreateEnvComponent(typeof(Equipementier), 1156, 10017, 10018, true, true);

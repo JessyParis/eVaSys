@@ -25,7 +25,7 @@ namespace eVaSys.ViewModels
         public int RefContactAdresseDocumentType { get; set; }
         public int RefContactAdresse { get; set; }
         public int RefDocumentType { get; set; }
-        public DocumentTypeViewModel DocumentTypeViewModel { get; set; }
+        public DocumentTypeViewModel DocumentType { get; set; }
         public int Nb { get; set; }
         #endregion Properties
     }

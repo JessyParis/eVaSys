@@ -6,11 +6,15 @@ import { ApplicationUserContext } from "../../../globals/globals";
 import { MatDialog } from "@angular/material/dialog";
 import { ListService } from "../../../services/list.service";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
-import { getCreationModificationTooltipText, showConfirmToUser, showErrorToUser, GetContactAdresseProcessTooltipRessourceId, showInformationToUser } from "../../../globals/utils";
+import {
+  getCreationModificationTooltipText, showConfirmToUser, showErrorToUser, GetContactAdresseProcessTooltipRessourceId, showInformationToUser
+  , cmp
+} from "../../../globals/utils";
 import { SnackBarQueueService } from "../../../services/snackbar-queue.service";
 import { DataModelService } from "../../../services/data-model.service";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { ComponentRelativeComponent } from "../../dialogs/component-relative/component-relative.component";
+import { ComponentName } from "../../../globals/enums";
 
 class MyErrorStateMatcher implements ErrorStateMatcher {
   //Constructor
@@ -42,6 +46,7 @@ export class ContactAdresseComponent implements OnInit {
   civiliteList: dataModelsInterfaces.Civilite[];
   titreList: dataModelsInterfaces.Titre[];
   contactAdresseContactAdresseProcessList: dataModelsInterfaces.ContactAdresseContactAdresseProcess[] = [];
+  contactAdresseDocumentTypeList: dataModelsInterfaces.ContactAdresseDocumentType[] = [];
   //Validation
   adresseRequired: boolean = true;
   //Global lock
@@ -54,7 +59,8 @@ export class ContactAdresseComponent implements OnInit {
     , private dataModelService: DataModelService
     , private snackBarQueueService: SnackBarQueueService
     , public dialog: MatDialog) {
-    // create an empty object from the ContactAdresse interface
+    if (this.contactAdresse && this.contactAdresse.ContactAdresseDocumentTypes == null) { this.contactAdresse.ContactAdresseDocumentTypes = []; }
+    // Create form
     this.createForm();
   }
   //-----------------------------------------------------------------------------------
@@ -73,6 +79,7 @@ export class ContactAdresseComponent implements OnInit {
       Cmt: [null],
       CmtServiceFonction: [null],
       ContactAdresseProcessList: [null],
+      DocumentTypeList: [null],
     });
     if (1 != 1) {
       this.lockScreen();
@@ -95,6 +102,9 @@ export class ContactAdresseComponent implements OnInit {
     this.listService.getListContactAdresseProcess().subscribe(result => {
       this.contactAdresseContactAdresseProcessList = result.map(item => ({ ContactAdresseProcess: item } as dataModelsInterfaces.ContactAdresseContactAdresseProcess));
     }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
+    this.listService.getList<dataModelsInterfaces.DocumentType>(ComponentName.DocumentType).subscribe(result => {
+      this.contactAdresseDocumentTypeList = result.map(item => ({ DocumentType: item } as dataModelsInterfaces.ContactAdresseDocumentType));
+    }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     //Update form
     this.updateForm();
   }
@@ -114,6 +124,7 @@ export class ContactAdresseComponent implements OnInit {
     this.form.get("Cmt").disable();
     this.form.get("CmtServiceFonction").disable();
     this.form.get("ContactAdresseProcessList").disable();
+    this.form.get("DocumentTypeList").disable();
   }
   //-----------------------------------------------------------------------------------
   //Manage screen
@@ -147,6 +158,7 @@ export class ContactAdresseComponent implements OnInit {
     this.form.get("Cmt").setValue(this.contactAdresse.Cmt);
     this.form.get("CmtServiceFonction").setValue(this.contactAdresse.CmtServiceFonction);
     this.form.get("ContactAdresseProcessList").setValue(this.contactAdresse.ContactAdresseContactAdresseProcesss);
+    this.form.get("DocumentTypeList").setValue(this.contactAdresse.ContactAdresseDocumentTypes);
     //Manage screen
     this.ManageScreen();
   }
@@ -165,6 +177,7 @@ export class ContactAdresseComponent implements OnInit {
     this.contactAdresse.Cmt = this.form.get("Cmt").value;
     this.contactAdresse.CmtServiceFonction = this.form.get("CmtServiceFonction").value;
     this.contactAdresse.ContactAdresseContactAdresseProcesss = this.form.get("ContactAdresseProcessList").value;
+    this.contactAdresse.ContactAdresseDocumentTypes = this.form.get("DocumentTypeList").value;
   }
   //-----------------------------------------------------------------------------------
   //Saves the data model in DB
@@ -272,6 +285,14 @@ export class ContactAdresseComponent implements OnInit {
   onContactAdresseProcessSelected() {
     this.ManageScreen();
   }
+  compareFnDocumentType(item: dataModelsInterfaces.ContactAdresseDocumentType, selectedItem: dataModelsInterfaces.ContactAdresseDocumentType) {
+    return item && selectedItem ? item.DocumentType.RefDocumentType === selectedItem.DocumentType.RefDocumentType : item === selectedItem;
+  }
+  public onDocumentTypeListReset() {
+    this.contactAdresse.ContactAdresseDocumentTypes = [];
+    this.form.get("DocumentTypeList").setValue(this.contactAdresse.ContactAdresseDocumentTypes);
+    this.ManageScreen();
+  }
   //-----------------------------------------------------------------------------------
   //Create ContratCollectivite label
   contactAdresseServiceFonctionLabel(cASF: dataModelsInterfaces.ContactAdresseServiceFonction): string {
@@ -285,6 +306,14 @@ export class ContactAdresseComponent implements OnInit {
     if (cASF.Service) {
       s += cASF.Service.Libelle;
     }
+    //End
+    return s;
+  }
+  //-----------------------------------------------------------------------------------
+  //Create DocumentType label
+  DocumentTypesLabel(): string {
+    let s = this.form.get("DocumentTypeList").value?.sort(function (a, b) { return cmp(a.DocumentType.Libelle, b.DocumentType.Libelle); })
+      .map(item => item.DocumentType.Libelle).join("\n");
     //End
     return s;
   }

@@ -533,6 +533,61 @@ namespace eVaSys.Utils
                 dataModel.CmtServiceFonction = Utils.SetEmptyStringToNull(viewModel.CmtServiceFonction);
             }
             //-----------------------------------------------------------------------------------
+            //Remove related data ContactAdresseDocumentType is deletable
+            if (dataModel.ContactAdresseDocumentTypes != null)
+            {
+                foreach (ContactAdresseDocumentType cACAP in dataModel.ContactAdresseDocumentTypes)
+                {
+                    if (viewModel.ContactAdresseDocumentTypes == null)
+                    {
+                        dataModel.ContactAdresseDocumentTypes.Remove(cACAP);
+                        dirty = true;
+                    }
+                    else if (viewModel.ContactAdresseDocumentTypes.Where(el => el.DocumentType.RefDocumentType == cACAP.RefDocumentType).FirstOrDefault() == null)
+                    {
+                        dataModel.ContactAdresseDocumentTypes.Remove(cACAP);
+                        dirty = true;
+                    }
+                }
+            }
+            //Add or update related data ContactAdresseDocumentTypes
+            if (viewModel.ContactAdresseDocumentTypes != null)
+            {
+                foreach (ContactAdresseDocumentTypeViewModel cACAPVM in viewModel.ContactAdresseDocumentTypes)
+                {
+                    ContactAdresseDocumentType cACAP = null;
+                    if (dataModel.ContactAdresseDocumentTypes != null)
+                    {
+                        cACAP = dataModel.ContactAdresseDocumentTypes.Where(el => el.RefDocumentType == cACAPVM.DocumentType.RefDocumentType).FirstOrDefault();
+                    }
+                    if (cACAP == null)
+                    {
+                        //Create entity
+                        cACAP = new ContactAdresseDocumentType() { RefDocumentType = cACAPVM.DocumentType.RefDocumentType, };
+                        if (dataModel.ContactAdresseDocumentTypes == null) { dataModel.ContactAdresseDocumentTypes = new HashSet<ContactAdresseDocumentType>(); }
+                        dataModel.ContactAdresseDocumentTypes.Add(cACAP);
+                        dirty = true;
+                    }
+                }
+            }
+            //Remove duplicates
+            if (dataModel.ContactAdresseDocumentTypes != null)
+            {
+                var resultP = dataModel.ContactAdresseDocumentTypes
+                    .AsEnumerable()
+                    .GroupBy(s => s.RefDocumentType)
+                    .SelectMany(g => g.Skip(1))
+                    .ToList();
+                if (resultP.Count > 0)
+                {
+                    foreach (var e in resultP)
+                    {
+                        dataModel.ContactAdresseDocumentTypes.Remove(e);
+                    }
+                    dirty = true;
+                }
+            }
+            //-----------------------------------------------------------------------------------
             //Remove related data ContactAdresseContactAdresseProcess is deletable
             if (dataModel.ContactAdresseContactAdresseProcesss != null)
             {

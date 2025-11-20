@@ -154,12 +154,29 @@
               </table>
               <mat-form-field style="width:100%;">
                 <mat-label>{{applicationUserContext.getCulturedRessourceText(1185)}}</mat-label>
-                <textarea matInput formControlName="CmtServiceFonction" maxlength="500" style="height:120px;"></textarea>
+                <textarea matInput formControlName="CmtServiceFonction" maxlength="500" style="height:60px;"></textarea>
                 <button *ngIf="form.get('CmtServiceFonction').value && form.get('CmtServiceFonction').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="form.get('CmtServiceFonction').setValue(null)" tabindex="-1" type="button">
                   <mat-icon>close</mat-icon>
                 </button>
                 <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(1189)}}</mat-hint>
               </mat-form-field>
+              <mat-form-field style="width:100%;">
+                <mat-label>{{applicationUserContext.getCulturedRessourceText(1608)}}</mat-label>
+                <mat-select multiple formControlName="DocumentTypeList" [compareWith]="compareFnDocumentType">
+                  <mat-option *ngFor="let contactAdresseDocumentType of contactAdresseDocumentTypeList" [value]="contactAdresseDocumentType">{{contactAdresseDocumentType.DocumentType.Libelle}}</mat-option>
+                </mat-select>
+                <button *ngIf="form.get('DocumentTypeList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
+                        (click)="$event.stopPropagation(); onDocumentTypeListReset();" tabindex="-1" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <div style="margin: 0 0 10px 0;">
+                <mat-card appearance="outlined" style="white-space: pre-wrap;">
+                  <mat-card-content [style.overflow]="'auto'" [style.height.px]="'55'">
+                    <p>{{DocumentTypesLabel()}}</p>
+                  </mat-card-content>
+                </mat-card>
+              </div>
             </td>
           </tr>
         </table>

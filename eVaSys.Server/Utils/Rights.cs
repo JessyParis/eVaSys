@@ -332,6 +332,10 @@ namespace eVaSys.Utils
             rowVals[2] = Enumerations.ObjectName.AdresseType.ToString(); rowVals[3] = "CRUD";
             rights.Rows.Add(rowVals);
             rowVals = new object[4];
+            rowVals[0] = Enumerations.Module.Administration.ToString(); rowVals[1] = Enumerations.HabilitationAdministration.Administrateur.ToString();
+            rowVals[2] = Enumerations.ObjectName.DocumentType.ToString(); rowVals[3] = "CRUD";
+            rights.Rows.Add(rowVals);
+            rowVals = new object[4];
             rowVals[0] = Enumerations.Module.Logistique.ToString(); rowVals[1] = Enumerations.HabilitationAdministration.Administrateur.ToString();
             rowVals[2] = Enumerations.ObjectName.ClientApplication.ToString(); rowVals[3] = "CRUD";
             rights.Rows.Add(rowVals);

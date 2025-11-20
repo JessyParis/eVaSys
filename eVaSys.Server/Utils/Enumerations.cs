@@ -999,7 +999,8 @@ namespace eVaSys.Utils
             Transport,
             Upload,
             Utilisateur,
-            Utils
+            Utils,
+            DocumentType
         }
 
         //Enum for data to lock

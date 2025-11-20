@@ -557,6 +557,8 @@ export interface DocumentType {
   Libelle: string;
   CreationText: string;
   ModificationText: string;
+  AllowStandardCRUD: string;
+  AllowBaseForm: boolean;
 }
 export interface Dpt {
   RefDpt: string;
