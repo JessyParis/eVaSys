@@ -906,6 +906,7 @@ namespace eVaSys.Utils
                 CreateEnvDataColumn(cR, DataColumnName.ContactAdresseActif, 1151, EnvDataColumnDataType.bit, "Actif", "tbmContactAdresse.Actif");
                 CreateEnvDataColumn(cR, DataColumnName.ContactAdresseCmt, 1236, EnvDataColumnDataType.text, "Cmt", "tbmContactAdresse.Cmt");
                 CreateEnvDataColumn(cR, DataColumnName.ContactAdresseCmtServiceFonction, 1185, EnvDataColumnDataType.text, "CmtServiceFonction", "tbmContactAdresse.CmtServiceFonction");
+                CreateEnvDataColumn(cR, DataColumnName.ContactAdresseListeDocumentTypes, 1608, EnvDataColumnDataType.text, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.ContactAdresseListeFonctionServices, 1146, EnvDataColumnDataType.text, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.ContactAdresseListeProcesss, 420, EnvDataColumnDataType.text, "", "");
                 CreateEnvDataColumn(cR, DataColumnName.ContactAdresseTel, 1221, EnvDataColumnDataType.text, "Tel", "tbmContactAdresse.Tel");

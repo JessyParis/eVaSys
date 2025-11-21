@@ -898,7 +898,8 @@ namespace eVaSys.Utils
             Certifie,
             RefUtilisateurCreation,
             RefUtilisateurModif,
-            RefUtilisateurCertif
+            RefUtilisateurCertif,
+            ContactAdresseListeDocumentTypes
         }
         //Enumération pour les types de notification
         public enum NotificationAppearance

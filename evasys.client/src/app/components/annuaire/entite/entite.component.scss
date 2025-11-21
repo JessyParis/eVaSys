@@ -207,9 +207,9 @@
 }
 
 .fixed_headers_contactadresses {
-  width: 795px;
-  min-width: 795px;
-  max-width: 795px;
+  width: 1205px;
+  min-width: 1205px;
+  max-width: 1205px;
   table-layout: fixed;
   border-collapse: collapse;
 
@@ -221,48 +221,55 @@
   }
 
   td:nth-child(2), th:nth-child(2) {
-    min-width: 125px;
-    max-width: 125px;
-    width: 125px;
+    min-width: 130px;
+    max-width: 130px;
+    width: 130px;
     box-sizing: border-box;
   }
 
   td:nth-child(3), th:nth-child(3) {
-    min-width: 125px;
-    max-width: 125px;
-    width: 135px;
+    min-width: 130px;
+    max-width: 130px;
+    width: 130px;
     box-sizing: border-box;
   }
 
   td:nth-child(4), th:nth-child(4) {
-    min-width: 131px;
-    max-width: 131px;
-    width: 131px;
+    min-width: 190px;
+    max-width: 190px;
+    width: 190px;
     box-sizing: border-box;
   }
 
   td:nth-child(5), th:nth-child(5) {
-    min-width: 125px;
-    max-width: 125px;
-    width: 125px;
+    min-width: 190px;
+    max-width: 190px;
+    width: 190px;
     box-sizing: border-box;
   }
 
   td:nth-child(6), th:nth-child(6) {
-    min-width: 110px;
-    max-width: 110px;
-    width: 110px;
+    min-width: 190px;
+    max-width: 190px;
+    width: 190px;
     box-sizing: border-box;
   }
 
   td:nth-child(7), th:nth-child(7) {
+    min-width: 190px;
+    max-width: 190px;
+    width: 190px;
+    box-sizing: border-box;
+  }
+
+  td:nth-child(8), th:nth-child(8) {
     min-width: 50px;
     max-width: 50px;
     width: 50px;
     box-sizing: border-box;
   }
 
-  td:nth-child(8), th:nth-child(8) {
+  td:nth-child(9), th:nth-child(9) {
     min-width: 50px;
     max-width: 50px;
     width: 50px;
@@ -284,9 +291,9 @@
   tbody {
     display: block;
     overflow: auto;
-    width: 795px;
-    min-width: 795px;
-    max-width: 795px;
+    width: 1205px;
+    min-width: 1205px;
+    max-width: 1205px;
     height: 610px;
   }
 }

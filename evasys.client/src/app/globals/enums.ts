@@ -325,6 +325,7 @@ export enum DataColumnName {
   ContactAdresseCmtServiceFonction = "ContactAdresseCmtServiceFonction",
   ContactAdresseEmail = "ContactAdresseEmail",
   ContactAdresseIsUser = "ContactAdresseIsUser",
+  ContactAdresseListeDocumentTypes = "ContactAdresseListeDocumentTypes",
   ContactAdresseListeFonctionServices = "ContactAdresseListeFonctionServices",
   ContactAdresseListeProcesss = "ContactAdresseListeProcesss",
   ContactAdresseTel = "ContactAdresseTel",

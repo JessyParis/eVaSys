@@ -99,7 +99,10 @@
                     <td>
                       {{applicationUserContext.getCulturedRessourceText(1145)}}
                     </td>
-                    <td style="width: 250px; text-align:right;">
+                    <td style="width: 250px; min-width: 250px; text-align: right;">
+                      {{applicationUserContext.getCulturedRessourceText(1608)}}
+                    </td>
+                    <td style="width: 200px; min-width: 200px; text-align: right;">
                       {{applicationUserContext.getCulturedRessourceText(420)}}
                     </td>
                   </tr>
@@ -149,7 +152,14 @@
                         </tr>
                       </table>
                     </td>
-                    <td style="width:250px; vertical-align:top; text-align:right;" class="border-top-grey">
+                    <td style="width: 250px; min-width: 250px; vertical-align: top; text-align: right; " class="border-top-grey">
+                      <div *ngIf="ctc.ContactAdresseDocumentTypes && ctc.ContactAdresseDocumentTypes.length>0">
+                        <div class="color-primary" *ngFor="let cADT of ctc.ContactAdresseDocumentTypes">
+                          {{cADT.DocumentType.Libelle}}
+                        </div>
+                      </div>
+                    </td>
+                    <td style="width: 200px; min-width: 200px; vertical-align: top; text-align: right;" class="border-top-grey">
                       <div *ngIf="ctc.ContactAdresseContactAdresseProcesss && ctc.ContactAdresseContactAdresseProcesss.length>0">
                         <div class="color-primary" *ngFor="let cAP of ctc.ContactAdresseContactAdresseProcesss">
                           {{cAP.ContactAdresseProcess.Libelle}}
@@ -209,7 +219,10 @@
                     <td>
                       {{applicationUserContext.getCulturedRessourceText(1145)}}
                     </td>
-                    <td style="width: 250px; text-align:right;">
+                    <td style="width: 250px; min-width: 250px; text-align: right;">
+                      {{applicationUserContext.getCulturedRessourceText(1608)}}
+                    </td>
+                    <td style="width: 200px; min-width: 200px; text-align: right;">
                       {{applicationUserContext.getCulturedRessourceText(420)}}
                     </td>
                   </tr>
@@ -259,7 +272,14 @@
                         </tr>
                       </table>
                     </td>
-                    <td style="width:250px; vertical-align:top; text-align:right;" class="border-top-grey">
+                    <td style="width: 250px; min-width: 250px; vertical-align: top; text-align: right; " class="border-top-grey">
+                      <div *ngIf="ctc.ContactAdresseDocumentTypes && ctc.ContactAdresseDocumentTypes.length>0">
+                        <div class="color-primary" *ngFor="let cADT of ctc.ContactAdresseDocumentTypes">
+                          {{cADT.DocumentType.Libelle}}test
+                        </div>
+                      </div>
+                    </td>
+                    <td style="width: 200px; min-width: 200px; vertical-align: top; text-align: right; " class="border-top-grey">
                       <div *ngIf="ctc.ContactAdresseContactAdresseProcesss && ctc.ContactAdresseContactAdresseProcesss.length>0">
                         <div class="color-primary" *ngFor="let cAP of ctc.ContactAdresseContactAdresseProcesss">
                           {{cAP.ContactAdresseProcess.Libelle}}

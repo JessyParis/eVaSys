@@ -1,7 +1,7 @@
 import { MatDialog } from "@angular/material/dialog";
 import { InformationComponent } from "../components/dialogs/information/information.component";
 import { ApplicationUserContext } from "./globals";
-import { CommandeFournisseur, ContactAdresse, ContactAdresseServiceFonction, Contrat, ContratCollectivite, EntiteType } from "../interfaces/dataModelsInterfaces";
+import { CommandeFournisseur, ContactAdresse, ContactAdresseServiceFonction, ContactAdresseDocumentType, Contrat, ContratCollectivite, EntiteType } from "../interfaces/dataModelsInterfaces";
 import moment from "moment";
 import { EventEmitterService } from "../services/event-emitter.service";
 import { AppLink, MatTableColumn } from '../interfaces/appInterfaces';
@@ -313,6 +313,7 @@ export function getContratEntitesLabel(contrat: Contrat): string {
   //End
   return s;
 }
+
 //-----------------------------------------------------------------------------------
 //Get Service-Fonctions for ContactAdresse
 export function getContactAdresseServiceFonctions(cA: ContactAdresse): string {
@@ -324,6 +325,21 @@ export function getContactAdresseServiceFonctions(cA: ContactAdresse): string {
         if (item.Fonction) { s += item.Fonction.Libelle };
         if (item.Fonction && item.Service) { s += " - " };
         if (item.Service) { s += item.Service.Libelle };
+        return s;
+      }).join(", ")
+  }
+  return s;
+}
+
+//-----------------------------------------------------------------------------------
+//Get DocumentType for ContactAdresse
+export function getContactAdresseDocumentTypes(cA: ContactAdresse): string {
+  let s: string = "";
+  if (cA?.ContactAdresseDocumentTypes) {
+    s = Array.prototype.map.call(cA.ContactAdresseDocumentTypes
+      , function (item: ContactAdresseDocumentType) {
+        let s: string = "";
+        if (item.DocumentType) { s += item.DocumentType.Libelle };
         return s;
       }).join(", ")
   }
@@ -729,6 +745,7 @@ export function createContactAvailableColumns(globalContactAvailableColumns: Env
           case DataColumnName.ContactAdresseCmt:
           case DataColumnName.ContactAdresseListeFonctionServices:
           case DataColumnName.ContactAdresseCmtServiceFonction:
+          case DataColumnName.ContactAdresseListeDocumentTypes:
           case DataColumnName.ContactAdresseTel:
           case DataColumnName.ContactAdresseTelMobile:
           case DataColumnName.ContactAdresseEmail:

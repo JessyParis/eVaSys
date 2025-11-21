@@ -563,6 +563,8 @@ namespace eVaSys.Controllers
                     .ThenInclude(p => p.ContactAdresseServiceFonctions)
                     .ThenInclude(p => p.Fonction)
                 .Include(r => r.ContactAdresses)
+                .ThenInclude(r => r.ContactAdresseDocumentTypes)
+                .Include(r => r.ContactAdresses)
                     .ThenInclude(r => r.Utilisateurs)
                 .Include(r => r.ContratCollectivites)
                 .Include(r => r.EntiteStandards)

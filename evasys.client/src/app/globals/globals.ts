@@ -418,6 +418,7 @@ export class ApplicationUserContext {
       this.contactAvailableColumns.push(this.envDataColumns.find(i => i.name == DataColumnName.ContactAdresseCmt));
       this.contactAvailableColumns.push(this.envDataColumns.find(i => i.name == DataColumnName.ContactAdresseListeFonctionServices));
       this.contactAvailableColumns.push(this.envDataColumns.find(i => i.name == DataColumnName.ContactAdresseCmtServiceFonction));
+      this.contactAvailableColumns.push(this.envDataColumns.find(i => i.name == DataColumnName.ContactAdresseListeDocumentTypes));
       this.contactAvailableColumns.push(this.envDataColumns.find(i => i.name == DataColumnName.ContactAdresseTel));
       this.contactAvailableColumns.push(this.envDataColumns.find(i => i.name == DataColumnName.ContactAdresseTelMobile));
       this.contactAvailableColumns.push(this.envDataColumns.find(i => i.name == DataColumnName.ContactAdresseEmail));

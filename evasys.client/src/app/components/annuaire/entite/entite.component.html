@@ -502,10 +502,10 @@
         </tr>
       </table>
     </div>
-    <div class="boxDoubleSize" *ngIf="showContactAdresses" [@fadeInOnEnter]>
+    <div class="boxTripleSize" *ngIf="showContactAdresses" [@fadeInOnEnter]>
       <table class="cadre_primary">
         <tr>
-          <td class="cadre_header_primary">
+          <td class="cadre_header_primary">u
             {{applicationUserContext.getCulturedRessourceText(1145)}}
           </td>
         </tr>
@@ -520,6 +520,7 @@
                   <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(470)}}</th>
                   <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(471)}}</th>
                   <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1146)}}</th>
+                  <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(1608)}}</th>
                   <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(420)}}</th>
                   <th style="padding:5px;">{{applicationUserContext.getCulturedRessourceText(265)}}</th>
                   <th style="padding:5px;"></th>
@@ -534,6 +535,7 @@
                   <td style="padding: 0px 5px 0px 5px;">{{contactAdresse.Contact?.Prenom}}</td>
                   <td style="padding: 0px 5px 0px 5px;" [class]="contactAdresse.Actif ? '':'color-warn'">{{contactAdresse.Contact?.Nom}}</td>
                   <td style="padding: 0px 5px 0px 5px;">{{getContactAdresseServiceFonctions(contactAdresse)}}</td>
+                  <td style="padding: 0px 5px 0px 5px;">{{getContactAdresseDocumentTypes(contactAdresse)}}</td>
                   <td style="padding: 0px 5px 0px 5px;">{{getContactAdresseProcesss(contactAdresse)}}</td>
                   <td style="padding: 0px 5px 0px 5px;">{{getAdresseType(contactAdresse)}}</td>
                   <td style="padding: 0px 5px 0px 5px;">

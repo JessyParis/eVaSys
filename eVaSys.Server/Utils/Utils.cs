@@ -370,6 +370,7 @@ namespace eVaSys.Utils
                 || fields.Contains(CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContactNom.ToString()].Name)
                 || fields.Contains(CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContactAdresseCmt.ToString()].Name)
                 || fields.Contains(CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContactAdresseListeFonctionServices.ToString()].Name)
+                || fields.Contains(CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContactAdresseListeDocumentTypes.ToString()].Name)
                 || fields.Contains(CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContactAdresseCmtServiceFonction.ToString()].Name)
                 || fields.Contains(CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContactAdresseTel.ToString()].Name)
                 || fields.Contains(CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContactAdresseTelMobile.ToString()].Name)
