@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Inject, OnInit, Input, Output, EventEmitter, ViewChild } from "@angular/core";
 import { ApplicationUserContext } from "../../../globals/globals";
 import { HttpHeaders, HttpClient } from "@angular/common/http";
 import { UntypedFormGroup, UntypedFormControl } from "@angular/forms";
@@ -7,6 +7,8 @@ import moment from "moment";
 import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces";
 import { showErrorToUser } from "../../../globals/utils";
 import { MatDialog } from "@angular/material/dialog";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatSort } from "@angular/material/sort";
 
 @Component({
   selector: "cible",
@@ -21,7 +23,9 @@ export class CibleComponent implements OnInit {
   filterVilleArrivees: string = "";
   villeArriveeList: any[] = [];
   selectedCamionTypeList: number[];
-  cibles: any[];
+  cibles = new MatTableDataSource<any>();
+  displayedColumns: string[] = ['Client', 'ResteALivrer', 'Positionne', 'Ville', 'Transporteur', 'NbTransportIdentique', 'CamionType', 'PUHT', 'Km'];
+  @ViewChild(MatSort) sort: MatSort;
   @Input() refCommandeFournisseur: number;
   @Input() refFournisseur: number;
   @Input() refTransporteur: number;
@@ -60,8 +64,8 @@ export class CibleComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Get carriages
   getCarriages() {
-    this.cibles = [];
-    this.cibles.push({ RefTransport: null, RefAdresseDestination: null, Client: null, ResteALivrer: null, Positionne: null, Ville: null, RefTransporteur: null, Transporteur: null, CamionType: null, PUHT: null })
+    this.cibles.data = [];
+    this.cibles.data.push({ RefTransport: null, RefAdresseDestination: null, Client: null, ResteALivrer: null, Positionne: null, Ville: null, RefTransporteur: null, Transporteur: null, CamionType: null, PUHT: null })
     if (this.refFournisseur && this.refFournisseur > 0 && this.refAdresseFournisseur && this.refAdresseFournisseur > 0
       && this.refProduit && this.refProduit > 0 && this.dMoisDechargementPrevu) {
       //Get data
@@ -79,15 +83,16 @@ export class CibleComponent implements OnInit {
           .set("dMoisDechargementPrevu", moment(this.dMoisDechargementPrevu).format("YYYY-MM-DD 00:00:00.000")),
         responseType: "json"
       }).subscribe(result => {
-        this.cibles = result;
+        this.cibles.data = result;
+        this.cibles.sort = this.sort;
         //Set min and max values
-        let max: number = Math.max.apply(Math, this.cibles.map((r: any) => r.PUHT));
-        let min: number = Math.min.apply(Math, this.cibles.map((r: any) => r.PUHT));
+        let max: number = Math.max.apply(Math, this.cibles.data.map((r: any) => r.PUHT));
+        let min: number = Math.min.apply(Math, this.cibles.data.map((r: any) => r.PUHT));
         this.haut = max - ((max - min) * 0.3);
         this.bas = max - ((max - min) * 0.7);
         //Set ville list
         this.villeArriveeList = []
-        let villes = new Set(this.cibles.map(x => x.Ville))
+        let villes = new Set(this.cibles.data.map(x => x.Ville))
         let villesTmp: any[] = [];
         villes.forEach(x => villesTmp.push({ Ville: x }));
         villesTmp = villesTmp.sort((obj1, obj2) => {
@@ -107,9 +112,9 @@ export class CibleComponent implements OnInit {
   //Colouring
   coloredCible(item: any): string {
     let cssClass: string = "";
-    if (item.PUHT > this.haut) { cssClass = "ev-cible-color-red"; }
-    else if (item.PUHT < this.bas) { cssClass = "ev-cible-color-green"; }
-    else { cssClass = "ev-cible-color-orange"; }
+    if (item.PUHT > this.haut) { cssClass = "background-color-warn"; }
+    else if (item.PUHT < this.bas) { cssClass = "background-color-green"; }
+    else { cssClass = "background-color-accent"; }
     return cssClass;
   }
   //-----------------------------------------------------------------------------------

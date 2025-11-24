@@ -22,36 +22,49 @@
       </div>
     </form>
   </header>
-  <div class="mat-dialog-content">
-    <div class="ev-datatable-container mat-elevation-z2">
-      <table style="display: block; width: 100%;">
-        <thead style="display:table-header-group; width:100%;">
-          <tr style="width:100%;">
-            <th style="padding:5px; width:15%;">{{applicationUserContext.getCulturedRessourceText(16)}}</th>
-            <th style="padding: 5px; width: 8%;">{{applicationUserContext.getCulturedRessourceText(490)}}</th>
-            <th style="padding: 5px; width: 8%;">{{applicationUserContext.getCulturedRessourceText(491)}}</th>
-            <th style="padding: 5px; width: 15%;">{{applicationUserContext.getCulturedRessourceText(246)}}</th>
-            <th style="padding: 5px; width: 15%;">{{applicationUserContext.getCulturedRessourceText(255)}}</th>
-            <th style="padding: 5px; width: 8%;">{{applicationUserContext.getCulturedRessourceText(728)}}</th>
-            <th style="padding: 5px; width: 15%;">{{applicationUserContext.getCulturedRessourceText(250)}}</th>
-            <th style="padding: 5px; width: 8%;">{{applicationUserContext.getCulturedRessourceText(252)}}</th>
-            <th style="padding: 5px; width: 8%;">{{applicationUserContext.getCulturedRessourceText(323)}}</th>
-          </tr>
-        </thead>
-        <tbody style="max-height: 60vh; overflow-y: auto; display: block; width:100%;">
-          <tr *ngFor="let item of cibles" [class]="coloredCible(item)" (click)="chooseCible(item)" style="width:100%;">
-            <td style="padding: 5px; width: 15%;">{{item.Client}}</td>
-            <td style="padding: 5px; width: 8%;">{{item.ResteALivrer}}</td>
-            <td style="padding: 5px; width: 8%;">{{item.Positionne}}</td>
-            <td style="padding: 5px; width: 15%;">{{item.Ville}}</td>
-            <td style="padding: 5px; width: 15%;">{{item.Transporteur}}</td>
-            <td style="padding: 5px; width: 8%;">{{item.NbTransportIdentique}}</td>
-            <td style="padding: 5px; width: 15%;">{{item.CamionType}}</td>
-            <td style="padding: 5px; width: 8%;">{{item.PUHT}}{{item.PUHT?'€':''}}</td>
-            <td style="padding: 5px; width: 8%;">{{item.Km}}</td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="mat-dialog-content" style="max-height: 60vh; overflow-y: auto;">
+    <div class="ev-datatable-container mat-elevation-z2" style="padding: 0 10px 0 10px;">
+      <mat-table [dataSource]="cibles" matSort style="display: block; width: 100%;">
+        <ng-container matColumnDef="Client">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="padding:5px; width:15%;">{{applicationUserContext.getCulturedRessourceText(16)}}</mat-header-cell>
+          <mat-cell *matCellDef="let item" style="padding: 5px; width: 15%;">{{item.Client}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="ResteALivrer">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="padding: 5px; width: 8%;">{{applicationUserContext.getCulturedRessourceText(490)}}</mat-header-cell>
+          <mat-cell *matCellDef="let item" style="padding: 5px; width: 8%;">{{item.ResteALivrer}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Positionne">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="padding: 5px; width: 8%;">{{applicationUserContext.getCulturedRessourceText(491)}}</mat-header-cell>
+          <mat-cell *matCellDef="let item" style="padding: 5px; width: 8%;">{{item.Positionne}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Ville">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="padding: 5px; width: 15%;">{{applicationUserContext.getCulturedRessourceText(246)}}</mat-header-cell>
+          <mat-cell *matCellDef="let item" style="padding: 5px; width: 15%;">{{item.Ville}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Transporteur">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="padding: 5px; width: 15%;">{{applicationUserContext.getCulturedRessourceText(255)}}</mat-header-cell>
+          <mat-cell *matCellDef="let item" style="padding: 5px; width: 15%;">{{item.Transporteur}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="NbTransportIdentique">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="padding: 5px; width: 8%;">{{applicationUserContext.getCulturedRessourceText(728)}}</mat-header-cell>
+          <mat-cell *matCellDef="let item" style="padding: 5px; width: 8%;">{{item.NbTransportIdentique}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="CamionType">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="padding: 5px; width: 15%;">{{applicationUserContext.getCulturedRessourceText(250)}}</mat-header-cell>
+          <mat-cell *matCellDef="let item" style="padding: 5px; width: 15%;">{{item.CamionType}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="PUHT">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="padding: 5px; width: 8%;">{{applicationUserContext.getCulturedRessourceText(252)}}</mat-header-cell>
+          <mat-cell *matCellDef="let item" style="padding: 5px; width: 8%;">{{item.PUHT}}{{item.PUHT?'€':''}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Km">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="padding: 5px; width: 8%;">{{applicationUserContext.getCulturedRessourceText(323)}}</mat-header-cell>
+          <mat-cell *matCellDef="let item" style="padding: 5px; width: 8%;">{{item.Km}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="width:100%;"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="coloredCible(row)" (click)="chooseCible(row)" style="width:100%; cursor:pointer;"></mat-row>
+      </mat-table>
     </div>
   </div>
   <footer class="ev-footer"></footer>

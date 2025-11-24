@@ -379,8 +379,9 @@ namespace eVaSys.Controllers
                         + " 		or (client.RefEntite=tbmEntiteEntite.RefEntiteRtt and transporteur.RefEntite=tbmEntiteEntite.RefEntite)"
                         + " 		or (transporteur.RefEntite=tbmEntiteEntite.RefEntite and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntiteRtt)"
                         + " 		or (transporteur.RefEntite=tbmEntiteEntite.RefEntiteRtt and adresseOrigine.RefEntite=tbmEntiteEntite.RefEntite)"
-                        + "     left join (select RefCamionType from tbmEntiteCamionType where RefEntite=@refFournisseur) as tbmEntiteCamionType on tblTransport.RefCamionType=tbmEntiteCamionType.RefCamionType"
-                        + "     inner join tbmEntiteCamionType as transporteurCamionType on tblTransport.RefCamionType=transporteurCamionType.RefCamionType and transporteurCamionType.RefEntite=transporteur.RefEntite"
+                        + "     left join (select distinct RefCamionType from tbmEntiteCamionType where RefEntite=@refFournisseur) as transporteurCamionType on tblTransport.RefCamionType=transporteurCamionType.RefCamionType"
+                        + "     left join tbmEntiteCamionType as fournisseurCamionType on tblTransport.RefCamionType=fournisseurCamionType.RefCamionType and fournisseurCamionType.RefEntite=@refFournisseur"
+                        + "     left join tbmEntiteCamionType as clientCamionType on tblTransport.RefCamionType=clientCamionType.RefCamionType and clientCamionType.RefEntite=client.RefEntite"
                         + "     left join (select RefTransporteur, RefAdresse, RefAdresseClient, RefCamionType, count(*) as NbTransportIdentique from tblCommandeFournisseur where dateadd(day, 180, DDechargement) > getdate() group by RefTransporteur, RefAdresse, RefAdresseClient, RefCamionType) as tr"
                         + "         on transporteur.RefEntite=tr.RefTransporteur and tblParcours.RefAdresseOrigine=tr.RefAdresse and tblParcours.RefAdresseDestination=tr.RefAdresseClient and tblTransport.RefCamionType=tr.RefCamionType"
                         + "     inner join (select distinct RefEntite, Interdit from tbmEntiteProduit where RefProduit=@refProduit) as clientProduit on client.RefEntite=clientProduit.RefEntite "
@@ -390,7 +391,8 @@ namespace eVaSys.Controllers
                         + "     and client.Actif=1"
                         + "     and clientProduit.Interdit=0"
                         + "     and transporteur.Actif=1"
-                        + "     and tbmEntiteCamionType.RefCamionType is null";
+                        + "     and fournisseurCamionType.RefCamionType is null"
+                        + "     and clientCamionType.RefCamionType is null";
                     //Contrat RI or not
                     if (refContrat > 0)
                     {

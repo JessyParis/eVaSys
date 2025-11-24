@@ -321,7 +321,7 @@ export class EntiteComponent implements OnInit {
       if (this.entite.EntiteType?.RefEntiteType == 1) {
         this.centreDeTriLieLabel = this.applicationUserContext.getCulturedRessourceText(1167);
       }
-      if (this.entite.EntiteType?.RefEntiteType == 3) {
+      if (this.entite.EntiteType?.RefEntiteType == 3 || this.entite.EntiteType?.RefEntiteType == 4) {
         this.camionTypeLieLabel = this.applicationUserContext.getCulturedRessourceText(1170);
       }
       //Show/hide
@@ -343,7 +343,7 @@ export class EntiteComponent implements OnInit {
         && (this.entite.EntiteEntites.some(item => item.RefEntiteRttType == 4 && (this.applicationUserContext.filterGlobalActif ? (item.Actif && item.ActifEntiteRtt) : true)) || this.showAll));
       this.showEntiteEntites5 = ((this.entite?.EntiteType?.RefEntiteType == 2 || this.entite?.EntiteType?.RefEntiteType == 4)
         && (this.entite.EntiteEntites.some(item => item.RefEntiteRttType == 5 && (this.applicationUserContext.filterGlobalActif ? (item.Actif && item.ActifEntiteRtt) : true)) || this.showAll));
-      this.showEntiteCamionTypes = ((this.entite?.EntiteType?.RefEntiteType == 2 || this.entite?.EntiteType?.RefEntiteType == 3)
+      this.showEntiteCamionTypes = ((this.entite?.EntiteType?.RefEntiteType == 2 || this.entite?.EntiteType?.RefEntiteType == 3 || this.entite?.EntiteType?.RefEntiteType == 4)
         && (this.entite.EntiteCamionTypes?.length > 0 || this.showAll));
       this.showActions = (this.entite.Actions?.length > 0 || this.showAll);
       this.showPrivateDocuments = (this.entite.DocumentEntites?.length > 0 || this.showAll);
