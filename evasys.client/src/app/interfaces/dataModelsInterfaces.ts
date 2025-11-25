@@ -555,6 +555,7 @@ export interface DocumentEntiteType {
 export interface DocumentType {
   RefDocumentType: number;
   Libelle: string;
+  Description: string;
   CreationText: string;
   ModificationText: string;
   AllowStandardCRUD: string;

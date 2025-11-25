@@ -323,7 +323,7 @@
             </button>
           </mat-form-field>
           <mat-form-field *ngIf="visibleFilterMonthList" class="ev-control-left">
-            <mat-label>{{labelMonthListFC}}</mat-label>
+            <mat-label>{{placeHolderMonthListFC}}</mat-label>
             <mat-select multiple formControlName="MonthList" [compareWith]="compareFnMonth">
               <mat-option *ngFor="let month of monthList" [value]="month">{{month.name}}</mat-option>
             </mat-select>
@@ -331,9 +331,10 @@
                     (click)="$event.stopPropagation(); onMonthListReset();" tabindex="-1" type="button">
               <mat-icon>close</mat-icon>
             </button>
+            <mat-hint *ngIf="!!labelMonthListFC" align="end">{{labelMonthListFC}}</mat-hint>
           </mat-form-field>
           <mat-form-field *ngIf="visibleFilterYearList" class="ev-control-left">
-            <mat-label>{{labelYearListFC}}</mat-label>
+            <mat-label>{{placeHolderYearListFC}}</mat-label>
             <mat-select multiple formControlName="YearList" [compareWith]="compareFnYear">
               <mat-option *ngFor="let year of yearList" [value]="year">{{year.y}}</mat-option>
             </mat-select>
@@ -341,6 +342,7 @@
                     (click)="$event.stopPropagation(); onYearListReset();" tabindex="-1" type="button">
               <mat-icon>close</mat-icon>
             </button>
+            <mat-hint *ngIf="!!labelYearListFC" align="end">{{labelYearListFC}}</mat-hint>
           </mat-form-field>
           <mat-form-field *ngIf="visibleFilterCamionTypeList" class="ev-control-left">
             <mat-label>{{applicationUserContext.getCulturedRessourceText(313)}}</mat-label>

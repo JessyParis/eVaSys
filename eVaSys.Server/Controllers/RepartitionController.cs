@@ -267,7 +267,10 @@ namespace eVaSys.Controllers
                         i.CommandeFournisseur.RefCommandeFournisseur != cF.RefCommandeFournisseur
                         && i.CommandeFournisseur.RefEntite == cF.RefEntite
                         && i.CommandeFournisseur.RefProduit == cF.RefProduit
-                        && i.CommandeFournisseur.DChargement <= D && i.CommandeFournisseur.DChargement > D.AddDays(-365));
+                        && i.CommandeFournisseur.DChargement <= D && i.CommandeFournisseur.DChargement > D.AddDays(-365)
+                        && !i.RepartitionCollectivites.Any(rc => DbContext.EntiteEntites.Any(ec => ec.RefEntite == cF.RefEntite && ec.RefEntiteRtt == rc.RefCollectivite && !ec.Actif))
+                        && !i.RepartitionCollectivites.Any(rc => DbContext.EntiteEntites.Any(ec => ec.RefEntiteRtt == cF.RefEntite && ec.RefEntite == rc.RefCollectivite && !ec.Actif))
+                        );
                 //Same type (collect, hors collecte or both)
                 if (cF.PoidsReparti == 0)
                 {

@@ -806,7 +806,8 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
     if (
       this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuExtractionCommande
     ) {
-      this.labelMonthListFC = this.applicationUserContext.getCulturedRessourceText(436);
+      this.placeHolderMonthListFC = this.applicationUserContext.getCulturedRessourceText(1611);
+      this.labelMonthListFC = this.applicationUserContext.getCulturedRessourceText(1615);
     }
     if (
       this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuEtatVenteAnnuelleProduitClient

@@ -117,8 +117,10 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) pagin: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   //Dynamic labels
-  labelMonthListFC: string = this.applicationUserContext.getCulturedRessourceText(571);
-  labelYearListFC: string = this.applicationUserContext.getCulturedRessourceText(569);
+  placeHolderMonthListFC: string = this.applicationUserContext.getCulturedRessourceText(571);
+  placeHolderYearListFC: string = this.applicationUserContext.getCulturedRessourceText(569);
+  labelMonthListFC: string = "";
+  labelYearListFC: string = "";
   labelDBeginFC: string = this.applicationUserContext.getCulturedRessourceText(212);
   labelDFinFC: string = this.applicationUserContext.getCulturedRessourceText(213);
   //Visibiliry marks
@@ -684,21 +686,25 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuTransportNonValide
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuCommandeFournisseur
     ) {
-      this.labelMonthListFC = this.applicationUserContext.getCulturedRessourceText(459);
-      this.labelYearListFC = this.applicationUserContext.getCulturedRessourceText(1071);
+      this.placeHolderMonthListFC = this.applicationUserContext.getCulturedRessourceText(1611);
+      this.labelMonthListFC = this.applicationUserContext.getCulturedRessourceText(1615);
+      this.placeHolderYearListFC = this.applicationUserContext.getCulturedRessourceText(1612);
+      this.labelYearListFC = this.applicationUserContext.getCulturedRessourceText(1615);
     }
     if (
       this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuNonConformite
     ) {
-      this.labelMonthListFC = this.applicationUserContext.getCulturedRessourceText(860);
-      this.labelYearListFC = this.applicationUserContext.getCulturedRessourceText(861);
+      this.placeHolderMonthListFC = this.applicationUserContext.getCulturedRessourceText(860);
+      this.placeHolderYearListFC = this.applicationUserContext.getCulturedRessourceText(861);
     }
     if (
       this.applicationUserContext.currentMenu.name === MenuName.QualiteMenuControle
       || this.applicationUserContext.currentMenu.name === MenuName.LogistiqueMenuRepartition
     ) {
-      this.labelMonthListFC = this.applicationUserContext.getCulturedRessourceText(1010);
-      this.labelYearListFC = this.applicationUserContext.getCulturedRessourceText(1011);
+      this.placeHolderMonthListFC = this.applicationUserContext.getCulturedRessourceText(1613);
+      this.labelMonthListFC = this.applicationUserContext.getCulturedRessourceText(1615);
+      this.placeHolderYearListFC = this.applicationUserContext.getCulturedRessourceText(1614);
+      this.labelYearListFC = this.applicationUserContext.getCulturedRessourceText(1615);
     }
     if (
       this.applicationUserContext.connectedUtilisateur.HabilitationLogistique == HabilitationLogistique.Client

@@ -163,7 +163,8 @@
               <mat-form-field style="width:100%;">
                 <mat-label>{{applicationUserContext.getCulturedRessourceText(1608)}}</mat-label>
                 <mat-select multiple formControlName="DocumentTypeList" [compareWith]="compareFnDocumentType">
-                  <mat-option *ngFor="let contactAdresseDocumentType of contactAdresseDocumentTypeList" [value]="contactAdresseDocumentType">{{contactAdresseDocumentType.DocumentType.Libelle}}</mat-option>
+                  <mat-option *ngFor="let contactAdresseDocumentType of contactAdresseDocumentTypeList" [value]="contactAdresseDocumentType"
+                             matTooltip={{contactAdresseDocumentType.DocumentType.Description}} >{{contactAdresseDocumentType.DocumentType.Libelle}}</mat-option>
                 </mat-select>
                 <button *ngIf="form.get('DocumentTypeList').value?.length>0" matIconSuffix mat-icon-button aria-label="Supprimer"
                         (click)="$event.stopPropagation(); onDocumentTypeListReset();" tabindex="-1" type="button">

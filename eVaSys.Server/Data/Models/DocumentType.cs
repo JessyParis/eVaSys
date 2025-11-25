@@ -34,6 +34,7 @@ namespace eVaSys.Data
         public CultureInfo currentCulture = new("fr-FR");
         public int RefDocumentType { get; set; }
         public string Libelle { get; set; }
+        public string Description { get; set; }
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
         public ICollection<ContactAdresseDocumentType> ContactAdresseDocumentTypes { get; set; }
