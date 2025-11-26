@@ -4190,6 +4190,7 @@ namespace eVaSys.Utils
                         , System.Drawing.ColorTranslator.FromHtml(Utils.hTMLColors[cI]).G
                         , System.Drawing.ColorTranslator.FromHtml(Utils.hTMLColors[cI]).B)
                         );
+                    chart.Series[c].SmoothLine = false;
                 }
                 //Labels
                 chart.DataLabels.LabelContainsValue = true;
