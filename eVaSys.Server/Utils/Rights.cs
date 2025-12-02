@@ -1622,6 +1622,14 @@ namespace eVaSys.Utils
             rowVals[1] = Enumerations.HabilitationAnnuaire.Administrateur.ToString();
             actionRights.Rows.Add(rowVals);
             rowVals = new object[2];
+            rowVals[0] = Enumerations.ActionName.ReportingCollectiviteElu.ToString();
+            rowVals[1] = Enumerations.HabilitationAnnuaire.Administrateur.ToString();
+            actionRights.Rows.Add(rowVals);
+            rowVals = new object[2];
+            rowVals[0] = Enumerations.ActionName.ReportingCollectiviteGrandPublic.ToString();
+            rowVals[1] = Enumerations.HabilitationAnnuaire.Administrateur.ToString();
+            actionRights.Rows.Add(rowVals);
+            rowVals = new object[2];
             rowVals[0] = Enumerations.ActionName.Mixte.ToString();
             rowVals[1] = Enumerations.HabilitationLogistique.Administrateur.ToString();
             actionRights.Rows.Add(rowVals);

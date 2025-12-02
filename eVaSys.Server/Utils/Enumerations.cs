@@ -128,6 +128,14 @@ namespace eVaSys.Utils
         {
             Administrateur, Utilisateur
         }
+        //DocumentType 
+        public enum RefDocumentType
+        {
+            ReportingCollectiviteElu = 1,
+            ReportingCollectiviteGrandPublic = 2,
+            EmailNoteCreditCollectivite = 3,
+            IncitationQualite = 4
+        }
         //Enumération pour les noms de modules
         public enum ModuleName
         {
@@ -201,7 +209,7 @@ namespace eVaSys.Utils
             AdministrationMenuUtilisateurInactif,
             AnnuaireMenuNbAffretementTransporteur,
             AnnuaireMenuIncitationQualite,
-            AnnuaireMenuEmailNoteCreditCollectivite,
+            AnnuaireMenuEnvoiDocumentType,
             AnnuaireMenuSuiviEnvois,
             AnnuaireMenuEntite,
             AnnuaireMenuExtractionAction,
@@ -328,6 +336,8 @@ namespace eVaSys.Utils
             CertificationCommandeClientMensuelle,
             UnCertificationPrixReprise,
             UnCertificationCommandeClientMensuelle,
+            ReportingCollectiviteElu,
+            ReportingCollectiviteGrandPublic,
         }
         //Enumération pour les noms de colonne
         public enum DataColumnName

@@ -188,7 +188,7 @@ namespace eVaSys.Utils
                     [MenuName.AdministrationMenuUtilisateur.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuUtilisateur.ToString(), RefRessource = 911, CulturedCaption = cR.GetTextRessource(911) == "" ? "?Utilisateurs?" : cR.GetTextRessource(911), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
                     [MenuName.AdministrationMenuUtilisateurInactif.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuUtilisateurInactif.ToString(), RefRessource = 1110, CulturedCaption = cR.GetTextRessource(1110) == "" ? "?Utilisateurs inactifs?" : cR.GetTextRessource(1110), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
                     [MenuName.AnnuaireMenuIncitationQualite.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuIncitationQualite.ToString(), RefRessource = 700, CulturedCaption = cR.GetTextRessource(700) == "" ? "?Incitation qualité?" : cR.GetTextRessource(700), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
-                    [MenuName.AnnuaireMenuEmailNoteCreditCollectivite.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuEmailNoteCreditCollectivite.ToString(), RefRessource = 699, CulturedCaption = cR.GetTextRessource(699) == "" ? "?Incitation qualité?" : cR.GetTextRessource(699), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
+                    [MenuName.AnnuaireMenuEnvoiDocumentType.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuEnvoiDocumentType.ToString(), RefRessource = 699, CulturedCaption = cR.GetTextRessource(699) == "" ? "?Incitation qualité?" : cR.GetTextRessource(699), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
                     [MenuName.AnnuaireMenuSuiviEnvois.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuSuiviEnvois.ToString(), RefRessource = 1083, CulturedCaption = cR.GetTextRessource(1083) == "" ? "?Suivi des envois?" : cR.GetTextRessource(1083), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
                     [MenuName.AnnuaireMenuEntite.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuEntite.ToString(), RefRessource = 1124, CulturedCaption = cR.GetTextRessource(1124) == "" ? "?Entités?" : cR.GetTextRessource(1124), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
                     [MenuName.LogistiqueMenuCommandeClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuCommandeClient.ToString(), RefRessource = 426, CulturedCaption = cR.GetTextRessource(426) == "" ? "?Commandes client?" : cR.GetTextRessource(426), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
@@ -350,6 +350,8 @@ namespace eVaSys.Utils
                 menu = CreateEnvMenu(cR, MenuName.AdministrationMenuJourFerie, 10086, ModuleName.Administration, "");
                 SetMenuGrid(menu, DataColumnName.JourFerie, false, "jour-ferie", "RefJourFerie");
 
+                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuEnvoiDocumentType, 1616, ModuleName.Annuaire, "");
+
                 menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuExtractionAction, 1202, ModuleName.Annuaire, "");
                 SetMenuGrid(menu, DataColumnName.ActionDate, false, "", "");
 
@@ -436,6 +438,8 @@ namespace eVaSys.Utils
                 {
                     [ActionName.IncitationQualite.ToString()] = new EnvAction() { Name = ActionName.IncitationQualite.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] },
                     [ActionName.EmailNoteCreditCollectivite.ToString()] = new EnvAction() { Name = ActionName.EmailNoteCreditCollectivite.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] },
+                    [ActionName.ReportingCollectiviteElu.ToString()] = new EnvAction() { Name = ActionName.ReportingCollectiviteElu.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] },
+                    [ActionName.ReportingCollectiviteGrandPublic.ToString()] = new EnvAction() { Name = ActionName.ReportingCollectiviteGrandPublic.ToString(), Module = EnvModules[ModuleName.Annuaire.ToString()] },
                     [ActionName.ValidateTransportPrice.ToString()] = new EnvAction() { Name = ActionName.ValidateTransportPrice.ToString(), Module = EnvModules[ModuleName.Logistique.ToString()] },
                     [ActionName.RejectTransportPrice.ToString()] = new EnvAction() { Name = ActionName.RejectTransportPrice.ToString(), Module = EnvModules[ModuleName.Logistique.ToString()] },
                     [ActionName.DeleteTransport.ToString()] = new EnvAction() { Name = ActionName.DeleteTransport.ToString(), Module = EnvModules[ModuleName.Logistique.ToString()] },

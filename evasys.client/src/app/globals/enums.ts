@@ -79,7 +79,7 @@ export enum MenuName {
   AdministrationMenuUtilisateurInactif = "AdministrationMenuUtilisateurInactif",
   AnnuaireMenuNbAffretementTransporteur = "AnnuaireMenuNbAffretementTransporteur",
   AnnuaireMenuIncitationQualite = "AnnuaireMenuIncitationQualite",
-  AnnuaireMenuEmailNoteCreditCollectivite = "AnnuaireMenuEmailNoteCreditCollectivite",
+  AnnuaireMenuEnvoiDocumentType = "AnnuaireMenuEnvoiDocumentType",
   AnnuaireMenuSuiviEnvois = "AnnuaireMenuSuiviEnvois",
   AnnuaireMenuEntite = "AnnuaireMenuEntite",
   AnnuaireMenuExtractionAction = "AnnuaireMenuExtractionAction",
@@ -871,6 +871,13 @@ export enum ListContentType {
   ProduitGroupeReportingTypeRef = "ProduitGroupeReportingTypeRef",
   Couleur = "Couleur",
   ModeTransportEE = "ModeTransportEE"
+}
+//DocumentType 
+export enum RefDocumentType {
+  ReportingCollectiviteElu = 1,
+  ReportingCollectiviteGrandPublic = 2,
+  EmailNoteCreditCollectivite = 3,
+  IncitationQualite = 4
 }
 //Document types for Module Collectivité
 export enum DocumentType {

@@ -772,7 +772,7 @@ export class AppComponent implements OnInit {
         this.annuaireMenuIncitationQualiteStyle = "ev-menu-selected";
         this.panelParametreAnnuaireExpanded = true;
         break;
-      case "AnnuaireMenuEmailNoteCreditCollectivite":
+      case "AnnuaireMenuEnvoiDocumentType":
         this.annuaireMenuEmailNoteCreditCollectiviteStyle = "ev-menu-selected";
         this.panelParametreAnnuaireExpanded = true;
         break;
@@ -1277,7 +1277,7 @@ export class AppComponent implements OnInit {
         case MenuName.AnnuaireMenuIncitationQualite:
           this.router.navigate(["envoi-email", "IncitationQualite"]);
           break;
-        case MenuName.AnnuaireMenuEmailNoteCreditCollectivite:
+        case MenuName.AnnuaireMenuEnvoiDocumentType:
           this.router.navigate(["envoi-email", "EmailNoteCreditCollectivite"]);
           break;
         case MenuName.MenuVisualisationAnnuaire:

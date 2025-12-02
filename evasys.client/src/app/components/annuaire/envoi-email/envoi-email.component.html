@@ -16,7 +16,19 @@
         </tr>
         <tr>
           <td class="cadre_body">
-            <mat-form-field class="ev-date-picker" style="width:100%;" *ngIf="documentType == 'EmailNoteCreditCollectivite'">
+            <mat-form-field style="width:100%;">
+              <mat-label>{{applicationUserContext.getCulturedRessourceText(722)}}</mat-label>
+              <mat-select formControlName="DocumentTypeList"
+                          required [errorStateMatcher]="matcher" (selectionChange)="onDocumentTypeSelected($event.value)">
+                <mat-option *ngFor="let documentType of documentTypeList" [value]="documentType"
+                            matTooltip={{documentType.Description}}>{{documentType.Libelle}}</mat-option>
+              </mat-select>
+              <button *ngIf="form.get('DocumentTypeList').value && form.get('DocumentTypeList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="$event.stopPropagation(); onDocumentTypeSelected(null)">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error align="end" *ngIf="form.get('DocumentTypeList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="ev-date-picker" style="width:100%;" *ngIf="form.get('DocumentTypeList').value?.RefDocumentType == RefDocumentType.EmailNoteCreditCollectivite">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(1078)}}</mat-label>
               <input matInput [matDatepicker]="pickerD" formControlName="D"
                      [errorStateMatcher]="matcher" (dateChange)="onDDateChange($event.value)">
@@ -25,10 +37,12 @@
               <button *ngIf="form.get('D').value && form.get('D').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="onDDateChange(null)">
                 <mat-icon>close</mat-icon>
               </button>
-              <mat-error align="end" *ngIf="(form.get('D').touched || form.get('D').dirty) && form.get('D').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="form.get('D').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
               <mat-hint align="end">{{applicationUserContext.getCulturedRessourceText(1079)}}</mat-hint>
             </mat-form-field>
-            <mat-form-field style="width:100%;" *ngIf="documentType == 'IncitationQualite'">
+            <mat-form-field style="width:100%;" *ngIf="form.get('DocumentTypeList').value?.RefDocumentType == RefDocumentType.IncitationQualite
+                            || form.get('DocumentTypeList').value?.RefDocumentType == RefDocumentType.ReportingCollectiviteElu
+                            || form.get('DocumentTypeList').value?.RefDocumentType == RefDocumentType.ReportingCollectiviteGrandPublic">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(569)}}</mat-label>
               <mat-select formControlName="YearList"
                           required [errorStateMatcher]="matcher" (selectionChange)="onYearSelected($event.value)">
@@ -37,7 +51,7 @@
               <button *ngIf="form.get('YearList').value && form.get('YearList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" tabindex="-1" type="button" (click)="onYearSelected(null)">
                 <mat-icon>close</mat-icon>
               </button>
-              <mat-error align="end" *ngIf="(form.get('YearList').touched || form.get('YearList').dirty) && form.get('YearList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="form.get('YearList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width:100%;">
               <mat-label>{{applicationUserContext.getCulturedRessourceText(1007)}}</mat-label>
@@ -47,9 +61,9 @@
               <button *ngIf="form.get('ParamEmailList').value && form.get('ParamEmailList').enabled" matIconSuffix mat-icon-button aria-label="Supprimer" (click)="$event.stopPropagation(); form.get('ParamEmailList').setValue(null)" tabindex="-1" type="button">
                 <mat-icon>close</mat-icon>
               </button>
-              <mat-error align="end" *ngIf="(form.get('ParamEmailList').touched || form.get('ParamEmailList').dirty) && form.get('ParamEmailList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
+              <mat-error align="end" *ngIf="form.get('ParamEmailList').errors?.required">{{applicationUserContext.getCulturedRessourceText(293)}}</mat-error>
             </mat-form-field>
-            <kendo-editor formControlName="EmailHTMLBody" style="height: 480px;">
+            <kendo-editor formControlName="EmailHTMLBody" style="height: 400px;">
               <kendo-toolbar>
                 <kendo-toolbar-buttongroup>
                   <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
@@ -104,7 +118,7 @@
         </tr>
       </table>
     </div>
-    <grid-simple [type]="documentType"></grid-simple>
+    <grid-simple [type]="refDocumentTypeLabel" *ngIf="refDocumentTypeLabel" style="padding: 0 10px 0 10px;"></grid-simple>
   </form>
   <footer class="ev-footer"></footer>
 </div>

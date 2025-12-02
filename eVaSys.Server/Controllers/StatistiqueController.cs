@@ -1005,6 +1005,7 @@ namespace eVaSys.Controllers
                     DateTime end = DateTime.MinValue;
                     if (DateTime.TryParse(eSF.FilterBegin, out begin) && DateTime.TryParse(eSF.FilterEnd, out end))
                     {
+                        end = end.Date.AddDays(1).AddSeconds(-1);
                         cmd.Parameters.Add("@begin", SqlDbType.DateTime).Value = begin;
                         cmd.Parameters.Add("@end", SqlDbType.DateTime).Value = end;
                     }
@@ -5042,6 +5043,10 @@ namespace eVaSys.Controllers
                     if (menu == Enumerations.MenuName.QualiteMenuEtatIncitationQualite.ToString())
                     {
                         sqlStrFinal += " ORDER BY cast(case when sousContrat.RefEntite is not null then 1 else 0 end as bit) desc, dbo.ListeDR(tblEntite.RefEntite), tblEntite.Libelle OPTION( QUERYRULEOFF JoinCommute )";
+                    }
+                    if (menu == Enumerations.MenuName.LogistiqueMenuExtractionReception.ToString())
+                    {
+                        sqlStrFinal += " OPTION( QUERYRULEOFF JoinCommute )";
                     }
                     if (menu == Enumerations.MenuName.QualiteMenuEtatControleReception.ToString())
                     {

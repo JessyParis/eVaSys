@@ -239,66 +239,66 @@ namespace eVaSys.Controllers
             //Init
             msg = email.Message;
             //Create e-mail
-            switch (emailType)
+            if (emailType == Enumerations.RefDocumentType.IncitationQualite.ToString())
             {
-                case "IncitationQualite":
-                    //Create e-mail
-                    body = "";
-                    //Création du corps du message
-                    body = "<span style=\"font-family:Gill Sans MT; font-size:11pt;\">"
-                        + WebUtility.HtmlEncode("Bonjour,") + "<br/><br/>"
-                        + WebUtility.HtmlEncode("Nous avons le plaisir de vous informer que la note de crédit (ou le courrier de non versement) de l’année " + year.ToString() + " relative à la mise en œuvre de la procédure d’autocontrôle est en ligne.") + "<br/><br/>"
-                        + WebUtility.HtmlEncode("Vous pouvez télécharger votre document en vous connectant sur votre espace ") + "<a href='https://app.e-valorplast.com/valorplast' target='_blank'>" + WebUtility.HtmlEncode("e-Valorplast") + "</a>" + WebUtility.HtmlEncode("/Mes documents.") + "<br/><br/>"
-                        + WebUtility.HtmlEncode("N’hésitez pas à consulter la statistique « Etat des enlèvements et incitation autocontrôle » afin d’avoir plus de détail.") + "<br/><br/>"
-                        + WebUtility.HtmlEncode("Vous en souhaitant bonne réception,") + "<br/><br/>"
-                        + WebUtility.HtmlEncode("L’équipe Valorplast") + "<br/><br/>"
-                        + "<strong>" + WebUtility.HtmlEncode("VALORPLAST") + "</strong><br/>"
-                        + WebUtility.HtmlEncode("21, rue d’Artois") + "<br/>"
-                        + WebUtility.HtmlEncode("75008 Paris") + "<br/>"
-                        + WebUtility.HtmlEncode("Tél. :  +33 (0)1 88 46 10 08") + "<br/>"
-                        + "<a href='http://www.valorplast.com' target='_self'>" + WebUtility.HtmlEncode("www.valorplast.com") + "</a><br/><br/><br/>"
-                        + "</span>"
-                        + "<div style='font-family:Arial; font-size:8pt; color:green;'>"
-                        + WebUtility.HtmlEncode("Avant d'imprimer ce mail, demandez-vous si vous avez vraiment besoin d'une copie papier ! ") + "<br/><br/>"
-                        + "</div>";
-                    mBuilder = msg.ToBuilder();
-                    mBuilder.Html = body;
-                    msg = mBuilder.Create();
-                    email.Message = msg;
-                    return new JsonResult(
-                        _mapper.Map<Email, EmailViewModel>(email),
-                        JsonSettings);
-                case "EmailNoteCreditCollectivite":
-                    DateTime dT = DateTime.Now.AddDays(-DateTime.Now.Day);
-                    Quarter q = new(dT, CurrentContext.CurrentCulture);
-                    //Create e-mail
-                    body = "";
-                    //Création du corps du message
-                    body = "<span style=\"font-family:Gill Sans MT; font-size:11pt;\">"
-                        + WebUtility.HtmlEncode("Bonjour,") + "<br/><br/>"
-                        + WebUtility.HtmlEncode("Nous avons le plaisir de vous informer que les documents relatifs à la reprise des balles de plastiques pour le ") + q.NameHTML + WebUtility.HtmlEncode(" sont en ligne.") + "<br/><br/>"
-                        + WebUtility.HtmlEncode("Vous pouvez les télécharger en vous connectant sur la page d’accueil de notre site internet ") + "<a href='https://www.valorplast.com' target='_blank'>" + WebUtility.HtmlEncode("www.valorplast.com") + "</a>" + WebUtility.HtmlEncode(" / espace e-Valorplast")
-                        + WebUtility.HtmlEncode(", ou directement via l'application ") + "<a href='https://app.e-valorplast.com/valorplast' target='_blank'>" + WebUtility.HtmlEncode("e-Valorplast") + "</a>"
-                        + "<br/><br/>"
-                        + WebUtility.HtmlEncode("Pensez à vous munir de votre identifiant et de votre mot de passe.") + "<br/><br/>"
-                        + WebUtility.HtmlEncode("Vous en souhaitant bonne réception,") + "<br/><br/>"
-                        + WebUtility.HtmlEncode("L’équipe Valorplast") + "<br/><br/>"
-                        + "<strong>" + WebUtility.HtmlEncode("VALORPLAST") + "</strong><br/>"
-                        + WebUtility.HtmlEncode("21, rue d’Artois") + "<br/>"
-                        + WebUtility.HtmlEncode("75008 Paris") + "<br/>"
-                        + WebUtility.HtmlEncode("Tél. : +33 (0) 1 88 46 10 07") + "<br/>"
-                        + "<a href='http://www.valorplast.com' target='_self'>" + WebUtility.HtmlEncode("www.valorplast.com") + "</a><br/><br/><br/>"
-                        + "</span>"
-                        + "<div style='font-family:Arial; font-size:8pt; color:green;'>"
-                        + WebUtility.HtmlEncode("Avant d'imprimer ce mail, demandez-vous si vous avez vraiment besoin d'une copie papier ! ") + "<br/><br/>"
-                        + "</div>";
-                    mBuilder = msg.ToBuilder();
-                    mBuilder.Html = body;
-                    msg = mBuilder.Create();
-                    email.Message = msg;
-                    return new JsonResult(
-                        _mapper.Map<Email, EmailViewModel>(email),
-                        JsonSettings);
+                //Create e-mail
+                body = "";
+                //Création du corps du message
+                body = "<span style=\"font-family:Gill Sans MT; font-size:11pt;\">"
+                    + WebUtility.HtmlEncode("Bonjour,") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("Nous avons le plaisir de vous informer que la note de crédit (ou le courrier de non versement) de l’année " + year.ToString() + " relative à la mise en œuvre de la procédure d’autocontrôle est en ligne.") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("Vous pouvez télécharger votre document en vous connectant sur votre espace ") + "<a href='https://app.e-valorplast.com/valorplast' target='_blank'>" + WebUtility.HtmlEncode("e-Valorplast") + "</a>" + WebUtility.HtmlEncode("/Mes documents.") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("N’hésitez pas à consulter la statistique « Etat des enlèvements et incitation autocontrôle » afin d’avoir plus de détail.") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("Vous en souhaitant bonne réception,") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("L’équipe Valorplast") + "<br/><br/>"
+                    + "<strong>" + WebUtility.HtmlEncode("VALORPLAST") + "</strong><br/>"
+                    + WebUtility.HtmlEncode("21, rue d’Artois") + "<br/>"
+                    + WebUtility.HtmlEncode("75008 Paris") + "<br/>"
+                    + WebUtility.HtmlEncode("Tél. :  +33 (0)1 88 46 10 08") + "<br/>"
+                    + "<a href='http://www.valorplast.com' target='_self'>" + WebUtility.HtmlEncode("www.valorplast.com") + "</a><br/><br/><br/>"
+                    + "</span>"
+                    + "<div style='font-family:Arial; font-size:8pt; color:green;'>"
+                    + WebUtility.HtmlEncode("Avant d'imprimer ce mail, demandez-vous si vous avez vraiment besoin d'une copie papier ! ") + "<br/><br/>"
+                    + "</div>";
+                mBuilder = msg.ToBuilder();
+                mBuilder.Html = body;
+                msg = mBuilder.Create();
+                email.Message = msg;
+                return new JsonResult(
+                    _mapper.Map<Email, EmailViewModel>(email),
+                    JsonSettings);
+            }
+            if (emailType == Enumerations.RefDocumentType.EmailNoteCreditCollectivite.ToString()) {
+                DateTime dT = DateTime.Now.AddDays(-DateTime.Now.Day);
+                Quarter q = new(dT, CurrentContext.CurrentCulture);
+                //Create e-mail
+                body = "";
+                //Création du corps du message
+                body = "<span style=\"font-family:Gill Sans MT; font-size:11pt;\">"
+                    + WebUtility.HtmlEncode("Bonjour,") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("Nous avons le plaisir de vous informer que les documents relatifs à la reprise des balles de plastiques pour le ") + q.NameHTML + WebUtility.HtmlEncode(" sont en ligne.") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("Vous pouvez les télécharger en vous connectant sur la page d’accueil de notre site internet ") + "<a href='https://www.valorplast.com' target='_blank'>" + WebUtility.HtmlEncode("www.valorplast.com") + "</a>" + WebUtility.HtmlEncode(" / espace e-Valorplast")
+                    + WebUtility.HtmlEncode(", ou directement via l'application ") + "<a href='https://app.e-valorplast.com/valorplast' target='_blank'>" + WebUtility.HtmlEncode("e-Valorplast") + "</a>"
+                    + "<br/><br/>"
+                    + WebUtility.HtmlEncode("Pensez à vous munir de votre identifiant et de votre mot de passe.") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("Vous en souhaitant bonne réception,") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("L’équipe Valorplast") + "<br/><br/>"
+                    + "<strong>" + WebUtility.HtmlEncode("VALORPLAST") + "</strong><br/>"
+                    + WebUtility.HtmlEncode("21, rue d’Artois") + "<br/>"
+                    + WebUtility.HtmlEncode("75008 Paris") + "<br/>"
+                    + WebUtility.HtmlEncode("Tél. : +33 (0) 1 88 46 10 07") + "<br/>"
+                    + "<a href='http://www.valorplast.com' target='_self'>" + WebUtility.HtmlEncode("www.valorplast.com") + "</a><br/><br/><br/>"
+                    + "</span>"
+                    + "<div style='font-family:Arial; font-size:8pt; color:green;'>"
+                    + WebUtility.HtmlEncode("Avant d'imprimer ce mail, demandez-vous si vous avez vraiment besoin d'une copie papier ! ") + "<br/><br/>"
+                    + "</div>";
+                mBuilder = msg.ToBuilder();
+                mBuilder.Html = body;
+                msg = mBuilder.Create();
+                email.Message = msg;
+                return new JsonResult(
+                    _mapper.Map<Email, EmailViewModel>(email),
+                    JsonSettings);
             }
             //Error
             return Conflict(new ConflictError(err));

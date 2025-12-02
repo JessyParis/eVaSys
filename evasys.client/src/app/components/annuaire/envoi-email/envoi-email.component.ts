@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, FormGroupDirective, NgForm } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
@@ -11,7 +11,7 @@ import * as dataModelsInterfaces from "../../../interfaces/dataModelsInterfaces"
 import * as appInterfaces from "../../../interfaces/appInterfaces";
 import { ConfirmComponent } from "../../dialogs/confirm/confirm.component";
 import { showErrorToUser } from "../../../globals/utils";
-import { HabilitationAnnuaire, HabilitationLogistique, ModuleName } from "../../../globals/enums";
+import { ComponentName, DocumentType, HabilitationAnnuaire, HabilitationLogistique, ModuleName, RefDocumentType } from "../../../globals/enums";
 import { DataModelService } from '../../../services/data-model.service';
 import { SnackBarQueueService } from '../../../services/snackbar-queue.service';
 import { GridSimpleComponent } from '../../global/grid-simple/grid-simple.component';
@@ -31,23 +31,24 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: "envoi-email",
-    templateUrl: "./envoi-email.component.html",
-    standalone: false
+  selector: "envoi-email",
+  templateUrl: "./envoi-email.component.html",
+  standalone: false
 })
 
 export class EnvoiEmailComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
   //Form
   form: UntypedFormGroup;
+  documentTypeList: dataModelsInterfaces.DocumentType[];
   paramEmailList: dataModelsInterfaces.ParamEmailList[];
   yearList: appInterfaces.Year[];
   email: dataModelsInterfaces.Email = {} as dataModelsInterfaces.Email;
   yearListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   dFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
+  documentTypeListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   paramEmailListFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
   emailHTMLBodyFC: UntypedFormControl = new UntypedFormControl(null, Validators.required);
-  documentType: string = "";
   dataYear: number;
   //Global lock
   locked: boolean = true;
@@ -60,6 +61,9 @@ export class EnvoiEmailComponent implements OnInit {
   //Misc
   documentTypeLabel: string = "";
   public kendoFontData = kendoFontData;
+  RefDocumentType = RefDocumentType;
+  refDocumentTypeLabel: string = "";
+  showGrid: boolean = false;
   //Children
   @ViewChild(GridSimpleComponent) gridSimple: GridSimpleComponent;
   @ViewChild(ProgressBarComponent) progressBar: ProgressBarComponent;
@@ -71,6 +75,7 @@ export class EnvoiEmailComponent implements OnInit {
     , private dataModelService: DataModelService
     , public dialog: MatDialog
     , private snackBarQueueService: SnackBarQueueService
+    , private changeDetectorRef: ChangeDetectorRef
   ) {
     this.createForm();
   }
@@ -78,6 +83,7 @@ export class EnvoiEmailComponent implements OnInit {
   //Form initial creation
   createForm() {
     this.form = this.fb.group({
+      DocumentTypeList: this.documentTypeListFC,
       D: this.dFC,
       YearList: this.yearListFC,
       ParamEmailList: this.paramEmailListFC,
@@ -87,7 +93,10 @@ export class EnvoiEmailComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Init
   ngOnInit() {
-    this.documentType = this.activatedRoute.snapshot.params["documentType"];
+    //Get existing DocumentType
+    this.listService.getList<dataModelsInterfaces.DocumentType>(ComponentName.DocumentType).subscribe(result => {
+      this.documentTypeList = result;
+    }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     //Get existing ParamEmail
     this.listService.getListParamEmail(null, true, false).subscribe(result => {
       this.paramEmailList = result;
@@ -105,8 +114,7 @@ export class EnvoiEmailComponent implements OnInit {
   //-----------------------------------------------------------------------------------
   //Manage screen
   manageScreen() {
-    if (this.documentType == "IncitationQualite") { this.documentTypeLabel = this.applicationUserContext.getCulturedRessourceText(700); }
-    if (this.documentType == "EmailNoteCreditCollectivite") { this.documentTypeLabel = this.applicationUserContext.getCulturedRessourceText(699); }
+    this.documentTypeLabel = this.documentTypeListFC.value?.Libelle;
     //Global lock
     if (this.applicationUserContext.connectedUtilisateur.HabilitationLogistique !== HabilitationLogistique.Administrateur) {
       this.lockScreen();
@@ -114,8 +122,11 @@ export class EnvoiEmailComponent implements OnInit {
     else {
       //Init
       this.unlockScreen();
-      if (this.documentType != "IncitationQualite") { this.yearListFC.disable(); }
-      if (this.documentType != "EmailNoteCreditCollectivite") { this.dFC.disable(); }
+      if (this.documentTypeListFC.value?.RefDocumentType != RefDocumentType.IncitationQualite
+        && this.documentTypeListFC.value?.RefDocumentType != RefDocumentType.ReportingCollectiviteElu
+        && this.documentTypeListFC.value?.RefDocumentType != RefDocumentType.ReportingCollectiviteGrandPublic
+      ) { this.yearListFC.disable(); }
+      if (this.documentTypeListFC.value?.RefDocumentType != RefDocumentType.EmailNoteCreditCollectivite) { this.dFC.disable(); }
     }
   }
   //-----------------------------------------------------------------------------------
@@ -146,9 +157,11 @@ export class EnvoiEmailComponent implements OnInit {
   //D change
   onDDateChange(d: moment.Moment) {
     this.emailHTMLBodyFC.setValue(null);
-    if (!!this.dFC.value) {
+    //Init DocumenType
+    let refDocumentType: number = this.documentTypeListFC.value?.RefDocumentType;
+    if (!!this.dFC.value && refDocumentType == RefDocumentType.EmailNoteCreditCollectivite) {
       //Get email template
-      this.dataModelService.getEmailTemplate(this.documentType, null, this.dFC.value)
+      this.dataModelService.getEmailTemplate(RefDocumentType[refDocumentType], null, this.dFC.value)
         .subscribe(result => {
           this.email = result;
           this.emailHTMLBodyFC.setValue(this.email.EmailHTMLBody);
@@ -167,9 +180,14 @@ export class EnvoiEmailComponent implements OnInit {
   //Year selected
   onYearSelected(year: number) {
     this.emailHTMLBodyFC.setValue(null);
-    if (!!this.yearListFC.value) {
+    //Init DocumenType
+    let refDocumentType: number = this.documentTypeListFC.value?.RefDocumentType;
+    if (!!this.yearListFC.value
+      && (refDocumentType == RefDocumentType.ReportingCollectiviteElu
+        || refDocumentType == RefDocumentType.ReportingCollectiviteGrandPublic)
+    ) {
       //Get email template
-      this.dataModelService.getEmailTemplate(this.documentType, this.yearListFC.value, null)
+      this.dataModelService.getEmailTemplate(RefDocumentType[refDocumentType], this.yearListFC.value, null)
         .subscribe(result => {
           this.email = result;
           this.emailHTMLBodyFC.setValue(this.email.EmailHTMLBody);
@@ -185,11 +203,36 @@ export class EnvoiEmailComponent implements OnInit {
     this.manageScreen();
   }
   //-----------------------------------------------------------------------------------
+  //On DocumentType selected
+  onDocumentTypeSelected(documentType: dataModelsInterfaces.DocumentType) {
+    //Init
+    if (!documentType) {
+      this.documentTypeListFC.setValue(null);
+    }
+    this.email = {} as dataModelsInterfaces.Email;
+    this.emailHTMLBodyFC.setValue(null);
+    this.dFC.setValue(null);
+    this.yearListFC.setValue(null);
+    //Init child GridSimple
+    this.refDocumentTypeLabel = "";
+    this.changeDetectorRef.detectChanges();
+    //Init DocumenType
+    let refDocumentType: number = this.documentTypeListFC.value?.RefDocumentType;
+    this.refDocumentTypeLabel = refDocumentType ? RefDocumentType[refDocumentType] : "";
+    this.manageScreen();
+  }
+  //-----------------------------------------------------------------------------------
+  //Get RefDocumentType label from DocumentType
+  getRefDocumentTypeLabel(): string {
+    let refDocumentType: number = this.documentTypeListFC.value?.RefDocumentType;
+    return refDocumentType ? RefDocumentType[refDocumentType] : "";
+  }
+  //-----------------------------------------------------------------------------------
   //Ask for confirmation
   onSave() {
     this.saveData();
     //Confirm
-    if (this.documentType == "IncitationQualite") {
+    if (this.documentTypeListFC.value?.RefDocumentType == RefDocumentType.IncitationQualite) {
       const dialogRef = this.dialog.open(ConfirmComponent, {
         width: "350px",
         data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(1008) },
@@ -203,7 +246,7 @@ export class EnvoiEmailComponent implements OnInit {
         }
       });
     }
-    if (this.documentType == "EmailNoteCreditCollectivite") {
+    if (this.documentTypeListFC.value?.RefDocumentType == RefDocumentType.EmailNoteCreditCollectivite) {
       const dialogRef = this.dialog.open(ConfirmComponent, {
         width: "350px",
         data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(1082) },
@@ -227,7 +270,7 @@ export class EnvoiEmailComponent implements OnInit {
       .post<number>(url, this.email, {
         headers: new HttpHeaders()
           .set("year", this.yearListFC.value == null ? "0" : this.yearListFC.value.toString())
-          .set("emailing", this.documentType)
+          .set("emailing", RefDocumentType[RefDocumentType.IncitationQualite])
       })
       .pipe(
         finalize(() => this.progressBar.stop())
@@ -263,7 +306,7 @@ export class EnvoiEmailComponent implements OnInit {
       .post<number>(url, this.email, {
         headers: new HttpHeaders()
           .set("d", !this.dFC.value ? "" : moment(this.dFC.value).format("YYYY-MM-DDT00:00:00.000"))
-          .set("emailing", this.documentType)
+          .set("emailing", RefDocumentType[RefDocumentType.EmailNoteCreditCollectivite])
       })
       .pipe(
         finalize(() => this.progressBar.stop())
@@ -279,24 +322,16 @@ export class EnvoiEmailComponent implements OnInit {
     //If applicable
     if (fileName !== "nothing") {
       const blob = new Blob([data]);
-      //if (window.navigator.msSaveOrOpenBlob) //IE & Edge
-      //{
-      //  //msSaveBlob only available for IE & Edge
-      //  window.navigator.msSaveBlob(blob, fileName);
-      //}
-      //else //Chrome & FF
-      {
-        const url = window.URL.createObjectURL(blob);
-        const a: HTMLAnchorElement = document.createElement("a") as HTMLAnchorElement;
+      const url = window.URL.createObjectURL(blob);
+      const a: HTMLAnchorElement = document.createElement("a") as HTMLAnchorElement;
 
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
 
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
   }
 }
