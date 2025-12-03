@@ -78,7 +78,6 @@ export enum MenuName {
   AdministrationMenuTitre = "AdministrationMenuTitre",
   AdministrationMenuUtilisateurInactif = "AdministrationMenuUtilisateurInactif",
   AnnuaireMenuNbAffretementTransporteur = "AnnuaireMenuNbAffretementTransporteur",
-  AnnuaireMenuIncitationQualite = "AnnuaireMenuIncitationQualite",
   AnnuaireMenuEnvoiDocumentType = "AnnuaireMenuEnvoiDocumentType",
   AnnuaireMenuSuiviEnvois = "AnnuaireMenuSuiviEnvois",
   AnnuaireMenuEntite = "AnnuaireMenuEntite",

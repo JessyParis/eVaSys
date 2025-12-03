@@ -118,6 +118,8 @@ namespace eVaSys.Controllers
                     switch (emailing)
                     {
                         case "IncitationQualite":
+                        case "ReportingCollectiviteElu":
+                        case "ReportingCollectiviteGrandPublic":
                             int.TryParse(year, out y);
                             //End if incorrect parameter
                             if (y == 0) { return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711))); }
@@ -268,7 +270,8 @@ namespace eVaSys.Controllers
                     _mapper.Map<Email, EmailViewModel>(email),
                     JsonSettings);
             }
-            if (emailType == Enumerations.RefDocumentType.EmailNoteCreditCollectivite.ToString()) {
+            if (emailType == Enumerations.RefDocumentType.EmailNoteCreditCollectivite.ToString())
+            {
                 DateTime dT = DateTime.Now.AddDays(-DateTime.Now.Day);
                 Quarter q = new(dT, CurrentContext.CurrentCulture);
                 //Create e-mail
@@ -281,6 +284,34 @@ namespace eVaSys.Controllers
                     + WebUtility.HtmlEncode(", ou directement via l'application ") + "<a href='https://app.e-valorplast.com/valorplast' target='_blank'>" + WebUtility.HtmlEncode("e-Valorplast") + "</a>"
                     + "<br/><br/>"
                     + WebUtility.HtmlEncode("Pensez à vous munir de votre identifiant et de votre mot de passe.") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("Vous en souhaitant bonne réception,") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("L’équipe Valorplast") + "<br/><br/>"
+                    + "<strong>" + WebUtility.HtmlEncode("VALORPLAST") + "</strong><br/>"
+                    + WebUtility.HtmlEncode("21, rue d’Artois") + "<br/>"
+                    + WebUtility.HtmlEncode("75008 Paris") + "<br/>"
+                    + WebUtility.HtmlEncode("Tél. : +33 (0) 1 88 46 10 07") + "<br/>"
+                    + "<a href='http://www.valorplast.com' target='_self'>" + WebUtility.HtmlEncode("www.valorplast.com") + "</a><br/><br/><br/>"
+                    + "</span>"
+                    + "<div style='font-family:Arial; font-size:8pt; color:green;'>"
+                    + WebUtility.HtmlEncode("Avant d'imprimer ce mail, demandez-vous si vous avez vraiment besoin d'une copie papier ! ") + "<br/><br/>"
+                    + "</div>";
+                mBuilder = msg.ToBuilder();
+                mBuilder.Html = body;
+                msg = mBuilder.Create();
+                email.Message = msg;
+                return new JsonResult(
+                    _mapper.Map<Email, EmailViewModel>(email),
+                    JsonSettings);
+            }
+            if (emailType == Enumerations.RefDocumentType.ReportingCollectiviteElu.ToString()
+                || emailType == Enumerations.RefDocumentType.ReportingCollectiviteGrandPublic.ToString())
+            {
+                //Create e-mail
+                body = "";
+                //Création du corps du message
+                body = "<span style=\"font-family:Gill Sans MT; font-size:11pt;\">"
+                    + WebUtility.HtmlEncode("Bonjour,") + "<br/><br/>"
+                    + WebUtility.HtmlEncode("Nous avons le plaisir de vous transmettre ci-joint le document relatif à la reprise des balles de plastiques pour l'année ") + year.ToString() + WebUtility.HtmlEncode(".") + "<br/><br/>"
                     + WebUtility.HtmlEncode("Vous en souhaitant bonne réception,") + "<br/><br/>"
                     + WebUtility.HtmlEncode("L’équipe Valorplast") + "<br/><br/>"
                     + "<strong>" + WebUtility.HtmlEncode("VALORPLAST") + "</strong><br/>"

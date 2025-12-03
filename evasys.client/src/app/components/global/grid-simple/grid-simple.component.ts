@@ -120,6 +120,12 @@ export class GridSimpleComponent implements AfterViewInit, OnInit {
         this.matSortDisabled = true;
         this.loadPage("");
         break;
+      case "ReportingCollectiviteElu":
+      case "ReportingCollectiviteGrandPublic":
+        this.sort.active = DataColumnName.EntiteCodeCITEO;
+        this.sort.direction = "asc";
+        if (this.filterYear != "") { this.loadPage(""); }
+        break;
       case "IncitationQualite":
         this.sort.active = DataColumnName.EntiteCodeCITEO;
         this.sort.direction = "asc";

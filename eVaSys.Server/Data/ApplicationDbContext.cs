@@ -324,6 +324,7 @@ namespace eVaSys.Data
         public virtual DbSet<EcoOrganisme> EcoOrganismes { get; set; }
         public virtual DbSet<EquivalentCO2> EquivalentCO2s { get; set; }
         public virtual DbSet<Email> Emails { get; set; }
+        public virtual DbSet<EmailDocumentType> EmailDocumentTypes { get; set; }
         public virtual DbSet<EmailIncitationQualite> EmailIncitationQualites { get; set; }
         public virtual DbSet<EmailNoteCredit> EmailNoteCredits { get; set; }
         public virtual DbSet<Entite> Entites { get; set; }
@@ -2243,6 +2244,16 @@ namespace eVaSys.Data
                     .WithMany(p => p.EmailModifs)
                     .HasForeignKey(d => d.RefUtilisateurModif)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+            modelBuilder.Entity<EmailDocumentType>(entity =>
+            {
+                entity.HasKey(e => e.RefEmailDocumentType);
+
+                entity.ToTable("tblEmailDocumentType");
+
+                entity.Property(e => e.DCreation)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
             });
             modelBuilder.Entity<EmailIncitationQualite>(entity =>
             {

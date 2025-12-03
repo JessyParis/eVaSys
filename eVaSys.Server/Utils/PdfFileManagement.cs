@@ -840,7 +840,7 @@ namespace eVaSys.Utils
         /// </summary>
         public static MemoryStream CreateNoteCreditGemBox(string refDoc, ApplicationDbContext dbContext)
         {
-            ComponentInfo.SetLicense("AN-2023Oct10-FtYmj6EAXrUErQZLioXUTYxwWv4bWI/iawSVRZFPqnOp9JqWWLXb/dWNMSOa4b/vj/MuebtOV2UWA24rCLtejMrDCKA==A");
+            ComponentInfo.SetLicense("BN-2025Aug04-ndN0CIiJY6CjOq50Ccj5vDpb8mtqTyUhhBvk5KsARIhO4hPXfuRpBMMkLyNmgaUwSqkS51ZY0o4Fe/w06lNyYJbhEqA==A");
             MemoryStream mS = new();
             //Get SAGE document
             var sAGEDoc = dbContext.SAGEDocuments

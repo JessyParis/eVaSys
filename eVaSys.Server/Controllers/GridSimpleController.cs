@@ -252,6 +252,19 @@ namespace eVaSys.Controllers
                     //Filters
                     cmd.Parameters.Add("@d", SqlDbType.DateTime).Value = d;
                     break;
+                case "ReportingCollectiviteElu":
+                case "ReportingCollectiviteGrandPublic":
+                    sqlStr = "select tblEntite.CodeEE as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCITEO.ToString()].Name + "]"
+                        + "     , tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteLibelle.ToString()].Name + "]"
+                        + "     , tbmContactAdresse.Email as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContactAdresseEmail.ToString()].Name + "]"
+                        + " from tblEntite"
+                        + " 	inner join tbmContactAdresse on tblEntite.RefEntite = tbmContactAdresse.RefEntite"
+                        + "     left join tblAdresse on tbmContactAdresse.RefAdresse = tblAdresse.RefAdresse"
+                        + " 	inner join tbmContactAdresseDocumentType on tbmContactAdresse.RefContactAdresse = tbmContactAdresseDocumentType.RefContactAdresse"
+                        + " where tbmContactAdresseDocumentType.RefDocumentType = "+ (int)Enum.Parse(typeof(Enumerations.RefDocumentType), type) + " and tbmContactAdresse.Email is not null"
+                        + "     and tbmContactAdresse.Actif = 1 and (tblAdresse.RefAdresse is null or tblAdresse.Actif=1) and tblEntite.Actif=1";
+                    //Filters
+                    break;
                 case "ContactModificationRequest":
                     sqlStr = "select tblAction.RefAction, tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteLibelle.ToString()].Name + "]"
                         + "     , tblEntite.CodeEE as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCITEO.ToString()].Name + "]"

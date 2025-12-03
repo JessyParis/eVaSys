@@ -12,10 +12,15 @@ using eVaSys.Data;
 using Limilabs.Client.SMTP;
 using Limilabs.Mail;
 using Limilabs.Mail.Headers;
+using Limilabs.Mail.MIME;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using System.Data;
 using System.Net;
 using System.Security.Authentication;
+using System.Windows.Interop;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace eVaSys.Utils
 {
@@ -305,6 +310,110 @@ namespace eVaSys.Utils
                                     Utils.DebugPrint("Erreur envoi note de crédit : " + err, configuration["Data:DefaultConnection:ConnectionString"]);
                                     break;
                                 }
+                            }
+                        }
+                        else { err = currentContext.CulturedRessources.GetTextRessource(617); }
+                        break;
+                    case "ReportingCollectiviteElu":
+                        if (year > 0)
+                        {
+                            var cAs = dbContext.ContactAdresses.Where(e => e.ContactAdresseDocumentTypes.Any(ca => ca.RefDocumentType == (int)Enumerations.RefDocumentType.ReportingCollectiviteElu)
+                                && !string.IsNullOrWhiteSpace(e.Email)
+                                && e.Actif == true && e.Entite.Actif == true && (e.Adresse == null || e.Adresse.Actif)).ToList();
+                            foreach (var cA in cAs)
+                            {
+                                //Send every e-mail
+                                email.Message.Subject = "Valorplast : synthèse de la reprise des balles d'emballages plastiques pour " + year.ToString() + ".";
+                                email.Message.To.Clear();
+                                email.Message.To.Add(new MailBox(cA.Email));
+                                //Create attachment
+                                MemoryStream ms = DocumentFileManagement.CreateDocumentType1(cA.RefEntite, dbContext);
+                                if (ms!=null)
+                                {
+                                    var mBuilder = email.Message.ToBuilder();
+                                    //Ajout du fichier
+                                    MimeData att1 = mBuilder.AddAttachment(ms.ToArray());
+                                    att1.ContentType = ContentType.ApplicationPdf;
+                                    att1.FileName = "Reporting.pdf";
+                                    email.Message = mBuilder.Create();
+                                }
+                                //Send e-mail
+                                err = Send(email, 0, dbContext, currentContext, configuration);
+                                if (err == "ok")
+                                {
+                                    //Save email sended to dadabase
+                                    dbContext.EmailDocumentTypes.Add(new EmailDocumentType()
+                                    {
+                                        RefDocumentType = (int)Enum.Parse(typeof(Enumerations.RefDocumentType), emailing),
+                                        RefEntite = cA.RefEntite,
+                                        RefContactAdresse = cA.RefContactAdresse,
+                                        Annee = year,
+                                        D = DateOnly.FromDateTime(d),
+                                        EmailTo = cA.Email,
+                                        RefUtilisateurCreation = currentContext.RefUtilisateur
+                                    });
+                                    dbContext.SaveChanges();
+                                    nb++;
+                                }
+                                else
+                                {
+                                    Utils.DebugPrint("Erreur envoi " + Enum.Parse(typeof(Enumerations.RefDocumentType), emailing).ToString() + " : " + err, configuration["Data:DefaultConnection:ConnectionString"]);
+                                    break;
+                                }
+                                //Clear attachments
+                                email.Message.RemoveAttachments();
+                            }
+                        }
+                        else { err = currentContext.CulturedRessources.GetTextRessource(617); }
+                        break;
+                    case "ReportingCollectiviteGrandPublic":
+                        if (year > 0)
+                        {
+                            var cAs = dbContext.ContactAdresses.Where(e => e.ContactAdresseDocumentTypes.Any(ca => ca.RefDocumentType == (int)Enumerations.RefDocumentType.ReportingCollectiviteGrandPublic)
+                                && !string.IsNullOrWhiteSpace(e.Email)
+                                && e.Actif == true && e.Entite.Actif == true && (e.Adresse == null || e.Adresse.Actif)).ToList();
+                            foreach (var cA in cAs)
+                            {
+                                //Send every e-mail
+                                email.Message.Subject = "Valorplast : synthèse de la reprise des balles d'emballages plastiques pour " + year.ToString() + ".";
+                                email.Message.To.Clear();
+                                email.Message.To.Add(new MailBox(cA.Email));
+                                //Create attachment
+                                MemoryStream ms = PresentationFileManagement.CreateDocumentType2(cA.RefEntite, dbContext);
+                                if (ms != null)
+                                {
+                                    var mBuilder = email.Message.ToBuilder();
+                                    //Ajout du fichier
+                                    MimeData att1 = mBuilder.AddAttachment(ms.ToArray());
+                                    att1.ContentType = ContentType.ApplicationVndMsPowerPoint;
+                                    att1.FileName = "Reporting.pptx";
+                                    email.Message = mBuilder.Create();
+                                }
+                                //Send e-mail
+                                err = Send(email, 0, dbContext, currentContext, configuration);
+                                if (err == "ok")
+                                {
+                                    //Save email sended to dadabase
+                                    dbContext.EmailDocumentTypes.Add(new EmailDocumentType()
+                                    {
+                                        RefDocumentType = (int)Enum.Parse(typeof(Enumerations.RefDocumentType), emailing),
+                                        RefEntite = cA.RefEntite,
+                                        RefContactAdresse = cA.RefContactAdresse,
+                                        Annee = year,
+                                        D = DateOnly.FromDateTime(d),
+                                        EmailTo = cA.Email,
+                                        RefUtilisateurCreation = currentContext.RefUtilisateur
+                                    });
+                                    dbContext.SaveChanges();
+                                    nb++;
+                                }
+                                else
+                                {
+                                    Utils.DebugPrint("Erreur envoi " + Enum.Parse(typeof(Enumerations.RefDocumentType), emailing).ToString() + " : " + err, configuration["Data:DefaultConnection:ConnectionString"]);
+                                    break;
+                                }
+                                //Clear attachments
+                                email.Message.RemoveAttachments();
                             }
                         }
                         else { err = currentContext.CulturedRessources.GetTextRessource(617); }

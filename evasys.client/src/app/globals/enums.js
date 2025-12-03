@@ -52,7 +52,6 @@ var MenuName;
     MenuName["AdministrationMenuService"] = "AdministrationMenuService";
     MenuName["AdministrationMenuTitre"] = "AdministrationMenuTitre";
     MenuName["AdministrationMenuUtilisateurInactif"] = "AdministrationMenuUtilisateurInactif";
-    MenuName["AnnuaireMenuIncitationQualite"] = "AnnuaireMenuIncitationQualite";
     MenuName["AnnuaireMenuEnvoiDocumentType"] = "AnnuaireMenuEnvoiDocumentType";
     MenuName["AnnuaireMenuSuiviEnvois"] = "AnnuaireMenuSuiviEnvois";
     MenuName["AnnuaireMenuEntite"] = "AnnuaireMenuEntite";

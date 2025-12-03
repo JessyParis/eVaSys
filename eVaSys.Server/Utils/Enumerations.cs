@@ -208,7 +208,6 @@ namespace eVaSys.Utils
             AdministrationMenuTitre,
             AdministrationMenuUtilisateurInactif,
             AnnuaireMenuNbAffretementTransporteur,
-            AnnuaireMenuIncitationQualite,
             AnnuaireMenuEnvoiDocumentType,
             AnnuaireMenuSuiviEnvois,
             AnnuaireMenuEntite,

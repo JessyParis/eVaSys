@@ -1000,9 +1000,6 @@
               </mat-expansion-panel-header>
               <table>
                 <tr *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur')">
-                  <td (click)="onMenu('AnnuaireMenuIncitationQualite')" [class]="annuaireMenuIncitationQualiteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AnnuaireMenuIncitationQualite')}}</td>
-                </tr>
-                <tr *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur')">
                   <td (click)="onMenu('AnnuaireMenuEnvoiDocumentType')" [class]="annuaireMenuEmailNoteCreditCollectiviteStyle">{{applicationUserContext.getEnvMenuCulturedCaption('AnnuaireMenuEnvoiDocumentType')}}</td>
                 </tr>
                 <tr *ngIf="(applicationUserContext.connectedUtilisateur.HabilitationAnnuaire==='Administrateur')">

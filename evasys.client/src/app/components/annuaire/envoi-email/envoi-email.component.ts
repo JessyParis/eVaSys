@@ -184,7 +184,8 @@ export class EnvoiEmailComponent implements OnInit {
     let refDocumentType: number = this.documentTypeListFC.value?.RefDocumentType;
     if (!!this.yearListFC.value
       && (refDocumentType == RefDocumentType.ReportingCollectiviteElu
-        || refDocumentType == RefDocumentType.ReportingCollectiviteGrandPublic)
+        || refDocumentType == RefDocumentType.ReportingCollectiviteGrandPublic
+        || refDocumentType == RefDocumentType.IncitationQualite)
     ) {
       //Get email template
       this.dataModelService.getEmailTemplate(RefDocumentType[refDocumentType], this.yearListFC.value, null)
@@ -246,17 +247,23 @@ export class EnvoiEmailComponent implements OnInit {
         }
       });
     }
-    if (this.documentTypeListFC.value?.RefDocumentType == RefDocumentType.EmailNoteCreditCollectivite) {
+    if (this.documentTypeListFC.value?.RefDocumentType == RefDocumentType.EmailNoteCreditCollectivite
+      || this.documentTypeListFC.value?.RefDocumentType == RefDocumentType.ReportingCollectiviteElu
+      || this.documentTypeListFC.value?.RefDocumentType == RefDocumentType.ReportingCollectiviteGrandPublic
+    ) {
+      //Create message
+      let msg = this.applicationUserContext.getCulturedRessourceText(1617) + this.documentTypeListFC.value.Libelle;
+      //Open confirm dialog
       const dialogRef = this.dialog.open(ConfirmComponent, {
         width: "350px",
-        data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: this.applicationUserContext.getCulturedRessourceText(1082) },
+        data: { title: this.applicationUserContext.getCulturedRessourceText(300), message: msg },
         autoFocus: false,
         restoreFocus: false
       });
-
+      //After closed
       dialogRef.afterClosed().subscribe(result => {
         if (result === "yes") {
-          this.onEmailNoteCreditCollectivite();
+          this.onEmailing();
         }
       });
     }
@@ -297,7 +304,7 @@ export class EnvoiEmailComponent implements OnInit {
           }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
       }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
   }
-  onEmailNoteCreditCollectivite() {
+  onEmailing() {
     //Check if there is data to process
     //Create e-mails
     var url = this.baseUrl + "evapi/email";
@@ -305,8 +312,9 @@ export class EnvoiEmailComponent implements OnInit {
     this.http
       .post<number>(url, this.email, {
         headers: new HttpHeaders()
+          .set("year", this.yearListFC.value == null ? "0" : this.yearListFC.value.toString())
           .set("d", !this.dFC.value ? "" : moment(this.dFC.value).format("YYYY-MM-DDT00:00:00.000"))
-          .set("emailing", RefDocumentType[RefDocumentType.EmailNoteCreditCollectivite])
+          .set("emailing", RefDocumentType[this.documentTypeListFC.value.RefDocumentType])
       })
       .pipe(
         finalize(() => this.progressBar.stop())

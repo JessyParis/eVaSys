@@ -54,7 +54,6 @@ export class AppComponent implements OnInit {
   administrationMenuUtilisateurStyle: string = "ev-menu";
   administrationMenuSecuriteStyle: string = "ev-menu";
   administrationMenuUtilisateurInactifStyle: string = "ev-menu";
-  annuaireMenuIncitationQualiteStyle: string = "ev-menu";
   annuaireMenuEmailNoteCreditCollectiviteStyle: string = "ev-menu";
   annuaireMenuSuiviEnvoisStyle: string = "ev-menu";
   annuaireMenuEntiteStyle: string = "ev-menu";
@@ -578,7 +577,6 @@ export class AppComponent implements OnInit {
     this.administrationMenuTitreStyle = "ev-menu";
     this.administrationMenuUtilisateurStyle = "ev-menu";
     this.administrationMenuUtilisateurInactifStyle = "ev-menu";
-    this.annuaireMenuIncitationQualiteStyle = "ev-menu";
     this.annuaireMenuEmailNoteCreditCollectiviteStyle = "ev-menu";
     this.annuaireMenuSuiviEnvoisStyle = "ev-menu";
     this.annuaireMenuEntiteStyle = "ev-menu";
@@ -767,10 +765,6 @@ export class AppComponent implements OnInit {
       case "AdministrationMenuJourFerie":
         this.administrationMenuJourFerieStyle = "ev-menu-selected";
         this.panelParametreLogistiqueExpanded = true;
-        break;
-      case "AnnuaireMenuIncitationQualite":
-        this.annuaireMenuIncitationQualiteStyle = "ev-menu-selected";
-        this.panelParametreAnnuaireExpanded = true;
         break;
       case "AnnuaireMenuEnvoiDocumentType":
         this.annuaireMenuEmailNoteCreditCollectiviteStyle = "ev-menu-selected";
@@ -1273,9 +1267,6 @@ export class AppComponent implements OnInit {
           break;
         case MenuName.AdministrationMenuSecurite:
           this.router.navigate(["securite"]);
-          break;
-        case MenuName.AnnuaireMenuIncitationQualite:
-          this.router.navigate(["envoi-email", "IncitationQualite"]);
           break;
         case MenuName.AnnuaireMenuEnvoiDocumentType:
           this.router.navigate(["envoi-email", "EmailNoteCreditCollectivite"]);
