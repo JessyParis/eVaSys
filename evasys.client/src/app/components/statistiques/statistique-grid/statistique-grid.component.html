@@ -409,13 +409,13 @@
           <mat-checkbox *ngIf="visibleFilterActif" class="ev-control-left" formControlName="Actif">
             {{applicationUserContext.getCulturedRessourceText(651)}}
           </mat-checkbox>
-          <mat-form-field *ngIf="visibleFilterEmailTypeList" class="ev-control-left">
+          <mat-form-field *ngIf="visibleFilterDocumentTypeList" class="ev-control-left">
             <mat-label>{{applicationUserContext.getCulturedRessourceText(722)}}</mat-label>
-            <mat-select formControlName="EmailTypeList" required [errorStateMatcher]="matcher">
-              <mat-option *ngFor="let emailType of emailTypeList" [value]="emailType">{{emailType.Libelle}}</mat-option>
+            <mat-select formControlName="DocumentTypeList" required [errorStateMatcher]="matcher">
+              <mat-option *ngFor="let documentType of documentTypeList" [value]="documentType">{{documentType.Libelle}}</mat-option>
             </mat-select>
-            <button *ngIf="form.get('EmailTypeList').value" matIconSuffix mat-icon-button aria-label="Supprimer"
-                    (click)="$event.stopPropagation(); onEmailTypeListReset();" tabindex="-1" type="button">
+            <button *ngIf="form.get('DocumentTypeList').value" matIconSuffix mat-icon-button aria-label="Supprimer"
+                    (click)="$event.stopPropagation(); onDocumentTypeListReset();" tabindex="-1" type="button">
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>

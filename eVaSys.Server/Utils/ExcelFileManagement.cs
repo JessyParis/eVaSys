@@ -3996,8 +3996,8 @@ namespace eVaSys.Utils
                         name == Enumerations.MenuName.AnnuaireMenuSuiviEnvois.ToString()
                     )
                 {
-                    if (eSF.FilterEmailType == "IncitationQualite") { ws.Cells[1, 0].Value = currentContext.CulturedRessources.GetTextRessource(700); }
-                    else if (eSF.FilterEmailType == "NoteCreditCollectivite") { ws.Cells[1, 0].Value = currentContext.CulturedRessources.GetTextRessource(699); }
+                    var docType = dbContext.DocumentTypes.Where(dt => dt.RefDocumentType == eSF.FilterDocumentType).FirstOrDefault();
+                    if (docType != null) { ws.Cells[1, 0].Value = docType.Libelle; }
                     ws.Cells[1, 0].Style = styleCritere;
                     ws.Rows.InsertEmpty(1);
                     lastCriteriaRowIndex++; firstDataRowIndex++; lastDataRowIndex++;

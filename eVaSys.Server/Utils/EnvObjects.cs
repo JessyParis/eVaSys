@@ -460,7 +460,7 @@ namespace eVaSys.Utils
                 return s;
             }
         }
-        public string FilterEmailType { get; set; }
+        public int FilterDocumentType { get; set; }
         public string FilterUtilisateurs { get; set; }
         public string FilterUtilisateursCaption
         {

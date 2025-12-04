@@ -20,7 +20,7 @@ export class StatistiqueService {
     , filterVilleDeparts = "", filterAdresseDestinations = "", filterVilleArrivees = ""
     , filterDRs = "", filterMonths = "", filterQuarters = "", filterYears = "", filterNonConformiteEtapeTypes = ""
     , filterNonConformiteNatures = "", filterCamionTypes = "", filterProduitGroupeReportings = ""
-    , filterMoins10Euros = false, filterCollecte = "", filterContrat = "", filterEE = null, filterEcoOrganismes = "", filterEntiteTypes = "", filterEmailType = "", filterActionTypes = ""
+    , filterMoins10Euros = false, filterCollecte = "", filterContrat = "", filterEE = null, filterEcoOrganismes = "", filterEntiteTypes = "", filterDocumentType = "", filterActionTypes = ""
     , filterAdresseTypes = "", filterContactAdresseProcesss = "", filterFonctions = "", filterServices = "", filterContactSelectedColumns = ""
     , filterFirstLogin = false, filterDayWeekMonth = "Month", filterEntites = "", filterUtilisateurs = "", filterText = "", statType = ""
   ): Observable<HttpResponse<any[]>> {
@@ -58,7 +58,7 @@ export class StatistiqueService {
           .set("filterCollecte", filterCollecte)
           .set("filterContrat", filterContrat)
           .set("filterEE", (filterEE == null ? "" : filterEE.toString()))
-          .set("filterEmailType", filterEmailType)
+          .set("filterDocumentType", filterDocumentType)
           .set("filterActionTypes", filterActionTypes)
           .set("filterAdresseTypes", filterAdresseTypes)
           .set("filterContactAdresseProcesss", filterContactAdresseProcesss)
@@ -88,7 +88,7 @@ export class StatistiqueService {
     , filterVilleDeparts = "", filterAdresseDestinations = "", filterVilleArrivees = ""
     , filterDRs = "", filterMonths = "", filterQuarters = "", filterYears = "", filterNonConformiteEtapeTypes = ""
     , filterNonConformiteNatures = "", filterCamionTypes = "", filterProduitGroupeReportings = ""
-    , filterMoins10Euros = false, filterCollecte = "", filterContrat = "", filterEE = null, filterEcoOrganismes = "", filterEntiteTypes = "", filterEmailType = "", filterActionTypes = ""
+    , filterMoins10Euros = false, filterCollecte = "", filterContrat = "", filterEE = null, filterEcoOrganismes = "", filterEntiteTypes = "", filterDocumentType = "", filterActionTypes = ""
     , filterAdresseTypes = "", filterContactAdresseProcesss = "", filterFonctions = "", filterServices = "", filterContactSelectedColumns = ""
     , filterFirstLogin = false, filterDayWeekMonth = "Month", filterEntites = "", filterUtilisateurs = "", filterText = "", statType = ""
   ): any {
@@ -124,7 +124,7 @@ export class StatistiqueService {
         .set("filterCollecte", filterCollecte)
         .set("filterContrat", filterContrat)
         .set("filterEE", (filterEE == null ? "" : filterEE.toString()))
-        .set("filterEmailType", filterEmailType)
+        .set("filterDocumentType", filterDocumentType)
         .set("filterActionTypes", filterActionTypes)
         .set("filterAdresseTypes", filterAdresseTypes)
         .set("filterContactAdresseProcesss", filterContactAdresseProcesss)

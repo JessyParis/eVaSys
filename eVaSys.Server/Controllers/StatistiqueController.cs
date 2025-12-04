@@ -81,7 +81,9 @@ namespace eVaSys.Controllers
             eSF.FilterContactAdresseProcesss = Request.Headers["filterContactAdresseProcesss"].ToString();
             eSF.FilterFonctions = Request.Headers["filterFonctions"].ToString();
             eSF.FilterServices = Request.Headers["filterServices"].ToString();
-            eSF.FilterEmailType = Request.Headers["filterEmailType"].ToString();
+            int refDocumentType = 0;
+            int.TryParse(Request.Headers["filterDocumentType"].ToString(), out refDocumentType);
+            eSF.FilterDocumentType = refDocumentType;
             eSF.FilterUtilisateurs = Request.Headers["filterUtilisateurs"].ToString();
             eSF.StatType = Request.Query["statType"].ToString();
             string filterContactSelectedColumns = Request.Headers["filterContactSelectedColumns"].ToString();
@@ -3600,7 +3602,7 @@ namespace eVaSys.Controllers
                         cmd.Parameters.Add("@end", SqlDbType.DateTime).Value = end.AddDays(1);
                     }
                 }
-                if (eSF.FilterEmailType == "IncitationQualite")
+                if (eSF.FilterDocumentType == (int)Enum.Parse(typeof(Enumerations.RefDocumentType), "IncitationQualite"))
                 {
                     sqlStr = "select Nom as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.GenerePar.ToString()].Name + "]"
                         + "     , tblEmailIncitationQualite.Annee as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.AnneeNb.ToString()].Name + "]"
@@ -3618,7 +3620,7 @@ namespace eVaSys.Controllers
                         cmd.Parameters.Add("@filterText", SqlDbType.NVarChar).Value = eSF.FilterText;
                     }
                 }
-                if (eSF.FilterEmailType == "NoteCreditCollectivite")
+                else if (eSF.FilterDocumentType == (int)Enum.Parse(typeof(Enumerations.RefDocumentType), "EmailNoteCreditCollectivite"))
                 {
                     sqlStr = "select Nom as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.GenerePar.ToString()].Name + "]"
                         + "     , RefSAGEDocument as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.SAGENumeroPiece.ToString()].Name + "]"
@@ -3634,6 +3636,23 @@ namespace eVaSys.Controllers
                     if (!string.IsNullOrEmpty(eSF.FilterText))
                     {
                         sqlStr += " and (tblEntite.CodeEE=@filterText or tblEntite.Libelle COLLATE Latin1_general_CI_AI like '%' + @filterText + '%' COLLATE Latin1_general_CI_AI or tblEmailNoteCredit.EmailTo like '%' + @filterText + '%' or tblEmailNoteCredit.RefSAGEDocument=@filterText)";
+                        cmd.Parameters.Add("@filterText", SqlDbType.NVarChar).Value = eSF.FilterText;
+                    }
+                }
+                else if (eSF.FilterDocumentType > 0)
+                {
+                    sqlStr = "select Nom as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.GenerePar.ToString()].Name + "]"
+                        + "     , tblEntite.CodeEE as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteCodeCITEO.ToString()].Name + "]"
+                        + "     , tblEntite.Libelle as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteLibelle.ToString()].Name + "]"
+                        + "     , tblEmailDocumentType.EmailTo as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContactAdresseEmail.ToString()].Name + "]"
+                        + "     , tblEmailDocumentType.DCreation as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EmailDEnvoi.ToString()].Name + "]"
+                        + " from tblEmailDocumentType"
+                        + "     left join tblUtilisateur on tblEmailDocumentType.RefUtilisateurCreation = tblUtilisateur.RefUtilisateur"
+                        + "     left join tblEntite on tblEntite.RefEntite = tblEmailDocumentType.RefEntite"
+                        + " where tblEmailDocumentType.DCreation>=@begin and tblEmailDocumentType.DCreation<@end";
+                    if (!string.IsNullOrEmpty(eSF.FilterText))
+                    {
+                        sqlStr += " and (tblEntite.CodeEE=@filterText or tblEntite.Libelle COLLATE Latin1_general_CI_AI like '%' + @filterText + '%' COLLATE Latin1_general_CI_AI or tblEmailDocumentType.EmailTo like '%' + @filterText + '%')";
                         cmd.Parameters.Add("@filterText", SqlDbType.NVarChar).Value = eSF.FilterText;
                     }
                 }
@@ -3788,8 +3807,8 @@ namespace eVaSys.Controllers
                     + "     , tblContratIncitationQualite.DDebut as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContratIncitationQualiteDebut.ToString()].Name + "]"
                     + "     , tblContratIncitationQualite.DFin as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContratIncitationQualiteFin.ToString()].Name + "]"
                     + "     , cast(case when tblContratIncitationQualite.DFin>=getdate() then 1 else 0 end as bit) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.SousContratIncitationQualite.ToString()].Name + "]"
-                    + "     , dbo.ListeEntiteProduit(tblEntite.RefEntite) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeProduits.ToString()].Name + "]"
-                    + "     , dbo.ListeEntiteProduitInterdit(tblEntite.RefEntite) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeProduitInterdits.ToString()].Name + "]"
+                    + "     , dbo.ListeEntiteProduit(tblEntite.RefEntite," + (CurrentContext.filterGlobalActif ? "1" : "0") + ") as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeProduits.ToString()].Name + "]"
+                    + "     , dbo.ListeEntiteProduitInterdit(tblEntite.RefEntite," + (CurrentContext.filterGlobalActif ? "1" : "0") + ") as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeProduitInterdits.ToString()].Name + "]"
                     + "     , dbo.ListeEntiteEntite(tblEntite.RefEntite,1,1) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeCollectiviteActifs.ToString()].Name + "]"
                     + "     , dbo.ListeEntiteEntite(tblEntite.RefEntite,1,0) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeCollectiviteInactifs.ToString()].Name + "]"
                     + "     , case when tblEntite.RefEntiteType=3 then dbo.ListeEntiteCamionTypes(tblEntite.RefEntite) else null end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriListeCamionTypes.ToString()].Name + "]"
@@ -3973,8 +3992,8 @@ namespace eVaSys.Controllers
                     + "     , tblContratIncitationQualite.DDebut as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContratIncitationQualiteDebut.ToString()].Name + "]"
                     + "     , tblContratIncitationQualite.DFin as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.ContratIncitationQualiteFin.ToString()].Name + "]"
                     + "     , cast(case when tblContratIncitationQualite.DFin>=getdate() then 1 else 0 end as bit) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.SousContratIncitationQualite.ToString()].Name + "]"
-                    + "     , dbo.ListeEntiteProduit(tblEntite.RefEntite) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeProduits.ToString()].Name + "]"
-                    + "     , dbo.ListeEntiteProduitInterdit(tblEntite.RefEntite) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeProduitInterdits.ToString()].Name + "]"
+                    + "     , dbo.ListeEntiteProduit(tblEntite.RefEntite," + (CurrentContext.filterGlobalActif ? "1" : "0") + ") as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeProduits.ToString()].Name + "]"
+                    + "     , dbo.ListeEntiteProduitInterdit(tblEntite.RefEntite," + (CurrentContext.filterGlobalActif ? "1" : "0") + ") as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeProduitInterdits.ToString()].Name + "]"
                     + "     , dbo.ListeEntiteEntite(tblEntite.RefEntite,1,1) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeCollectiviteActifs.ToString()].Name + "]"
                     + "     , dbo.ListeEntiteEntite(tblEntite.RefEntite,1,0) as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.EntiteListeCollectiviteInactifs.ToString()].Name + "]"
                     + "     , case when tblEntite.RefEntiteType=3 then dbo.ListeEntiteCamionTypes(tblEntite.RefEntite) else null end as [" + CurrentContext.EnvDataColumns[Enumerations.DataColumnName.CentreDeTriListeCamionTypes.ToString()].Name + "]"
@@ -5066,13 +5085,17 @@ namespace eVaSys.Controllers
                     }
                     if (menu == Enumerations.MenuName.AnnuaireMenuSuiviEnvois.ToString())
                     {
-                        if (eSF.FilterEmailType == "IncitationQualite")
+                        if (eSF.FilterDocumentType == (int)Enum.Parse(typeof(Enumerations.RefDocumentType), "IncitationQualite"))
                         {
                             sqlStrFinal += " ORDER BY tblEmailIncitationQualite.DCreation ";
                         }
-                        if (eSF.FilterEmailType == "NoteCreditCollectivite")
+                        else if (eSF.FilterDocumentType == (int)Enum.Parse(typeof(Enumerations.RefDocumentType), "EmailNoteCreditCollectivite"))
                         {
                             sqlStrFinal += " ORDER BY tblEmailNoteCredit.DCreation ";
+                        }
+                        else if (eSF.FilterDocumentType > 0)
+                        {
+                            sqlStrFinal += " ORDER BY tblEmailDocumentType.DCreation ";
                         }
                     }
                     if (menu == Enumerations.MenuName.AnnuaireMenuEvolutionTonnage.ToString())

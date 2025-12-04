@@ -101,7 +101,7 @@ export class ApplicationUserContext {
   public filterGlobalActif: boolean = true;
   public filterNonRepartissable: boolean = null;
   public filterRepartitionAFinaliser: boolean = false;
-  public filterEmailType: any = null;
+  public filterDocumentType: dataModelsInterfaces.DocumentType = null;
   public filterContactSelectedColumns: appClasses.EnvDataColumn[] = [];
   //Navigation
   public fromMenu: appClasses.EnvMenu = null;
@@ -550,7 +550,7 @@ export class ApplicationUserContext {
     this.filterDayWeekMonth = "Month";
     this.filterFirstLogin = true;
     this.filterEE = null;
-    this.filterEmailType = null;
+    this.filterDocumentType = null;
     this.filterContactSelectedColumns = [];
     this.filterRepartitionAFinaliser = false;
     //Set default mandatory filters

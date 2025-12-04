@@ -8,7 +8,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { ApplicationUserContext } from "../../../globals/globals";
 import { UntypedFormGroup, UntypedFormControl, Validators, FormGroupDirective, NgForm, FormControl } from "@angular/forms";
-import { MenuName, ModuleName, HabilitationQualite, DataColumnName, HabilitationModuleCollectivite, HabilitationLogistique, DocumentType } from "../../../globals/enums";
+import { MenuName, ModuleName, HabilitationQualite, DataColumnName, HabilitationModuleCollectivite, HabilitationLogistique, DocumentType, ComponentName } from "../../../globals/enums";
 import { StatistiqueService } from "../../../services/statistique.service";
 import moment from "moment";
 import { ListService } from "../../../services/list.service";
@@ -83,7 +83,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
   filterContactAdresseProcesss: string = "";
   filterFonctions: string = "";
   filterServices: string = "";
-  filterEmailType: string = "";
+  filterDocumentType: string = "";
   filterContactSelectedColumns = "";
   entiteList: dataModelsInterfaces.EntiteList[];
   filteredEntiteList: ReplaySubject<dataModelsInterfaces.EntiteList[]> = new ReplaySubject<dataModelsInterfaces.EntiteList[]>(1);
@@ -124,9 +124,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
   contactAdresseProcessList: dataModelsInterfaces.ContactAdresseProcess[];
   fonctionList: dataModelsInterfaces.Fonction[];
   serviceList: dataModelsInterfaces.Service[];
-  emailTypeList: any[] = [
-    { Type: "IncitationQualite", Libelle: this.applicationUserContext.getCulturedRessourceText(700) }
-    , { Type: "NoteCreditCollectivite", Libelle: this.applicationUserContext.getCulturedRessourceText(699) }]
+  documentTypeList: dataModelsInterfaces.DocumentType[];
   dataSource: StatistiqueDataSource;
   visibleFilterFilterText: boolean = false;
   visibleFilterDBegin: boolean = false;
@@ -168,7 +166,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
   visibleFilterContrat: boolean = false;
   visibleFilterEE: boolean = false;
   visibleFilterActif: boolean = false;
-  visibleFilterEmailTypeList: boolean = false;
+  visibleFilterDocumentTypeList: boolean = false;
   visibleFilterFirstLogin: boolean = false;
   visibleFilterDayWeekMonth: boolean = false;
   visibleStatistiqueCollectivite: boolean = false;
@@ -249,6 +247,10 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
     moment.locale(this.applicationUserContext.currentCultureName.substr(0, 2));
     //Set dynamic labels
     this.setDynamicLabels();
+    //Get existing DocumentType
+    this.listService.getList<dataModelsInterfaces.DocumentType>(ComponentName.DocumentType).subscribe(result => {
+      this.documentTypeList = result;
+    }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     //Get existing transporteur
     listService.getListTransporteur(null, false, false).subscribe(result => {
       this.transporteurList = result;
@@ -579,7 +581,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       Contrat: new UntypedFormControl(this.applicationUserContext.filterContrat),
       EE: new UntypedFormControl(this.applicationUserContext.filterEE == null ? "" : this.applicationUserContext.filterEE.toString()),
       Actif: new UntypedFormControl(this.applicationUserContext.filterActif),
-      EmailTypeList: new UntypedFormControl(this.applicationUserContext.filterEmailType, Validators.required),
+      DocumentTypeList: new UntypedFormControl(this.applicationUserContext.filterDocumentType, Validators.required),
       UtilisateurList: new UntypedFormControl(this.applicationUserContext.filterUtilisateurs),
       UtilisateurListFilter: new UntypedFormControl(),
       FirstLogin: new UntypedFormControl(this.applicationUserContext.filterFirstLogin),
@@ -857,7 +859,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
     this.form.get("DBegin").disable();
     this.form.get("DEnd").disable();
     this.form.get("CollectiviteList").disable();
-    this.form.get("EmailTypeList").disable();
+    this.form.get("DocumentTypeList").disable();
     this.form.get("MonthList").disable();
     this.form.get("YearList").disable();
     this.form.get("MonthEndList").disable();
@@ -1256,8 +1258,8 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
         this.form.get("DBegin").enable();
         this.visibleFilterDEnd = true;
         this.form.get("DEnd").enable();
-        this.visibleFilterEmailTypeList = true;
-        this.form.get("EmailTypeList").enable();
+        this.visibleFilterDocumentTypeList = true;
+        this.form.get("DocumentTypeList").enable();
         break;
       case MenuName.ModuleCollectiviteMenuStatistiques:
         this.visibleStatistiqueCollectivite = true;
@@ -1416,7 +1418,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
     this.applicationUserContext.filterContrat = this.form.get("Contrat").value;
     this.applicationUserContext.filterEE = (this.form.get("EE").value ? this.form.get("EE").value : null);
     this.applicationUserContext.filterActif = this.form.get("Actif").value;
-    this.applicationUserContext.filterEmailType = this.form.get("EmailTypeList").value;
+    this.applicationUserContext.filterDocumentType = this.form.get("DocumentTypeList").value;
     this.applicationUserContext.filterContactSelectedColumns = this.contactSelectedColumns;
     this.applicationUserContext.filterFirstLogin = this.form.get("FirstLogin").value;
     this.applicationUserContext.filterDayWeekMonth = this.form.get("DayWeekMonth").value;
@@ -1609,7 +1611,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
     else {
       this.filterServices = "";
     }
-    this.filterEmailType = (this.form.get("EmailTypeList").value ? this.form.get("EmailTypeList").value.Type : "");
+    this.filterDocumentType = (this.form.get("DocumentTypeList").value ? this.form.get("DocumentTypeList").value.RefDocumentType.toString() : "");
     if (this.applicationUserContext.filterContactSelectedColumns && this.applicationUserContext.filterContactSelectedColumns.length > 0) {
       this.filterContactSelectedColumns = Array.prototype.map.call(this.applicationUserContext.filterContactSelectedColumns, function (item: EnvDataColumn) { return item.name; }).join(",");
     }
@@ -1643,7 +1645,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       , this.filterProduits, this.filterTransporteurs, this.filterVilleDeparts, this.filterAdresseDestinations, this.filterVilleArrivees
       , this.filterDRs, this.filterMonths, this.filterQuarters, this.filterYears, this.filterNonConformiteEtapeTypes, this.filterNonConformiteNatures, this.filterCamionTypes, this.filterProduitGroupeReportings
       , this.applicationUserContext.filterMoins10Euros, this.applicationUserContext.filterCollecte, this.applicationUserContext.filterContrat, this.applicationUserContext.filterEE
-      , this.filterEcoOrganismes, this.filterEntiteTypes, this.filterEmailType, this.filterActionTypes, this.filterAdresseTypes, this.filterContactAdresseProcesss, this.filterFonctions, this.filterServices, this.filterContactSelectedColumns
+      , this.filterEcoOrganismes, this.filterEntiteTypes, this.filterDocumentType, this.filterActionTypes, this.filterAdresseTypes, this.filterContactAdresseProcesss, this.filterFonctions, this.filterServices, this.filterContactSelectedColumns
       , this.applicationUserContext.filterFirstLogin, this.applicationUserContext.filterDayWeekMonth, this.filterEntites, this.filterUtilisateurs, this.filterText, this.applicationUserContext.statType
     )
       .pipe(
@@ -1682,7 +1684,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
       , this.filterProduits, this.filterTransporteurs, this.filterVilleDeparts, this.filterAdresseDestinations, this.filterVilleArrivees
       , this.filterDRs, this.filterMonths, this.filterQuarters, this.filterYears, this.filterNonConformiteEtapeTypes, this.filterNonConformiteNatures, this.filterCamionTypes, this.filterProduitGroupeReportings
       , this.applicationUserContext.filterMoins10Euros, this.applicationUserContext.filterCollecte, this.applicationUserContext.filterContrat, this.applicationUserContext.filterEE
-      , this.filterEcoOrganismes, this.filterEntiteTypes, this.filterEmailType, this.filterActionTypes, this.filterAdresseTypes, this.filterContactAdresseProcesss, this.filterFonctions, this.filterServices, this.filterContactSelectedColumns
+      , this.filterEcoOrganismes, this.filterEntiteTypes, this.filterDocumentType, this.filterActionTypes, this.filterAdresseTypes, this.filterContactAdresseProcesss, this.filterFonctions, this.filterServices, this.filterContactSelectedColumns
       , this.applicationUserContext.filterFirstLogin, this.applicationUserContext.filterDayWeekMonth, this.filterEntites, this.filterUtilisateurs, this.filterText, this.applicationUserContext.statType
     )
   }
@@ -2000,7 +2002,7 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
     this.form.get("Contrat").setValue(this.applicationUserContext.filterContrat);
     this.form.get("EE").setValue(this.applicationUserContext.filterEE == null ? "" : this.applicationUserContext.filterEE.toString());
     this.form.get("Actif").setValue(this.applicationUserContext.filterActif);
-    this.form.get("EmailTypeList").setValue(this.applicationUserContext.filterEmailType);
+    this.form.get("DocumentTypeList").setValue(this.applicationUserContext.filterDocumentType);
     this.form.get("UtilisateurList").setValue(this.applicationUserContext.filterUtilisateurs);
     this.form.get("UtilisateurListFilter").setValue(null);
     this.form.get("DayWeekMonth").setValue(this.applicationUserContext.filterDayWeekMonth);
@@ -2145,9 +2147,9 @@ export class StatistiqueGridComponent implements AfterViewInit, OnInit, OnDestro
     this.applicationUserContext.filterServices = [];
     this.form.get("ServiceList").setValue(this.applicationUserContext.filterServices);
   }
-  public onEmailTypeListReset() {
-    this.applicationUserContext.filterEmailType = null;
-    this.form.get("EmailTypeList").setValue(this.applicationUserContext.filterEmailType);
+  public onDocumentTypeListReset() {
+    this.applicationUserContext.filterDocumentType = null;
+    this.form.get("DocumentTypeList").setValue(this.applicationUserContext.filterDocumentType);
   }
   public onUtilisateurListReset() {
     this.applicationUserContext.filterUtilisateurs = [];
@@ -2386,7 +2388,7 @@ export class StatistiqueDataSource implements DataSource<any> {
     , filterCentreDeTris = "", filterClients = "", filterCollectivites = "", filterDptDeparts = "", filterDptArrivees = "", filterPayss = "", filterProcesss = ""
     , filterProduits = "", filterTransporteurs = "", filterVilleDeparts = "", filterAdresseDestinations = "", filterVilleArrivees = ""
     , filterDRs = "", filterMonths = "", filterQuarters = "", filterYears = "", filterNonConformiteEtapeTypes = "", filterNonConformiteNatures = "", filterCamionTypes = "", filterProduitGroupeReportings = ""
-    , filterMoins10Euros = false, filterCollecte = "", filterContrat = "", filterEE = null, filterEcoOrganismes = "", filterEntiteTypes = "", filterEmailType = "", filterActionTypes = ""
+    , filterMoins10Euros = false, filterCollecte = "", filterContrat = "", filterEE = null, filterEcoOrganismes = "", filterEntiteTypes = "", filterDocumentType = "", filterActionTypes = ""
     , filterAdresseTypes = "", filterContactAdresseProcesss = "", filterFonctions = "", filterServices = "", filterContactSelectedColumns = ""
     , filterFirstLogin = false, filterDayWeekMonth = "Month", filterEntites = "", filterUtilisateurs = "", filterText = "", statType = ""
   ) {
@@ -2398,7 +2400,7 @@ export class StatistiqueDataSource implements DataSource<any> {
       , filterCentreDeTris, filterClients, filterCollectivites, filterDptDeparts, filterDptArrivees, filterPayss, filterProcesss
       , filterProduits, filterTransporteurs, filterVilleDeparts, filterAdresseDestinations, filterVilleArrivees
       , filterDRs, filterMonths, filterQuarters, filterYears, filterNonConformiteEtapeTypes, filterNonConformiteNatures, filterCamionTypes, filterProduitGroupeReportings
-      , filterMoins10Euros, filterCollecte, filterContrat, filterEE, filterEcoOrganismes, filterEntiteTypes, filterEmailType, filterActionTypes
+      , filterMoins10Euros, filterCollecte, filterContrat, filterEE, filterEcoOrganismes, filterEntiteTypes, filterDocumentType, filterActionTypes
       , filterAdresseTypes, filterContactAdresseProcesss, filterFonctions, filterServices, filterContactSelectedColumns
       , filterFirstLogin, filterDayWeekMonth, filterEntites, filterUtilisateurs, filterText, statType).pipe<any, HttpResponse<any[]>>(
         catchError(() => of([])),
