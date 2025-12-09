@@ -86,6 +86,8 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
   requiredCollectiviteList: boolean = false;
   requiredCollectiviteNAList: boolean = false;
   requiredPrixReprise: boolean = false;
+  visibleRepartitionCollectivite: boolean = false;
+  visibleRepartitionProduit: boolean = false;
   //Functions
   toFixed = toFixed;
   getFormattedNumeroCommande = getFormattedNumeroCommande;
@@ -360,6 +362,12 @@ export class RepartitionComponent extends BaseFormComponent<dataModelsInterfaces
         this.poidsFC.disable();
       }
     }
+    //Visibility
+    this.visibleRepartitionCollectivite = (this.repartition.RepartitionCollectivites.length > 0
+      || this.repartition.CommandeFournisseur.PoidsReparti > 0);
+    this.visibleRepartitionProduit = (this.repartition.RepartitionProduits.length > 0
+      || this.repartition.CommandeFournisseur.PoidsReparti < this.repartition.CommandeFournisseur.PoidsChargement)
+      && this.applicationUserContext.connectedUtilisateur.HabilitationLogistique === HabilitationLogistique.Administrateur;
   }
   //-----------------------------------------------------------------------------------
   //Get sumRepartitionCollectivite

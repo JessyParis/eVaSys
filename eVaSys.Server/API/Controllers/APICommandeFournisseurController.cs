@@ -509,7 +509,7 @@ namespace eVaSys.Controllers
                     var cA = DbContext.ContactAdresses
                         .Include(r => r.ContactAdresseContactAdresseProcesss)
                         .Include(r => r.Adresse)
-                        .Where(el => el.RefEntite == refEntite
+                        .Where(el => el.RefEntite == refEntite && el.Actif == true
                             && el.ContactAdresseContactAdresseProcesss.Any(related => related.RefContactAdresseProcess == (int)Enumerations.ContactAdresseProcess.BonDeLivraison)).FirstOrDefault();
                     if (cA != null)
                     {

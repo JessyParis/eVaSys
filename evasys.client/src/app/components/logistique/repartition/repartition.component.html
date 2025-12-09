@@ -140,7 +140,7 @@
       </div>
     </form>
     <form id="FormRepartitionCollectivite" [formGroup]="formRepartitionCollectivite">
-      <div class="boxDoubleSize" *ngIf="repartition?.PoidsReparti>0">
+      <div class="boxDoubleSize" *ngIf="visibleRepartitionCollectivite">
         <table class="cadre_primary">
           <tr>
             <td [class]="'cadre_header_' + (formRepartitionCollectivite.get('RepartitionCollectivite').errors?.poidsTotalRepartitionCollectivite || formRepartitionCollectivite.get('RepartitionCollectivite')['controls'].length===0 ? 'warn' : 'primary')">
@@ -211,7 +211,7 @@
       </div>
     </form>
     <form id="FormRepartitionProduit" [formGroup]="formRepartitionProduit">
-      <div class="boxDoubleSize" *ngIf="repartition?.PoidsChargement > repartition?.PoidsReparti">
+      <div class="boxDoubleSize" *ngIf="visibleRepartitionProduit">
         <table class="cadre_primary">
           <tr>
             <td [class]="'cadre_header_' + (formRepartitionProduit.get('RepartitionProduit').errors?.poidsTotalRepartitionProduit || formRepartitionProduit.get('RepartitionProduit')['controls'].length===0 ? 'warn' : 'primary')">
