@@ -1259,117 +1259,119 @@ export class GridComponent implements AfterViewInit, OnInit, OnDestroy {
   //-----------------------------------------------------------------------------------
   //Row clicked
   onRowClicked(item: any) {
-    this.selectedItem = item;
-    if (this.applicationUserContext.currentMenu.gridGoto) {
-      this.router.navigate([this.applicationUserContext.currentMenu.gridGoto, item[this.applicationUserContext.currentMenu.gridRef]]);
-    }
-    else {
-      switch (this.applicationUserContext.currentMenu.name) {
-        case MenuName.AnnuaireMenuEntite:
-          this.router.navigate(["entite", item.Id, { elementType: SearchElementType.Entite }])
-          break;
-        case MenuName.AdministrationMenuUtilisateur:
-        case MenuName.AdministrationMenuUtilisateurInactif:
-          this.router.navigate(["utilisateur", item.Id])
-          break;
-        case MenuName.AdministrationMenuDescriptionControle:
-          this.router.navigate(["description-controle-container", item.RefProduit])
-          break;
-        case MenuName.AdministrationMenuDescriptionCVQ:
-          this.router.navigate(["description-cvq-container", item.RefProduit])
-          break;
-        case MenuName.AdministrationMenuDescriptionReception:
-          this.router.navigate(["description-reception-container"])
-          break;
-        case MenuName.AdministrationMenuClientApplication:
-          this.router.navigate(["client-application", item.RefClientApplication])
-          break;
-        case MenuName.AdministrationMenuEquipementier:
-          this.router.navigate(["equipementier", item.RefEquipementier])
-          break;
-        case MenuName.AdministrationMenuFonction:
-          this.router.navigate(["fonction", item.RefFonction])
-          break;
-        case MenuName.AdministrationMenuFournisseurTO:
-          this.router.navigate(["fournisseurto", item.RefFournisseurTO])
-          break;
-        case MenuName.AdministrationMenuMontantIncitationQualite:
-          this.router.navigate(["montant-incitation-qualite", item.RefMontantIncitationQualite])
-          break;
-        case MenuName.AdministrationMenuNonConformiteDemandeClientType:
-          this.router.navigate(["non-conformite-demande-client-type", item.RefNonConformiteDemandeClientType])
-          break;
-        case MenuName.AdministrationMenuNonConformiteFamille:
-          this.router.navigate(["non-conformite-famille", item.RefNonConformiteFamille])
-          break;
-        case MenuName.AdministrationMenuNonConformiteNature:
-          this.router.navigate(["non-conformite-nature", item.RefNonConformiteNature])
-          break;
-        case MenuName.AdministrationMenuNonConformiteReponseClientType:
-          this.router.navigate(["non-conformite-reponse-client-type", item.RefNonConformiteReponseClientType])
-          break;
-        case MenuName.AdministrationMenuNonConformiteReponseFournisseurType:
-          this.router.navigate(["non-conformite-reponse-fournisseur-type", item.RefNonConformiteReponseFournisseurType])
-          break;
-        case MenuName.AdministrationMenuTitre:
-          this.router.navigate(["titre", item.RefTitre])
-          break;
-        case MenuName.AdministrationMenuService:
-          this.router.navigate(["service", item.RefService])
-          break;
-        case MenuName.LogistiqueMenuModifierTousPrixTransport:
-        case MenuName.LogistiqueMenuModifierTransport:
-        case MenuName.LogistiqueMenuSupprimerTransportEnMasse:
-        case MenuName.LogistiqueMenuTransportNonValide:
-        case MenuName.LogistiqueMenuValiderNouveauPrixTransport:
-          this.router.navigate(["transport", item.RefTransport == null ? "0" : item.RefTransport, {
-            refAdresseOrigine: item.RefAdresseOrigine
-            , refAdresseDestination: item.RefAdresseDestination
-            , refTransporteur: item.RefTransporteur
-            , refCamionType: item.RefCamionType
-          }])
-          break;
-        case MenuName.LogistiqueMenuSurcoutCarburant:
-          this.router.navigate(["surcout-carburant", item.RefSurcoutCarburant])
-          break;
-        case MenuName.LogistiqueMenuTransportCommande:
-        case MenuName.LogistiqueMenuTransportCommandeEnCours:
-        case MenuName.LogistiqueMenuTransportCommandeModifiee:
-        case MenuName.LogistiqueMenuCommandeFournisseur:
-          this.router.navigate(["commande-fournisseur", item.RefCommandeFournisseur])
-          break;
-        case MenuName.LogistiqueMenuCommandeClient:
-          this.router.navigate(["commande-client", "0", {
-            refEntite: item.RefEntite,
-            refAdresse: item.RefAdresse,
-            refContrat: item.RefContrat,
-            d: item.CommandeClientMensuelleD
-          }])
-          break;
-        case MenuName.LogistiqueMenuRepartition:
-          this.router.navigate(["repartition", item.RefRepartition??0, {
-            refCommandeFournisseur: item.RefCommandeFournisseur
-          }])
-          break;
-        case MenuName.LogistiqueMenuPrixReprise:
-          this.router.navigate(["prix-reprise", "0", {
-            refProcess: item.RefProcess,
-            d: item.PrixRepriseD
-          }])
-          break;
-        case MenuName.MessagerieMenuMessage:
-          this.router.navigate(["message", item.RefMessage])
-          break;
-        case MenuName.QualiteMenuControle:
-          this.router.navigate(["fiche-controle", item.RefFicheControle, {
-            refCommandeFournisseur: "0"
-          }])
-          break;
-        case MenuName.QualiteMenuNonConformite:
-          this.router.navigate(["non-conformite", item.RefNonConformite, {
-            refCommandeFournisseur: "0"
-          }])
-          break;
+    if (this.applicationUserContext.currentMenu.name != MenuName.LogistiqueMenuTransportDemandeEnlevement) {
+      this.selectedItem = item;
+      if (this.applicationUserContext.currentMenu.gridGoto) {
+        this.router.navigate([this.applicationUserContext.currentMenu.gridGoto, item[this.applicationUserContext.currentMenu.gridRef]]);
+      }
+      else {
+        switch (this.applicationUserContext.currentMenu.name) {
+          case MenuName.AnnuaireMenuEntite:
+            this.router.navigate(["entite", item.Id, { elementType: SearchElementType.Entite }])
+            break;
+          case MenuName.AdministrationMenuUtilisateur:
+          case MenuName.AdministrationMenuUtilisateurInactif:
+            this.router.navigate(["utilisateur", item.Id])
+            break;
+          case MenuName.AdministrationMenuDescriptionControle:
+            this.router.navigate(["description-controle-container", item.RefProduit])
+            break;
+          case MenuName.AdministrationMenuDescriptionCVQ:
+            this.router.navigate(["description-cvq-container", item.RefProduit])
+            break;
+          case MenuName.AdministrationMenuDescriptionReception:
+            this.router.navigate(["description-reception-container"])
+            break;
+          case MenuName.AdministrationMenuClientApplication:
+            this.router.navigate(["client-application", item.RefClientApplication])
+            break;
+          case MenuName.AdministrationMenuEquipementier:
+            this.router.navigate(["equipementier", item.RefEquipementier])
+            break;
+          case MenuName.AdministrationMenuFonction:
+            this.router.navigate(["fonction", item.RefFonction])
+            break;
+          case MenuName.AdministrationMenuFournisseurTO:
+            this.router.navigate(["fournisseurto", item.RefFournisseurTO])
+            break;
+          case MenuName.AdministrationMenuMontantIncitationQualite:
+            this.router.navigate(["montant-incitation-qualite", item.RefMontantIncitationQualite])
+            break;
+          case MenuName.AdministrationMenuNonConformiteDemandeClientType:
+            this.router.navigate(["non-conformite-demande-client-type", item.RefNonConformiteDemandeClientType])
+            break;
+          case MenuName.AdministrationMenuNonConformiteFamille:
+            this.router.navigate(["non-conformite-famille", item.RefNonConformiteFamille])
+            break;
+          case MenuName.AdministrationMenuNonConformiteNature:
+            this.router.navigate(["non-conformite-nature", item.RefNonConformiteNature])
+            break;
+          case MenuName.AdministrationMenuNonConformiteReponseClientType:
+            this.router.navigate(["non-conformite-reponse-client-type", item.RefNonConformiteReponseClientType])
+            break;
+          case MenuName.AdministrationMenuNonConformiteReponseFournisseurType:
+            this.router.navigate(["non-conformite-reponse-fournisseur-type", item.RefNonConformiteReponseFournisseurType])
+            break;
+          case MenuName.AdministrationMenuTitre:
+            this.router.navigate(["titre", item.RefTitre])
+            break;
+          case MenuName.AdministrationMenuService:
+            this.router.navigate(["service", item.RefService])
+            break;
+          case MenuName.LogistiqueMenuModifierTousPrixTransport:
+          case MenuName.LogistiqueMenuModifierTransport:
+          case MenuName.LogistiqueMenuSupprimerTransportEnMasse:
+          case MenuName.LogistiqueMenuTransportNonValide:
+          case MenuName.LogistiqueMenuValiderNouveauPrixTransport:
+            this.router.navigate(["transport", item.RefTransport == null ? "0" : item.RefTransport, {
+              refAdresseOrigine: item.RefAdresseOrigine
+              , refAdresseDestination: item.RefAdresseDestination
+              , refTransporteur: item.RefTransporteur
+              , refCamionType: item.RefCamionType
+            }])
+            break;
+          case MenuName.LogistiqueMenuSurcoutCarburant:
+            this.router.navigate(["surcout-carburant", item.RefSurcoutCarburant])
+            break;
+          case MenuName.LogistiqueMenuTransportCommande:
+          case MenuName.LogistiqueMenuTransportCommandeEnCours:
+          case MenuName.LogistiqueMenuTransportCommandeModifiee:
+          case MenuName.LogistiqueMenuCommandeFournisseur:
+            this.router.navigate(["commande-fournisseur", item.RefCommandeFournisseur])
+            break;
+          case MenuName.LogistiqueMenuCommandeClient:
+            this.router.navigate(["commande-client", "0", {
+              refEntite: item.RefEntite,
+              refAdresse: item.RefAdresse,
+              refContrat: item.RefContrat,
+              d: item.CommandeClientMensuelleD
+            }])
+            break;
+          case MenuName.LogistiqueMenuRepartition:
+            this.router.navigate(["repartition", item.RefRepartition ?? 0, {
+              refCommandeFournisseur: item.RefCommandeFournisseur
+            }])
+            break;
+          case MenuName.LogistiqueMenuPrixReprise:
+            this.router.navigate(["prix-reprise", "0", {
+              refProcess: item.RefProcess,
+              d: item.PrixRepriseD
+            }])
+            break;
+          case MenuName.MessagerieMenuMessage:
+            this.router.navigate(["message", item.RefMessage])
+            break;
+          case MenuName.QualiteMenuControle:
+            this.router.navigate(["fiche-controle", item.RefFicheControle, {
+              refCommandeFournisseur: "0"
+            }])
+            break;
+          case MenuName.QualiteMenuNonConformite:
+            this.router.navigate(["non-conformite", item.RefNonConformite, {
+              refCommandeFournisseur: "0"
+            }])
+            break;
+        }
       }
     }
   }
@@ -2514,7 +2516,10 @@ export class GridDataSource implements DataSource<any> {
       , yearFrom, monthFrom, yearTo, monthTo
       , filterEcoOrganismes, filterEntiteTypes, filterMessageTypes, filterApplicationProduitOrigines, filterActif, filterNonRepartissable
       , filterCollecte, filterDonneeEntiteSage, filterUtilisateurMaitres, filterRepartitionAFinaliser, filterCommandesFournisseurNonReparties ).pipe<any, HttpResponse<any[]>>(
-        catchError(() => of([])),
+        catchError((error) => {
+          console.error(error);
+          return of([]);
+        }),
         finalize(() => { this.loadingSubject.next(false); })
       )
       .subscribe((resp: HttpResponse<any[]>) => {

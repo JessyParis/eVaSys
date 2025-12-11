@@ -116,6 +116,7 @@ namespace eVaSys.Controllers
                         + " where (ValideDPrevues=0"
                         + "     and (RefCommandeFournisseurStatut=1)"
                         + "     and (DChargement is null or DDechargement is null)"
+                        + "     and (DChargementPrevue is null or DDechargementPrevue is null)"
                         + "     and DBlocage is null"
                         + "     and RefusCamion=0"
                         + "     and (RefTransporteur is null or (RefTransporteur is not null and dbo.JoursTravailles(DAffretement,getdate())>2))"
