@@ -1007,9 +1007,9 @@ namespace eVaSys.Controllers
                     DateTime end = DateTime.MinValue;
                     if (DateTime.TryParse(eSF.FilterBegin, out begin) && DateTime.TryParse(eSF.FilterEnd, out end))
                     {
-                        end = end.Date.AddDays(1).AddSeconds(-1);
-                        cmd.Parameters.Add("@begin", SqlDbType.DateTime).Value = begin;
-                        cmd.Parameters.Add("@end", SqlDbType.DateTime).Value = end;
+                        //end = end.Date.AddDays(1).AddSeconds(-1);
+                        cmd.Parameters.Add("@begin", SqlDbType.Date).Value = begin;
+                        cmd.Parameters.Add("@end", SqlDbType.Date).Value = end;
                     }
                 }
                 if (eSF.FilterCentreDeTris != "")
