@@ -10,7 +10,9 @@
 
 using eVaSys.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Data;
+using System.Windows.Controls;
 
 namespace eVaSys.Utils
 {
@@ -1805,7 +1807,7 @@ namespace eVaSys.Utils
             bool r = false;
             if (!string.IsNullOrEmpty(menuName))
             {
-                string moduleName = currentContext.EnvMenus[menuName].Module.Name;
+                string moduleName = currentContext.EnvMenus[menuName].Modules[0]?.Name;
                 string habilitation = "undefined";
                 if (moduleName == Enumerations.Module.Administration.ToString()) { habilitation = currentContext.ConnectedUtilisateur.HabilitationAdministration; }
                 if (moduleName == Enumerations.Module.Logistique.ToString()) { habilitation = currentContext.ConnectedUtilisateur.HabilitationLogistique; }
@@ -1887,6 +1889,37 @@ namespace eVaSys.Utils
             }
             return r;
         }
+        ////--------------------------------------------------------------------------------------------
+        ///// <summary>
+        ///// Chek if the access to a DocumentType is granted or not
+        ///// <param name="refDocumentType">The document type</param>
+        ///// <param name="u">The connected user</param>
+        ///// </summary>
+        //public static bool AuthorizedDocumentType(int refDocumentType, int? refEntite, Utilisateur u, ApplicationDbContext dbContext)
+        //{
+        //    bool r = false;
+        //    if (u != null)
+        //    {
+        //        if (refDocumentType == (int)Enumerations.RefDocumentType.ReportingCollectiviteElu)
+        //        {
+        //            if (refEntite.HasValue)
+        //            {
+        //                //Rights
+        //                if (u.Actif)
+        //                {
+        //                    if (u.HabilitationLogistique == nameof(Enumerations.HabilitationAnnuaire.Administrateur)
+        //                        || (u.ContactAdresse?.ContactAdresseDocumentTypes.Contains(new Func<object, bool>(e => e.RefDocumentType == refDocumentType))
+        //                        && u.Collectivite?.RefEntite == refEntite)
+        //                        )
+        //                    {
+        //                        return true;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return r;
+        //}
         //--------------------------------------------------------------------------------------------
         /// <summary>
         /// Chek if the access to a document is granted or not

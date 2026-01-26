@@ -268,4 +268,18 @@ namespace eVaSys.Data
             return r;
         }
     }
+    /// <summary>
+    /// Class for contact BL
+    /// </summary>
+    public class VueBL
+    {
+        #region Constructor
+        public VueBL()
+        {
+        }
+        #endregion
+        public int RefContactAdresse { get; private set; }
+        public int RefEntite { get; private set; }
+        public int? RefAdresse { get; private set; }
+    }
 }

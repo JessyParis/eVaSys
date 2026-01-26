@@ -26,11 +26,13 @@ namespace eVaSys.Controllers
     public class EmailController : BaseApiController
     {
         private readonly IMapper _mapper;
+        protected IWebHostEnvironment _env;
         #region Constructor
-        public EmailController(ApplicationDbContext context, IConfiguration configuration, IMapper mapper)
+        public EmailController(ApplicationDbContext context, IConfiguration configuration, IMapper mapper, IWebHostEnvironment env)
             : base(context, configuration)
         {
             _mapper = mapper;
+            _env = env;
         }
         #endregion Constructor
 
@@ -124,7 +126,7 @@ namespace eVaSys.Controllers
                             //End if incorrect parameter
                             if (y == 0) { return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711))); }
                             //Process if everything ok
-                            r = EmailUtils.SendEmailing(email, emailing, y, DateTime.MinValue, DbContext, CurrentContext, Configuration);
+                            r = EmailUtils.SendEmailing(email, emailing, y, DateTime.MinValue, DbContext, CurrentContext, Configuration, _env.ContentRootPath);
                             int.TryParse(r, out nb);
                             if (nb >= 0) { return new JsonResult(nb); }
                             else
@@ -139,7 +141,7 @@ namespace eVaSys.Controllers
                             //End if incorrect parameter
                             if (dT == DateTime.MinValue) { return BadRequest(new BadRequestError(CurrentContext.CulturedRessources.GetTextRessource(711))); }
                             //Process if everything ok
-                            r = EmailUtils.SendEmailing(email, emailing, y, dT, DbContext, CurrentContext, Configuration);
+                            r = EmailUtils.SendEmailing(email, emailing, y, dT, DbContext, CurrentContext, Configuration, _env.ContentRootPath);
                             int.TryParse(r, out nb);
                             if (nb >= 0) { return new JsonResult(nb); }
                             else

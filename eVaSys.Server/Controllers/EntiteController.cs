@@ -16,6 +16,8 @@ using eVaSys.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using SkiaSharp;
+using System.Web;
 
 namespace eVaSys.Controllers
 {
@@ -23,11 +25,14 @@ namespace eVaSys.Controllers
     public class EntiteController : BaseApiController
     {
         private readonly IMapper _mapper;
+        protected IWebHostEnvironment _env;
+
         #region Constructor
-        public EntiteController(ApplicationDbContext context, IConfiguration configuration, IMapper mapper)
+        public EntiteController(ApplicationDbContext context, IConfiguration configuration, IMapper mapper, IWebHostEnvironment env)
             : base(context, configuration)
         {
             _mapper = mapper;
+            _env = env;
         }
         #endregion Constructor
 
@@ -887,7 +892,7 @@ namespace eVaSys.Controllers
             return new JsonResult(docs, JsonSettings);
         }
         /// <summary>
-        /// GET: api/items/getetatmensuelhcss
+        /// GET: api/entite/getetatmensuelhcss
         /// ROUTING TYPE: attribute-based
         /// </summary>
         /// <returns>An array of items.</returns>
@@ -930,6 +935,44 @@ namespace eVaSys.Controllers
             //End
             return new JsonResult(docs, JsonSettings);
         }
+
+        /// <summary>
+        /// Get existing file
+        /// </summary>
+        [HttpGet("getdocumenttype")]
+        public IActionResult GetDocumentType()
+        {
+            string refEntite = Request.Headers["refEntite"].ToString();
+            string refDocumentType = Request.Headers["refDocumentType"].ToString();
+            string year = Request.Headers["year"].ToString();
+            MemoryStream mS = null;
+            string fileName = "tmp";
+            //Get the file
+            //Process
+            mS = DocumentFileManagement.CreateDocumentType1(System.Convert.ToInt32(refEntite)
+                , System.Convert.ToInt32(year), DbContext, _env.ContentRootPath);
+            fileName = "DocElu.pdf";
+            //Send file
+            if (mS != null)
+            {
+                //Headers
+                var cD = new System.Net.Mime.ContentDisposition
+                {
+                    FileName = fileName,
+                    //FileName = fileName.Replace(" ", "_"),
+                    // always prompt the user for downloading
+                    Inline = false,
+                };
+                string s = string.Format("attachment; filename=\"{0}\"", HttpUtility.UrlEncode(fileName));
+                Response.Headers.Remove("Content-Disposition");
+                Response.Headers.Append("Content-Disposition", s);
+                //End
+                return new FileContentResult(mS.ToArray(), "application/octet-stream");
+            }
+
+            return NotFound(new NotFoundError(CurrentContext.CulturedRessources.GetTextRessource(460)));
+        }
+
         #endregion
 
         #region Services

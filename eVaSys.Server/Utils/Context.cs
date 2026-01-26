@@ -167,237 +167,308 @@ namespace eVaSys.Utils
             if (EnvMenus.Count == 0)
             {
                 CulturedRessources cR = new(CurrentCulture, DbContext);
-                EnvMenus = new Dictionary<string, EnvMenu>
-                {
-                    [MenuName.AdministrationMenuClientApplication.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuClientApplication.ToString(), RefRessource = 702, CulturedCaption = cR.GetTextRessource(702) == "" ? "?Applications client?" : cR.GetTextRessource(702), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuDescriptionControle.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuDescriptionControle.ToString(), RefRessource = 52, CulturedCaption = cR.GetTextRessource(52) == "" ? "?Contrôle de balle?" : cR.GetTextRessource(52), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuDescriptionCVQ.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuDescriptionCVQ.ToString(), RefRessource = 51, CulturedCaption = cR.GetTextRessource(51) == "" ? "?Contrôle visuel quantifié?" : cR.GetTextRessource(51), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuDescriptionReception.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuDescriptionReception.ToString(), RefRessource = 72, CulturedCaption = cR.GetTextRessource(72) == "" ? "?Contrôle visuel chargement?" : cR.GetTextRessource(72), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuEquipementier.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuEquipementier.ToString(), RefRessource = 10016, CulturedCaption = cR.GetTextRessource(10016) == "" ? "?Equipementiers?" : cR.GetTextRessource(10016), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuFonction.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuFonction.ToString(), RefRessource = 10015, CulturedCaption = cR.GetTextRessource(10015) == "" ? "?Fonctions?" : cR.GetTextRessource(10015), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuFournisseurTO.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuFournisseurTO.ToString(), RefRessource = 10021, CulturedCaption = cR.GetTextRessource(10021) == "" ? "?FournisseursTO?" : cR.GetTextRessource(10021), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuMontantIncitationQualite.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuMontantIncitationQualite.ToString(), RefRessource = 430, CulturedCaption = cR.GetTextRessource(430) == "" ? "?Montant incitation qualité?" : cR.GetTextRessource(430), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuNonConformiteDemandeClientType.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuNonConformiteDemandeClientType.ToString(), RefRessource = 815, CulturedCaption = cR.GetTextRessource(815) == "" ? "?Non conformité demande client type?" : cR.GetTextRessource(815), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuNonConformiteFamille.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuNonConformiteFamille.ToString(), RefRessource = 816, CulturedCaption = cR.GetTextRessource(816) == "" ? "?Non conformité famille?" : cR.GetTextRessource(816), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuNonConformiteNature.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuNonConformiteNature.ToString(), RefRessource = 817, CulturedCaption = cR.GetTextRessource(817) == "" ? "?Non conformité nature?" : cR.GetTextRessource(817), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuNonConformiteReponseClientType.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuNonConformiteReponseClientType.ToString(), RefRessource = 818, CulturedCaption = cR.GetTextRessource(818) == "" ? "?Non conformité réponse client type?" : cR.GetTextRessource(818), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuNonConformiteReponseFournisseurType.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuNonConformiteReponseFournisseurType.ToString(), RefRessource = 819, CulturedCaption = cR.GetTextRessource(819) == "" ? "?Non conformité réponse fournisseur type?" : cR.GetTextRessource(819), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuSecurite.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuSecurite.ToString(), RefRessource = 1109, CulturedCaption = cR.GetTextRessource(1109) == "" ? "?Sécurité?" : cR.GetTextRessource(1109), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuService.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuService.ToString(), RefRessource = 10011, CulturedCaption = cR.GetTextRessource(10011) == "" ? "?Services?" : cR.GetTextRessource(10011), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuTitre.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuTitre.ToString(), RefRessource = 10005, CulturedCaption = cR.GetTextRessource(10005) == "" ? "?Titres?" : cR.GetTextRessource(10005), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuUtilisateur.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuUtilisateur.ToString(), RefRessource = 911, CulturedCaption = cR.GetTextRessource(911) == "" ? "?Utilisateurs?" : cR.GetTextRessource(911), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AdministrationMenuUtilisateurInactif.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuUtilisateurInactif.ToString(), RefRessource = 1110, CulturedCaption = cR.GetTextRessource(1110) == "" ? "?Utilisateurs inactifs?" : cR.GetTextRessource(1110), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
-                    [MenuName.AnnuaireMenuEnvoiDocumentType.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuEnvoiDocumentType.ToString(), RefRessource = 699, CulturedCaption = cR.GetTextRessource(699) == "" ? "?Incitation qualité?" : cR.GetTextRessource(699), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
-                    [MenuName.AnnuaireMenuSuiviEnvois.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuSuiviEnvois.ToString(), RefRessource = 1083, CulturedCaption = cR.GetTextRessource(1083) == "" ? "?Suivi des envois?" : cR.GetTextRessource(1083), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
-                    [MenuName.AnnuaireMenuEntite.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuEntite.ToString(), RefRessource = 1124, CulturedCaption = cR.GetTextRessource(1124) == "" ? "?Entités?" : cR.GetTextRessource(1124), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuCommandeClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuCommandeClient.ToString(), RefRessource = 426, CulturedCaption = cR.GetTextRessource(426) == "" ? "?Commandes client?" : cR.GetTextRessource(426), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuCommandeFournisseur.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuCommandeFournisseur.ToString(), RefRessource = 427, CulturedCaption = cR.GetTextRessource(427) == "" ? "?Commandes Centre de Tri?" : cR.GetTextRessource(427), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuExportSAGE.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuExportSAGE.ToString(), RefRessource = 428, CulturedCaption = cR.GetTextRessource(428) == "" ? "?Exports SAGE?" : cR.GetTextRessource(428), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuImpression.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuImpression.ToString(), RefRessource = 429, CulturedCaption = cR.GetTextRessource(429) == "" ? "?Impressions?" : cR.GetTextRessource(429), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuPrixReprise.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuPrixReprise.ToString(), RefRessource = 431, CulturedCaption = cR.GetTextRessource(431) == "" ? "?Prix de reprise?" : cR.GetTextRessource(431), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuTransportNonValide.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportNonValide.ToString(), RefRessource = 266, CulturedCaption = cR.GetTextRessource(266) == "" ? "?Validation en attente?" : cR.GetTextRessource(266), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuModifierTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuModifierTransport.ToString(), RefRessource = 38, CulturedCaption = cR.GetTextRessource(38) == "" ? "?Consulter/Modifier?" : cR.GetTextRessource(38), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuImporterTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuImporterTransport.ToString(), RefRessource = 267, CulturedCaption = cR.GetTextRessource(267) == "" ? "?Importer?" : cR.GetTextRessource(267), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuSupprimerTransportEnMasse.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuSupprimerTransportEnMasse.ToString(), RefRessource = 268, CulturedCaption = cR.GetTextRessource(268) == "" ? "?Supprimer?" : cR.GetTextRessource(268), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuValiderNouveauPrixTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuValiderNouveauPrixTransport.ToString(), RefRessource = 269, CulturedCaption = cR.GetTextRessource(269) == "" ? "?Valider nouveaux prix?" : cR.GetTextRessource(269), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuModifierTousPrixTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuModifierTousPrixTransport.ToString(), RefRessource = 274, CulturedCaption = cR.GetTextRessource(274) == "" ? "?Valider nouveaux prix?" : cR.GetTextRessource(274), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuTransportDemandeEnlevement.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportDemandeEnlevement.ToString(), RefRessource = 270, CulturedCaption = cR.GetTextRessource(270) == "" ? "?Bourse d'affrètement Valorplast?" : cR.GetTextRessource(270), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuTransportCommande.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportCommande.ToString(), RefRessource = 271, CulturedCaption = cR.GetTextRessource(271) == "" ? "?Mes commandes?" : cR.GetTextRessource(271), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuTransportCommandeEnCours.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportCommandeEnCours.ToString(), RefRessource = 567, CulturedCaption = cR.GetTextRessource(567) == "" ? "?Mes commandes en cours?" : cR.GetTextRessource(567), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuTransportCommandeModifiee.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportCommandeModifiee.ToString(), RefRessource = 568, CulturedCaption = cR.GetTextRessource(568) == "" ? "?Mes commandes modifiees?" : cR.GetTextRessource(568), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatCoutTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatCoutTransport.ToString(), RefRessource = 272, CulturedCaption = cR.GetTextRessource(272) == "" ? "?Etat des coûts de transport?" : cR.GetTextRessource(272), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuExportSAGE.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuExportSAGE.ToString(), RefRessource = 428, CulturedCaption = cR.GetTextRessource(428) == "" ? "?Etat des coûts de transport?" : cR.GetTextRessource(428), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuSurcoutCarburant.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuSurcoutCarburant.ToString(), RefRessource = 714, CulturedCaption = cR.GetTextRessource(714) == "" ? "?Surcoût gasoil?" : cR.GetTextRessource(714), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuLotDisponible.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuLotDisponible.ToString(), RefRessource = 777, CulturedCaption = cR.GetTextRessource(777) == "" ? "?Lots disponibles?" : cR.GetTextRessource(777), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.MenuVisualisationAnnuaire.ToString()] = new EnvMenu() { Name = MenuName.MenuVisualisationAnnuaire.ToString(), RefRessource = 1339, CulturedCaption = cR.GetTextRessource(1339) == "" ? "?Mon annuaire?" : cR.GetTextRessource(1339), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatReceptionEmballagePlastique.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatReceptionEmballagePlastique.ToString(), RefRessource = 907, CulturedCaption = cR.GetTextRessource(907) == "" ? "?Réception des emballages plastique CITEO?" : cR.GetTextRessource(907), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur.ToString(), RefRessource = 908, CulturedCaption = cR.GetTextRessource(908) == "" ? "?Suivi des tonnages des emballages plastique chez les recycleurs?" : cR.GetTextRessource(908), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatDesFluxDev.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatDesFluxDev.ToString(), RefRessource = 909, CulturedCaption = cR.GetTextRessource(909) == "" ? "?Etat des flux DEV?" : cR.GetTextRessource(909), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatTarifTransporteurClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatTarifTransporteurClient.ToString(), RefRessource = 943, CulturedCaption = cR.GetTextRessource(943) == "" ? "?Tarifs transporteur?" : cR.GetTextRessource(943), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuPartMarcheTransporteur.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuPartMarcheTransporteur.ToString(), RefRessource = 944, CulturedCaption = cR.GetTextRessource(944) == "" ? "?Parts de marché par transporteur en CA et en volume (nb. d''affrètements).?" : cR.GetTextRessource(944), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatKmMoyen.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatKmMoyen.ToString(), RefRessource = 945, CulturedCaption = cR.GetTextRessource(945) == "" ? "?Etat pour km moyen?" : cR.GetTextRessource(945), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuSuiviCommandeClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuSuiviCommandeClient.ToString(), RefRessource = 952, CulturedCaption = cR.GetTextRessource(952) == "" ? "?Suivi commandes par client?" : cR.GetTextRessource(952), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuSuiviCommandeClientProduit.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuSuiviCommandeClientProduit.ToString(), RefRessource = 953, CulturedCaption = cR.GetTextRessource(953) == "" ? "?Suivi commandes par produit?" : cR.GetTextRessource(953), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatReceptionProduit.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatReceptionProduit.ToString(), RefRessource = 954, CulturedCaption = cR.GetTextRessource(954) == "" ? "?Etat des réceptions par produit?" : cR.GetTextRessource(954), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatReceptionProduitDR.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatReceptionProduitDR.ToString(), RefRessource = 955, CulturedCaption = cR.GetTextRessource(955) == "" ? "?Etat réception des produits/DR?" : cR.GetTextRessource(955), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuExtractionReception.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuExtractionReception.ToString(), RefRessource = 956, CulturedCaption = cR.GetTextRessource(956) == "" ? "?Extraction des réceptions?" : cR.GetTextRessource(956), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuExtractionCommande.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuExtractionCommande.ToString(), RefRessource = 957, CulturedCaption = cR.GetTextRessource(957) == "" ? "?Extraction des commandes?" : cR.GetTextRessource(957), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatDesPoids.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatDesPoids.ToString(), RefRessource = 958, CulturedCaption = cR.GetTextRessource(958) == "" ? "?Etat des poids?" : cR.GetTextRessource(958), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatTonnageParProcess.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatTonnageParProcess.ToString(), RefRessource = 959, CulturedCaption = cR.GetTextRessource(959) == "" ? "?Tonnages par process?" : cR.GetTextRessource(959), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatVenteAnnuelleProduitClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatVenteAnnuelleProduitClient.ToString(), RefRessource = 960, CulturedCaption = cR.GetTextRessource(960) == "" ? "?Vente annuelle produit-client?" : cR.GetTextRessource(960), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuEtatDestinationAnnuelleProduitClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatDestinationAnnuelleProduitClient.ToString(), RefRessource = 961, CulturedCaption = cR.GetTextRessource(961) == "" ? "?Destination annuelle produit-client?" : cR.GetTextRessource(961), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuSuiviFacturationHCS.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuSuiviFacturationHCS.ToString(), RefRessource = 962, CulturedCaption = cR.GetTextRessource(962) == "" ? "?Suivi facturation HC?" : cR.GetTextRessource(962), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuTonnageCollectiviteProduit.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTonnageCollectiviteProduit.ToString(), RefRessource = 1014, CulturedCaption = cR.GetTextRessource(1014) == "" ? "?Tonnages du Centre de Tri?" : cR.GetTextRessource(1014), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuTonnageCDTProduitComposant.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTonnageCDTProduitComposant.ToString(), RefRessource = 963, CulturedCaption = cR.GetTextRessource(963) == "" ? "?Tonnages de la collectivité?" : cR.GetTextRessource(963), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuTonnageCLSousContrat.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTonnageCLSousContrat.ToString(), RefRessource = 964, CulturedCaption = cR.GetTextRessource(964) == "" ? "?Tonnage annuel CL sous contrat?" : cR.GetTextRessource(964), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.LogistiqueMenuListeProduit.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuListeProduit.ToString(), RefRessource = 965, CulturedCaption = cR.GetTextRessource(965) == "" ? "?Liste produits?" : cR.GetTextRessource(965), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
-                    [MenuName.MessagerieMenuMessage.ToString()] = new EnvMenu() { Name = MenuName.MessagerieMenuMessage.ToString(), RefRessource = 640, CulturedCaption = cR.GetTextRessource(640) == "" ? "?Messages?" : cR.GetTextRessource(640), Module = EnvModules[ModuleName.Messagerie.ToString()], Cmt = "" },
-                    [MenuName.MessagerieMenuVisualisation.ToString()] = new EnvMenu() { Name = MenuName.MessagerieMenuVisualisation.ToString(), RefRessource = 641, CulturedCaption = cR.GetTextRessource(641) == "" ? "?Visualisations?" : cR.GetTextRessource(641), Module = EnvModules[ModuleName.Messagerie.ToString()], Cmt = "" },
-                    [MenuName.QualiteMenuControle.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuControle.ToString(), RefRessource = 762, CulturedCaption = cR.GetTextRessource(762) == "" ? "?Contrôles qualité?" : cR.GetTextRessource(762), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
-                    [MenuName.QualiteMenuNonConformite.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuNonConformite.ToString(), RefRessource = 763, CulturedCaption = cR.GetTextRessource(763) == "" ? "?Non conformités?" : cR.GetTextRessource(763), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
-                    [MenuName.QualiteMenuRepartitionControleClient.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuRepartitionControleClient.ToString(), RefRessource = 876, CulturedCaption = cR.GetTextRessource(876) == "" ? "?Taux de contrôle effectif par client?" : cR.GetTextRessource(876), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
-                    [MenuName.QualiteMenuExtractionFicheControle.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuExtractionFicheControle.ToString(), RefRessource = 877, CulturedCaption = cR.GetTextRessource(877) == "" ? "?Extraction des contrôles visuels chargement?" : cR.GetTextRessource(877), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
-                    [MenuName.QualiteMenuExtractionControle.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuExtractionControle.ToString(), RefRessource = 878, CulturedCaption = cR.GetTextRessource(878) == "" ? "?Extraction des contrôles de balle?" : cR.GetTextRessource(878), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
-                    [MenuName.QualiteMenuExtractionNonConformite.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuExtractionNonConformite.ToString(), RefRessource = 879, CulturedCaption = cR.GetTextRessource(879) == "" ? "?Extraction des réclamations?" : cR.GetTextRessource(879), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
-                    [MenuName.QualiteMenuExtractionCVQ.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuExtractionCVQ.ToString(), RefRessource = 880, CulturedCaption = cR.GetTextRessource(880) == "" ? "?Extraction des contrôles visuels quantifiés?" : cR.GetTextRessource(880), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
-                    [MenuName.QualiteMenuEtatIncitationQualite.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuEtatIncitationQualite.ToString(), RefRessource = 881, CulturedCaption = cR.GetTextRessource(881) == "" ? "?Etat des incitations qualité?" : cR.GetTextRessource(881), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
-                    [MenuName.QualiteMenuEtatControleReception.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuEtatControleReception.ToString(), RefRessource = 889, CulturedCaption = cR.GetTextRessource(889) == "" ? "?Etat des contrôles / réceptions?" : cR.GetTextRessource(889), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
-                };
-                EnvMenu menu = CreateEnvMenu(cR, MenuName.AdministrationMenuAdresseType, 10043, ModuleName.Administration, "");
+                //EnvMenus = new Dictionary<string, EnvMenu>
+                //{
+                //    [MenuName.AdministrationMenuClientApplication.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuClientApplication.ToString(), RefRessource = 702, CulturedCaption = cR.GetTextRessource(702) == "" ? "?Applications client?" : cR.GetTextRessource(702), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuDescriptionControle.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuDescriptionControle.ToString(), RefRessource = 52, CulturedCaption = cR.GetTextRessource(52) == "" ? "?Contrôle de balle?" : cR.GetTextRessource(52), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuDescriptionCVQ.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuDescriptionCVQ.ToString(), RefRessource = 51, CulturedCaption = cR.GetTextRessource(51) == "" ? "?Contrôle visuel quantifié?" : cR.GetTextRessource(51), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuDescriptionReception.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuDescriptionReception.ToString(), RefRessource = 72, CulturedCaption = cR.GetTextRessource(72) == "" ? "?Contrôle visuel chargement?" : cR.GetTextRessource(72), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuEquipementier.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuEquipementier.ToString(), RefRessource = 10016, CulturedCaption = cR.GetTextRessource(10016) == "" ? "?Equipementiers?" : cR.GetTextRessource(10016), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuFonction.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuFonction.ToString(), RefRessource = 10015, CulturedCaption = cR.GetTextRessource(10015) == "" ? "?Fonctions?" : cR.GetTextRessource(10015), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuFournisseurTO.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuFournisseurTO.ToString(), RefRessource = 10021, CulturedCaption = cR.GetTextRessource(10021) == "" ? "?FournisseursTO?" : cR.GetTextRessource(10021), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuMontantIncitationQualite.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuMontantIncitationQualite.ToString(), RefRessource = 430, CulturedCaption = cR.GetTextRessource(430) == "" ? "?Montant incitation qualité?" : cR.GetTextRessource(430), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuNonConformiteDemandeClientType.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuNonConformiteDemandeClientType.ToString(), RefRessource = 815, CulturedCaption = cR.GetTextRessource(815) == "" ? "?Non conformité demande client type?" : cR.GetTextRessource(815), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuNonConformiteFamille.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuNonConformiteFamille.ToString(), RefRessource = 816, CulturedCaption = cR.GetTextRessource(816) == "" ? "?Non conformité famille?" : cR.GetTextRessource(816), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuNonConformiteNature.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuNonConformiteNature.ToString(), RefRessource = 817, CulturedCaption = cR.GetTextRessource(817) == "" ? "?Non conformité nature?" : cR.GetTextRessource(817), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuNonConformiteReponseClientType.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuNonConformiteReponseClientType.ToString(), RefRessource = 818, CulturedCaption = cR.GetTextRessource(818) == "" ? "?Non conformité réponse client type?" : cR.GetTextRessource(818), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuNonConformiteReponseFournisseurType.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuNonConformiteReponseFournisseurType.ToString(), RefRessource = 819, CulturedCaption = cR.GetTextRessource(819) == "" ? "?Non conformité réponse fournisseur type?" : cR.GetTextRessource(819), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuSecurite.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuSecurite.ToString(), RefRessource = 1109, CulturedCaption = cR.GetTextRessource(1109) == "" ? "?Sécurité?" : cR.GetTextRessource(1109), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuService.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuService.ToString(), RefRessource = 10011, CulturedCaption = cR.GetTextRessource(10011) == "" ? "?Services?" : cR.GetTextRessource(10011), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuTitre.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuTitre.ToString(), RefRessource = 10005, CulturedCaption = cR.GetTextRessource(10005) == "" ? "?Titres?" : cR.GetTextRessource(10005), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuUtilisateur.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuUtilisateur.ToString(), RefRessource = 911, CulturedCaption = cR.GetTextRessource(911) == "" ? "?Utilisateurs?" : cR.GetTextRessource(911), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AdministrationMenuUtilisateurInactif.ToString()] = new EnvMenu() { Name = MenuName.AdministrationMenuUtilisateurInactif.ToString(), RefRessource = 1110, CulturedCaption = cR.GetTextRessource(1110) == "" ? "?Utilisateurs inactifs?" : cR.GetTextRessource(1110), Module = EnvModules[ModuleName.Administration.ToString()], Cmt = "" },
+                //    [MenuName.AnnuaireMenuEnvoiDocumentType.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuEnvoiDocumentType.ToString(), RefRessource = 699, CulturedCaption = cR.GetTextRessource(699) == "" ? "?Incitation qualité?" : cR.GetTextRessource(699), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
+                //    [MenuName.AnnuaireMenuSuiviEnvois.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuSuiviEnvois.ToString(), RefRessource = 1083, CulturedCaption = cR.GetTextRessource(1083) == "" ? "?Suivi des envois?" : cR.GetTextRessource(1083), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
+                //    [MenuName.AnnuaireMenuEntite.ToString()] = new EnvMenu() { Name = MenuName.AnnuaireMenuEntite.ToString(), RefRessource = 1124, CulturedCaption = cR.GetTextRessource(1124) == "" ? "?Entités?" : cR.GetTextRessource(1124), Module = EnvModules[ModuleName.Annuaire.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuCommandeClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuCommandeClient.ToString(), RefRessource = 426, CulturedCaption = cR.GetTextRessource(426) == "" ? "?Commandes client?" : cR.GetTextRessource(426), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuCommandeFournisseur.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuCommandeFournisseur.ToString(), RefRessource = 427, CulturedCaption = cR.GetTextRessource(427) == "" ? "?Commandes Centre de Tri?" : cR.GetTextRessource(427), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuExportSAGE.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuExportSAGE.ToString(), RefRessource = 428, CulturedCaption = cR.GetTextRessource(428) == "" ? "?Exports SAGE?" : cR.GetTextRessource(428), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuImpression.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuImpression.ToString(), RefRessource = 429, CulturedCaption = cR.GetTextRessource(429) == "" ? "?Impressions?" : cR.GetTextRessource(429), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuPrixReprise.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuPrixReprise.ToString(), RefRessource = 431, CulturedCaption = cR.GetTextRessource(431) == "" ? "?Prix de reprise?" : cR.GetTextRessource(431), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuTransportNonValide.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportNonValide.ToString(), RefRessource = 266, CulturedCaption = cR.GetTextRessource(266) == "" ? "?Validation en attente?" : cR.GetTextRessource(266), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuModifierTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuModifierTransport.ToString(), RefRessource = 38, CulturedCaption = cR.GetTextRessource(38) == "" ? "?Consulter/Modifier?" : cR.GetTextRessource(38), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuImporterTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuImporterTransport.ToString(), RefRessource = 267, CulturedCaption = cR.GetTextRessource(267) == "" ? "?Importer?" : cR.GetTextRessource(267), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuSupprimerTransportEnMasse.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuSupprimerTransportEnMasse.ToString(), RefRessource = 268, CulturedCaption = cR.GetTextRessource(268) == "" ? "?Supprimer?" : cR.GetTextRessource(268), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuValiderNouveauPrixTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuValiderNouveauPrixTransport.ToString(), RefRessource = 269, CulturedCaption = cR.GetTextRessource(269) == "" ? "?Valider nouveaux prix?" : cR.GetTextRessource(269), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuModifierTousPrixTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuModifierTousPrixTransport.ToString(), RefRessource = 274, CulturedCaption = cR.GetTextRessource(274) == "" ? "?Valider nouveaux prix?" : cR.GetTextRessource(274), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuTransportDemandeEnlevement.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportDemandeEnlevement.ToString(), RefRessource = 270, CulturedCaption = cR.GetTextRessource(270) == "" ? "?Bourse d'affrètement Valorplast?" : cR.GetTextRessource(270), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuTransportCommande.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportCommande.ToString(), RefRessource = 271, CulturedCaption = cR.GetTextRessource(271) == "" ? "?Mes commandes?" : cR.GetTextRessource(271), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuTransportCommandeEnCours.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportCommandeEnCours.ToString(), RefRessource = 567, CulturedCaption = cR.GetTextRessource(567) == "" ? "?Mes commandes en cours?" : cR.GetTextRessource(567), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuTransportCommandeModifiee.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTransportCommandeModifiee.ToString(), RefRessource = 568, CulturedCaption = cR.GetTextRessource(568) == "" ? "?Mes commandes modifiees?" : cR.GetTextRessource(568), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatCoutTransport.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatCoutTransport.ToString(), RefRessource = 272, CulturedCaption = cR.GetTextRessource(272) == "" ? "?Etat des coûts de transport?" : cR.GetTextRessource(272), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuExportSAGE.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuExportSAGE.ToString(), RefRessource = 428, CulturedCaption = cR.GetTextRessource(428) == "" ? "?Etat des coûts de transport?" : cR.GetTextRessource(428), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuSurcoutCarburant.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuSurcoutCarburant.ToString(), RefRessource = 714, CulturedCaption = cR.GetTextRessource(714) == "" ? "?Surcoût gasoil?" : cR.GetTextRessource(714), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuLotDisponible.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuLotDisponible.ToString(), RefRessource = 777, CulturedCaption = cR.GetTextRessource(777) == "" ? "?Lots disponibles?" : cR.GetTextRessource(777), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.MenuVisualisationAnnuaire.ToString()] = new EnvMenu() { Name = MenuName.MenuVisualisationAnnuaire.ToString(), RefRessource = 1339, CulturedCaption = cR.GetTextRessource(1339) == "" ? "?Mon annuaire?" : cR.GetTextRessource(1339), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatReceptionEmballagePlastique.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatReceptionEmballagePlastique.ToString(), RefRessource = 907, CulturedCaption = cR.GetTextRessource(907) == "" ? "?Réception des emballages plastique CITEO?" : cR.GetTextRessource(907), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur.ToString(), RefRessource = 908, CulturedCaption = cR.GetTextRessource(908) == "" ? "?Suivi des tonnages des emballages plastique chez les recycleurs?" : cR.GetTextRessource(908), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatDesFluxDev.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatDesFluxDev.ToString(), RefRessource = 909, CulturedCaption = cR.GetTextRessource(909) == "" ? "?Etat des flux DEV?" : cR.GetTextRessource(909), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatTarifTransporteurClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatTarifTransporteurClient.ToString(), RefRessource = 943, CulturedCaption = cR.GetTextRessource(943) == "" ? "?Tarifs transporteur?" : cR.GetTextRessource(943), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuPartMarcheTransporteur.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuPartMarcheTransporteur.ToString(), RefRessource = 944, CulturedCaption = cR.GetTextRessource(944) == "" ? "?Parts de marché par transporteur en CA et en volume (nb. d''affrètements).?" : cR.GetTextRessource(944), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatKmMoyen.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatKmMoyen.ToString(), RefRessource = 945, CulturedCaption = cR.GetTextRessource(945) == "" ? "?Etat pour km moyen?" : cR.GetTextRessource(945), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuSuiviCommandeClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuSuiviCommandeClient.ToString(), RefRessource = 952, CulturedCaption = cR.GetTextRessource(952) == "" ? "?Suivi commandes par client?" : cR.GetTextRessource(952), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuSuiviCommandeClientProduit.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuSuiviCommandeClientProduit.ToString(), RefRessource = 953, CulturedCaption = cR.GetTextRessource(953) == "" ? "?Suivi commandes par produit?" : cR.GetTextRessource(953), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatReceptionProduit.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatReceptionProduit.ToString(), RefRessource = 954, CulturedCaption = cR.GetTextRessource(954) == "" ? "?Etat des réceptions par produit?" : cR.GetTextRessource(954), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatReceptionProduitDR.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatReceptionProduitDR.ToString(), RefRessource = 955, CulturedCaption = cR.GetTextRessource(955) == "" ? "?Etat réception des produits/DR?" : cR.GetTextRessource(955), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuExtractionReception.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuExtractionReception.ToString(), RefRessource = 956, CulturedCaption = cR.GetTextRessource(956) == "" ? "?Extraction des réceptions?" : cR.GetTextRessource(956), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuExtractionCommande.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuExtractionCommande.ToString(), RefRessource = 957, CulturedCaption = cR.GetTextRessource(957) == "" ? "?Extraction des commandes?" : cR.GetTextRessource(957), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatDesPoids.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatDesPoids.ToString(), RefRessource = 958, CulturedCaption = cR.GetTextRessource(958) == "" ? "?Etat des poids?" : cR.GetTextRessource(958), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatTonnageParProcess.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatTonnageParProcess.ToString(), RefRessource = 959, CulturedCaption = cR.GetTextRessource(959) == "" ? "?Tonnages par process?" : cR.GetTextRessource(959), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatVenteAnnuelleProduitClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatVenteAnnuelleProduitClient.ToString(), RefRessource = 960, CulturedCaption = cR.GetTextRessource(960) == "" ? "?Vente annuelle produit-client?" : cR.GetTextRessource(960), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuEtatDestinationAnnuelleProduitClient.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuEtatDestinationAnnuelleProduitClient.ToString(), RefRessource = 961, CulturedCaption = cR.GetTextRessource(961) == "" ? "?Destination annuelle produit-client?" : cR.GetTextRessource(961), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuSuiviFacturationHCS.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuSuiviFacturationHCS.ToString(), RefRessource = 962, CulturedCaption = cR.GetTextRessource(962) == "" ? "?Suivi facturation HC?" : cR.GetTextRessource(962), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuTonnageCollectiviteProduit.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTonnageCollectiviteProduit.ToString(), RefRessource = 1014, CulturedCaption = cR.GetTextRessource(1014) == "" ? "?Tonnages du Centre de Tri?" : cR.GetTextRessource(1014), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuTonnageCDTProduitComposant.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTonnageCDTProduitComposant.ToString(), RefRessource = 963, CulturedCaption = cR.GetTextRessource(963) == "" ? "?Tonnages de la collectivité?" : cR.GetTextRessource(963), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuTonnageCLSousContrat.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuTonnageCLSousContrat.ToString(), RefRessource = 964, CulturedCaption = cR.GetTextRessource(964) == "" ? "?Tonnage annuel CL sous contrat?" : cR.GetTextRessource(964), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.LogistiqueMenuListeProduit.ToString()] = new EnvMenu() { Name = MenuName.LogistiqueMenuListeProduit.ToString(), RefRessource = 965, CulturedCaption = cR.GetTextRessource(965) == "" ? "?Liste produits?" : cR.GetTextRessource(965), Module = EnvModules[ModuleName.Logistique.ToString()], Cmt = "" },
+                //    [MenuName.MessagerieMenuMessage.ToString()] = new EnvMenu() { Name = MenuName.MessagerieMenuMessage.ToString(), RefRessource = 640, CulturedCaption = cR.GetTextRessource(640) == "" ? "?Messages?" : cR.GetTextRessource(640), Module = EnvModules[ModuleName.Messagerie.ToString()], Cmt = "" },
+                //    [MenuName.MessagerieMenuVisualisation.ToString()] = new EnvMenu() { Name = MenuName.MessagerieMenuVisualisation.ToString(), RefRessource = 641, CulturedCaption = cR.GetTextRessource(641) == "" ? "?Visualisations?" : cR.GetTextRessource(641), Module = EnvModules[ModuleName.Messagerie.ToString()], Cmt = "" },
+                //    [MenuName.QualiteMenuControle.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuControle.ToString(), RefRessource = 762, CulturedCaption = cR.GetTextRessource(762) == "" ? "?Contrôles qualité?" : cR.GetTextRessource(762), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
+                //    [MenuName.QualiteMenuNonConformite.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuNonConformite.ToString(), RefRessource = 763, CulturedCaption = cR.GetTextRessource(763) == "" ? "?Non conformités?" : cR.GetTextRessource(763), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
+                //    [MenuName.QualiteMenuRepartitionControleClient.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuRepartitionControleClient.ToString(), RefRessource = 876, CulturedCaption = cR.GetTextRessource(876) == "" ? "?Taux de contrôle effectif par client?" : cR.GetTextRessource(876), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
+                //    [MenuName.QualiteMenuExtractionFicheControle.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuExtractionFicheControle.ToString(), RefRessource = 877, CulturedCaption = cR.GetTextRessource(877) == "" ? "?Extraction des contrôles visuels chargement?" : cR.GetTextRessource(877), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
+                //    [MenuName.QualiteMenuExtractionControle.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuExtractionControle.ToString(), RefRessource = 878, CulturedCaption = cR.GetTextRessource(878) == "" ? "?Extraction des contrôles de balle?" : cR.GetTextRessource(878), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
+                //    [MenuName.QualiteMenuExtractionNonConformite.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuExtractionNonConformite.ToString(), RefRessource = 879, CulturedCaption = cR.GetTextRessource(879) == "" ? "?Extraction des réclamations?" : cR.GetTextRessource(879), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
+                //    [MenuName.QualiteMenuExtractionCVQ.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuExtractionCVQ.ToString(), RefRessource = 880, CulturedCaption = cR.GetTextRessource(880) == "" ? "?Extraction des contrôles visuels quantifiés?" : cR.GetTextRessource(880), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
+                //    [MenuName.QualiteMenuEtatIncitationQualite.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuEtatIncitationQualite.ToString(), RefRessource = 881, CulturedCaption = cR.GetTextRessource(881) == "" ? "?Etat des incitations qualité?" : cR.GetTextRessource(881), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
+                //    [MenuName.QualiteMenuEtatControleReception.ToString()] = new EnvMenu() { Name = MenuName.QualiteMenuEtatControleReception.ToString(), RefRessource = 889, CulturedCaption = cR.GetTextRessource(889) == "" ? "?Etat des contrôles / réceptions?" : cR.GetTextRessource(889), Module = EnvModules[ModuleName.Qualite.ToString()], Cmt = "" },
+                //};
+                EnvMenu menu = CreateEnvMenu(cR, MenuName.AdministrationMenuAdresseType, 10043, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.AdresseTypeLibelle, true, "adressetype", "RefAdresseType");
-
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuActionType, 1193, ModuleName.Administration, "");
+                
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuActionType, 1193, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ActionTypeLibelle, true, "action-type", "RefActionType");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuAide, 1518, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuAide, 1518, [EnvModules[ModuleName.Administration.ToString()]], "");
                 if (CurrentCulture.Name == "en-GB") { SetMenuGrid(menu, DataColumnName.AideLibelleENGB, true, "aide", "RefAide"); }
                 else { SetMenuGrid(menu, DataColumnName.AideLibelleFRFR, true, "aide", "RefAide"); }
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuApplication, 10046, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuApplication, 10046, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ApplicationLibelle, true, "application", "RefApplication");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuApplicationProduitOrigine, 1274, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuApplicationProduitOrigine, 1274, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ApplicationProduitOrigineLibelle, true, "application-produit-origine", "RefApplicationProduitOrigine");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuCamionType, 10050, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuCamionType, 10050, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.CamionTypeLibelle, true, "camion-type", "RefCamionType");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuCivilite, 10001, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuCivilite, 10001, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.CiviliteLibelle, true, "civilite", "RefCivilite");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuDocument, 1201, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuDocument, 1201, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RefDocument, false, "document", "Id");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuEcoOrganisme, 1419, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuEcoOrganisme, 1419, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.EcoOrganismeLibelle, true, "eco-organisme", "RefEcoOrganisme");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuEntiteType, 10066, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuEntiteType, 10066, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.EntiteTypeLibelleFRFR, true, "entite-type", "RefEntiteType");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuEquivalentCO2, 1395, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuEquivalentCO2, 1395, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.EquivalentCO2Libelle, true, "equivalentco2", "RefEquivalentCO2");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuFormeContact, 1266, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuFormeContact, 1266, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.FormeContactLibelle, true, "forme-contact", "RefFormeContact");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMessageType, 10057, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMessageType, 10057, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.MessageTypeLibelle, true, "message-type", "RefMessageType");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuModeTransportEE, 10061, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuModeTransportEE, 10061, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ModeTransportEELibelle, true, "mode-transport-EE", "RefModeTransportEE");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMotifAnomalieChargement, 10029, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMotifAnomalieChargement, 10029, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.MotifAnomalieChargementLibelle, true, "motif-anomalie-chargement", "RefMotifAnomalieChargement");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMotifAnomalieClient, 10026, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMotifAnomalieClient, 10026, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.MotifAnomalieClientLibelle, true, "motif-anomalie-client", "RefMotifAnomalieClient");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMotifAnomalieTransporteur, 10032, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMotifAnomalieTransporteur, 10032, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.MotifAnomalieTransporteurLibelle, true, "motif-anomalie-transporteur", "RefMotifAnomalieTransporteur");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMotifCamionIncomplet, 10025, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMotifCamionIncomplet, 10025, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.MotifCamionIncompletLibelle, true, "motif-camion-incomplet", "RefMotifCamionIncomplet");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuParamEmail, 1298, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuParamEmail, 1298, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ParamEmailLibelleExpediteur, true, "param-email", "RefParamEmail");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuParametre, 1406, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuParametre, 1406, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ParametreLibelle, true, "parametre", "RefParametre");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuPays, 10077, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuPays, 10077, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.PaysLibelle, true, "pays", "RefPays");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuProcess, 10037, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuProcess, 10037, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ProcessLibelle, true, "process", "RefProcess");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuProduit, 317, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuProduit, 317, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ProduitLibelle, true, "produit", "Id");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuProduitGroupeReporting, 1281, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuProduitGroupeReporting, 1281, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ProduitGroupeReportingLibelle, true, "produit-groupe-reporting", "RefProduitGroupeReporting");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuProduitGroupeReportingType, 1275, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuProduitGroupeReportingType, 1275, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ProduitGroupeReportingTypeLibelle, true, "produit-groupe-reporting-type", "RefProduitGroupeReportingType");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuRegionEE, 1297, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuRegionEE, 1297, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RegionEELibelle, true, "region-ee", "RefRegionEE");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuRegionReporting, 10074, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuRegionReporting, 10074, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RegionReportingLibelle, true, "region-reporting", "RefRegionReporting");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuRepreneur, 1296, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuRepreneur, 1296, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RepreneurLibelle, true, "repreneur", "RefRepreneur");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuRepriseType, 1278, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuRepriseType, 1278, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RepriseTypeLibelle, true, "reprise-type", "RefRepriseType");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuRessource, 1288, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuRessource, 1288, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RessourceLibelleFRFR, true, "ressource", "RefRessource");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuSAGECodeTransport, 10081, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuSAGECodeTransport, 10081, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.SAGECodeTransportCode, true, "sage-code-transport", "RefSAGECodeTransport");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuStandard, 1030, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuStandard, 1030, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.StandardLibelle, true, "standard", "RefStandard");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuSuiviLogin, 1299, ModuleName.Administration, "");
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuExtractionLogin, 1325, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuSuiviLogin, 1299, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuExtractionLogin, 1325, [EnvModules[ModuleName.Administration.ToString()]], "");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuTicket, 10054, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuTicket, 10054, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.TicketLibelle, true, "ticket", "RefTicket");
 
-                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuJourFerie, 10086, ModuleName.Administration, "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuJourFerie, 10086, [EnvModules[ModuleName.Administration.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.JourFerie, false, "jour-ferie", "RefJourFerie");
 
-                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuEnvoiDocumentType, 1616, ModuleName.Annuaire, "");
-
-                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuExtractionAction, 1202, ModuleName.Annuaire, "");
+                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuExtractionAction, 1202, [EnvModules[ModuleName.Annuaire.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.ActionDate, false, "", "");
 
-                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuExtractionAnnuaire, 1224, ModuleName.Annuaire, "");
+                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuExtractionAnnuaire, 1224, [EnvModules[ModuleName.Annuaire.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RefEntite, false, "", "");
 
-                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuEvolutionTonnage, 1234, ModuleName.Annuaire, "");
+                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuEvolutionTonnage, 1234, [EnvModules[ModuleName.Annuaire.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.D, false, "", "");
 
-                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuNbAffretementTransporteur, 1238, ModuleName.Annuaire, "");
+                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuNbAffretementTransporteur, 1238, [EnvModules[ModuleName.Annuaire.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.D, false, "", "");
 
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuDelaiCommandeEnlevement, 1270, ModuleName.Logistique, "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuDelaiCommandeEnlevement, 1270, [EnvModules[ModuleName.Logistique.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RefEntite, false, "", "");
 
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatReception, 1244, ModuleName.Logistique, "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatReception, 1244, [EnvModules[ModuleName.Logistique.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RefProduit, false, "", "");
 
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatReceptionFournisseurChargement, 1260, ModuleName.Logistique, "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatReceptionFournisseurChargement, 1260, [EnvModules[ModuleName.Logistique.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RefProduit, false, "", "");
 
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuChargementAnnule, 1245, ModuleName.Logistique, "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuChargementAnnule, 1245, [EnvModules[ModuleName.Logistique.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RefCommandeFournisseur, false, "", "");
 
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuRepartition, 432, ModuleName.Logistique, "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuRepartition, 432, [EnvModules[ModuleName.Logistique.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RefCommandeFournisseur, false, "", "");
 
-                menu = CreateEnvMenu(cR, MenuName.ModulePrestataireMenuCommandeFournisseur, 427, ModuleName.ModulePrestataire, "");
+                menu = CreateEnvMenu(cR, MenuName.ModulePrestataireMenuCommandeFournisseur, 427, [EnvModules[ModuleName.ModulePrestataire.ToString()]], "");
                 SetMenuGrid(menu, DataColumnName.RefCommandeFournisseur, false, "", "");
 
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatDesEnlevements, 1426, ModuleName.Logistique, "");
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuPoidsMoyenChargementProduit, 1427, ModuleName.Logistique, "");
-                menu = CreateEnvMenu(cR, MenuName.MenuDocuments, 1336, ModuleName.Logistique, "");
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExtractionLeko, 1434, ModuleName.Logistique, "");
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatDesFluxDevLeko, 1438, ModuleName.Logistique, "");
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExtractionOscar, 1549, ModuleName.Logistique, "");
-                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit, 1595, ModuleName.Logistique, "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatDesEnlevements, 1426, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuPoidsMoyenChargementProduit, 1427, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.MenuDocuments, 1336, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExtractionLeko, 1434, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatDesFluxDevLeko, 1438, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExtractionOscar, 1549, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTonnageCollectiviteCDTProduit, 1595, [EnvModules[ModuleName.Logistique.ToString()]], "");
+
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuClientApplication, 702, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuDescriptionControle, 52, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuDescriptionCVQ, 51, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuDescriptionReception, 72, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuEquipementier, 10016, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuFonction, 10015, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuFournisseurTO, 10021, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuMontantIncitationQualite, 430, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuNonConformiteDemandeClientType, 815, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuNonConformiteFamille, 816, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuNonConformiteNature, 817, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuNonConformiteReponseClientType, 818, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuNonConformiteReponseFournisseurType, 819, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuSecurite, 1109, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuService, 10011, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuTitre, 10005, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuUtilisateur, 911, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AdministrationMenuUtilisateurInactif, 1110, [EnvModules[ModuleName.Administration.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuEnvoiDocumentType, 1616, [EnvModules[ModuleName.Annuaire.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuSuiviEnvois, 1083, [EnvModules[ModuleName.Annuaire.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.AnnuaireMenuEntite, 1124, [EnvModules[ModuleName.Annuaire.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuCommandeClient, 426, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuCommandeFournisseur, 427, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExportSAGE, 428, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuImpression, 429, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuPrixReprise, 431, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTransportNonValide, 266, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuModifierTransport, 38, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuImporterTransport, 267, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuSupprimerTransportEnMasse, 268, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuValiderNouveauPrixTransport, 269, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuModifierTousPrixTransport, 274, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTransportDemandeEnlevement, 270, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTransportCommande, 271, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTransportCommandeEnCours, 567, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTransportCommandeModifiee, 568, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatCoutTransport, 272, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuSurcoutCarburant, 714, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuLotDisponible, 777, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.MenuVisualisationAnnuaire, 1339, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatReceptionEmballagePlastique, 907, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatSuiviTonnageRecycleur, 908, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatDesFluxDev, 909, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatTarifTransporteurClient, 943, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuPartMarcheTransporteur, 944, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatKmMoyen, 945, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuSuiviCommandeClient, 952, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuSuiviCommandeClientProduit, 953, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatReceptionProduit, 954, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatReceptionProduitDR, 955, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExtractionReception, 956, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuExtractionCommande, 957, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatDesPoids, 958, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatTonnageParProcess, 959, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatVenteAnnuelleProduitClient, 960, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuEtatDestinationAnnuelleProduitClient, 961, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuSuiviFacturationHCS, 962, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTonnageCollectiviteProduit, 1014, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTonnageCDTProduitComposant, 963, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuTonnageCLSousContrat, 964, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.LogistiqueMenuListeProduit, 965, [EnvModules[ModuleName.Logistique.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.MessagerieMenuMessage, 640, [EnvModules[ModuleName.Messagerie.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.MessagerieMenuVisualisation, 641, [EnvModules[ModuleName.Messagerie.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.QualiteMenuControle, 762, [EnvModules[ModuleName.Qualite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.QualiteMenuNonConformite, 763, [EnvModules[ModuleName.Qualite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.QualiteMenuRepartitionControleClient, 876, [EnvModules[ModuleName.Qualite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.QualiteMenuExtractionFicheControle, 877, [EnvModules[ModuleName.Qualite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.QualiteMenuExtractionControle, 878, [EnvModules[ModuleName.Qualite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.QualiteMenuExtractionNonConformite, 879, [EnvModules[ModuleName.Qualite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.QualiteMenuExtractionCVQ, 880, [EnvModules[ModuleName.Qualite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.QualiteMenuEtatIncitationQualite, 881, [EnvModules[ModuleName.Qualite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.QualiteMenuEtatControleReception, 889, [EnvModules[ModuleName.Qualite.ToString()]], "");
 
                 //ModuleCollectivite
-                menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuAccueil, 31, ModuleName.ModuleCollectivite, "");
-                menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuDocuments, 1336, ModuleName.ModuleCollectivite, "");
-                menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuPrixReprise, 1337, ModuleName.ModuleCollectivite, "");
-                menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuStatistiques, 1338, ModuleName.ModuleCollectivite, "");
-                menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuVisualisationAnnuaire, 1339, ModuleName.ModuleCollectivite, "");
+                menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuAccueil, 31, [EnvModules[ModuleName.ModuleCollectivite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuDocuments, 1336, [EnvModules[ModuleName.ModuleCollectivite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuPrixReprise, 1337, [EnvModules[ModuleName.ModuleCollectivite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuStatistiques, 1338, [EnvModules[ModuleName.ModuleCollectivite.ToString()]], "");
+                menu = CreateEnvMenu(cR, MenuName.ModuleCollectiviteMenuVisualisationAnnuaire, 1339, [EnvModules[ModuleName.ModuleCollectivite.ToString()]], "");
             }
         }
-        private EnvMenu CreateEnvMenu(CulturedRessources cR, MenuName name, int ress, ModuleName module, string cmt)
+        private EnvMenu CreateEnvMenu(CulturedRessources cR, MenuName name, int ress, List<EnvModule> modules, string cmt)
         {
             // Check ressource availability
             string cultured = cR.GetTextRessource(ress);
@@ -409,7 +480,7 @@ namespace eVaSys.Utils
                 Name = name.ToString(),
                 RefRessource = ress,
                 CulturedCaption = cultured,
-                Module = EnvModules[module.ToString()],
+                Modules = modules,
                 Cmt = cmt,
             };
             EnvMenus[name.ToString()] = menu;

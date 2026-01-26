@@ -2,9 +2,9 @@ import { Component, OnInit, Inject,  } from "@angular/core";
 import { ApplicationUserContext } from "../../globals/globals";
 import moment from "moment";
 import { Router, NavigationEnd } from "@angular/router";
-import { MenuName, ModuleName, EnvCommandeFournisseurStatutName, HabilitationLogistique, SearchElementType, HabilitationAnnuaire } from "../../globals/enums";
+import { MenuName, ModuleName, EnvCommandeFournisseurStatutName, HabilitationLogistique, SearchElementType, HabilitationAnnuaire, RefDocumentType } from "../../globals/enums";
 import { EventEmitterService } from "../../services/event-emitter.service";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import * as appInterfaces from "../../interfaces/appInterfaces";
 import { MatDialog } from "@angular/material/dialog";
 import { MessageVisuComponent } from "../dialogs/message-visu/message-visu.component";
@@ -123,6 +123,8 @@ export class HomeComponent implements OnInit {
   NonConformitesEnAttenteFactureNbUrgent: string = "0";
   //Labels
   NouvellesDemandesEnlevementCaption: string = "";
+    downloadService: any;
+    entite: any;
   //Constructor
   constructor(public applicationUserContext: ApplicationUserContext
     , private http: HttpClient, @Inject("BASE_URL") private baseUrl: string
@@ -487,6 +489,35 @@ export class HomeComponent implements OnInit {
       else { this.NonConformitesEnAttenteFactureCss += " ev-dashboard-off ev-dashboard-off-color-qualite"; }
     }, error => showErrorToUser(this.dialog, error, this.applicationUserContext));
     this.animDashboard = true;
+    //Test
+    //this.getTestDocumentTypeFile();
+  }
+  //-----------------------------------------------------------------------------------
+  //Download a file
+  getTestDocumentTypeFile() {
+    this.dataModelService.getEntiteDocumentType(2945, RefDocumentType.ReportingCollectiviteElu, 2025)
+      .subscribe((data: HttpResponse<Blob>) => {
+        let contentDispositionHeader = data.headers.get("Content-Disposition");
+        let fileName = "ReportingCollectiviteElu.pdf";
+        this.downloadFile(data.body, fileName);
+      }, error => {
+        console.log(error);
+        showErrorToUser(this.dialog, error, this.applicationUserContext);
+      });
+  }
+  downloadFile(data: any, fileName: string) {
+    const blob = new Blob([data]);
+    {
+      const url = window.URL.createObjectURL(blob);
+      const a: HTMLAnchorElement = document.createElement("a") as HTMLAnchorElement;
+
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
   }
   //------------------------------------------------------------------------------
   //Manage screen

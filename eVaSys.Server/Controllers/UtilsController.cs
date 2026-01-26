@@ -162,7 +162,7 @@ namespace eVaSys.Controllers
                 rowVals[0] = mod.Name;
                 rowVals[1] = mod.RefRessource.ToString();
                 rowVals[2] = mod.CulturedCaption;
-                rowVals[3] = mod.Module.Name;
+                rowVals[3] = mod.Modules[0]?.Name;
                 rowVals[4] = mod.Cmt;
                 rowVals[5] = mod.GridField;
                 rowVals[6] = mod.GridSort;

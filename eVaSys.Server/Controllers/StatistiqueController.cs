@@ -5065,7 +5065,7 @@ namespace eVaSys.Controllers
                     }
                     if (menu == Enumerations.MenuName.LogistiqueMenuExtractionReception.ToString())
                     {
-                        sqlStrFinal += " OPTION( QUERYRULEOFF JoinCommute )";
+                        //sqlStrFinal += " OPTION( QUERYRULEOFF JoinCommute )";
                     }
                     if (menu == Enumerations.MenuName.QualiteMenuEtatControleReception.ToString())
                     {

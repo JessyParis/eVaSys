@@ -38,40 +38,40 @@ namespace eVaSys.Utils
         public string Format(CultureInfo currentCulture)
         {
             string r = Name;
-            if (DataType == Enumerations.EnvDataColumnDataType.date.ToString())
+            if (DataType == nameof(Enumerations.EnvDataColumnDataType.date))
             {
                 r = Name + " as [" + Name + "]";
                 //r = "isnull(format( " + Name + ", 'd', '" + currentCulture.Name + "' ), '') as [" + Name + "]";
             }
-            else if (DataType == Enumerations.EnvDataColumnDataType.dateTime.ToString())
+            else if (DataType == nameof(Enumerations.EnvDataColumnDataType.dateTime))
             {
                 r = Name + " as [" + Name + "]";
             }
-            else if (DataType == Enumerations.EnvDataColumnDataType.year.ToString())
+            else if (DataType == nameof(Enumerations.EnvDataColumnDataType.year))
             {
                 r = "isnull(format( " + Name + ", '#', '" + currentCulture.Name + "' ), '') as [" + Name + "]";
             }
-            else if (DataType == Enumerations.EnvDataColumnDataType.intNumber.ToString())
+            else if (DataType == nameof(Enumerations.EnvDataColumnDataType.intNumber))
             {
                 r = "isnull(format( " + Name + ", '#,0', '" + currentCulture.Name + "' ), '') as [" + Name + "]";
             }
-            else if (DataType == Enumerations.EnvDataColumnDataType.numeroCommande.ToString())
+            else if (DataType == nameof(Enumerations.EnvDataColumnDataType.numeroCommande))
             {
                 r = "isnull(format( " + Name + ", '0000 00 0000', '" + currentCulture.Name + "' ), '') as [" + Name + "]";
             }
-            else if (DataType == Enumerations.EnvDataColumnDataType.decimalNumber2.ToString())
+            else if (DataType == nameof(Enumerations.EnvDataColumnDataType.decimalNumber2))
             {
                 r = "isnull(format( " + Name + ", '#,0.00', '" + currentCulture.Name + "' ), '') as [" + Name + "]";
             }
-            else if (DataType == Enumerations.EnvDataColumnDataType.decimalNumber3.ToString())
+            else if (DataType == nameof(Enumerations.EnvDataColumnDataType.decimalNumber3))
             {
                 r = "isnull(format( " + Name + ", '#,0.000', '" + currentCulture.Name + "' ), '') as [" + Name + "]";
             }
-            else if (DataType == Enumerations.EnvDataColumnDataType.id.ToString())
+            else if (DataType == nameof(Enumerations.EnvDataColumnDataType.id))
             {
                 r = "isnull(cast(" + Name + " as nvarchar(20)), '') as [" + Name + "]";
             }
-            else if (DataType == Enumerations.EnvDataColumnDataType.text.ToString())
+            else if (DataType == nameof(Enumerations.EnvDataColumnDataType.text))
             {
                 r = "isnull(" + Name + ",'') as [" + Name + "]";
             }
@@ -138,6 +138,22 @@ namespace eVaSys.Utils
         }
         public string Name { get; set; }
         public EnvModule Module { get; set; }
+        private List<EnvModule> _modules;
+
+        public List<EnvModule> Modules
+        {
+            get => _modules;
+            set
+            {
+                _modules = value ?? [];
+                //Retrocompatibility: set first module as main module
+                if (_modules.Count > 0)
+                {
+                    Module = _modules[0];
+                }
+            }
+        }
+
         public int RefRessource { get; set; }
         public string CulturedCaption { get; set; }
         public string Cmt { get; set; }

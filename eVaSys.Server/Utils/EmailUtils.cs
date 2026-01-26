@@ -188,7 +188,8 @@ namespace eVaSys.Utils
         /// <param name="currentContext">The current session context</param>
         /// <param name="configuration">The current IConfiguration</param>
         /// <returns>"ok", or the error message</returns>
-        public static string SendEmailing(Email email, string emailing, int year, DateTime d, ApplicationDbContext dbContext, Context currentContext, IConfiguration configuration)
+        public static string SendEmailing(Email email, string emailing, int year, DateTime d, ApplicationDbContext dbContext, Context currentContext, IConfiguration configuration, string rootPath
+        )
         {
             //Init
             string err = currentContext.CulturedRessources.GetTextRessource(677);
@@ -269,9 +270,9 @@ namespace eVaSys.Utils
                                 + " 	inner join tblEntite on F_DOCENTETE.DO_TIERS=tblEntite.SAGECodeComptable"
                                 + " 	inner join tblAdresse on tblAdresse.RefEntite=tblEntite.refEntite"
                                 + " 	inner join tbmContactAdresse on tblAdresse.RefAdresse = tbmContactAdresse.RefAdresse"
-                                + " 	inner join tbmContactAdresseContactAdresseProcess on tbmContactAdresse.RefContactAdresse = tbmContactAdresseContactAdresseProcess.RefContactAdresse"
+                                + " 	inner join tbmContactAdresseDocumentType on tbmContactAdresse.RefContactAdresse = tbmContactAdresseDocumentType.RefContactAdresse"
                                 + "     left join tblEmailNoteCredit on F_DOCENTETE.DO_PIECE=tblEmailNoteCredit.RefSAGEDocument"
-                                + " where tbmContactAdresseContactAdresseProcess.RefContactAdresseProcess = 3 and tbmContactAdresse.Email is not null"
+                                + " where tbmContactAdresseDocumentType.RefDocumentType = 3 and tbmContactAdresse.Email is not null"
                                 + "     and tbmContactAdresse.Actif=1 and tblAdresse.Actif=1 and tblEntite.Actif=1"
                                 + " 	and DO_TYPE = 17 and DO_DATE >= @d"
                                 + "     and tblEmailNoteCredit.RefSAGEDocument is null";
@@ -327,7 +328,7 @@ namespace eVaSys.Utils
                                 email.Message.To.Clear();
                                 email.Message.To.Add(new MailBox(cA.Email));
                                 //Create attachment
-                                MemoryStream ms = DocumentFileManagement.CreateDocumentType1(cA.RefEntite, dbContext);
+                                MemoryStream ms = DocumentFileManagement.CreateDocumentType1(cA.RefEntite, year, dbContext, rootPath);
                                 if (ms!=null)
                                 {
                                     var mBuilder = email.Message.ToBuilder();

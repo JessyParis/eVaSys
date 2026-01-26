@@ -485,4 +485,19 @@ namespace eVaSys.Data
             return r;
         }
     }
+    /// <summary>
+    /// Class for linked contrat
+    /// </summary>
+    public class VueCommandeFournisseurContrat
+    {
+        #region Constructor
+        public VueCommandeFournisseurContrat()
+        {
+        }
+        #endregion
+        public int RefCommandeFournisseur { get; private set; }
+        public int NumeroCommande { get; private set; }
+        public int RefContrat { get; private set; }
+        public int Nb { get; private set; }
+    }
 }

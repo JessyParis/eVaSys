@@ -47,7 +47,7 @@ namespace eVaSys.Data
             get => LazyLoader.Load(this, ref _entite);
             set => _entite = value;
         }
-        public int? RefAdresse { get; set; }
+        public int RefAdresse { get; set; }
         private Adresse _adresse;
         public Adresse Adresse
         {

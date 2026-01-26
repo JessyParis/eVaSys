@@ -37,6 +37,7 @@ namespace eVaSys.Data
         public string Description { get; set; }
         public DateTime DCreation { get; set; }
         public DateTime? DModif { get; set; }
+        public ICollection<DocumentTypeMeta> DocumentTypeMetas { get; set; }
         public ICollection<ContactAdresseDocumentType> ContactAdresseDocumentTypes { get; set; }
         public ICollection<ActionDocumentType> ActionDocumentTypes { get; set; }
         [NotMapped]
@@ -96,12 +97,11 @@ namespace eVaSys.Data
         public string IsValid()
         {
             string r = "";
-            bool existsInDB = (Utils.Utils.DbScalar("select count(*) from tbrDocumentType where RefDocumentType=" + RefDocumentType, DbContext.Database.GetDbConnection()) != "0");
-            int c = DbContext.DocumentTypes.Where(q => q.Libelle == Libelle).Count();
-            if ((!existsInDB && c > 0) || (existsInDB && c > 1) || Libelle?.Length > 50)
+            int c = DbContext.DocumentTypes.Count(q => q.Libelle == Libelle && q.RefDocumentType != RefDocumentType);
+            if ( c > 1 || Libelle?.Length > 50)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);
-                if ((!existsInDB && c > 0) || (existsInDB && c > 1)) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }
+                if (c > 1) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(410); }
                 if (Libelle?.Length > 50) { if (r == "") { r += Environment.NewLine; } r += cR.GetTextRessource(394); }
             }
             return r;
@@ -115,6 +115,7 @@ namespace eVaSys.Data
             string r = "";
             int nbLinkedData = DbContext.Entry(this).Collection(b => b.ContactAdresseDocumentTypes).Query().Count();
             nbLinkedData += DbContext.Entry(this).Collection(b => b.ActionDocumentTypes).Query().Count();
+            nbLinkedData += DbContext.Entry(this).Collection(b => b.DocumentTypeMetas).Query().Count();
             if (nbLinkedData != 0)
             {
                 CulturedRessources cR = new(currentCulture, DbContext);

@@ -8,6 +8,7 @@
 /// Création : 06/06/2018
 /// -----------------------------------------------------------------------------------------------------
 
+using GemBox.Email.Mime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Newtonsoft.Json;
@@ -319,6 +320,7 @@ namespace eVaSys.Data
         public virtual DbSet<DocumentEntite> DocumentEntites { get; set; }
         public virtual DbSet<DocumentEntiteType> DocumentEntiteTypes { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
+        public virtual DbSet<DocumentTypeMeta> DocumentTypeMetas { get; set; }
         public virtual DbSet<FicheControle> FicheControles { get; set; }
         public virtual DbSet<FicheControleDescriptionReception> FicheControleDescriptionReceptions { get; set; }
         public virtual DbSet<EcoOrganisme> EcoOrganismes { get; set; }
@@ -408,6 +410,8 @@ namespace eVaSys.Data
         public virtual DbSet<Utilisateur> Utilisateurs { get; set; }
         public virtual DbSet<UtilisateurAPI> UtilisateurAPIs { get; set; }
         public virtual DbSet<Verrouillage> Verrouillages { get; set; }
+        public virtual DbSet<VueBL> VueBLs { get; set; }
+        public virtual DbSet<VueCommandeFournisseurContrat> VueCommandeFournisseurContrats { get; set; }
 
         //Scalar functions declarations as sendin exception, to be sure they are not used this way, but correctly in a query
         [DbFunction("GetRefContratType1", "dbo")]
@@ -2009,6 +2013,16 @@ namespace eVaSys.Data
                     .WithMany(p => p.DocumentEntiteTypes)
                     .HasForeignKey(d => d.RefEntiteType)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+            modelBuilder.Entity<DocumentType>(entity =>
+            {
+                modelBuilder.Entity<DocumentTypeMeta>(entity =>
+                {
+                    entity.HasKey(e => e.RefDocumentTypeMeta); // Define primary key
+                    entity.Property(e => e.RefDocumentType).IsRequired();
+                    entity.Property(e => e.Libelle).IsRequired().HasMaxLength(50);
+                    entity.Property(e => e.Contenu).IsRequired().HasMaxLength(500);
+                });
             });
             modelBuilder.Entity<DocumentType>(entity =>
             {
@@ -4515,8 +4529,17 @@ namespace eVaSys.Data
                     .HasForeignKey(d => d.RefUtilisateur)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+            modelBuilder.Entity<VueBL>(entity =>
+            {
+                entity.ToView("VueBL");
+                entity.HasNoKey();
+            });
+            modelBuilder.Entity<VueCommandeFournisseurContrat>(entity =>
+            {
+                entity.ToView("VueCommandeFournisseurContrat");
+                entity.HasNoKey();
+            });
         }
-
         #endregion Models
     }
 }

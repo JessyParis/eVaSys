@@ -538,6 +538,18 @@ export class DataModelService {
     });
   }
   //-----------------------------------------------------------------------------------
+  //Get existing DocumentType
+  getEntiteDocumentType(refEntite: number, refDocumentType: number, year: number): any {
+    return this.http.get(this.baseUrl + "evapi/entite/getdocumenttype/", {
+      headers: new HttpHeaders()
+        .set("refEntite", refEntite.toString())
+        .set("refDocumentType", refDocumentType.toString())
+        .set("year", year.toString()),
+      observe: "response",
+      responseType: "blob"
+    });
+  }
+  //-----------------------------------------------------------------------------------
   //Get FicheControle
   getFicheControle(refFicheControle: number, refCommandeFournisseur: number): Observable<dataModelsInterfaces.FicheControle> {
     return this.http.get<dataModelsInterfaces.FicheControle>(this.baseUrl + "evapi/fichecontrole/" + refFicheControle.toString(), {
