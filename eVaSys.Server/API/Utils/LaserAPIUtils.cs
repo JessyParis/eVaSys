@@ -433,7 +433,9 @@ namespace eVaSys.Utils
             string responseBody = "";
             string jsonBody = "";
             string urlGetLogisticsChain = configuration["AppResources:Laser:Url"] + "/api/logistics_chains?sourceActor.code="
-                + cmdF.Entite.CodeEE;
+                + cmdF.Entite.CodeEE
+                + "&activeDatetimeTo[after]=" + DateTime.Now.ToString("yyyy-MM-dd")
+                ;
             if (cmdF.Produit?.LaserType == LaserType.Quality.ToString()) { urlGetLogisticsChain += "&quality.code="; }
             if (cmdF.Produit?.LaserType == LaserType.Flow.ToString()) { urlGetLogisticsChain += "&flow.type="; }
             string url = configuration["AppResources:Laser:Url"] + "/api/transitions";
